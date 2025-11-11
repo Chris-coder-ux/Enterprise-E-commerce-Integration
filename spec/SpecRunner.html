@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jasmine Test Runner - Mi Integración API</title>
+
+  <!-- Jasmine CSS - Ruta relativa desde spec/ hacia node_modules/ -->
+  <link rel="stylesheet" href="../node_modules/jasmine-core/lib/jasmine-core/jasmine.css">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .jasmine_html-reporter {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Jasmine Test Runner - Mi Integración API</h1>
+  <p>Cargando tests...</p>
+
+  <!-- Jasmine JavaScript - IMPORTANTE: Cargar en orden correcto -->
+  <!-- Rutas relativas desde spec/ hacia node_modules/ (un nivel arriba) -->
+  <!-- 1. jasmine.js - Core de Jasmine -->
+  <script src="../node_modules/jasmine-core/lib/jasmine-core/jasmine.js"></script>
+  <!-- 2. jasmine-html.js - Reporter HTML -->
+  <script src="../node_modules/jasmine-core/lib/jasmine-core/jasmine-html.js"></script>
+  <!-- 3. boot0.js - Inicializa Jasmine y expone la API global -->
+  <script src="../node_modules/jasmine-core/lib/jasmine-core/boot0.js"></script>
+  
+  <script>
+    // Configurar Jasmine ANTES de cargar boot1.js
+    // boot0.js ya ha inicializado jasmine, así que podemos configurarlo
+    if (typeof jasmine !== 'undefined') {
+      jasmine.getEnv().configure({
+        random: false,
+        seed: null,
+        stopOnFailure: false
+      });
+      console.log('✅ Jasmine configurado');
+    } else {
+      console.error('❌ Jasmine no está disponible después de boot0.js');
+    }
+
+    // Función para cargar scripts de forma secuencial
+    function loadScript(src, callback) {
+      const script = document.createElement('script');
+      script.src = src;
+      script.async = false;
+      script.onload = function() {
+        console.log('✅ Cargado:', src);
+        if (callback) callback();
+      };
+      script.onerror = function() {
+        console.error('❌ Error al cargar:', src);
+        if (callback) callback(); // Continuar aunque falle
+      };
+      document.head.appendChild(script);
+    }
+
+    // Cargar helpers primero - Ruta relativa desde spec/
+    loadScript('helpers/jasmine-jquery.js', function() {
+      console.log('✅ Helpers cargados');
+
+      // Cargar el código fuente que queremos testear
+      const sourceFiles = [
+        // Cargar ConsoleManager.js para poder testearlo
+        '../assets/js/dashboard/components/ConsoleManager.js',
+        // Cargar ErrorHandler.js para poder testearlo
+        '../assets/js/dashboard/core/ErrorHandler.js',
+        // Cargar PollingManager.js para poder testearlo
+        '../assets/js/dashboard/managers/PollingManager.js'
+      ];
+
+      // Cargar archivos fuente
+      let sourceIndex = 0;
+      function loadNextSource() {
+        if (sourceIndex >= sourceFiles.length) {
+          // Todos los archivos fuente cargados, cargar specs
+          loadSpecs();
+          return;
+        }
+        loadScript(sourceFiles[sourceIndex], function() {
+          sourceIndex++;
+          loadNextSource();
+        });
+      }
+
+      // Cargar specs - Rutas relativas desde spec/
+      function loadSpecs() {
+        const specFiles = [
+          'dashboard/components/ConsoleManagerSpec.js',
+          'dashboard/core/ErrorHandlerSpec.js',
+          'dashboard/managers/PollingManagerSpec.js'
+        ];
+
+        let specIndex = 0;
+        function loadNextSpec() {
+          if (specIndex >= specFiles.length) {
+            // Todos los specs cargados, cargar boot1.js que ejecutará los tests
+            console.log('✅ Todos los scripts cargados, cargando boot1.js...');
+            loadScript('../node_modules/jasmine-core/lib/jasmine-core/boot1.js', function() {
+              console.log('✅ boot1.js cargado - Los tests se ejecutarán automáticamente');
+            });
+            return;
+          }
+          loadScript(specFiles[specIndex], function() {
+            specIndex++;
+            loadNextSpec();
+          });
+        }
+        loadNextSpec();
+      }
+
+      // Iniciar carga
+      if (sourceFiles.length > 0) {
+        loadNextSource();
+      } else {
+        loadSpecs();
+      }
+    });
+  </script>
+</body>
+</html>

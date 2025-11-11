@@ -835,17 +835,19 @@ class AjaxSync {
 			}
 			
 			$phase1_porcentaje = 0.0;
-			// ✅ CORRECCIÓN: Si no hay sincronización activa de Fase 1, resetear valores a 0
-			$phase1_products_processed = $phase1_in_progress ? ((float) ($phase1_info['products_processed'] ?? 0)) : 0;
-			$phase1_total_products = $phase1_in_progress ? ((float) ($phase1_info['total_products'] ?? 0)) : 0;
+			// ✅ CORRECCIÓN: Usar valores reales siempre que existan, incluso si está pausada o cancelada
+			// Esto permite mostrar el progreso real cuando la sincronización se detiene
+			$phase1_products_processed = (float) ($phase1_info['products_processed'] ?? 0);
+			$phase1_total_products = (float) ($phase1_info['total_products'] ?? 0);
 			
-			// ✅ CORRECCIÓN: Solo calcular porcentaje si hay sincronización activa y total_products > 0
-			if ($phase1_in_progress && $phase1_total_products > 0) {
+			// ✅ CORRECCIÓN: Calcular porcentaje siempre que haya total_products > 0, incluso si está pausada o cancelada
+			// Esto permite mostrar el progreso real cuando la sincronización se detiene
+			if ($phase1_total_products > 0) {
 				$phase1_porcentaje = ($phase1_products_processed / $phase1_total_products) * 100;
 			}
 			$phase1_porcentaje = is_numeric($phase1_porcentaje) ? (float) $phase1_porcentaje : 0.0;
-			// ✅ CORRECCIÓN: Solo aplicar mínimo 2% si hay sincronización activa
-			$phase1_porcentaje_visual = $phase1_in_progress ? max(2.0, $phase1_porcentaje) : 0.0;
+			// ✅ CORRECCIÓN: Aplicar mínimo 2% solo si está en progreso, pero mostrar porcentaje real si está pausada/cancelada
+			$phase1_porcentaje_visual = $phase1_in_progress ? max(2.0, $phase1_porcentaje) : $phase1_porcentaje;
 			
 			// ✅ CORRECCIÓN: Calcular si Fase 1 está realmente completada
 			// Solo marcar como completado si realmente se procesaron todos los productos
@@ -896,17 +898,18 @@ class AjaxSync {
 					'mensaje' => (!empty($phase1_info['paused']) && $phase1_info['paused'] === true) ? 'Sincronización pausada' : ($phase1_in_progress ? 'Sincronizando imágenes...' : ($phase1_is_completed ? 'Imágenes completadas' : 'Pendiente de sincronización')),
 					'products_processed' => $phase1_products_processed,
 					'total_products' => $phase1_total_products,
-					// ✅ CORRECCIÓN: Si no hay sincronización activa, resetear valores a 0
-					'images_processed' => $phase1_in_progress ? ((int) ($phase1_info['images_processed'] ?? 0)) : 0,
-					'duplicates_skipped' => $phase1_in_progress ? ((int) ($phase1_info['duplicates_skipped'] ?? 0)) : 0,
-					'errors' => $phase1_in_progress ? ((int) ($phase1_info['errors'] ?? 0)) : 0, // ✅ CORRECCIÓN: Usar 'errors' para consistencia con frontend
-					'errores' => $phase1_in_progress ? ((int) ($phase1_info['errors'] ?? 0)) : 0, // ✅ MANTENER: Compatibilidad con código que espera 'errores'
+					// ✅ CORRECCIÓN: Usar valores reales siempre que existan, incluso si está pausada o cancelada
+					// Esto permite mostrar el progreso real cuando la sincronización se detiene
+					'images_processed' => (int) ($phase1_info['images_processed'] ?? 0),
+					'duplicates_skipped' => (int) ($phase1_info['duplicates_skipped'] ?? 0),
+					'errors' => (int) ($phase1_info['errors'] ?? 0), // ✅ CORRECCIÓN: Usar 'errors' para consistencia con frontend
+					'errores' => (int) ($phase1_info['errors'] ?? 0), // ✅ MANTENER: Compatibilidad con código que espera 'errores'
 					'is_completed' => $phase1_is_completed,
 					// ✅ NUEVO: Información del último producto procesado para mostrar en consola
-					'last_processed_id' => $phase1_in_progress ? ((int) ($phase1_info['last_processed_id'] ?? 0)) : 0,
-					'last_product_images' => $phase1_in_progress ? ((int) ($phase1_info['last_product_images'] ?? 0)) : 0,
-					'last_product_duplicates' => $phase1_in_progress ? ((int) ($phase1_info['last_product_duplicates'] ?? 0)) : 0,
-					'last_product_errors' => $phase1_in_progress ? ((int) ($phase1_info['last_product_errors'] ?? 0)) : 0,
+					'last_processed_id' => (int) ($phase1_info['last_processed_id'] ?? 0),
+					'last_product_images' => (int) ($phase1_info['last_product_images'] ?? 0),
+					'last_product_duplicates' => (int) ($phase1_info['last_product_duplicates'] ?? 0),
+					'last_product_errors' => (int) ($phase1_info['last_product_errors'] ?? 0),
 					// ✅ NUEVO: Métricas de limpieza de caché
 					'last_cleanup_metrics' => $phase1_info['last_cleanup_metrics'] ?? null
 				],
@@ -2154,6 +2157,30 @@ class AjaxSync {
 			// Obtener instancias necesarias
 			$imageSyncManager = new \MiIntegracionApi\Sync\ImageSyncManager($apiConnector, $logger);
 
+			// ✅ CRÍTICO: Actualizar estado a "in_progress" ANTES de ejecutar syncAllImages
+			// Esto asegura que cuando el frontend consulte el estado inmediatamente después,
+			// ya esté marcado como "en progreso" y no como "pausado"
+			// Obtener total de productos para el estado inicial
+			$product_ids = $imageSyncManager->getAllProductIds();
+			$total_products = count($product_ids);
+			
+			\MiIntegracionApi\Helpers\SyncStatusHelper::updatePhase1Images([
+				'in_progress' => true,
+				'paused' => false,
+				'cancelled' => false,
+				'total_products' => $total_products,
+				'products_processed' => 0,
+				'images_processed' => 0,
+				'duplicates_skipped' => 0,
+				'errors' => 0,
+				'last_processed_id' => 0
+			]);
+			
+			// Limpiar caché para asegurar que el estado se refleje inmediatamente
+			if (function_exists('wp_cache_flush')) {
+				wp_cache_flush();
+			}
+			
 			// ✅ OPTIMIZADO: Aumentar timeout para permitir proceso largo
 			// El timeout del AJAX en el frontend es de 240 segundos, pero el proceso puede tardar más
 			set_time_limit(0); // Sin límite de tiempo en el servidor
@@ -2164,6 +2191,7 @@ class AjaxSync {
 			self::logInfo('Iniciando sincronización de imágenes vía AJAX', [
 				'resume' => $resume,
 				'batch_size' => $batch_size,
+				'total_products' => $total_products,
 				'user_id' => get_current_user_id()
 			]);
 

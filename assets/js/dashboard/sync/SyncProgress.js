@@ -243,16 +243,26 @@ function handleSuccess(response) {
       const phase1TotalProducts = phase1Status.total_products || 0;
       const phase1ImagesProcessed = phase1Status.images_processed || 0;
 
-      // ✅ NUEVO: Emitir evento de progreso a través de PollingManager
-      // Esto permite que ConsoleManager y otros suscriptores reciban actualizaciones
-      if (typeof window !== 'undefined' && window.pollingManager && typeof window.pollingManager.emit === 'function') {
+      // ✅ CORRECCIÓN: NO emitir eventos desde SyncProgress si Phase1Manager está activo
+      // Phase1Manager.checkPhase1Complete() ya emite eventos cada 5 segundos
+      // Esto evita duplicación de eventos para la misma consulta al backend
+      const phase1ManagerActive = typeof window !== 'undefined' && 
+                                   window.Phase1Manager && 
+                                   typeof window.Phase1Manager.getPollingInterval === 'function' &&
+                                   window.Phase1Manager.getPollingInterval() !== null;
+      
+      if (!phase1ManagerActive && typeof window !== 'undefined' && window.pollingManager && typeof window.pollingManager.emit === 'function') {
+        // Solo emitir si Phase1Manager NO está activo (para Fase 2 o cuando no hay polling de Fase 1)
         window.pollingManager.emit('syncProgress', {
           syncData: response.data,
           phase1Status: phase1Status,
           timestamp: Date.now()
         });
         // eslint-disable-next-line no-console
-        console.log('[SyncProgress] ✅ Evento syncProgress emitido a través de PollingManager');
+        console.log('[SyncProgress] ✅ Evento syncProgress emitido a través de PollingManager (Phase1Manager no activo)');
+      } else if (phase1ManagerActive) {
+        // eslint-disable-next-line no-console
+        console.log('[SyncProgress] ⏭️  Omitiendo emisión de evento (Phase1Manager ya está manejando el polling)');
       }
 
       // ✅ CORRECCIÓN: Actualizar dashboard completo usando updateDashboardFromStatus

@@ -124,9 +124,20 @@ class PollingManager {
    */
   emit(eventName, data) {
     const listeners = this.eventListeners.get(eventName);
+    // ✅ DEBUG: Log para diagnosticar emisión de eventos
+    // eslint-disable-next-line no-console
+    console.log('[PollingManager] emit llamado', {
+      eventName,
+      listenersCount: listeners ? listeners.length : 0,
+      hasData: !!data,
+      dataKeys: data ? Object.keys(data).slice(0, 5) : []
+    });
+    
     if (listeners && listeners.length > 0) {
-      listeners.forEach(callback => {
+      listeners.forEach((callback, index) => {
         try {
+          // eslint-disable-next-line no-console
+          console.log(`[PollingManager] Ejecutando listener ${index + 1}/${listeners.length} para evento ${eventName}`);
           callback(data);
         } catch (error) {
           // eslint-disable-next-line no-console
@@ -136,6 +147,9 @@ class PollingManager {
           }
         }
       });
+    } else {
+      // eslint-disable-next-line no-console
+      console.warn(`[PollingManager] ⚠️  No hay listeners registrados para el evento ${eventName}`);
     }
   }
 

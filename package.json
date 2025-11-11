@@ -9,7 +9,10 @@
     "test:coverage": "jest --coverage",
     "test:dashboard": "jest test_dashboard_complete_functionality.js",
     "test:dashboard:watch": "jest test_dashboard_complete_functionality.js --watch",
-    "test:dashboard:coverage": "jest test_dashboard_complete_functionality.js --coverage"
+    "test:dashboard:coverage": "jest test_dashboard_complete_functionality.js --coverage",
+    "test:jasmine": "jasmine",
+    "test:jasmine:watch": "jasmine --watch",
+    "test:jasmine:browser": "echo 'Abre spec/SpecRunner.html en tu navegador'"
   },
   "keywords": [
     "wordpress",
@@ -25,6 +28,8 @@
     "@mermaid-js/mermaid-cli": "^11.10.1",
     "@testing-library/jest-dom": "^6.1.4",
     "@testing-library/jest-native": "^5.4.3",
+    "jasmine": "^5.12.0",
+    "jasmine-core": "^5.12.1",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "jquery": "^3.7.1",

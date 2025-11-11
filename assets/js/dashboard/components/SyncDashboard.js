@@ -110,6 +110,28 @@ class SyncDashboard {
           addConsoleLine('success', 'Fase 1 iniciada correctamente');
         }
         
+        // ✅ NUEVO: Emitir evento inmediato cuando se inicia la sincronización
+        // Esto permite que ConsoleManager muestre el mensaje de inicio inmediatamente
+        if (typeof window !== 'undefined' && window.pollingManager && typeof window.pollingManager.emit === 'function') {
+          const phase1Status = response.data && response.data.phase1_images ? response.data.phase1_images : {
+            in_progress: true,
+            completed: false,
+            products_processed: 0,
+            total_products: response.data && response.data.total_products ? response.data.total_products : 0
+          };
+          
+          window.pollingManager.emit('syncProgress', {
+            syncData: response.data || {
+              in_progress: false,
+              is_completed: false
+            },
+            phase1Status: phase1Status,
+            timestamp: Date.now()
+          });
+          // eslint-disable-next-line no-console
+          console.log('[SyncDashboard] ✅ Evento syncProgress emitido inmediatamente al iniciar Fase 1');
+        }
+        
         // ✅ NUEVO: Iniciar polling de Phase1Manager para monitorear completitud
         // Esto asegura que checkPhase1Complete() se ejecute y actualice la consola
         if (typeof window !== 'undefined' && window.Phase1Manager) {
@@ -1018,14 +1040,41 @@ class SyncDashboard {
       if (response.success && response.data) {
         this.updateDashboardFromStatus(response.data);
         
-        // ✅ CENTRALIZADO: Actualizar consola también desde loadCurrentStatus
-        // Esto asegura que la consola se actualice incluso si SyncProgress no está activo
+        // ✅ CORRECCIÓN: NO emitir eventos desde loadCurrentStatus si hay polling activo
+        // loadCurrentStatus se llama al cargar la página, pero no debería emitir eventos
+        // si Phase1Manager o SyncProgress ya están manejando el polling
+        // Solo emitir si es la carga inicial y no hay polling activo
         const phase1Status = response.data.phase1_images || {};
-        // Usar window.updateSyncConsole o ConsoleManager.updateSyncConsole
-        if (typeof window !== 'undefined' && typeof window.updateSyncConsole === 'function') {
-          window.updateSyncConsole(response.data, phase1Status);
-        } else if (typeof window !== 'undefined' && window.ConsoleManager && typeof window.ConsoleManager.updateSyncConsole === 'function') {
-          window.ConsoleManager.updateSyncConsole(response.data, phase1Status);
+        const phase1ManagerActive = typeof window !== 'undefined' && 
+                                     window.Phase1Manager && 
+                                     typeof window.Phase1Manager.getPollingInterval === 'function' &&
+                                     window.Phase1Manager.getPollingInterval() !== null;
+        const syncProgressActive = typeof window !== 'undefined' && 
+                                    window.pollingManager && 
+                                    window.pollingManager.config &&
+                                    window.pollingManager.config.currentMode === 'active';
+        
+        // Solo emitir si NO hay polling activo (carga inicial de la página)
+        if (!phase1ManagerActive && !syncProgressActive && typeof window !== 'undefined' && window.pollingManager && typeof window.pollingManager.emit === 'function') {
+          window.pollingManager.emit('syncProgress', {
+            syncData: response.data,
+            phase1Status: phase1Status,
+            timestamp: Date.now()
+          });
+          // eslint-disable-next-line no-console
+          console.log('[SyncDashboard] ✅ Evento syncProgress emitido a través de PollingManager (carga inicial, sin polling activo)');
+        } else if (phase1ManagerActive || syncProgressActive) {
+          // eslint-disable-next-line no-console
+          console.log('[SyncDashboard] ⏭️  Omitiendo emisión de evento (ya hay polling activo)');
+        } else {
+          // Fallback: Solo si no hay sistema de eventos disponible
+          // eslint-disable-next-line no-console
+          console.warn('[SyncDashboard] ⚠️  PollingManager no está disponible, usando fallback directo');
+          if (typeof window !== 'undefined' && typeof window.updateSyncConsole === 'function') {
+            window.updateSyncConsole(response.data, phase1Status);
+          } else if (typeof window !== 'undefined' && window.ConsoleManager && typeof window.ConsoleManager.updateSyncConsole === 'function') {
+            window.ConsoleManager.updateSyncConsole(response.data, phase1Status);
+          }
         }
       }
     } catch (error) {

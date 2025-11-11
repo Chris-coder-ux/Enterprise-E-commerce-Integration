@@ -78,6 +78,27 @@ function checkPhase1Complete() {
       if (progressResponse.success && progressResponse.data) {
         const phase1Status = progressResponse.data.phase1_images || {};
 
+        // ✅ DEBUG: Log para ver qué devuelve el backend
+        // eslint-disable-next-line no-console
+        console.log('[Phase1Manager] 🔍 Respuesta del backend (checkPhase1Complete):', {
+          'phase1Status.in_progress': phase1Status.in_progress,
+          'phase1Status.completed': phase1Status.completed,
+          'phase1Status.products_processed': phase1Status.products_processed,
+          'phase1Status.total_products': phase1Status.total_products,
+          'phase1Status.last_processed_id': phase1Status.last_processed_id,
+          'phase1Status.images_processed': phase1Status.images_processed,
+          'syncData.in_progress': progressResponse.data.in_progress,
+          'syncData.is_completed': progressResponse.data.is_completed,
+          'Tipo phase1Status.in_progress': typeof phase1Status.in_progress,
+          'Valor real phase1Status.in_progress': phase1Status.in_progress === true ? 'TRUE' : phase1Status.in_progress === false ? 'FALSE' : String(phase1Status.in_progress)
+        });
+        
+        // ✅ DEBUG: Log separado con el objeto completo para inspección manual
+        // eslint-disable-next-line no-console
+        console.log('[Phase1Manager] 🔍 Objeto completo phase1Status del backend:', phase1Status);
+        // eslint-disable-next-line no-console
+        console.log('[Phase1Manager] 🔍 Objeto completo progressResponse.data del backend:', progressResponse.data);
+
         // ✅ NUEVO: Emitir evento de progreso a través de PollingManager
         // Esto permite que ConsoleManager y otros suscriptores reciban actualizaciones
         if (typeof window !== 'undefined' && window.pollingManager && typeof window.pollingManager.emit === 'function') {
@@ -215,6 +236,29 @@ function handleSuccess(response) {
 
   // Inicializar estado
   phase1Complete = false;
+
+  // ✅ NUEVO: Emitir evento inmediato cuando se inicia la sincronización
+  // Esto permite que ConsoleManager muestre el mensaje de inicio inmediatamente
+  if (typeof window !== 'undefined' && window.pollingManager && typeof window.pollingManager.emit === 'function') {
+    // Obtener datos iniciales de la respuesta o hacer una consulta rápida
+    const phase1Status = response.data && response.data.phase1_images ? response.data.phase1_images : {
+      in_progress: true,
+      completed: false,
+      products_processed: 0,
+      total_products: response.data && response.data.total_products ? response.data.total_products : 0
+    };
+    
+    window.pollingManager.emit('syncProgress', {
+      syncData: response.data || {
+        in_progress: false,
+        is_completed: false
+      },
+      phase1Status: phase1Status,
+      timestamp: Date.now()
+    });
+    // eslint-disable-next-line no-console
+    console.log('[Phase1Manager] ✅ Evento syncProgress emitido inmediatamente al iniciar Fase 1');
+  }
 
   // Iniciar polling para monitorear Fase 1
   startPolling();

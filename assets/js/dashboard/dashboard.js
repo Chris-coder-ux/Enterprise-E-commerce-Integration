@@ -10,7 +10,7 @@
  * @author Christian
  */
 
-/* global jQuery, miIntegracionApiDashboard, ErrorHandler, AjaxManager, SystemEventManager, SELECTORS, DASHBOARD_CONFIG, ConsoleManager, SyncStateManager, NonceManager, SyncProgress, Phase1Manager, Phase2Manager */
+/* global jQuery, miIntegracionApiDashboard, ErrorHandler, AjaxManager, SystemEventManager, SELECTORS, DASHBOARD_CONFIG, ConsoleManager, SyncStateManager, NonceManager, SyncProgress */
 
 // ========================================
 // VERIFICACIÓN DE DEPENDENCIAS
@@ -294,6 +294,33 @@
    * @private
    */
   function initializeConsoleManager() {
+    // ✅ VERIFICACIÓN ADICIONAL: Verificar si el script se ejecutó
+    // Buscar en la consola si hay algún log de ConsoleManager
+    const scriptElement = typeof document !== 'undefined' 
+      ? document.querySelector('script[src*="ConsoleManager.js"]')
+      : null;
+    
+    if (scriptElement) {
+      // Verificar si el script tiene el atributo async o defer que podría estar causando problemas
+      const isAsync = scriptElement.hasAttribute('async');
+      const isDefer = scriptElement.hasAttribute('defer');
+      
+      // eslint-disable-next-line no-console
+      console.log('[dashboard.js] Información del script ConsoleManager:', {
+        scriptSrc: scriptElement.src,
+        isAsync,
+        isDefer,
+        scriptLoaded: scriptElement !== null,
+        scriptReadyState: scriptElement.readyState || 'N/A',
+        hasOnLoad: scriptElement.onload !== null,
+        hasOnError: scriptElement.onerror !== null
+      });
+      
+      // ✅ ELIMINADO: Carga manual del script
+      // Ya no es necesario porque el script ahora está envuelto en un IIFE
+      // que previene redeclaraciones si se carga múltiples veces
+    }
+    
     // Función auxiliar para intentar inicializar
     function tryInitialize() {
       // Verificar disponibilidad
@@ -303,9 +330,12 @@
 
       // eslint-disable-next-line no-console
       console.log('[dashboard.js] Verificando ConsoleManager...', {
-        hasConsoleManager: hasConsoleManager,
-        hasWindowConsoleManager: hasWindowConsoleManager,
-        hasPollingManager: hasPollingManager
+        hasConsoleManager,
+        hasWindowConsoleManager,
+        hasPollingManager,
+        ConsoleManagerType: typeof ConsoleManager,
+        windowConsoleManagerType: typeof window !== 'undefined' ? typeof window.ConsoleManager : 'window undefined',
+        windowKeys: typeof window !== 'undefined' ? Object.keys(window).filter(key => key.toLowerCase().includes('console')) : []
       });
 
       if (hasConsoleManager || hasWindowConsoleManager) {
@@ -336,18 +366,42 @@
     console.warn('  ⚠️  ConsoleManager no está disponible inmediatamente, esperando...');
     
     let attempts = 0;
-    const maxAttempts = 10; // 10 intentos = 1 segundo
+    const maxAttempts = 20; // 20 intentos = 2 segundos (aumentado para dar más tiempo)
     const checkInterval = setInterval(function() {
       attempts++;
       if (tryInitialize()) {
         clearInterval(checkInterval);
+        // eslint-disable-next-line no-console
+        console.log('  ✅ ConsoleManager disponible después de', attempts * 100, 'ms');
       } else if (attempts >= maxAttempts) {
         clearInterval(checkInterval);
+        // Verificar si el script está cargado
+        let scriptLoaded = false;
+        let scriptSrc = null;
+        if (typeof document !== 'undefined') {
+          const scriptElement = document.querySelector('script[src*="ConsoleManager.js"]');
+          scriptLoaded = scriptElement !== null;
+          scriptSrc = scriptElement ? scriptElement.src : null;
+        }
+        
+        // Verificar si hay errores de JavaScript en la consola
+        const allScripts = typeof document !== 'undefined' 
+          ? Array.from(document.querySelectorAll('script[src*="dashboard"]')).map(s => s.src)
+          : [];
+        
         // eslint-disable-next-line no-console
         console.error('  ❌ ConsoleManager no está disponible después de', maxAttempts * 100, 'ms', {
           ConsoleManager: typeof ConsoleManager,
           windowConsoleManager: typeof window !== 'undefined' ? typeof window.ConsoleManager : 'window undefined',
-          scriptLoaded: typeof document !== 'undefined' && document.querySelector('script[src*="ConsoleManager.js"]') !== null
+          scriptLoaded,
+          scriptSrc,
+          allDashboardScripts: allScripts,
+          windowKeys: typeof window !== 'undefined' ? Object.keys(window).filter(key => 
+            key.toLowerCase().includes('console') || 
+            key.toLowerCase().includes('manager') ||
+            key.toLowerCase().includes('sync')
+          ).slice(0, 20) : [],
+          suggestion: 'Verifica la consola del navegador para errores de JavaScript en ConsoleManager.js'
         });
       }
     }, 100);
