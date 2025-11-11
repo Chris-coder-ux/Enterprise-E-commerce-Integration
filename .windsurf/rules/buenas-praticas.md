@@ -1,0 +1,356 @@
+---
+trigger: always_on
+description: "Buenas prácticas de programación aplicadas en todo el código del proyecto"
+globs: ["**/*.js", "**/*.ts", "**/*.jsx", "**/*.tsx", "**/*.php", "**/*.py"]
+---
+
+# 📋 Buenas Prácticas de Programación
+
+## SOLID Principles
+
+### SRP - Single Responsibility
+Cada clase/módulo debe tener una sola responsabilidad.  
+**Good ✅**  
+```ts
+class UserRepository {
+  getUserById(id: number) { /* ... */ }
+}
+
+class UserService {
+  constructor(private repo: UserRepository) {}
+  getUserProfile(id: number) { /* ... */ }
+}
+```
+**Bad ❌**  
+```ts
+class UserManager {
+  getUserById(id: number) { /* ... */ }
+  renderUserProfile(id: number) { /* ... */ } // Lógica de presentación mezclada
+}
+```
+
+---
+
+### OCP - Open/Closed
+Abierto a extensión, cerrado a modificación.  
+**Good ✅**  
+```ts
+interface Shape {
+  area(): number;
+}
+
+class Circle implements Shape {
+  constructor(private r: number) {}
+  area() { return Math.PI * this.r * this.r; }
+}
+
+class Square implements Shape {
+  constructor(private s: number) {}
+  area() { return this.s * this.s; }
+}
+```
+**Bad ❌**  
+```ts
+function area(shape: any) {
+  if (shape.type === 'circle') return Math.PI * shape.r * shape.r;
+  if (shape.type === 'square') return shape.s * shape.s;
+  // Cada vez que agrego una figura debo modificar esta función
+}
+```
+
+---
+
+### LSP - Liskov Substitution
+Las subclases deben poder reemplazar a la clase base.  
+**Good ✅**  
+```ts
+class Bird {
+  fly() { /* ... */ }
+}
+
+class Sparrow extends Bird {}
+```
+**Bad ❌**  
+```ts
+class Bird {
+  fly() { /* ... */ }
+}
+
+class Penguin extends Bird {
+  fly() { throw new Error("Penguins can't fly"); } // Rompe el contrato
+}
+```
+
+---
+
+### ISP - Interface Segregation
+Preferir varias interfaces específicas en lugar de una general.  
+**Good ✅**  
+```ts
+interface Printer {
+  print(): void;
+}
+
+interface Scanner {
+  scan(): void;
+}
+```
+**Bad ❌**  
+```ts
+interface Machine {
+  print(): void;
+  scan(): void;
+  fax(): void;
+}
+
+class SimplePrinter implements Machine {
+  print() { /* ... */ }
+  scan() { throw new Error("Not supported"); }
+  fax() { throw new Error("Not supported"); }
+}
+```
+
+---
+
+### DIP - Dependency Inversion
+Depender de abstracciones, no de implementaciones.  
+**Good ✅**  
+```ts
+interface Notifier {
+  send(message: string): void;
+}
+
+class EmailNotifier implements Notifier {
+  send(message: string) { /* ... */ }
+}
+
+class UserService {
+  constructor(private notifier: Notifier) {}
+  registerUser(user: string) {
+    this.notifier.send("User registered");
+  }
+}
+```
+**Bad ❌**  
+```ts
+class UserService {
+  private notifier = new EmailNotifier(); // Acoplamiento directo
+}
+```
+
+---
+
+## DRY (Don't Repeat Yourself)
+**Good ✅**  
+```ts
+function calculateDiscount(price: number): number {
+  return price * 0.9;
+}
+```
+**Bad ❌**  
+```ts
+const discountedPrice1 = price1 * 0.9;
+const discountedPrice2 = price2 * 0.9;
+```
+
+---
+
+## KISS (Keep It Simple, Stupid)
+**Good ✅**  
+```ts
+function isEven(n: number): boolean {
+  return n % 2 === 0;
+}
+```
+**Bad ❌**  
+```ts
+function isEven(n: number): boolean {
+  return Math.abs(Math.sin(n * Math.PI / 2)) < 0.00001;
+}
+```
+
+---
+
+## Separation of Concerns
+**Good ✅**  
+```ts
+// Archivo db.ts
+export function getUserById(id: number) { /* ... */ }
+
+// Archivo userController.ts
+import { getUserById } from './db';
+export function showUser(id: number) { /* ... */ }
+```
+**Bad ❌**  
+```ts
+function showUser(id: number) {
+  // Lógica de base de datos y lógica de UI en la misma función
+}
+```
+
+---
+
+## Configuration over Convention
+**Good ✅**  
+```ts
+const dbHost = process.env.DB_HOST || "localhost";
+```
+**Bad ❌**  
+```ts
+const dbHost = "localhost"; // Hardcodeado
+```
+
+---
+
+## Fail Fast
+**Good ✅**  
+```ts
+function divide(a: number, b: number) {
+  if (b === 0) throw new Error("Division by zero");
+  return a / b;
+}
+```
+**Bad ❌**  
+```ts
+function divide(a: number, b: number) {
+  return a / b; // Error oculto si b = 0
+}
+```
+
+---
+
+## Graceful Degradation
+**Good ✅**  
+```ts
+try {
+  loadHighResImage();
+} catch {
+  loadLowResImage(); // Fallback
+}
+```
+**Bad ❌**  
+```ts
+loadHighResImage(); // Si falla, todo rompe
+```
+
+---
+
+## Resource Management
+**Good ✅**  
+```ts
+const file = fs.openSync("data.txt", "r");
+try {
+  // Usar el archivo
+} finally {
+  fs.closeSync(file);
+}
+```
+**Bad ❌**  
+```ts
+const file = fs.openSync("data.txt", "r");
+// Nunca se cierra el archivo
+```
+
+---
+
+## Error Handling
+**Good ✅**  
+```ts
+try {
+  processPayment();
+} catch (err) {
+  logger.error("Payment failed", err);
+}
+```
+**Bad ❌**  
+```ts
+processPayment(); // Sin manejo de errores
+```
+
+---
+
+## Performance Optimization
+**Good ✅**  
+```ts
+const data = new Set([1,2,3,4]);
+data.has(3); // O(1)
+```
+**Bad ❌**  
+```ts
+const data = [1,2,3,4];
+data.includes(3); // O(n) innecesario si el dataset es grande
+```
+
+---
+
+## Type Safety
+**Good ✅**  
+```ts
+function add(a: number, b: number): number {
+  return a + b;
+}
+```
+**Bad ❌**  
+```ts
+function add(a, b) {
+  return a + b; // Puede concatenar strings sin querer
+}
+```
+
+---
+
+## Documentation
+**Good ✅**  
+```ts
+// Calcula el precio total incluyendo impuestos
+function calculateTotal(price: number, tax: number): number {
+  return price + (price * tax);
+}
+```
+**Bad ❌**  
+```ts
+// Función
+function calculateTotal(price, tax) {
+  return price + (price * tax);
+}
+```
+
+---
+
+## Testing
+**Good ✅**  
+```ts
+test("calculateTotal con impuesto", () => {
+  expect(calculateTotal(100, 0.2)).toBe(120);
+});
+```
+**Bad ❌**  
+```ts
+// Sin pruebas
+```
+
+---
+
+## Security
+**Good ✅**  
+```ts
+const userInput = sanitize(input);
+db.query("SELECT * FROM users WHERE name = ?", [userInput]);
+```
+**Bad ❌**  
+```ts
+db.query("SELECT * FROM users WHERE name = '" + input + "'"); // SQL Injection
+```
+
+---
+
+## Monitoring
+**Good ✅**  
+```ts
+logger.info("Service started");
+metrics.increment("requests_total");
+```
+**Bad ❌**  
+```ts
+console.log("Service started"); // Sin métricas ni observabilidad real
+```

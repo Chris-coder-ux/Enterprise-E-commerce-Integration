@@ -1,0 +1,1352 @@
+/**
+ * Estilos para la página de Endpoints
+ * Diseño moderno con glassmorphism
+ * 
+ * @package MiIntegracionApi
+ * @subpackage Admin
+ */
+
+/* ========================================
+   LAYOUT PRINCIPAL
+   ======================================== */
+
+.mi-integracion-api-admin {
+  display: flex;
+  min-height: calc(100vh - 32px);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  margin: -20px -20px 0 -20px;
+  padding: 20px;
+  gap: 20px;
+}
+
+/* ========================================
+   SIDEBAR DE NAVEGACIÓN
+   ======================================== */
+
+.mi-integracion-api-sidebar {
+  width: 280px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  height: fit-content;
+  position: sticky;
+  top: 20px;
+}
+
+.mi-integracion-api-sidebar h2 {
+  color: white;
+  margin: 0 0 20px 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.mi-integracion-api-nav-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mi-integracion-api-nav-menu li {
+  margin-bottom: 8px;
+}
+
+.mi-integracion-api-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.mi-integracion-api-nav-link:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  transform: translateX(4px);
+}
+
+.mi-integracion-api-nav-menu li.active .mi-integracion-api-nav-link {
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.mi-integracion-api-nav-menu .dashicons {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+/* ========================================
+   CONTENIDO PRINCIPAL
+   ======================================== */
+
+.mi-integracion-api-main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+/* ========================================
+   BANNER PRINCIPAL
+   ======================================== */
+
+.mi-integracion-api-banner {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  margin-bottom: 20px;
+  position: relative;
+  overflow: visible;
+  padding-bottom: 80px; /* Espacio para el botón de ayuda */
+}
+
+/* Icono de Ayuda en Endpoints */
+.endpoints-help {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  z-index: 10;
+}
+
+.endpoints-help .help-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  padding: 8px 16px;
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.endpoints-help .help-link:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.endpoints-help .help-link i {
+  font-size: 16px;
+  color: #6cbbf2;
+  transition: color 0.3s ease;
+}
+
+.endpoints-help .help-link:hover i {
+  color: #4a9eff;
+}
+
+.endpoints-help .help-link span {
+  font-size: 13px;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.banner-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.banner-icon .dashicons {
+  font-size: 48px;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.banner-text {
+  flex: 1;
+  padding: 32px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.banner-text h1 {
+  color: white;
+  margin: 0 0 8px 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.banner-text p {
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  font-size: 1.1rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* ========================================
+   TARJETAS PRINCIPALES
+   ======================================== */
+
+.mi-integracion-api-card {
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+  margin-bottom: 32px;
+  padding: 32px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.card-header {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px 30px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-header h2 {
+  color: white;
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.card-content {
+  padding: 30px;
+}
+
+/* ========================================
+   PESTAÑAS UNIFICADAS
+   ======================================== */
+
+.unified-tabs {
+  display: flex;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  margin-bottom: 32px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px 12px 0 0;
+  padding: 8px;
+  backdrop-filter: blur(15px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.unified-tabs::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+}
+
+.unified-tab-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  border-radius: 10px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-right: 8px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  min-width: 180px;
+  justify-content: center;
+}
+
+.unified-tab-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.unified-tab-link:hover::before {
+  left: 100%;
+}
+
+.unified-tab-link:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.unified-tab-link.active {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
+  color: white;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.unified-tab-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 3px;
+  background: linear-gradient(90deg, #4dabf7, #339af0);
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(77, 171, 247, 0.4);
+}
+
+.unified-tab-link .dashicons {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  transition: transform 0.3s ease;
+}
+
+.unified-tab-link:hover .dashicons {
+  transform: scale(1.1);
+}
+
+.unified-tab-link.active .dashicons {
+  transform: scale(1.1);
+  color: #4dabf7;
+  text-shadow: 0 0 8px rgba(77, 171, 247, 0.5);
+}
+
+/* Contenido de las pestañas */
+.unified-tab-content {
+  display: none;
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.unified-tab-content.active {
+  display: block;
+}
+
+/* Mostrar la primera pestaña por defecto */
+#tab-endpoints {
+  display: block;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   PESTAÑAS LEGACY (COMPATIBILIDAD)
+   ======================================== */
+
+.mi-integracion-api-tabs {
+  display: flex;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  margin-bottom: 32px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px 12px 0 0;
+  padding: 8px;
+  backdrop-filter: blur(15px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.mi-integracion-api-tab-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  margin-right: 8px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.mi-integracion-api-tab-link:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.mi-integracion-api-tab-link.active {
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Contenido de las pestañas */
+.mi-integracion-api-tab-content {
+  display: none;
+}
+
+.mi-integracion-api-tab-content.active {
+  display: block;
+}
+
+/* ========================================
+   INTRODUCCIÓN DE ENDPOINTS
+   ======================================== */
+
+.endpoint-intro {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 32px;
+  border-left: 4px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.endpoint-intro:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.endpoint-intro-icon {
+  margin-right: 24px;
+  background: rgba(255, 255, 255, 0.2);
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.endpoint-intro-icon .dashicons {
+  color: white;
+  font-size: 28px;
+  width: auto;
+  height: auto;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.endpoint-intro-text h3 {
+  margin: 0 0 8px 0;
+  color: white;
+  font-size: 20px;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.endpoint-intro-text p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+  line-height: 1.5;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* ========================================
+   FORMULARIOS MEJORADOS
+   ======================================== */
+
+.endpoint-form-container {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
+  padding: 40px;
+  margin-bottom: 32px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.endpoint-form-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #4dabf7, #339af0, #228be6);
+  border-radius: 20px 20px 0 0;
+}
+
+.endpoint-form-container::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(77, 171, 247, 0.1) 0%, transparent 70%);
+  animation: formGlow 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes formGlow {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.1); }
+}
+
+.mi-integracion-api-form-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr auto;
+  gap: 28px;
+  align-items: end;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .mi-integracion-api-form-row {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .endpoint-form-container {
+    padding: 24px;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.form-group label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: white;
+  font-size: 14px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.form-group label::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 20px;
+  background: linear-gradient(180deg, #4dabf7, #339af0);
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.form-group:focus-within label::before {
+  opacity: 1;
+}
+
+.form-group label .dashicons {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  transition: all 0.3s ease;
+}
+
+.form-group:focus-within label .dashicons {
+  color: #4dabf7;
+  transform: scale(1.1);
+  text-shadow: 0 0 8px rgba(77, 171, 247, 0.5);
+}
+
+/* Select Mejorado */
+.mi-integracion-api-select {
+  width: 100%;
+  padding: 16px 20px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  appearance: none;
+  backdrop-filter: blur(15px);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 16px center;
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  padding-right: 52px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.mi-integracion-api-select:focus {
+  outline: none;
+  border-color: #4dabf7;
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 0 4px rgba(77, 171, 247, 0.2);
+  transform: translateY(-2px);
+}
+
+.mi-integracion-api-select:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.mi-integracion-api-select::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.mi-integracion-api-select option {
+  background: #2c3e50;
+  color: white;
+  padding: 8px;
+}
+
+/* Textarea Mejorado */
+#mi_endpoint_param {
+  width: 100%;
+  padding: 20px 24px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 14px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  line-height: 1.6;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  resize: vertical;
+  min-height: 140px;
+  backdrop-filter: blur(15px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+#mi_endpoint_param:focus {
+  outline: none;
+  border-color: #4dabf7;
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 0 4px rgba(77, 171, 247, 0.2);
+  transform: translateY(-2px);
+}
+
+#mi_endpoint_param:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+#mi_endpoint_param::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+  font-style: italic;
+}
+
+/* Estilos para el textarea cuando está enfocado */
+#mi_endpoint_param:focus::before {
+  content: 'JSON';
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: rgba(77, 171, 247, 0.2);
+  color: #4dabf7;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ========================================
+   BOTONES MEJORADOS
+   ======================================== */
+
+.mi-integracion-api-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 32px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  min-height: 56px;
+  position: relative;
+  overflow: hidden;
+}
+
+.mi-integracion-api-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.mi-integracion-api-button:hover::before {
+  left: 100%;
+}
+
+.mi-integracion-api-button.primary {
+  background: linear-gradient(135deg, #4dabf7 0%, #339af0 100%);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 25px rgba(77, 171, 247, 0.3);
+}
+
+.mi-integracion-api-button.primary:hover {
+  background: linear-gradient(135deg, #339af0 0%, #228be6 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(77, 171, 247, 0.4);
+}
+
+.mi-integracion-api-button.primary:active {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(77, 171, 247, 0.3);
+}
+
+.mi-integracion-api-button.secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.mi-integracion-api-button.secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+
+.mi-integracion-api-button.secondary:active {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.mi-integracion-api-button .dashicons {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  transition: transform 0.3s ease;
+}
+
+.mi-integracion-api-button:hover .dashicons {
+  transform: scale(1.1);
+}
+
+.mi-integracion-api-button.primary .dashicons {
+  color: white;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+}
+
+/* Área de feedback */
+#mi-endpoint-feedback {
+  margin-bottom: 24px;
+}
+
+/* ========================================
+   NOTIFICACIONES
+   ======================================== */
+
+.notice {
+  padding: 16px 20px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid;
+  backdrop-filter: blur(10px);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.notice-success {
+  background: rgba(81, 207, 102, 0.2);
+  color: #51cf66;
+  border-color: rgba(81, 207, 102, 0.4);
+}
+
+.notice-error {
+  background: rgba(255, 107, 107, 0.2);
+  color: #ff6b6b;
+  border-color: rgba(255, 107, 107, 0.4);
+}
+
+.notice-warning {
+  background: rgba(255, 217, 61, 0.2);
+  color: #ffd93d;
+  border-color: rgba(255, 217, 61, 0.4);
+}
+
+.notice-info {
+  background: rgba(77, 171, 247, 0.2);
+  color: #4dabf7;
+  border-color: rgba(77, 171, 247, 0.4);
+}
+
+/* ========================================
+   TABLAS
+   ======================================== */
+
+.mi-integracion-api-table-wrapper {
+  margin-top: 32px;
+}
+
+.mi-integracion-api-table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.results-title {
+  font-size: 18px;
+  color: white;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.results-title .dashicons {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.table-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.table-responsive {
+  overflow-x: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.mi-integracion-api-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.mi-integracion-api-table th {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 15px 12px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mi-integracion-api-table td {
+  padding: 12px;
+  color: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.mi-integracion-api-table tr:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Campos JSON */
+.json-field {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  white-space: pre-wrap;
+  max-height: 200px;
+  overflow-y: auto;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.json-field:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ========================================
+   DOCUMENTACIÓN DE API MEJORADA
+   ======================================== */
+
+#tab-docs {
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
+  margin-top: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+#tab-docs::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #4dabf7, #339af0, #228be6);
+  border-radius: 20px 20px 0 0;
+}
+
+.api-docs {
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  position: relative;
+  z-index: 1;
+}
+
+.api-docs-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 40px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.api-docs-header::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, #4dabf7, #339af0);
+  border-radius: 0 4px 4px 0;
+}
+
+.api-docs-header .dashicons {
+  color: #4dabf7;
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+  text-shadow: 0 0 8px rgba(77, 171, 247, 0.5);
+}
+
+.api-docs-header h3 {
+  color: white;
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.endpoints-list {
+  display: grid;
+  padding: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  gap: 28px;
+}
+
+.endpoint-doc-item {
+  backdrop-filter: blur(15px);
+  border-radius: 16px;
+  padding: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.endpoint-doc-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #4dabf7, #339af0);
+  border-radius: 16px 16px 0 0;
+}
+
+.endpoint-doc-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+  border-color: rgba(77, 171, 247, 0.3);
+}
+
+.endpoint-doc-item h4 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.endpoint-tag {
+  display: inline-block;
+  background: linear-gradient(135deg, #4dabf7, #339af0);
+  color: white;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(77, 171, 247, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.endpoint-doc-item p {
+  margin: 0 0 20px 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 15px;
+  line-height: 1.6;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.endpoint-params {
+  margin-top: 20px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.endpoint-params strong {
+  color: white;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  display: block;
+  margin-bottom: 12px;
+  font-size: 15px;
+}
+
+.endpoint-params ul {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.endpoint-params li {
+  margin-bottom: 8px;
+  line-height: 1.5;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border-left: 3px solid rgba(77, 171, 247, 0.5);
+  transition: all 0.3s ease;
+}
+
+.endpoint-params li:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-left-color: #4dabf7;
+}
+
+.endpoint-params code {
+  background: rgba(77, 171, 247, 0.2);
+  color: #4dabf7;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(77, 171, 247, 0.3);
+  box-shadow: 0 2px 4px rgba(77, 171, 247, 0.1);
+}
+
+.api-docs-footer {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+
+.api-docs-info {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.api-docs-info p {
+  margin-bottom: 16px;
+  color: rgba(255, 255, 255, 0.8);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* ========================================
+   INDICADOR DE CARGA
+   ======================================== */
+
+.endpoints-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.endpoints-loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  margin-bottom: 16px;
+  animation: endpoint-spin 1s linear infinite;
+}
+
+.endpoints-loading-text {
+  color: rgba(255, 255, 255, 0.8);
+  font-style: italic;
+  font-size: 14px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes endpoint-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ========================================
+   RESPONSIVE DESIGN MEJORADO
+   ======================================== */
+
+@media (max-width: 1200px) {
+  .mi-integracion-api-admin {
+    flex-direction: column;
+  }
+  
+  .mi-integracion-api-sidebar {
+    width: 100%;
+    position: static;
+  }
+  
+  .mi-integracion-api-nav-menu ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 8px;
+  }
+  
+  .unified-tabs {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .unified-tab-link {
+    min-width: 160px;
+    flex: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .mi-integracion-api-admin {
+    margin: -20px -10px 0 -10px;
+    padding: 10px;
+  }
+  
+  .banner-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .banner-text h1 {
+    font-size: 2rem;
+  }
+  
+  .banner-text p {
+    font-size: 1rem;
+  }
+  
+  .endpoints-list {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+  
+  .mi-integracion-api-card {
+    padding: 20px;
+  }
+  
+  .endpoint-form-container {
+    padding: 24px;
+  }
+  
+  .unified-tab-link {
+    min-width: 140px;
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+  
+  .endpoint-doc-item {
+    padding: 20px;
+  }
+  
+  .api-docs-header {
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+  
+  .api-docs-header h3 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-content {
+    padding: 20px;
+  }
+  
+  .banner-text h1 {
+    font-size: 1.8rem;
+  }
+  
+  .banner-text p {
+    font-size: 1rem;
+  }
+  
+  .unified-tabs {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .unified-tab-link {
+    min-width: auto;
+    width: 100%;
+    justify-content: flex-start;
+  }
+  
+  .endpoint-form-container {
+    padding: 16px;
+  }
+  
+  .mi-integracion-api-form-row {
+    gap: 16px;
+  }
+  
+  .endpoint-doc-item {
+    padding: 16px;
+  }
+  
+  .endpoint-params {
+    padding: 12px;
+  }
+  
+  .api-docs-header {
+    padding: 12px;
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+  }
+  
+  .api-docs-header h3 {
+    font-size: 18px;
+  }
+  
+  /* Ajustes responsive del icono de ayuda en móviles */
+  .endpoints-help {
+    bottom: 15px;
+    left: 15px;
+  }
+  
+  .endpoints-help .help-link {
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 16px;
+  }
+  
+  .endpoints-help .help-link i {
+    font-size: 14px;
+  }
+  
+  .endpoints-help .help-link span {
+    font-size: 11px;
+  }
+  
+  .mi-integracion-api-banner {
+    padding-bottom: 60px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Ajustes responsive del icono de ayuda en tablets */
+  .endpoints-help {
+    bottom: 17px;
+    left: 17px;
+  }
+  
+  .endpoints-help .help-link {
+    padding: 7px 14px;
+    font-size: 13px;
+  }
+  
+  .endpoints-help .help-link i {
+    font-size: 15px;
+  }
+  
+  .endpoints-help .help-link span {
+    font-size: 12px;
+  }
+  
+  .mi-integracion-api-banner {
+    padding-bottom: 70px;
+  }
+}

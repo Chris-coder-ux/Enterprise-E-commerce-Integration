@@ -1,0 +1,169 @@
+/* Estilos para el frontend de Mi Integración API */
+
+.mi-integracion-api-frontend {
+    font-family: var(--mi-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif);
+    line-height: var(--mi-line-height, 1.6);
+    color: var(--mi-text-color, #333);
+}
+
+.mi-integracion-api-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--mi-spacing-md, 20px);
+}
+
+.mi-integracion-api-card {
+    background: var(--mi-background-color-white, #fff);
+    border-radius: var(--mi-border-radius-md, 8px);
+    box-shadow: var(--mi-box-shadow-sm, 0 2px 4px rgba(0,0,0,0.1));
+    padding: var(--mi-spacing-md, 20px);
+    margin-bottom: var(--mi-spacing-md, 20px);
+}
+
+.mi-integracion-api-card-header {
+    border-bottom: 1px solid var(--mi-border-color-light, #eee);
+    padding-bottom: var(--mi-spacing-sm, 15px);
+    margin-bottom: var(--mi-spacing-sm, 15px);
+}
+
+.mi-integracion-api-card-header h2 {
+    margin: 0;
+    color: var(--mi-heading-color, #23282d);
+    font-size: var(--mi-font-size-lg, 20px);
+}
+
+.mi-integracion-api-form-group {
+    margin-bottom: var(--mi-spacing-sm, 15px);
+}
+
+.mi-integracion-api-form-group label {
+    display: block;
+    margin-bottom: var(--mi-spacing-xs, 5px);
+    font-weight: var(--mi-font-weight-semibold, 600);
+}
+
+.mi-integracion-api-form-group input,
+.mi-integracion-api-form-group select,
+.mi-integracion-api-form-group textarea {
+    width: 100%;
+    padding: var(--mi-spacing-xs, 8px) var(--mi-spacing-sm, 12px);
+    border: 1px solid var(--mi-border-color, #ddd);
+    border-radius: var(--mi-border-radius-sm, 4px);
+    font-size: var(--mi-font-size-sm, 14px);
+}
+
+.mi-integracion-api-form-group input:focus,
+.mi-integracion-api-form-group select:focus,
+.mi-integracion-api-form-group textarea:focus {
+    border-color: var(--mi-color-primary, #0073aa);
+    outline: none;
+    box-shadow: 0 0 2px rgba(0,115,170,0.8);
+}
+
+.mi-integracion-api-button {
+    display: inline-block;
+    padding: var(--mi-spacing-xs, 8px) var(--mi-spacing-md, 16px);
+    background: var(--mi-color-primary, #0073aa);
+    color: #fff;
+    border: none;
+    border-radius: var(--mi-border-radius-sm, 4px);
+    cursor: pointer;
+    font-size: var(--mi-font-size-sm, 14px);
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+.mi-integracion-api-button:hover {
+    background: var(--mi-color-primary-dark, #005177);
+}
+
+.mi-integracion-api-button.secondary {
+    background: #f7f7f7;
+    color: #333;
+    border: 1px solid var(--mi-border-color, #ddd);
+}
+
+.mi-integracion-api-button.secondary:hover {
+    background: #f0f0f0;
+}
+
+.mi-integracion-api-alert {
+    padding: var(--mi-spacing-sm, 12px) var(--mi-spacing-md, 15px);
+    margin: var(--mi-spacing-md, 15px) 0;
+    border-radius: var(--mi-border-radius-sm, 4px);
+    border-left: 4px solid;
+}
+
+.mi-integracion-api-alert.success {
+    background: #ecf7ed;
+    border-left-color: #46b450;
+}
+
+.mi-integracion-api-alert.error {
+    background: #fbeaea;
+    border-left-color: #dc3232;
+}
+
+.mi-integracion-api-alert.warning {
+    background: #fff8e5;
+    border-left-color: #ffb900;
+}
+
+.mi-integracion-api-alert.info {
+    background: #e5f5fa;
+    border-left-color: #00a0d2;
+}
+
+.mi-integracion-api-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--mi-spacing-md, 15px) 0;
+}
+
+.mi-integracion-api-table th,
+.mi-integracion-api-table td {
+    padding: var(--mi-spacing-sm, 12px);
+    text-align: left;
+    border-bottom: 1px solid var(--mi-border-color-light, #eee);
+}
+
+.mi-integracion-api-table th {
+    background: #f9f9f9;
+    font-weight: 600;
+}
+
+.mi-integracion-api-table tr:hover {
+    background: #f5f5f5;
+}
+
+.mi-integracion-api-loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(0,0,0,0.1);
+    border-radius: 50%;
+    border-top-color: var(--mi-color-primary, #0073aa);
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+    .mi-integracion-api-container {
+        padding: var(--mi-spacing-sm, 10px);
+    }
+
+    .mi-integracion-api-card {
+        padding: var(--mi-spacing-sm, 15px);
+    }
+
+    .mi-integracion-api-table {
+        display: block;
+        overflow-x: auto;
+    }
+}

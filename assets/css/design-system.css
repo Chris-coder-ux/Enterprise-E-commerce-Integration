@@ -1,0 +1,776 @@
+/**
+ * Design System para Mi Integración API
+ * Sistema centralizado de variables CSS y utilidades
+ * Inspirado en sistemas de diseño modernos
+ */
+
+:root {
+  /* Colores principales */
+  --mi-primary: #2563eb;
+  --mi-primary-light: #3b82f6;
+  --mi-primary-dark: #1d4ed8;
+  --mi-secondary: #64748b;
+  --mi-secondary-light: #94a3b8;
+  --mi-secondary-dark: #475569;
+  
+  /* Colores para estados */
+  --mi-success: #22c55e;
+  --mi-success-light: #4ade80;
+  --mi-success-dark: #16a34a;
+  --mi-warning: #f59e0b;
+  --mi-warning-light: #fbbf24;
+  --mi-warning-dark: #d97706;
+  --mi-error: #ef4444;
+  --mi-error-light: #f87171;
+  --mi-error-dark: #dc2626;
+  --mi-info: #3b82f6;
+  --mi-info-light: #60a5fa;
+  --mi-info-dark: #2563eb;
+  
+  /* Grises y neutrales */
+  --mi-gray-50: #f8fafc;
+  --mi-gray-100: #f1f5f9;
+  --mi-gray-200: #e2e8f0;
+  --mi-gray-300: #cbd5e1;
+  --mi-gray-400: #94a3b8;
+  --mi-gray-500: #64748b;
+  --mi-gray-600: #475569;
+  --mi-gray-700: #334155;
+  --mi-gray-800: #1e293b;
+  --mi-gray-900: #0f172a;
+  
+  /* Fondos y superficies */
+  --mi-background: #f8fafc;
+  --mi-surface: #ffffff;
+  --mi-surface-hover: #f8fafc;
+  
+  /* Tipografía */
+  --mi-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --mi-font-size-xs: 0.75rem;   /* 12px */
+  --mi-font-size-sm: 0.875rem;  /* 14px */
+  --mi-font-size-base: 1rem;    /* 16px */
+  --mi-font-size-md: 1.125rem;  /* 18px */
+  --mi-font-size-lg: 1.25rem;   /* 20px */
+  --mi-font-size-xl: 1.5rem;    /* 24px */
+  --mi-font-size-2xl: 1.875rem; /* 30px */
+  
+  /* Espaciado */
+  --mi-spacing-2: 0.5rem;   /* 8px */
+  --mi-spacing-3: 0.75rem;  /* 12px */
+  --mi-spacing-4: 1rem;     /* 16px */
+  --mi-spacing-5: 1.25rem;  /* 20px */
+  --mi-spacing-6: 1.5rem;   /* 24px */
+  --mi-spacing-8: 2rem;     /* 32px */
+  --mi-spacing-10: 2.5rem;  /* 40px */
+  --mi-spacing-12: 3rem;    /* 48px */
+  
+  /* Bordes y radios */
+  --mi-border-color: var(--mi-gray-200);
+  --mi-radius-sm: 0.375rem; /* 6px */
+  --mi-radius-md: 0.5rem;   /* 8px */
+  --mi-radius-lg: 0.75rem;  /* 12px */
+  --mi-radius-xl: 1rem;     /* 16px */
+  --mi-radius-full: 9999px;
+  
+  /* Sombras */
+  --mi-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --mi-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --mi-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --mi-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --mi-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  /* Transiciones */
+  --mi-transition-fast: 150ms;
+  --mi-transition: 200ms;
+  --mi-transition-slow: 300ms;
+  --mi-easing: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Variables de retrocompatibilidad - Dashboard */
+  --dashboard-primary: var(--mi-primary);
+  --dashboard-primary-light: var(--mi-primary-light);
+  --dashboard-success: var(--mi-success);
+  --dashboard-warning: var(--mi-warning);
+  --dashboard-error: var(--mi-error);
+  --dashboard-gray-50: var(--mi-gray-50);
+  --dashboard-gray-100: var(--mi-gray-100);
+  --dashboard-gray-200: var(--mi-gray-200);
+  --dashboard-gray-300: var(--mi-gray-300);
+  --dashboard-gray-600: var(--mi-gray-600);
+  --dashboard-gray-700: var(--mi-gray-700);
+  --dashboard-gray-900: var(--mi-gray-900);
+  
+/* Logo y branding */
+--mi-logo-url: url('../images/logo.png');
+--mi-logo-url-svg: url('../images/logo.svg');
+--mi-logo-size: 32px;
+--mi-logo-size-small: 16px;
+--mi-logo-size-large: 64px;
+
+/* Estilos para el logo */
+.mi-integracion-api-logo {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.mi-integracion-api-logo-header {
+  margin-right: var(--mi-spacing-4);
+  float: left;
+}
+
+.mi-integracion-api-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--mi-spacing-6);
+}
+
+.mi-integracion-api-header h1 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Logo en el menú de WordPress */
+#adminmenu .toplevel_page_mi-integracion-api .wp-menu-image img {
+  width: 20px;
+  height: 20px;
+  padding: 6px 0;
+}
+  --dashboard-shadow: var(--mi-shadow);
+  --dashboard-shadow-lg: var(--mi-shadow-lg);
+  --dashboard-radius: var(--mi-radius-lg);
+  --dashboard-radius-lg: var(--mi-radius-xl);
+  
+  /* Variables de retrocompatibilidad - Admin */
+  --primary-color: var(--mi-primary);
+  --primary-hover: var(--mi-primary-dark);
+  --secondary-color: var(--mi-secondary);
+  --success-color: var(--mi-success);
+  --error-color: var(--mi-error);
+  --warning-color: var(--mi-warning);
+  --background-color: var(--mi-background);
+  --card-background: var(--mi-surface);
+  --border-color: var(--mi-border-color);
+  --text-primary: var(--mi-gray-900);
+  --text-secondary: var(--mi-gray-600);
+  --shadow-sm: var(--mi-shadow-sm);
+  --shadow-md: var(--mi-shadow-md);
+  --radius-sm: var(--mi-radius-sm);
+  --radius-md: var(--mi-radius-md);
+  --spacing-xs: var(--mi-spacing-2);
+  --spacing-sm: var(--mi-spacing-3);
+  --spacing-md: var(--mi-spacing-4);
+  --spacing-lg: var(--mi-spacing-6);
+  --spacing-xl: var(--mi-spacing-8);
+}
+
+/* Modo oscuro - deshabilitado temporalmente para forzar tema claro */
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --mi-background: #ffffff;
+    --mi-surface: #ffffff;
+    --mi-surface-hover: #334155;
+    --mi-border-color: #334155;
+  }
+} */
+
+/* Clases de utilidad para márgenes */
+/* Utilidades de espaciado */
+.mi-m-0 { margin: 0; }
+.mi-m-2 { margin: var(--mi-spacing-2); }
+.mi-m-4 { margin: var(--mi-spacing-4); }
+.mi-m-6 { margin: var(--mi-spacing-6); }
+
+.mi-mt-0 { margin-top: 0; }
+.mi-mt-2 { margin-top: var(--mi-spacing-2); }
+.mi-mt-4 { margin-top: var(--mi-spacing-4); }
+.mi-mt-6 { margin-top: var(--mi-spacing-6); }
+
+.mi-mr-0 { margin-right: 0; }
+.mi-mr-2 { margin-right: var(--mi-spacing-2); }
+.mi-mr-4 { margin-right: var(--mi-spacing-4); }
+.mi-mr-6 { margin-right: var(--mi-spacing-6); }
+
+.mi-mb-0 { margin-bottom: 0; }
+.mi-mb-2 { margin-bottom: var(--mi-spacing-2); }
+.mi-mb-4 { margin-bottom: var(--mi-spacing-4); }
+.mi-mb-6 { margin-bottom: var(--mi-spacing-6); }
+
+.mi-ml-0 { margin-left: 0; }
+.mi-ml-2 { margin-left: var(--mi-spacing-2); }
+.mi-ml-4 { margin-left: var(--mi-spacing-4); }
+.mi-ml-6 { margin-left: var(--mi-spacing-6); }
+
+.mi-mx-auto { margin-left: auto; margin-right: auto; }
+.mi-my-2 { margin-top: var(--mi-spacing-2); margin-bottom: var(--mi-spacing-2); }
+.mi-my-4 { margin-top: var(--mi-spacing-4); margin-bottom: var(--mi-spacing-4); }
+
+.mi-p-0 { padding: 0; }
+.mi-p-2 { padding: var(--mi-spacing-2); }
+.mi-p-4 { padding: var(--mi-spacing-4); }
+.mi-p-6 { padding: var(--mi-spacing-6); }
+
+.mi-pt-0 { padding-top: 0; }
+.mi-pt-2 { padding-top: var(--mi-spacing-2); }
+.mi-pt-4 { padding-top: var(--mi-spacing-4); }
+.mi-pt-6 { padding-top: var(--mi-spacing-6); }
+
+.mi-pr-0 { padding-right: 0; }
+.mi-pr-2 { padding-right: var(--mi-spacing-2); }
+.mi-pr-4 { padding-right: var(--mi-spacing-4); }
+.mi-pr-6 { padding-right: var(--mi-spacing-6); }
+
+.mi-pb-0 { padding-bottom: 0; }
+.mi-pb-2 { padding-bottom: var(--mi-spacing-2); }
+.mi-pb-4 { padding-bottom: var(--mi-spacing-4); }
+.mi-pb-6 { padding-bottom: var(--mi-spacing-6); }
+
+.mi-pl-0 { padding-left: 0; }
+.mi-pl-2 { padding-left: var(--mi-spacing-2); }
+.mi-pl-4 { padding-left: var(--mi-spacing-4); }
+.mi-pl-6 { padding-left: var(--mi-spacing-6); }
+
+.mi-px-2 { padding-left: var(--mi-spacing-2); padding-right: var(--mi-spacing-2); }
+.mi-px-4 { padding-left: var(--mi-spacing-4); padding-right: var(--mi-spacing-4); }
+.mi-py-2 { padding-top: var(--mi-spacing-2); padding-bottom: var(--mi-spacing-2); }
+.mi-py-4 { padding-top: var(--mi-spacing-4); padding-bottom: var(--mi-spacing-4); }
+.mi-mb-4 { margin-bottom: var(--mi-spacing-4); }
+.mi-mb-6 { margin-bottom: var(--mi-spacing-6); }
+.mi-mb-8 { margin-bottom: var(--mi-spacing-8); }
+.mi-mt-2 { margin-top: var(--mi-spacing-2); }
+.mi-mt-4 { margin-top: var(--mi-spacing-4); }
+.mi-mt-6 { margin-top: var(--mi-spacing-6); }
+.mi-mt-8 { margin-top: var(--mi-spacing-8); }
+.mi-mx-auto { margin-left: auto; margin-right: auto; }
+
+/* Clases de utilidad para relleno (padding) */
+.mi-p-2 { padding: var(--mi-spacing-2); }
+.mi-p-4 { padding: var(--mi-spacing-4); }
+.mi-p-6 { padding: var(--mi-spacing-6); }
+.mi-p-8 { padding: var(--mi-spacing-8); }
+.mi-px-4 { padding-left: var(--mi-spacing-4); padding-right: var(--mi-spacing-4); }
+.mi-py-2 { padding-top: var(--mi-spacing-2); padding-bottom: var(--mi-spacing-2); }
+.mi-py-4 { padding-top: var(--mi-spacing-4); padding-bottom: var(--mi-spacing-4); }
+
+/* Utilidades de flexbox */
+.mi-flex { display: flex; }
+.mi-flex-col { flex-direction: column; }
+.mi-items-center { align-items: center; }
+.mi-justify-between { justify-content: space-between; }
+.mi-justify-center { justify-content: center; }
+.mi-flex-wrap { flex-wrap: wrap; }
+.mi-gap-2 { gap: var(--mi-spacing-2); }
+.mi-gap-4 { gap: var(--mi-spacing-4); }
+
+/* Utilidades de grid */
+.mi-grid { display: grid; }
+.mi-grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
+.mi-grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+.mi-grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+.mi-gap-x-2 { column-gap: var(--mi-spacing-2); }
+.mi-gap-y-2 { row-gap: var(--mi-spacing-2); }
+
+/* Contenedores y cards */
+.mi-container {
+  width: 100%;
+  padding-left: var(--mi-spacing-4);
+  padding-right: var(--mi-spacing-4);
+}
+
+.mi-card {
+  background-color: var(--mi-surface);
+  border-radius: var(--mi-radius-md);
+  box-shadow: var(--mi-shadow);
+  padding: var(--mi-spacing-4);
+  border: 1px solid var(--mi-border-color);
+  transition: box-shadow var(--mi-transition) var(--mi-easing);
+}
+
+.mi-card:hover {
+  box-shadow: var(--mi-shadow-md);
+}
+
+.mi-card-header {
+  padding-bottom: var(--mi-spacing-3);
+  border-bottom: 1px solid var(--mi-border-color);
+  margin-bottom: var(--mi-spacing-4);
+}
+
+.mi-card-title {
+  font-size: var(--mi-font-size-lg);
+  font-weight: 600;
+  color: var(--mi-gray-900);
+  margin: 0 0 var(--mi-spacing-2) 0;
+}
+
+.mi-card-subtitle {
+  font-size: var(--mi-font-size-sm);
+  color: var(--mi-gray-600);
+  margin: 0;
+}
+
+.mi-card-body {
+  margin-bottom: var(--mi-spacing-4);
+}
+
+.mi-card-footer {
+  border-top: 1px solid var(--mi-border-color);
+  padding-top: var(--mi-spacing-3);
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Botones */
+.mi-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 1px solid transparent;
+  padding: 0.5rem 1rem;
+  font-size: var(--mi-font-size-sm);
+  line-height: 1.5;
+  border-radius: var(--mi-radius-md);
+  transition: all var(--mi-transition) var(--mi-easing);
+  gap: 0.5rem;
+}
+
+.mi-btn:disabled {
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+.mi-btn-primary {
+  color: white;
+  background-color: var(--mi-primary);
+  border-color: var(--mi-primary);
+}
+
+.mi-btn-primary:hover, .mi-btn-primary:focus {
+  background-color: var(--mi-primary-dark);
+  border-color: var(--mi-primary-dark);
+  transform: translateY(-1px);
+}
+
+.mi-btn-secondary {
+  color: var(--mi-gray-700);
+  background-color: white;
+  border-color: var(--mi-gray-300);
+}
+
+.mi-btn-secondary:hover, .mi-btn-secondary:focus {
+  background-color: var(--mi-gray-50);
+  border-color: var(--mi-gray-400);
+}
+
+.mi-btn-success {
+  color: white;
+  background-color: var(--mi-success);
+  border-color: var(--mi-success);
+}
+
+.mi-btn-success:hover, .mi-btn-success:focus {
+  background-color: var(--mi-success-dark);
+  border-color: var(--mi-success-dark);
+}
+
+.mi-btn-danger {
+  color: white;
+  background-color: var(--mi-error);
+  border-color: var(--mi-error);
+}
+
+.mi-btn-danger:hover, .mi-btn-danger:focus {
+  background-color: var(--mi-error-dark);
+  border-color: var(--mi-error-dark);
+}
+
+.mi-btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+}
+
+.mi-btn-lg {
+  padding: 0.75rem 1.5rem;
+  font-size: var(--mi-font-size-base);
+}
+
+/* Tablas mejoradas */
+.mi-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.mi-table th, .mi-table td {
+  padding: var(--mi-spacing-3);
+  text-align: left;
+  border-bottom: 1px solid var(--mi-gray-200);
+}
+
+.mi-table th {
+  background-color: var(--mi-gray-50);
+  font-weight: 600;
+  color: var(--mi-gray-700);
+}
+
+.mi-table tbody tr:hover {
+  background-color: var(--mi-gray-50);
+}
+
+/* Formularios mejorados */
+.mi-form-group {
+  margin-bottom: var(--mi-spacing-4);
+}
+
+.mi-form-label {
+  display: block;
+  margin-bottom: var(--mi-spacing-2);
+  font-weight: 500;
+  color: var(--mi-gray-700);
+}
+
+.mi-form-control {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: var(--mi-font-size-base);
+  line-height: 1.5;
+  color: var(--mi-gray-700);
+  background-color: white;
+  background-clip: padding-box;
+  border: 1px solid var(--mi-gray-300);
+  border-radius: var(--mi-radius-md);
+  transition: border-color var(--mi-transition) ease-in-out, box-shadow var(--mi-transition) ease-in-out;
+}
+
+.mi-form-control:focus {
+  border-color: var(--mi-primary-light);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  outline: none;
+}
+
+.mi-form-text {
+  margin-top: var(--mi-spacing-2);
+  font-size: var(--mi-font-size-xs);
+  color: var(--mi-gray-600);
+}
+
+.mi-form-select {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 2rem 0.5rem 0.75rem;
+  font-size: var(--mi-font-size-base);
+  line-height: 1.5;
+  color: var(--mi-gray-700);
+  background-color: white;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 12px;
+  border: 1px solid var(--mi-gray-300);
+  border-radius: var(--mi-radius-md);
+  appearance: none;
+}
+
+.mi-form-select:focus {
+  border-color: var(--mi-primary-light);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  outline: none;
+}
+
+.mi-form-check {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--mi-spacing-2);
+}
+
+.mi-form-check-input {
+  margin-right: var(--mi-spacing-2);
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Badges */
+.mi-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: var(--mi-radius-full);
+}
+
+.mi-badge-primary {
+  color: white;
+  background-color: var(--mi-primary);
+}
+
+.mi-badge-secondary {
+  color: var(--mi-gray-700);
+  background-color: var(--mi-gray-200);
+}
+
+.mi-badge-success {
+  color: white;
+  background-color: var(--mi-success);
+}
+
+.mi-badge-warning {
+  color: var(--mi-gray-900);
+  background-color: var(--mi-warning);
+}
+
+.mi-badge-error {
+  color: white;
+  background-color: var(--mi-error);
+}
+
+/* Alertas y banners */
+.mi-alert {
+  position: relative;
+  padding: var(--mi-spacing-3) var(--mi-spacing-4);
+  margin-bottom: var(--mi-spacing-4);
+  border: 1px solid transparent;
+  border-radius: var(--mi-radius-md);
+  font-size: var(--mi-font-size-sm);
+}
+
+.mi-alert-success {
+  color: var(--mi-success-dark);
+  background-color: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.2);
+}
+
+.mi-alert-info {
+  color: var(--mi-info-dark);
+  background-color: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+.mi-alert-warning {
+  color: var(--mi-warning-dark);
+  background-color: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.2);
+}
+
+.mi-alert-error {
+  color: var(--mi-error-dark);
+  background-color: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.mi-alert-title {
+  margin-top: 0;
+  margin-bottom: var(--mi-spacing-2);
+  font-weight: 600;
+}
+
+/* Loaders y spinners */
+.mi-loader {
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-left-color: var(--mi-primary);
+  border-radius: 50%;
+  animation: mi-spin 1s linear infinite;
+}
+
+.mi-loader-sm {
+  width: 1rem;
+  height: 1rem;
+  border-width: 2px;
+}
+
+.mi-loader-lg {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-width: 3px;
+}
+
+@keyframes mi-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Utilidades de visibilidad y display */
+.mi-hidden { display: none; }
+.mi-block { display: block; }
+.mi-inline-block { display: inline-block; }
+.mi-invisible { visibility: hidden; }
+
+/* Utilidades de tamaño */
+.mi-w-full { width: 100%; }
+.mi-w-auto { width: auto; }
+.mi-h-full { height: 100%; }
+.mi-h-auto { height: auto; }
+
+/* Utilidades de texto */
+.mi-text-center { text-align: center; }
+.mi-text-left { text-align: left; }
+.mi-text-right { text-align: right; }
+.mi-text-primary { color: var(--mi-primary); }
+.mi-text-success { color: var(--mi-success); }
+.mi-text-warning { color: var(--mi-warning); }
+.mi-text-error { color: var(--mi-error); }
+.mi-text-muted { color: var(--mi-gray-600); }
+.mi-text-sm { font-size: var(--mi-font-size-sm); }
+.mi-text-base { font-size: var(--mi-font-size-base); }
+.mi-text-lg { font-size: var(--mi-font-size-lg); }
+.mi-text-xl { font-size: var(--mi-font-size-xl); }
+.mi-font-bold { font-weight: 700; }
+.mi-font-semibold { font-weight: 600; }
+.mi-font-medium { font-weight: 500; }
+.mi-font-normal { font-weight: 400; }
+
+/* Tooltips */
+.mi-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.mi-tooltip-text {
+  visibility: hidden;
+  width: 200px;
+  background-color: var(--mi-gray-800);
+  color: white;
+  text-align: center;
+  border-radius: var(--mi-radius-md);
+  padding: var(--mi-spacing-2);
+  position: absolute;
+  z-index: 1000;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity var(--mi-transition) var(--mi-easing);
+  font-size: var(--mi-font-size-xs);
+  pointer-events: none;
+}
+
+.mi-tooltip:hover .mi-tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Notificaciones Toast */
+.mi-toast-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 350px;
+}
+
+.mi-toast {
+  background-color: white;
+  color: var(--mi-gray-700);
+  border-radius: var(--mi-radius-md);
+  padding: var(--mi-spacing-3) var(--mi-spacing-4);
+  box-shadow: var(--mi-shadow-lg);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--mi-spacing-3);
+  animation: mi-slide-in-right 0.3s forwards;
+}
+
+.mi-toast.mi-hide {
+  animation: mi-slide-out-right 0.3s forwards;
+}
+
+.mi-toast-success {
+  border-left: 4px solid var(--mi-success);
+}
+
+.mi-toast-error {
+  border-left: 4px solid var(--mi-error);
+}
+
+.mi-toast-warning {
+  border-left: 4px solid var(--mi-warning);
+}
+
+.mi-toast-info {
+  border-left: 4px solid var(--mi-info);
+}
+
+.mi-toast-icon {
+  flex-shrink: 0;
+}
+
+.mi-toast-content {
+  flex: 1;
+}
+
+.mi-toast-title {
+  font-weight: 600;
+  margin-bottom: var(--mi-spacing-2);
+}
+
+.mi-toast-message {
+  font-size: var(--mi-font-size-sm);
+}
+
+.mi-toast-close {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--mi-gray-500);
+  font-size: var(--mi-font-size-lg);
+  line-height: 1;
+  transition: color var(--mi-transition) var(--mi-easing);
+}
+
+.mi-toast-close:hover {
+  color: var(--mi-gray-700);
+}
+
+@keyframes mi-slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes mi-slide-out-right {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Media queries para responsive */
+@media (max-width: 768px) {
+  .mi-grid-cols-2,
+  .mi-grid-cols-3 {
+    grid-template-columns: 1fr;
+  }
+  
+  .mi-toast-container {
+    right: 0;
+    left: 0;
+    align-items: center;
+  }
+  
+  .mi-toast {
+    width: 90%;
+  }
+}

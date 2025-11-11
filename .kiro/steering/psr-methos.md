@@ -1,0 +1,41 @@
+---
+inclusion: always
+---
+
+# Métodos PSR Requeridos
+
+## PSR-3 Logger Interface
+Cuando crees una clase Logger, debe implementar estos métodos:
+
+```php
+public function emergency(string $message, array $context = []): void;
+public function alert(string $message, array $context = []): void;
+public function critical(string $message, array $context = []): void;
+public function error(string $message, array $context = []): void;
+public function warning(string $message, array $context = []): void;
+public function notice(string $message, array $context = []): void;
+public function info(string $message, array $context = []): void;
+public function debug(string $message, array $context = []): void;
+public function log($level, string $message, array $context = []): void;
+```
+
+## PSR-11 Container Interface
+Cuando crees una clase Container, debe implementar estos métodos:
+
+```php
+public function get(string $id): mixed;
+public function has(string $id): bool;
+```
+## PSR-16 Simple Cache
+Cuando crees una clase Simple Cache, debe implementar estos métodos:
+
+```php
+public function get(string $key, mixed $default = null): mixed;
+public function set(string $key, mixed $value, null|int|\DateInterval $ttl = null): bool;
+public function delete(string $key): bool;
+public function clear(): bool;
+public function getMultiple(iterable $keys, mixed $default = null): iterable;
+public function setMultiple(iterable $values, null|int|\DateInterval $ttl = null): bool;
+public function deleteMultiple(iterable $keys): bool;
+public function has(string $key): bool;
+```

@@ -1,0 +1,9 @@
+# Bloquear acceso directo a archivos de caché
+Order Deny,Allow
+Deny from all
+
+# Permitir solo acceso desde WordPress
+<Files "*.php">
+    Allow from 127.0.0.1
+    Allow from ::1
+</Files>

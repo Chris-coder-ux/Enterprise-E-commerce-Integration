@@ -1,0 +1,41 @@
+/* Archivo CSS para Mi Integración API - Reporte de Compatibilidad */
+
+.mi-integracion-api-compatibility {
+  background: var(--mi-background-color-light, #f8f9fa);
+  padding: var(--mi-spacing-lg, 24px);
+  border-radius: var(--mi-border-radius-md, 6px);
+  margin-bottom: var(--mi-spacing-lg, 24px);
+}
+
+.mi-integracion-api-compatibility .compat-card {
+  background: var(--mi-background-color-white, #fff);
+  border-radius: var(--mi-border-radius-md, 6px);
+  box-shadow: var(--mi-box-shadow-sm, 0 2px 8px rgba(0,0,0,0.04));
+  padding: var(--mi-spacing-md, 18px) var(--mi-spacing-sm, 16px);
+  margin-bottom: var(--mi-spacing-md, 18px);
+}
+
+.mi-integracion-api-compatibility .compat-status-ok {
+  color: var(--mi-color-success, #217a00);
+  font-weight: var(--mi-font-weight-bold, bold);
+}
+.mi-integracion-api-compatibility .compat-status-error {
+  color: var(--mi-color-danger, #b30000);
+  font-weight: var(--mi-font-weight-bold, bold);
+}
+
+.mi-integracion-api-compatibility table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--mi-background-color-white, #fff);
+  margin-top: var(--mi-spacing-md, 18px);
+}
+.mi-integracion-api-compatibility th, .mi-integracion-api-compatibility td {
+  border: 1px solid var(--mi-border-color, #e1e1e1);
+  padding: var(--mi-spacing-xs, 8px) var(--mi-spacing-sm, 10px);
+  text-align: left;
+}
+.mi-integracion-api-compatibility th {
+  background: var(--mi-background-color-gray-light, #f0f0f0);
+  font-weight: var(--mi-font-weight-semibold, 600);
+}

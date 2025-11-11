@@ -1,0 +1,128 @@
+{
+    "name": "verial/mi-integracion-api",
+    "description": "Enterprise E-commerce Integration - Professional ERP integration suite for WooCommerce",
+    "version": "2.0.0",
+    "type": "wordpress-plugin",
+    "license": "proprietary",
+    "require": {
+        "php": ">=8.1",
+        "ext-curl": "*",
+        "ext-zlib": "*",
+        "eftec/bladeone": "^4.18",
+        "gettext/gettext": "^5.7",
+        "marc-mabe/php-enum": "^4.7.1",
+        "mck89/peast": "^1.17",
+        "psr/container": "^2.0",
+        "psr/log": "^3.0"
+    },
+    "suggest": {
+        "ext-lz4": "Para compresión LZ4 (opcional, fallback a gzip si no está disponible)",
+        "ext-zstd": "Para compresión Zstandard (opcional, fallback a gzip si no está disponible)"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/",
+            "Vendor\\Package\\": "src/",
+            "MiIntegracionApi\\": "includes/",
+            "MiIntegracionApi\\Core\\": "includes/Core/",
+            "MiIntegracionApi\\Admin\\": "includes/Admin/",
+            "MiIntegracionApi\\WooCommerce\\": "includes/WooCommerce/",
+            "MiIntegracionApi\\Helpers\\": "includes/Helpers/",
+            "MiIntegracionApi\\Cache\\": "includes/Cache/",
+            "MiIntegracionApi\\Sync\\": "includes/Sync/",
+            "MiIntegracionApi\\Deteccion\\": "includes/Deteccion/",
+            "MiIntegracionApi\\Hooks\\": "includes/Hooks/",
+            "MiIntegracionApi\\DTOs\\": "includes/DTOs/",
+            "MiIntegracionApi\\Endpoints\\": "includes/Endpoints/",
+            "MiIntegracionApi\\Traits\\": "includes/Traits/",
+            "MiIntegracionApi\\Compatibility\\": "includes/Compatibility/",
+            "MiIntegracionApi\\Services\\": "includes/Services/",
+            "MiIntegracionApi\\SSL\\": "includes/SSL/",
+            "MiIntegracionApi\\Tools\\": "includes/Tools/",
+            "MiIntegracionApi\\Improvements\\": "includes/Improvements/",
+            "MiIntegracionApi\\Constants\\": "includes/Constants/",
+            "MiIntegracionApi\\Logging\\": "includes/Logging/",
+            "MiIntegracionApi\\ErrorHandling\\": "includes/ErrorHandling/",
+            "MiIntegracionApi\\Config\\": "includes/Config/"
+        },
+        "files": [
+            "includes/functions.php",
+            "includes/Helpers/TransientCompatibility.php",
+            "verialconfig.php"
+        ],
+        "classmap": [
+            "includes/Admin/",
+            "includes/WooCommerce/",
+            "includes/Helpers/",
+            "includes/Cache/",
+            "includes/Core/",
+            "includes/Sync/",
+            "includes/Deteccion/",
+            "includes/Hooks/",
+            "includes/DTOs/",
+            "includes/Endpoints/",
+            "includes/Traits/",
+            "includes/Compatibility/",
+            "includes/SSL/",
+            "includes/Services/",
+            "includes/Tools/",
+            "includes/Improvements/",
+            "includes/Constants/",
+            "includes/Config/"
+        ],
+        "exclude-from-classmap": [
+            "includes/Core/ApiConnector_Improved_Test.php",
+            "**/tests/",
+            "**/test/",
+            "**/legacy/",
+            "**/Legacy/",
+            "**/*test*.php",
+            "test_*.php",
+            "test-*.php",
+            "**/analisis-*.php",
+            "**/test-*.php",
+            "**/audit-*.php"
+        ]
+    },
+    "require-dev": {
+        "php-stubs/woocommerce-stubs": "^9.8",
+        "php-stubs/wordpress-stubs": "^6.8",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan": "^1.10",
+        "phpunit/phpunit": "^9.5",
+        "squizlabs/php_codesniffer": "^3.7",
+        "szepeviktor/phpstan-wordpress": "^1.3",
+        "vimeo/psalm": "^6.13",
+        "wp-coding-standards/wpcs": "^3.0"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "apcu-autoloader": true,
+        "classmap-authoritative": true,
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "phpcs": "phpcs --standard=phpcs-ruleset.xml",
+        "phpcbf": "phpcbf --standard=phpcs-ruleset.xml",
+        "phpstan": "phpstan analyse -c phpstan.neon",
+        "build": "bash ./build-plugin-fixed-v2.sh",
+        "build:light": "bash ./build-plugin-lightweight.sh",
+        "build:legacy": "bash ./build-plugin-fixed.sh",
+        "strict:check": "bash ./scripts/strict_types_check.sh"
+    },
+    "extra": {
+        "wordpress-plugin": {
+            "features": [
+                "categorias-verial-nombres-reales",
+                "mapeo-categorias-jerarquico",
+                "actualizacion-categorias-automatica",
+                "soporte-multi-categoria"
+            ]
+        }
+    }
+}

@@ -1,0 +1,7 @@
+# Archivos de caché
+*.cache
+*.tmp
+*.log
+!*.htaccess
+!index.php
+!.gitignore

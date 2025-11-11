@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Endpoints - Mi Integración API</title>
+    <link rel="stylesheet" href="manual-usuario.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="manual-container">
+        <!-- Header -->
+        <header class="manual-header">
+            <div class="header-content">
+                <h1><i class="fas fa-network-wired"></i> Manual de Endpoints</h1>
+                <div class="version-info">Versión 2.0.0</div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="manual-nav">
+            <div class="nav-content">
+                <h3><i class="fas fa-list"></i> Índice</h3>
+                <ul class="nav-list">
+                    <li><a href="#introduccion"><i class="fas fa-info-circle"></i> Introducción</a></li>
+                    <li><a href="#que-son-endpoints"><i class="fas fa-question-circle"></i> ¿Qué son los Endpoints?</a></li>
+                    <li><a href="#funcionalidades"><i class="fas fa-star"></i> Funcionalidades</a></li>
+                    <li><a href="#usar-pruebas"><i class="fas fa-play"></i> Cómo Usar las Pruebas</a></li>
+                    <li><a href="#endpoints-disponibles"><i class="fas fa-list"></i> Endpoints Disponibles</a></li>
+                    <li><a href="#formato-json"><i class="fas fa-code"></i> Formato JSON</a></li>
+                    <li><a href="#interpretar-resultados"><i class="fas fa-eye"></i> Interpretar Resultados</a></li>
+                    <li><a href="#pestaña-documentacion"><i class="fas fa-book"></i> Pestaña Documentación</a></li>
+                    <li><a href="#copiar-resultados"><i class="fas fa-copy"></i> Copiar Resultados</a></li>
+                    <li><a href="#solucion-problemas"><i class="fas fa-tools"></i> Solución de Problemas</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="manual-content">
+            <!-- Introducción -->
+            <section id="introduccion" class="manual-section">
+                <h2><i class="fas fa-info-circle"></i> Introducción</h2>
+                <p>El <strong>Sistema de Pruebas de Endpoints</strong> es una herramienta completa para probar las operaciones POST del servicio web Verial directamente desde tu panel de administración de WordPress.</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <i class="fas fa-flask"></i>
+                        <h3>Pruebas en Tiempo Real</h3>
+                        <p>Prueba endpoints POST de Verial sin salir de WordPress</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-code"></i>
+                        <h3>Editor JSON Integrado</h3>
+                        <p>Editor de JSON con validación en tiempo real</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-table"></i>
+                        <h3>Resultados Formateados</h3>
+                        <p>Visualiza respuestas en formato tabla legible</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-book"></i>
+                        <h3>Documentación Integrada</h3>
+                        <p>Acceso rápido a la documentación de cada endpoint</p>
+                    </div>
+                </div>
+
+                <div class="characteristics-box">
+                    <h3><i class="fas fa-star"></i> Características Principales</h3>
+                    <ul class="characteristics-list">
+                        <li><strong>Interfaz Intuitiva:</strong> Diseño moderno con glassmorphism y animaciones fluidas</li>
+                        <li><strong>Validación Automática:</strong> Detecta errores de formato JSON antes de enviar</li>
+                        <li><strong>Respuestas Estructuradas:</strong> Visualiza respuestas en formato tabla legible</li>
+                        <li><strong>Copiar al Portapapeles:</strong> Exporta resultados con un solo clic</li>
+                        <li><strong>Documentación Completa:</strong> Acceso a parámetros y ejemplos de cada endpoint</li>
+                        <li><strong>Indicadores Visuales:</strong> Estados de carga y resultados claros</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- ¿Qué son los Endpoints? -->
+            <section id="que-son-endpoints" class="manual-section">
+                <h2><i class="fas fa-question-circle"></i> ¿Qué son los Endpoints?</h2>
+                
+                <div class="info-box">
+                    <h3><i class="fas fa-lightbulb"></i> Concepto</h3>
+                    <p>Los <strong>endpoints</strong> son puntos de acceso específicos de la API de Verial que permiten realizar operaciones sobre datos (clientes, pedidos, productos, etc.).</p>
+                    <p>En esta herramienta, puedes probar <strong>operaciones POST</strong>, que son aquellas que envían datos al servidor Verial para crear o actualizar información.</p>
+                </div>
+
+                <div class="process-steps">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3><i class="fas fa-plug"></i> Conexión</h3>
+                        <p>El sistema se conecta a la API de Verial usando las credenciales configuradas.</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3><i class="fas fa-paper-plane"></i> Envío</h3>
+                        <p>Envía los datos JSON al endpoint seleccionado mediante una petición POST.</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3><i class="fas fa-server"></i> Procesamiento</h3>
+                        <p>Verial procesa la petición y ejecuta la operación solicitada.</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <h3><i class="fas fa-chart-bar"></i> Respuesta</h3>
+                        <p>El sistema muestra los resultados en formato tabla legible.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Funcionalidades -->
+            <section id="funcionalidades" class="manual-section">
+                <h2><i class="fas fa-star"></i> Funcionalidades</h2>
+                
+                <div class="functionality-grid">
+                    <div class="functionality-card">
+                        <h3><i class="fas fa-list-alt"></i> Selector de Endpoints</h3>
+                        <p>Selecciona el endpoint que deseas probar de una lista predefinida:</p>
+                        <ul>
+                            <li><strong>Crear Pedido:</strong> Envía un nuevo pedido a Verial</li>
+                            <li><strong>Actualizar Stock:</strong> Modifica el stock de productos</li>
+                            <li><strong>Registrar Cliente:</strong> Crea o actualiza clientes</li>
+                            <li><strong>Actualizar Precios:</strong> Actualiza precios de productos</li>
+                            <li><strong>Crear Artículo:</strong> Da de alta un nuevo producto</li>
+                        </ul>
+                    </div>
+
+                    <div class="functionality-card">
+                        <h3><i class="fas fa-edit"></i> Editor de Parámetros JSON</h3>
+                        <p>Editor de texto multilínea para escribir los parámetros en formato JSON:</p>
+                        <ul>
+                            <li>Valida el formato JSON antes de enviar</li>
+                            <li>Resalta errores de sintaxis</li>
+                            <li>Sugiere estructura básica según el endpoint</li>
+                        </ul>
+                    </div>
+
+                    <div class="functionality-card">
+                        <h3><i class="fas fa-paper-plane"></i> Botón de Prueba</h3>
+                        <p>Envía la petición POST al endpoint seleccionado:</p>
+                        <ul>
+                            <li>Muestra indicador de carga durante el proceso</li>
+                            <li>Gestiona errores de forma visual</li>
+                            <li>Confirma éxito de la operación</li>
+                        </ul>
+                    </div>
+
+                    <div class="functionality-card">
+                        <h3><i class="fas fa-table"></i> Visualización de Resultados</h3>
+                        <p>Muestra los resultados de la petición en formato tabla:</p>
+                        <ul>
+                            <li>Campo y valor por fila</li>
+                            <li>Formato JSON en campos anidados</li>
+                            <li>Copiar resultados al portapapeles</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cómo Usar las Pruebas -->
+            <section id="usar-pruebas" class="manual-section">
+                <h2><i class="fas fa-play"></i> Cómo Usar las Pruebas</h2>
+                
+                <div class="usage-guide">
+                    <h3><i class="fas fa-list-ol"></i> Pasos para Probar un Endpoint</h3>
+                    
+                    <div class="guide-card">
+                        <h4><i class="fas fa-1"></i> Paso 1: Seleccionar Endpoint</h4>
+                        <p>En el menú desplegable "Endpoint", selecciona la operación que deseas probar:</p>
+                        <code>Ejemplo: Crear Pedido (crear_pedido)</code>
+                    </div>
+                    
+                    <div class="guide-card">
+                        <h4><i class="fas fa-2"></i> Paso 2: Introducir Parámetros JSON</h4>
+                        <p>En el campo de texto "Parámetros JSON", escribe la estructura de datos en formato JSON:</p>
+                        <pre><code>{
+  "sesionwcf": 18,
+  "Tipo": 5,
+  "ID_Cliente": 1,
+  "Contenido": [
+    {
+      "ID_Articulo": 123,
+      "Uds": 2,
+      "Precio": 29.99
+    }
+  ]
+}</code></pre>
+                    </div>
+                    
+                    <div class="guide-card">
+                        <h4><i class="fas fa-3"></i> Paso 3: Hacer Clic en "Probar API"</h4>
+                        <p>Haz clic en el botón "Probar API" para enviar la petición:</p>
+                        <ul>
+                            <li>Verás un indicador de carga mientras se procesa</li>
+                            <li>El sistema se conectará con Verial</li>
+                            <li>Espera a que aparezcan los resultados</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="guide-card">
+                        <h4><i class="fas fa-4"></i> Paso 4: Revisar Resultados</h4>
+                        <p>Los resultados aparecerán en una tabla debajo del formulario:</p>
+                        <ul>
+                            <li>Cadena "Campo" muestra el nombre del campo</li>
+                            <li>Cadena "Valor" muestra el valor devuelto</li>
+                            <li>Los valores JSON se formatean automáticamente</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Endpoints Disponibles -->
+            <section id="endpoints-disponibles" class="manual-section">
+                <h2><i class="fas fa-list"></i> Endpoints Disponibles</h2>
+                
+                <div class="endpoints-grid">
+                    <div class="endpoint-card">
+                        <h3><span class="endpoint-tag">POST</span> NuevoClienteWS</h3>
+                        <p><strong>Función:</strong> Da de alta un nuevo cliente o modifica uno existente en Verial.</p>
+                        <div class="endpoint-params">
+                            <strong>Parámetros Principales:</strong>
+                            <ul>
+                                <li><code>sesionwcf</code> - Número de sesión (Requerido)</li>
+                                <li><code>Id</code> - ID del cliente para modificar (Opcional)</li>
+                                <li><code>Tipo</code> - Tipo de cliente: 1=Particular, 2=Empresa (Requerido)</li>
+                                <li><code>NIF</code> - NIF/CIF del cliente (Requerido)</li>
+                                <li><code>Nombre</code> - Nombre del cliente (Requerido)</li>
+                                <li><code>Direccion</code> - Dirección del cliente (Requerido)</li>
+                                <li><code>Email</code> - Correo electrónico (Opcional)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <h3><span class="endpoint-tag">POST</span> NuevoDocClienteWS</h3>
+                        <p><strong>Función:</strong> Da de alta o modifica un documento de cliente (pedido, factura, albarán).</p>
+                        <div class="endpoint-params">
+                            <strong>Parámetros Principales:</strong>
+                            <ul>
+                                <li><code>sesionwcf</code> - Número de sesión (Requerido)</li>
+                                <li><code>Id</code> - ID del documento para modificar (Opcional)</li>
+                                <li><code>Tipo</code> - Tipo de documento: 1=Factura, 5=Pedido (Requerido)</li>
+                                <li><code>ID_Cliente</code> - ID del cliente (Requerido)</li>
+                                <li><code>Contenido</code> - Array con las líneas del documento (Requerido)</li>
+                                <li><code>Pagos</code> - Array con los pagos del documento (Opcional)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <h3><span class="endpoint-tag">POST</span> NuevaDireccionEnvioWS</h3>
+                        <p><strong>Función:</strong> Da de alta una nueva dirección de envío en un cliente existente.</p>
+                        <div class="endpoint-params">
+                            <strong>Parámetros Principales:</strong>
+                            <ul>
+                                <li><code>sesionwcf</code> - Número de sesión (Requerido)</li>
+                                <li><code>ID_Cliente</code> - ID del cliente (Requerido)</li>
+                                <li><code>Nombre</code> - Nombre del destinatario (Requerido)</li>
+                                <li><code>Direccion</code> - Dirección de envío (Requerido)</li>
+                                <li><code>CPostal</code> - Código postal (Requerido)</li>
+                                <li><code>Telefono</code> - Teléfono de contacto (Opcional)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <h3><span class="endpoint-tag">POST</span> EstadoPedidosWS</h3>
+                        <p><strong>Función:</strong> Consulta el estado de los pedidos. Permite consultar múltiples pedidos.</p>
+                        <div class="endpoint-params">
+                            <strong>Parámetros Principales:</strong>
+                            <ul>
+                                <li><code>sesionwcf</code> - Número de sesión (Requerido)</li>
+                                <li><code>Pedidos</code> - Array con los pedidos a consultar (Requerido)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <h3><span class="endpoint-tag">POST</span> NuevaMascotaWS</h3>
+                        <p><strong>Función:</strong> Da de alta o modifica los datos de un registro de mascota.</p>
+                        <div class="endpoint-params">
+                            <strong>Parámetros Principales:</strong>
+                            <ul>
+                                <li><code>sesionwcf</code> - Número de sesión (Requerido)</li>
+                                <li><code>ID_Cliente</code> - ID del cliente propietario (Requerido)</li>
+                                <li><code>Nombre</code> - Nombre de la mascota (Requerido)</li>
+                                <li><code>TipoAnimal</code> - Tipo de animal (Requerido)</li>
+                                <li><code>Raza</code> - Raza del animal (Opcional)</li>
+                                <li><code>FechaNacimiento</code> - Fecha de nacimiento (Opcional)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h3><i class="fas fa-info-circle"></i> Nota Importante</h3>
+                    <p>Para ver la lista completa de endpoints y sus parámetros detallados, puedes usar la pestaña "Documentación" en la página de Endpoints.</p>
+                </div>
+            </section>
+
+            <!-- Formato JSON -->
+            <section id="formato-json" class="manual-section">
+                <h2><i class="fas fa-code"></i> Formato JSON</h2>
+                
+                <div class="json-guide">
+                    <h3><i class="fas fa-file-code"></i> Estructura JSON Válida</h3>
+                    <p>JSON (JavaScript Object Notation) es un formato de datos ligero y fácil de leer:</p>
+                    
+                    <div class="code-example">
+                        <h4><i class="fas fa-check-circle"></i> Ejemplo de JSON Válido</h4>
+                        <pre><code>{
+  "sesionwcf": 18,
+  "Tipo": 1,
+  "NIF": "12345678A",
+  "Nombre": "Juan",
+  "Email": "juan@ejemplo.com",
+  "Direccion": "Calle Principal 123"
+}</code></pre>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4><i class="fas fa-exclamation-triangle"></i> Errores Comunes</h4>
+                        <ul>
+                            <li><strong>Comas extras:</strong> No pongas coma después del último elemento</li>
+                            <li><strong>Comillas simples:</strong> Usa comillas dobles <code>"</code>, no simples</li>
+                            <li><strong>Sin trailing comma:</strong> Evita la coma final en arrays y objetos</li>
+                            <li><strong>Llaves balanceadas:</strong> Cada <code>{</code> debe tener su <code>}</code></li>
+                        </ul>
+                    </div>
+
+                    <h3><i class="fas fa-tools"></i> Tipos de Valores en JSON</h3>
+                    <div class="value-types">
+                        <div class="value-type-card">
+                            <h4><i class="fas fa-hashtag"></i> Números</h4>
+                            <p>Enteros o decimales sin comillas:</p>
+                            <code>18, 123.45, -10</code>
+                        </div>
+                        <div class="value-type-card">
+                            <h4><i class="fas fa-quote-left"></i> Texto</h4>
+                            <p>Entre comillas dobles:</p>
+                            <code>"Nombre", "Juan Pérez"</code>
+                        </div>
+                        <div class="value-type-card">
+                            <h4><i class="fas fa-toggle-on"></i> Booleanos</h4>
+                            <p>true o false sin comillas:</p>
+                            <code>true, false</code>
+                        </div>
+                        <div class="value-type-card">
+                            <h4><i class="fas fa-list"></i> Arrays</h4>
+                            <p>Entre corchetes, elementos separados por comas:</p>
+                            <code>["item1", "item2"]</code>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Interpretar Resultados -->
+            <section id="interpretar-resultados" class="manual-section">
+                <h2><i class="fas fa-eye"></i> Interpretar Resultados</h2>
+                
+                <div class="results-guide">
+                    <h3><i class="fas fa-table"></i> Tabla de Resultados</h3>
+                    <p>Los resultados de la API se muestran en una tabla con dos columnas:</p>
+                    
+                    <div class="table-guide">
+                        <div class="table-column-explanation">
+                            <div class="column-explanation">
+                                <h4><i class="fas fa-columns"></i> Columna "Campo"</h4>
+                                <p>Muestra el nombre del campo o propiedad devuelta por la API.</p>
+                                <p class="example"><strong>Ejemplos:</strong> <code>Id</code>, <code>Codigo</code>, <code>InfoError</code></p>
+                            </div>
+                            
+                            <div class="column-explanation">
+                                <h4><i class="fas fa-columns"></i> Columna "Valor"</h4>
+                                <p>Muestra el valor devuelto por la API para ese campo.</p>
+                                <p class="example"><strong>Ejemplos:</strong> <code>123</code>, <code>"OK"</code>, <code>{"Codigo": 0, "Mensaje": "Éxito"}</code></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3><i class="fas fa-info-circle"></i> Valores JSON Anidados</h3>
+                    <p>Cuando el valor es un objeto JSON complejo, se formatea automáticamente para mayor legibilidad:</p>
+                    
+                    <div class="code-example">
+                        <h4><i class="fas fa-code"></i> Ejemplo de Valor Anidado</h4>
+                        <pre><code>{
+  "Codigo": 0,
+  "Mensaje": "Operación exitosa",
+  "Data": {
+    "Id": 123,
+    "Nombre": "Cliente Test"
+  }
+}</code></pre>
+                    </div>
+
+                    <h3><i class="fas fa-check-circle"></i> Estados de Resultado</h3>
+                    <div class="status-types">
+                        <div class="status-card success">
+                            <div class="status-icon">✅</div>
+                            <h4>Éxito</h4>
+                            <p>La operación se completó correctamente.</p>
+                        </div>
+                        
+                        <div class="status-card error">
+                            <div class="status-icon">❌</div>
+                            <h4>Error</h4>
+                            <p>Hubo un problema con la petición. Revisa los mensajes de error.</p>
+                        </div>
+                        
+                        <div class="status-card pending">
+                            <div class="status-icon">⏳</div>
+                            <h4>En Proceso</h4>
+                            <p>La petición está siendo procesada por Verial.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pestaña Documentación -->
+            <section id="pestaña-documentacion" class="manual-section">
+                <h2><i class="fas fa-book"></i> Pestaña Documentación</h2>
+                
+                <div class="docs-guide">
+                    <h3><i class="fas fa-book-open"></i> ¿Qué es la Pestaña Documentación?</h3>
+                    <p>La pestaña "Documentación" te proporciona información detallada sobre todos los endpoints disponibles y sus parámetros.</p>
+                    
+                    <div class="docs-features">
+                        <div class="feature-explain">
+                            <h4><i class="fas fa-list-alt"></i> Lista Completa de Endpoints</h4>
+                            <p>Accede a la lista completa de endpoints POST disponibles en Verial.</p>
+                        </div>
+                        
+                        <div class="feature-explain">
+                            <h4><i class="fas fa-tags"></i> Parámetros Documentados</h4>
+                            <p>Cada endpoint incluye una lista detallada de sus parámetros, indicando cuáles son requeridos y cuáles opcionales.</p>
+                        </div>
+                        
+                        <div class="feature-explain">
+                            <h4><i class="fas fa-info"></i> Descripción de Funcionalidad</h4>
+                            <p>Cada endpoint tiene una descripción clara de su propósito y funcionalidad.</p>
+                        </div>
+                        
+                        <div class="feature-explain">
+                            <h4><i class="fas fa-code"></i> Formato de Datos</h4>
+                            <p>Ejemplos de cómo estructurar los datos JSON para cada tipo de operación.</p>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <h3><i class="fas fa-lightbulb"></i> Consejo</h3>
+                        <p>Usa la pestaña de Documentación como referencia antes de probar un endpoint. Te ahorrará tiempo y evitará errores.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Copiar Resultados -->
+            <section id="copiar-resultados" class="manual-section">
+                <h2><i class="fas fa-copy"></i> Copiar Resultados</h2>
+                
+                <div class="copy-guide">
+                    <h3><i class="fas fa-clipboard"></i> Funcionalidad de Copiar</h3>
+                    <p>La herramienta permite copiar los resultados de una petición al portapapeles para su posterior uso.</p>
+                    
+                    <div class="action-steps">
+                        <div class="step-card">
+                            <div class="step-number">1</div>
+                            <h3><i class="fas fa-mouse-pointer"></i> Ver Resultados</h3>
+                            <p>Una vez que se muestren los resultados en la tabla, verás el botón "Copiar" en la esquina superior derecha.</p>
+                        </div>
+                        
+                        <div class="step-card">
+                            <div class="step-number">2</div>
+                            <h3><i class="fas fa-click"></i> Hacer Clic</h3>
+                            <p>Haz clic en el botón "Copiar" para copiar toda la tabla de resultados al portapapeles.</p>
+                        </div>
+                        
+                        <div class="step-card">
+                            <div class="step-number">3</div>
+                            <h3><i class="fas fa-check-circle"></i> Confirmación</h3>
+                            <p>Verás un mensaje de confirmación indicando que los datos se copiaron correctamente.</p>
+                        </div>
+                    </div>
+
+                    <div class="usage-tips">
+                        <h3><i class="fas fa-lightbulb"></i> Casos de Uso</h3>
+                        <ul>
+                            <li><strong>Documentar pruebas:</strong> Guarda los resultados para documentar tus pruebas</li>
+                            <li><strong>Compartir con el equipo:</strong> Copia los resultados para compartirlos con tu equipo</li>
+                            <li><strong>Análisis posterior:</strong> Pega los resultados en un archivo de texto o Excel para análisis</li>
+                            <li><strong>Depuración:</strong> Usa los resultados para identificar problemas en las peticiones</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Solución de Problemas -->
+            <section id="solucion-problemas" class="manual-section">
+                <h2><i class="fas fa-tools"></i> Solución de Problemas</h2>
+
+                <div class="troubleshooting-section">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Problemas Comunes</h3>
+                    
+                    <div class="problem-grid">
+                        <div class="problem-card">
+                            <h4><i class="fas fa-bug"></i> Error de Sintaxis JSON</h4>
+                            <p><strong>Síntoma:</strong> El sistema no permite enviar la petición o muestra un error de sintaxis.</p>
+                            <div class="solutions">
+                                <strong>Soluciones:</strong>
+                                <ol>
+                                    <li>Verifica que todas las comillas sean dobles <code>"</code></li>
+                                    <li>Elimina comas extras al final de arrays u objetos</li>
+                                    <li>Comprueba que las llaves <code>{}</code> y corchetes <code>[]</code> estén balanceados</li>
+                                    <li>Usa un validador JSON online para verificar la sintaxis</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="problem-card">
+                            <h4><i class="fas fa-times-circle"></i> Parámetros Incorrectos</h4>
+                            <p><strong>Síntoma:</strong> La API devuelve un error indicando que faltan parámetros o son incorrectos.</p>
+                            <div class="solutions">
+                                <strong>Soluciones:</strong>
+                                <ol>
+                                    <li>Revisa la documentación del endpoint seleccionado</li>
+                                    <li>Verifica que todos los parámetros requeridos estén presentes</li>
+                                    <li>Comprueba que los tipos de datos sean correctos (números sin comillas, texto con comillas)</li>
+                                    <li>Asegúrate de incluir <code>sesionwcf</code> si es requerido</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="problem-card">
+                            <h4><i class="fas fa-wifi"></i> Error de Conexión</h4>
+                            <p><strong>Síntoma:</strong> No hay respuesta del servidor o timeout.</p>
+                            <div class="solutions">
+                                <strong>Soluciones:</strong>
+                                <ol>
+                                    <li>Verifica tu conexión a Internet</li>
+                                    <li>Comprueba que la API de Verial esté disponible</li>
+                                    <li>Revisa las credenciales de acceso configuradas</li>
+                                    <li>Intenta de nuevo después de unos minutos</li>
+                                    <li>Verifica la configuración de firewall del servidor</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="problem-card">
+                            <h4><i class="fas fa-server"></i> Sesión Expirada</h4>
+                            <p><strong>Síntoma:</strong> Errores relacionados con sesión no válida o expirada.</p>
+                            <div class="solutions">
+                                <strong>Soluciones:</strong>
+                                <ol>
+                                    <li>Verifica que el valor de <code>sesionwcf</code> sea válido</li>
+                                    <li>Asegúrate de que la sesión no haya expirado</li>
+                                    <li>Inicia una nueva sesión en la configuración del plugin</li>
+                                    <li>Revisa los logs del sistema para más detalles</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="logs-section">
+                    <h3><i class="fas fa-file-alt"></i> Revisar Logs</h3>
+                    <p>Para obtener más información sobre errores:</p>
+                    <ol>
+                        <li>Navega a la página de <strong>Logs del Sistema</strong></li>
+                        <li>Filtra por tipo "endpoints" o "API"</li>
+                        <li>Busca el timestamp de tu última prueba</li>
+                        <li>Revisa el mensaje de error completo</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="manual-footer">
+                <p><i class="fas fa-info-circle"></i> Este manual está actualizado para la versión 2.0.0 del sistema de Pruebas de Endpoints.</p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        // Smooth scrolling for navigation links
+        for (const anchor of document.querySelectorAll('a[href^="#"]')) {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        }
+
+        // Highlight current section
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('.manual-section');
+            const navLinks = document.querySelectorAll('.nav-list a');
+            
+            let current = '';
+            for (const section of sections) {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            }
+
+            for (const link of navLinks) {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

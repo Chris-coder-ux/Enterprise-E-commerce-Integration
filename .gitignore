@@ -1,0 +1,74 @@
+
+
+# Ignore cursor AI rules
+.cursor/rules/codacy.mdc
+
+# Dependencies
+node_modules/
+vendor/
+composer.lock
+package-lock.json
+yarn.lock
+
+# WordPress core
+wp-config.php
+wp-config-*.php
+wp-content/advanced-cache.php
+wp-content/backup-db/
+wp-content/backups/
+wp-content/blogs.dir/
+wp-content/cache/
+wp-content/upgrade/
+wp-content/uploads/
+wp-content/wp-cache-config.php
+wp-content/object-cache.php
+wp-content/debug.log
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# IDE specific files
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+.phpunit.result.cache
+.php-cs-fixer.cache
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Cache directories
+.cache/
+.temp/
+
+# Local development
+wp-content/plugins/hello.php
+wp-content/plugins/akismet/
+
+# Debug files
+debug.log
+*.log
+
+# Verial specific
+/cache/
+/logs/
+/api_connector/debug.log
+
+# Ignore all dotfiles except .gitignore and .htaccess
+.*
+!.gitignore
+!.htaccess
+!.editorconfig

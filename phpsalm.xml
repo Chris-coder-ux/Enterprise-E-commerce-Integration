@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<psalm
+    totallyTyped="true"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://getpsalm.org/schema/config.xsd"
+>
+    <projectFiles>
+        <directory name="./includes"/>
+        <directory name="./admin"/>
+        <directory name="./api_connector"/>
+        <directory name="./assets"/>
+        <ignoreFiles>
+            <directory name="./vendor"/>
+            <directory name="node_includes"/>
+            <directory name="scripts"/>
+            <directory name="./tests"/>
+            <directory name="./backups"/>
+            <directory name="./logs"/>
+        </ignoreFiles>
+    </projectFiles>
+
+    <issueHandlers>
+        <MissingReturnType errorLevel="error"/>
+        <MissingParamType errorLevel="error"/>
+        <MissingPropertyType errorLevel="error"/>
+        <PossiblyNullReference errorLevel="error"/>
+        <PossiblyUndefinedVariable errorLevel="error"/>
+        <UndefinedClass errorLevel="error"/>
+        <UndefinedMethod errorLevel="error"/>
+        <UndefinedFunction errorLevel="error"/>
+        <InvalidReturnType errorLevel="error"/>
+        <InvalidArgument errorLevel="error"/>
+        <MixedAssignment errorLevel="error"/>
+        <MixedReturnStatement errorLevel="error"/>
+        <MixedPropertyTypeCoercion errorLevel="error"/>
+        <MixedArrayAccess errorLevel="error"/>
+        <MixedMethodCall errorLevel="error"/>
+        <MixedTypeCoercion errorLevel="error"/>
+        <DeprecatedMethod errorLevel="info"/>
+        <DeprecatedProperty errorLevel="info"/>
+        <DeprecatedFunction errorLevel="info"/>
+        <DeprecatedClass errorLevel="info"/>
+         <PossiblyUnusedMethodCall>
+        <errorLevel type="suppress">
+            <file name="includes/Core/Sync_Manager.php"/>
+        </errorLevel>
+    </PossiblyUnusedMethodCall>
+    </issueHandlers>
+
+    <plugins>
+        <pluginClass class="Psalm\Plugin\Symfony\SymfonyPlugin"/>
+    </plugins>
+
+    <phpVersion>8.1</phpVersion>
+    <resolveFromConfigFile>true</resolveFromConfigFile>
+    <useDocblockTypes>true</useDocblockTypes>
+    <findUnusedCode>true</findUnusedCode>
+    <findUnusedPsalmSuppress>true</findUnusedPsalmSuppress>
+</psalm>

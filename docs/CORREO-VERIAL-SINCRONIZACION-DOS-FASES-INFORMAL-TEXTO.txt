@@ -1,0 +1,61 @@
+ASUNTO: Cambio en la sincronización
+
+Buenos días Fran,
+
+Te escribo para contarte que he hecho un cambio importante en cómo funciona la sincronización. Básicamente, para solucionar los problemas de saturación que teníamos con los lotes, he reorganizado todo el proceso.
+
+LO QUE TENÍAMOS ANTES
+
+Antes procesaba todo junto en un mismo batch: productos, precios, stock e imágenes, todo de golpe. Funcionaba, pero tenía sus problemas:
+
+- Las transacciones de base de datos se hacían eternas (30-60 segundos)
+- Consumía muchos recursos
+- No reutilizábamos nada (cada vez volvíamos a procesar todas las imágenes)
+- No escalaba bien
+
+LO QUE HE HECHO AHORA: DOS FASES SEPARADAS
+
+He separado el proceso en dos fases independientes:
+
+FASE 1: Primero las imágenes
+- Obtenemos todos los IDs de productos con GetArticulosWS
+- Para cada producto, sacamos sus imágenes con GetImagenesArticulosWS
+- Las procesamos y las guardamos en la biblioteca
+- Guardamos metadatos para poder reutilizarlas después
+
+FASE 2: Luego los productos
+- Obtenemos los datos de productos con GetArticulosWS (sin imágenes)
+- Sacamos stock, precios y todo lo demás
+- Buscamos las imágenes que ya procesamos en la Fase 1
+- Las asignamos a los productos
+
+LO BUENO DE ESTE CAMBIO
+
+✓ Timeouts casi eliminados (reducción del 80-85%)
+  - Las transacciones pasan de 30-60 segundos a solo 5-10 segundos
+
+✓ Menos consumo de recursos
+  - Usamos la memoria de forma más eficiente
+  - El servidor respira mejor
+
+✓ Reutilización automática (100%)
+  - Las imágenes que ya tenemos se reutilizan automáticamente
+  - En sincronizaciones repetidas, no volvemos a descargar lo que ya tenemos
+  - Muchísimas menos llamadas a la API para imágenes
+
+✓ Escala mucho mejor
+  - Ahora podemos procesar millones de productos sin problemas
+
+La diferencia:
+- Primera sincronización: Más o menos el mismo número de llamadas, solo que organizadas en dos fases
+- Sincronizaciones siguientes: Muchísimas menos llamadas a GetImagenesArticulosWS (solo para productos nuevos o que hayan cambiado)
+- Mejor distribución: Las llamadas se reparten mejor en el tiempo, así que no hay picos de carga
+
+RESULTADOS QUE ESPERAMOS
+
+| Métrica | Antes | Ahora | Mejora |
+|---------|-------|-------|--------|
+| Tiempo de transacción | 30-60 seg | 5-10 seg | 80-85% menos |
+| Reutilización de imágenes | 0% | 100% | 100% mejora |
+| Llamadas API (sincronizaciones repetidas) | 100% | ~10-20% | 80-90% menos |
+| Escalabilidad | Limitada | Alta | Mucho mejor |

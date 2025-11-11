@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <mxfile host="codeviz.app" modified="2025-09-10T17:09:56.990Z" agent="CodeViz Exporter" version="14.6.5" type="device">
+          <diagram id="codeviz-diagram" name="System Diagram">
+            <mxGraphModel dx="1000" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+              <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="admin_panel_boundary" value="" style="html=1;whiteSpace=wrap;container=1;fillColor=#dae8fc;strokeColor=#6c8ebf;dashed=1;fillOpacity=20;strokeWidth=2;containerType=none;recursiveResize=0;movable=1;resizable=1;autosize=0;dropTarget=0" vertex="1" parent="verial_integration_system_boundary">
+                  <mxGeometry x="2215.8333333333335" y="-39" width="648" height="209" as="geometry"/>
+                </mxCell>
+                <mxCell id="admin_panel_boundary_label" value="Admin Panel" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;labelBackgroundColor=white;spacing=5" vertex="1" parent="verial_integration_system_boundary">
+                  <mxGeometry x="2223.8333333333335" y="-31" width="572" height="24" as="geometry"/>
+                </mxCell>
+<mxCell id="api_connector_boundary" value="" style="html=1;whiteSpace=wrap;container=1;fillColor=#dae8fc;strokeColor=#6c8ebf;dashed=1;fillOpacity=20;strokeWidth=2;containerType=none;recursiveResize=0;movable=1;resizable=1;autosize=0;dropTarget=0" vertex="1" parent="verial_integration_system_boundary">
+                  <mxGeometry x="1948.6666666666667" y="-39" width="248" height="209" as="geometry"/>
+                </mxCell>
+                <mxCell id="api_connector_boundary_label" value="API Connector" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;labelBackgroundColor=white;spacing=5" vertex="1" parent="verial_integration_system_boundary">
+                  <mxGeometry x="1956.6666666666667" y="-31" width="172" height="24" as="geometry"/>
+                </mxCell>
+<mxCell id="core_app_boundary" value="" style="html=1;whiteSpace=wrap;container=1;fillColor=#dae8fc;strokeColor=#6c8ebf;dashed=1;fillOpacity=20;strokeWidth=2;containerType=none;recursiveResize=0;movable=1;resizable=1;autosize=0;dropTarget=0" vertex="1" parent="verial_integration_system_boundary">
+                  <mxGeometry x="174" y="148" width="2863" height="209" as="geometry"/>
+                </mxCell>
+                <mxCell id="core_app_boundary_label" value="Core Application" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;labelBackgroundColor=white;spacing=5" vertex="1" parent="verial_integration_system_boundary">
+                  <mxGeometry x="182" y="156" width="2787" height="24" as="geometry"/>
+                </mxCell>
+<mxCell id="woocommerce_integration_boundary" value="" style="html=1;whiteSpace=wrap;container=1;fillColor=#dae8fc;strokeColor=#6c8ebf;dashed=1;fillOpacity=20;strokeWidth=2;containerType=none;recursiveResize=0;movable=1;resizable=1;autosize=0;dropTarget=0" vertex="1" parent="verial_integration_system_boundary">
+                  <mxGeometry x="858.125" y="335" width="794" height="209" as="geometry"/>
+                </mxCell>
+                <mxCell id="woocommerce_integration_boundary_label" value="WooCommerce Integration" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;labelBackgroundColor=white;spacing=5" vertex="1" parent="verial_integration_system_boundary">
+                  <mxGeometry x="866.125" y="343" width="718" height="24" as="geometry"/>
+                </mxCell>
+<mxCell id="verial_integration_system_boundary" value="" style="html=1;whiteSpace=wrap;container=1;fillColor=#dae8fc;strokeColor=#6c8ebf;dashed=1;fillOpacity=20;strokeWidth=2;containerType=none;recursiveResize=0;movable=1;resizable=1;autosize=0;dropTarget=0" vertex="1" parent="base-diagram-group">
+                  <mxGeometry x="166" y="94" width="2914" height="668" as="geometry"/>
+                </mxCell>
+                <mxCell id="verial_integration_system_boundary_label" value="Verial Integration System" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;labelBackgroundColor=white;spacing=5" vertex="1" parent="base-diagram-group">
+                  <mxGeometry x="174" y="102" width="2838" height="24" as="geometry"/>
+                </mxCell>
+<mxCell id="base-diagram-group" value="" style="html=1;whiteSpace=wrap;container=1;fillColor=#dae8fc;strokeColor=#6c8ebf;dashed=1;fillOpacity=20;strokeWidth=2;containerType=none;recursiveResize=0;movable=1;resizable=1;autosize=0;dropTarget=0" vertex="1" parent="1">
+                  <mxGeometry x="12" y="12" width="3112" height="971" as="geometry"/>
+                </mxCell>
+                <mxCell id="base-diagram-group_label" value="Base Diagram" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;labelBackgroundColor=white;spacing=5" vertex="1" parent="1">
+                  <mxGeometry x="20" y="20" width="3036" height="24" as="geometry"/>
+                </mxCell>
+                <mxCell id="admin" value="Administrator" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="base-diagram-group">
+                      <mxGeometry x="2459.8333333333335" y="60" width="100" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="customer" value="Customer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="base-diagram-group">
+                      <mxGeometry x="34" y="429.5" width="76" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="wordpress" value="WordPress" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="base-diagram-group">
+                      <mxGeometry x="524.6666666666667" y="60" width="82" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="woocommerce" value="WooCommerce" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="base-diagram-group">
+                      <mxGeometry x="78" y="799" width="110" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="external_api" value="External API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="base-diagram-group">
+                      <mxGeometry x="2942.0000000000005" y="799" width="90" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="database" value="Database" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="base-diagram-group">
+                      <mxGeometry x="703.2291666666666" y="890" width="74" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="admin_dashboard" value="Admin Dashboard" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="admin_panel_boundary">
+                      <mxGeometry x="146" y="107" width="127" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="sync_status_viewer" value="Sync Status Viewer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="admin_panel_boundary">
+                      <mxGeometry x="293" y="107" width="130" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="price_sync_tool" value="Price Sync Tool" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="admin_panel_boundary">
+                      <mxGeometry x="20" y="107" width="106" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="category_updater" value="Category Updater" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="admin_panel_boundary">
+                      <mxGeometry x="443" y="107" width="125" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="api_endpoint_handler" value="API Endpoint Handler" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="api_connector_boundary">
+                      <mxGeometry x="20" y="107" width="148" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="admin_components" value="Admin Components" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="core_app_boundary">
+                      <mxGeometry x="321" y="107" width="138" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="ajax_handlers" value="AJAX Handlers" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="core_app_boundary">
+                      <mxGeometry x="1089" y="107" width="103" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="cache_manager" value="Cache Manager" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="core_app_boundary">
+                      <mxGeometry x="20" y="107" width="112" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="cli_commands" value="CLI Commands" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="core_app_boundary">
+                      <mxGeometry x="1912" y="107" width="109" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="compatibility_layer" value="Compatibility Layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="core_app_boundary">
+                      <mxGeometry x="2041" y="107" width="134" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="constants_definitions" value="Constants Definitions" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="core_app_boundary">
+                      <mxGeometry x="479" y="107" width="147" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="core_utilities" value="Core Utilities" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="core_app_boundary">
+                      <mxGeometry x="800" y="107" width="94" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="diagnostics_tools" value="Diagnostics Tools" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="core_app_boundary">
+                      <mxGeometry x="1489" y="107" width="122" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="data_transfer_objects" value="Data Transfer Objects" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="core_app_boundary">
+                      <mxGeometry x="2495" y="107" width="148" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="endpoint_definitions" value="Endpoint Definitions" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="core_app_boundary">
+                      <mxGeometry x="1212" y="107" width="141" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="helper_functions" value="Helper Functions" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="core_app_boundary">
+                      <mxGeometry x="2663" y="107" width="120" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="hook_management" value="Hook Management" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="core_app_boundary">
+                      <mxGeometry x="646" y="107" width="134" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="improvements_module" value="Improvements Module" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="core_app_boundary">
+                      <mxGeometry x="914" y="107" width="155" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="mi_integracion_api_core" value="Mi Integracion API Core" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="core_app_boundary">
+                      <mxGeometry x="2314" y="107" width="161" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="service_layer" value="Service Layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="core_app_boundary">
+                      <mxGeometry x="1373" y="107" width="96" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="ssl_management" value="SSL Management" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="core_app_boundary">
+                      <mxGeometry x="1631" y="107" width="122" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="synchronization_logic" value="Synchronization Logic" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="core_app_boundary">
+                      <mxGeometry x="152" y="107" width="149" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="general_tools" value="General Tools" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="core_app_boundary">
+                      <mxGeometry x="2195" y="107" width="99" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="traits_definitions" value="Traits Definitions" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="core_app_boundary">
+                      <mxGeometry x="1773" y="107" width="119" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="product_sync" value="Product Synchronization" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="woocommerce_integration_boundary">
+                      <mxGeometry x="166" y="107" width="165" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="order_sync" value="Order Synchronization" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="woocommerce_integration_boundary">
+                      <mxGeometry x="351" y="107" width="153" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="webhook_handler" value="Webhook Handler" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="woocommerce_integration_boundary">
+                      <mxGeometry x="20" y="107" width="126" height="41" as="geometry"/>
+                    </mxCell>
+<mxCell id="woocommerce_api_wrapper" value="WooCommerce API Wrapper" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="woocommerce_integration_boundary">
+                      <mxGeometry x="524" y="107" width="190" height="41" as="geometry"/>
+                    </mxCell>
+                <mxCell id="edge-e-admin_panel_boundary-core_app_boundary" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="admin_panel_boundary" target="core_app_boundary">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-e-admin_panel_boundary-core_app_boundary_label" value="Uses | HTTP/S" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-e-admin_panel_boundary-core_app_boundary">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-e-api_connector_boundary-core_app_boundary" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="api_connector_boundary" target="core_app_boundary">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-e-api_connector_boundary-core_app_boundary_label" value="Uses | PHP Function Calls" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-e-api_connector_boundary-core_app_boundary">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-e-core_app_boundary-api_connector_boundary" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="core_app_boundary" target="api_connector_boundary">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-e-core_app_boundary-api_connector_boundary_label" value="Uses | PHP Function Calls" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-e-core_app_boundary-api_connector_boundary">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-e-core_app_boundary-woocommerce_integration_boundary" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="core_app_boundary" target="woocommerce_integration_boundary">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-e-core_app_boundary-woocommerce_integration_boundary_label" value="Uses | PHP Function Calls" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-e-core_app_boundary-woocommerce_integration_boundary">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-e-woocommerce_integration_boundary-core_app_boundary" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="woocommerce_integration_boundary" target="core_app_boundary">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-e-woocommerce_integration_boundary-core_app_boundary_label" value="Uses | PHP Function Calls" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-e-woocommerce_integration_boundary-core_app_boundary">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-e-api_connector_boundary-external_api" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="api_connector_boundary" target="external_api">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-e-api_connector_boundary-external_api_label" value="Sends/Receives data | HTTP/S" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-e-api_connector_boundary-external_api">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-e-woocommerce_integration_boundary-woocommerce" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="woocommerce_integration_boundary" target="woocommerce">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-e-woocommerce_integration_boundary-woocommerce_label" value="Interacts with | WooCommerce API/Hooks" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-e-woocommerce_integration_boundary-woocommerce">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-e-core_app_boundary-database" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="core_app_boundary" target="database">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-e-core_app_boundary-database_label" value="Reads from and writes to | SQL" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-e-core_app_boundary-database">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-e-woocommerce_integration_boundary-database" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="woocommerce_integration_boundary" target="database">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-e-woocommerce_integration_boundary-database_label" value="Reads from and writes to | SQL" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-e-woocommerce_integration_boundary-database">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-e-admin-admin_panel_boundary" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="admin" target="admin_panel_boundary">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-e-admin-admin_panel_boundary_label" value="Manages | HTTP/S" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-e-admin-admin_panel_boundary">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-e-customer-woocommerce" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="customer" target="woocommerce">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-e-customer-woocommerce_label" value="Interacts with" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-e-customer-woocommerce">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-e-wordpress-database" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="wordpress" target="database">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-e-wordpress-database_label" value="Reads from and writes to | SQL" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-e-wordpress-database">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-e-woocommerce-database" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="woocommerce" target="database">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-e-woocommerce-database_label" value="Reads from and writes to | SQL" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-e-woocommerce-database">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-e-wordpress-core_app_boundary" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="wordpress" target="core_app_boundary">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-e-wordpress-core_app_boundary_label" value="Provides context to | WordPress Hooks/API" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-e-wordpress-core_app_boundary">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-e-woocommerce-core_app_boundary" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="woocommerce" target="core_app_boundary">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-e-woocommerce-core_app_boundary_label" value="Provides context to | WooCommerce Hooks/API" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-e-woocommerce-core_app_boundary">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+              </root>
+            </mxGraphModel>
+          </diagram>
+        </mxfile>

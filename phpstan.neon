@@ -1,0 +1,36 @@
+parameters:
+    level: 5
+
+    paths:
+        - includes
+        - admin
+        - api_connector
+
+    excludePaths:
+        - vendor
+        - tests
+        - backups
+        - logs
+
+    baseline: phpstan-baseline.neon
+
+    bootstrapFiles:
+        - bootstrap-phpstan.php
+
+    # Mantener chequeos de tipos estrictos
+    checkMissingIterableValueType: true
+    checkGenericClassInNonGenericObjectType: true
+    checkMissingCallableSignature: true
+
+    # Avisa si un ignore ya no se usa
+    reportUnmatchedIgnoredErrors: true
+
+    # Ignoramos funciones de WordPress explícitamente, porque
+    # queremos tratarlas como externas y no meter phpstan-wordpress
+    ignoreErrors:
+        - '#Call to an undefined function get_option#'
+        - '#Call to an undefined function update_option#'
+        - '#Call to an undefined function set_transient#'
+        - '#Call to an undefined function get_transient#'
+        - '#Call to an undefined function delete_transient#'
+        - '#Result of method ReflectionProperty::setAccessible\(\) is unused.#'

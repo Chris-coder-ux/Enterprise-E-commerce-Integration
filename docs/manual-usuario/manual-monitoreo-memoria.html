@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Monitoreo de Memoria - Mi Integración API</title>
+    <link rel="stylesheet" href="manual-usuario.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="manual-container">
+        <!-- Header -->
+        <header class="manual-header">
+            <div class="header-content">
+                <h1><i class="fas fa-memory"></i> Manual de Monitoreo de Memoria</h1>
+                <div class="version-info">Versión 2.0.0</div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="manual-nav">
+            <div class="nav-content">
+                <h3><i class="fas fa-list"></i> Índice</h3>
+                <ul class="nav-list">
+                    <li><a href="#introduccion"><i class="fas fa-info-circle"></i> Introducción</a></li>
+                    <li><a href="#que-es-monitoreo"><i class="fas fa-question-circle"></i> ¿Qué es el Monitoreo?</a></li>
+                    <li><a href="#metricas"><i class="fas fa-chart-bar"></i> Métricas Disponibles</a></li>
+                    <li><a href="#estados-memoria"><i class="fas fa-heartbeat"></i> Estados de Memoria</a></li>
+                    <li><a href="#alertas"><i class="fas fa-bell"></i> Alertas y Notificaciones</a></li>
+                    <li><a href="#acciones"><i class="fas fa-tools"></i> Acciones Disponibles</a></li>
+                    <li><a href="#optimizacion"><i class="fas fa-arrow-up"></i> Optimización</a></li>
+                    <li><a href="#mejores-practicas"><i class="fas fa-check-circle"></i> Mejores Prácticas</a></li>
+                    <li><a href="#solucion-problemas"><i class="fas fa-tools"></i> Solución de Problemas</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="manual-content">
+            <!-- Introducción -->
+            <section id="introduccion" class="manual-section">
+                <h2><i class="fas fa-info-circle"></i> Introducción</h2>
+                <p>El <strong>Sistema de Monitoreo de Memoria</strong> permite supervisar en tiempo real el uso de memoria del plugin y recibir alertas cuando se acerque a los límites establecidos.</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Monitoreo en Tiempo Real</h3>
+                        <p>Métricas actualizadas cada segundo</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-bell"></i>
+                        <h3>Alertas Inteligentes</h3>
+                        <p>Notificaciones cuando la memoria sea crítica</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-history"></i>
+                        <h3>Historial de Uso</h3>
+                        <p>Registro de uso de memoria a lo largo del tiempo</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-sliders-h"></i>
+                        <h3>Configuración Flexible</h3>
+                        <p>Ajusta límites y umbrales según tus necesidades</p>
+                    </div>
+                </div>
+
+                <div class="characteristics-box">
+                    <h3><i class="fas fa-star"></i> Características Principales</h3>
+                    <ul class="characteristics-list">
+                        <li><strong>Monitoreo Continuo:</strong> Supervisa el uso de memoria en cada operación</li>
+                        <li><strong>Alertas Proactivas:</strong> Notifica antes de alcanzar límites críticos</li>
+                        <li><strong>Historial Complet</strong> Registro histórico de uso de memoria</li>
+                        <li><strong>Visualización Clara:</strong> Gráficos e indicadores visuales intuitivos</li>
+                        <li><strong>Configuración de Límites:</strong> Define umbrales personalizados para alertas</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- ¿Qué es el Monitoreo? -->
+            <section id="que-es-monitoreo" class="manual-section">
+                <h2><i class="fas fa-question-circle"></i> ¿Qué es el Monitoreo de Memoria?</h2>
+                
+                <div class="info-box">
+                    <h3><i class="fas fa-lightbulb"></i> Concepto</h3>
+                    <p>El <strong>monitoreo de memoria</strong> es el proceso de supervisar y registrar el uso de memoria RAM del plugin para identificar problemas de rendimiento o riesgos de saturación.</p>
+                    <p>Este sistema te ayuda a:</p>
+                    <ul>
+                        <li>Detectar fugas de memoria</li>
+                        <li>Optimizar el rendimiento</li>
+                        <li>Prevenir errores por falta de memoria</li>
+                        <li>Planificar recursos necesarios</li>
+                    </ul>
+                </div>
+
+                <div class="process-steps">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3><i class="fas fa-eye"></i> Observación</h3>
+                        <p>El sistema observa continuamente el uso de memoria en cada operación.</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3><i class="fas fa-chart-bar"></i> Registro</h3>
+                        <p>Registra métricas y valores de memoria para análisis posterior.</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3><i class="fas fa-bell"></i> Alerta</h3>
+                        <p>Notifica cuando se alcancen umbrales configurados.</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <h3><i class="fas fa-tools"></i> Acción</h3>
+                        <p>Proporciona herramientas para optimizar y liberar memoria.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Métricas -->
+            <section id="metricas" class="manual-section">
+                <h2><i class="fas fa-chart-bar"></i> Métricas Disponibles</h2>
+                
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <h4><i class="fas fa-database"></i> Uso Actual de Memoria</h4>
+                        <p>Memoria utilizada por el plugin en el momento actual (MB).</p>
+                        <p><strong>Formato:</strong> XX MB / YY MB</p>
+                    </div>
+
+                    <div class="metric-card">
+                        <h4><i class="fas fa-percentage"></i> Porcentaje de Uso</h4>
+                        <p>Porcentaje de memoria del límite configurado que está siendo usado.</p>
+                        <p><strong>Formato:</strong> XX%</p>
+                    </div>
+
+                    <div class="metric-card">
+                        <h4><i class="fas fa-layer-group"></i> Límite Máximo</h4>
+                        <p>Límite configurado de memoria para alertas (MB).</p>
+                        <p><strong>Formato:</strong> YY MB</p>
+                    </div>
+
+                    <div class="metric-card">
+                        <h4><i class="fas fa-clock"></i> Última Actualización</h4>
+                        <p>Fecha y hora de la última actualización de métricas.</p>
+                        <p><strong>Formato:</strong> DD/MM/YYYY HH:MM</p>
+                    </div>
+
+                    <div class="metric-card">
+                        <h4><i class="fas fa-history"></i> Pico de Memoria</h4>
+                        <p>Valor máximo de memoria alcanzado desde el inicio.</p>
+                        <p><strong>Formato:</strong> XX MB</p>
+                    </div>
+
+                    <div class="metric-card">
+                        <h4><i class="fas fa-user-times"></i> Límite PHP</h4>
+                        <p>Límite de memoria configurado en PHP (memory_limit).</p>
+                        <p><strong>Formato:</strong> YY MB</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Estados -->
+            <section id="estados-memoria" class="manual-section">
+                <h2><i class="fas fa-heartbeat"></i> Estados de Memoria</h2>
+                
+                <div class="health-grid">
+                    <div class="health-card healthy">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <strong>Saludable</strong>
+                            <p>Memoria < 60%</p>
+                        </div>
+                    </div>
+
+                    <div class="health-card attention">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <div>
+                            <strong>Precaución</strong>
+                            <p>Memoria 60-80%</p>
+                        </div>
+                    </div>
+
+                    <div class="health-card warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div>
+                            <strong>Alerta</strong>
+                            <p>Memoria 80-95%</p>
+                        </div>
+                    </div>
+
+                    <div class="health-card critical">
+                        <i class="fas fa-times-circle"></i>
+                        <div>
+                            <strong>Crítico</strong>
+                            <p>Memoria > 95%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="states-grid">
+                    <div class="state-card">
+                        <h3><i class="fas fa-leaf"></i> Estado Normal</h3>
+                        <p>El uso de memoria está dentro de rangos saludables.</p>
+                        <p><strong>Acción:</strong> Ninguna necesaria</p>
+                    </div>
+
+                    <div class="state-card">
+                        <h3><i class="fas fa-info-circle"></i> Estado de Advertencia</h3>
+                        <p>La memoria se acerca al límite configurado.</p>
+                        <p><strong>Acción:</strong> Monitorear de cerca</p>
+                    </div>
+
+                    <div class="state-card">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Estado Crítico</h3>
+                        <p>La memoria está muy cerca del límite o lo ha alcanzado.</p>
+                        <p><strong>Acción:</strong> Liberar memoria urgentemente</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Alertas -->
+            <section id="alertas" class="manual-section">
+                <h2><i class="fas fa-bell"></i> Alertas y Notificaciones</h2>
+                
+                <div class="alert-types">
+                    <div class="alert-card info">
+                        <div class="alert-header">
+                            <i class="fas fa-info-circle"></i>
+                            <h4>Alerta Informativa</h4>
+                        </div>
+                        <p><strong>Cuándo se activa:</strong> Información general sobre el estado de memoria.</p>
+                        <p><strong>Severidad:</strong> Baja</p>
+                        <p><strong>Acción requerida:</strong> Ninguna</p>
+                    </div>
+
+                    <div class="alert-card warning">
+                        <div class="alert-header">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h4>Alerta de Precaución</h4>
+                        </div>
+                        <p><strong>Cuándo se activa:</strong> Memoria entre 60-80% del límite.</p>
+                        <p><strong>Severidad:</strong> Media</p>
+                        <p><strong>Acción requerida:</strong> Monitorear</p>
+                    </div>
+
+                    <div class="alert-card error">
+                        <div class="alert-header">
+                            <i class="fas fa-times-circle"></i>
+                            <h4>Alerta Crítica</h4>
+                        </div>
+                        <p><strong>Cuándo se activa:</strong> Memoria > 95% del límite.</p>
+                        <p><strong>Severidad:</strong> Alta</p>
+                        <p><strong>Acción requerida:</strong> Liberar memoria inmediatamente</p>
+                    </div>
+                </div>
+
+                <div class="notification-settings">
+                    <h3><i class="fas fa-sliders-h"></i> Configuración de Alertas</h3>
+                    <p>Puedes configurar los umbrales de alertas según tus necesidades:</p>
+                    <ul>
+                        <li><strong>Umbral de Precaución:</strong> Porcentaje para alerta de advertencia (por defecto: 60%)</li>
+                        <li><strong>Umbral de Alerta:</strong> Porcentaje para alerta crítica (por defecto: 80%)</li>
+                        <li><strong>Umbral Crítico:</strong> Porcentaje para alerta crítica (por defecto: 95%)</li>
+                        <li><strong>Frecuencia de Notificaciones:</strong> Cada cuánto tiempo enviar recordatorios</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Acciones -->
+            <section id="acciones" class="manual-section">
+                <h2><i class="fas fa-tools"></i> Acciones Disponibles</h2>
+                
+                <div class="quick-actions-grid">
+                    <div class="action-card">
+                        <h3><i class="fas fa-broom"></i> Limpiar Caché</h3>
+                        <p>Libera memoria limpiando el caché de operaciones.</p>
+                        <p><strong>Cuándo usar:</strong> Cuando la memoria esté cerca del límite</p>
+                    </div>
+
+                    <div class="action-card">
+                        <h3><i class="fas fa-trash-alt"></i> Limpiar Logs Antiguos</h3>
+                        <p>Elimina logs antiguos para liberar espacio en memoria.</p>
+                        <p><strong>Cuándo usar:</strong> Cuando hay muchos logs acumulados</p>
+                    </div>
+
+                    <div class="action-card">
+                        <h3><i class="fas fa-stop-circle"></i> Detener Sincronizaciones</h3>
+                        <p>Detiene sincronizaciones activas para liberar memoria temporalmente.</p>
+                        <p><strong>Cuándo usar:</strong> En situaciones críticas de memoria</p>
+                    </div>
+
+                    <div class="action-card">
+                        <h3><i class="fas fa-sync-alt"></i> Reiniciar Monitoreo</h3>
+                        <p>Reinicia las métricas del sistema de monitoreo.</p>
+                        <p><strong>Cuándo usar:</strong> Después de realizar limpiezas importantes</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Optimización -->
+            <section id="optimizacion" class="manual-section">
+                <h2><i class="fas fa-arrow-up"></i> Optimización de Memoria</h2>
+                
+                <div class="optimization-section">
+                    <h3><i class="fas fa-lightbulb"></i> Recomendaciones de Optimización</h3>
+                    
+                    <div class="recommendation-grid">
+                        <div class="recommendation-card high">
+                            <div class="recommendation-header">
+                                <i class="fas fa-clock"></i>
+                                <h4>Configurar TTL del Caché</h4>
+                            </div>
+                            <p>Ajusta el TTL del caché para balancear rendimiento y uso de memoria. Un TTL más corto usa menos memoria.</p>
+                        </div>
+
+                        <div class="recommendation-card medium">
+                            <div class="recommendation-header">
+                                <i class="fas fa-file-alt"></i>
+                                <h4>Limpiar Logs Regularmente</h4>
+                            </div>
+                            <p>Elimina logs antiguos periódicamente para evitar acumulación de datos.</p>
+                        </div>
+
+                        <div class="recommendation-card medium">
+                            <div class="recommendation-header">
+                                <i class="fas fa-sliders-h"></i>
+                                <h4>Optimizar Configuración de PHP</h4>
+                            </div>
+                            <p>Aumenta el límite de memoria PHP si es necesario: <code>memory_limit = 256M</code></p>
+                        </div>
+
+                        <div class="recommendation-card low">
+                            <div class="recommendation-header">
+                                <i class="fas fa-window-restore"></i>
+                                <h4>Evitar Procesos Simultáneos</h4>
+                            </div>
+                            <p>Evita ejecutar múltiples sincronizaciones grandes simultáneamente.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mejores Prácticas -->
+            <section id="mejores-practicas" class="manual-section">
+                <h2><i class="fas fa-check-circle"></i> Mejores Prácticas</h2>
+                
+                <div class="recommendation-grid">
+                    <div class="recommendation-card low">
+                        <div class="recommendation-header">
+                            <i class="fas fa-eye"></i>
+                            <h4>Monitorear Regularmente</h4>
+                        </div>
+                        <p>Revisa las métricas de memoria regularmente para identificar tendencias.</p>
+                    </div>
+
+                    <div class="recommendation-card medium">
+                        <div class="recommendation-header">
+                            <i class="fas fa-cog"></i>
+                            <h4>Configurar Umbrales Realistas</h4>
+                        </div>
+                        <p>Establece umbrales de alerta que reflejen tu uso real de memoria.</p>
+                    </div>
+
+                    <div class="recommendation-card high">
+                        <div class="recommendation-header">
+                            <i class="fas fa-trash"></i>
+                            <h4>Mantenimiento Preventivo</h4>
+                        </div>
+                        <p>Limpia el caché y los logs periódicamente antes de que sea necesario.</p>
+                    </div>
+
+                    <div class="recommendation-card medium">
+                        <div class="recommendation-header">
+                            <i class="fas fa-chart-line"></i>
+                            <h4>Analizar Tendencias</h4>
+                        </div>
+                        <p>Usa el historial para identificar patrones de uso de memoria.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Solución de Problemas -->
+            <section id="solucion-problemas" class="manual-section">
+                <h2><i class="fas fa-tools"></i> Solución de Problemas</h2>
+
+                <div class="troubleshooting-section">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Problemas Comunes</h3>
+                    
+                    <div class="problem-grid">
+                        <div class="problem-card">
+                            <h4><i class="fas fa-exclamation-circle"></i> Memoria Constantemente Alta</h4>
+                            <p><strong>Síntoma:</strong> La memoria siempre está cerca del límite.</p>
+                            <div class="solutions">
+                                <strong>Soluciones:</strong>
+                                <ol>
+                                    <li>Limpiar caché y logs periódicamente</li>
+                                    <li>Aumentar el límite de memoria PHP</li>
+                                    <li>Reducir el TTL del caché</li>
+                                    <li>Revisar si hay fugas de memoria en el código</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="problem-card">
+                            <h4><i class="fas fa-bell"></i> Alertas Frecuentes</h4>
+                            <p><strong>Síntoma:</strong> Recibes alertas de memoria constantemente.</p>
+                            <div class="solutions">
+                                <strong>Soluciones:</strong>
+                                <ol>
+                                    <li>Ajustar los umbrales de alerta a valores más altos</li>
+                                    <li>Implementar limpieza automática</li>
+                                    <li>Revisar qué operaciones consumen más memoria</li>
+                                    <li>Optimizar sincronizaciones grandes</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="problem-card">
+                            <h4><i class="fas fa-bug"></i> Fugas de Memoria</h4>
+                            <p><strong>Síntoma:</strong> La memoria aumenta gradualmente sin liberarse.</p>
+                            <div class="solutions">
+                                <strong>Soluciones:</strong>
+                                <ol>
+                                    <li>Revisar que las variables se liberen correctamente</li>
+                                    <li>Verificar cierres de conexiones</li>
+                                    <li>Revisar que no haya bucles infinitos</li>
+                                    <li>Contactar con soporte si persiste</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="problem-card">
+                            <h4><i class="fas fa-chart-line"></i> Gráficos No Se Actualizan</h4>
+                            <p><strong>Síntoma:</strong> Las métricas no cambian en la interfaz.</p>
+                            <div class="solutions">
+                                <strong>Soluciones:</strong>
+                                <ol>
+                                    <li>Recargar la página</li>
+                                    <li>Verificar que JavaScript esté activado</li>
+                                    <li>Limpiar la caché del navegador</li>
+                                    <li>Revisar consola del navegador para errores</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="logs-section">
+                    <h3><i class="fas fa-file-alt"></i> Revisar Logs</h3>
+                    <p>Para diagnosticar problemas de memoria:</p>
+                    <ol>
+                        <li>Navega a la página de <strong>Logs del Sistema</strong></li>
+                        <li>Filtra por "memoria" o "memory"</li>
+                        <li>Busca patrones de crecimiento de memoria</li>
+                        <li>Identifica qué operaciones consumen más recursos</li>
+                        <li>Revisa el historial de alertas</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="manual-footer">
+                <p><i class="fas fa-info-circle"></i> Este manual está actualizado para la versión 2.0.0 del sistema de Monitoreo de Memoria.</p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        // Smooth scrolling for navigation links
+        for (const anchor of document.querySelectorAll('a[href^="#"]')) {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        }
+
+        // Highlight current section
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('.manual-section');
+            const navLinks = document.querySelectorAll('.nav-list a');
+            
+            let current = '';
+            for (const section of sections) {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            }
+
+            for (const link of navLinks) {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
+

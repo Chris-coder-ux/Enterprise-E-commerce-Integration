@@ -1,0 +1,793 @@
+================================================================================
+MANUAL DE USUARIO - PLUGIN MI INTEGRACIÓN API
+Integración WooCommerce con Verial ERP
+Versión 2.0.0
+================================================================================
+
+ÍNDICE
+================================================================================
+1.  INTRODUCCIÓN
+2.  REQUISITOS DEL SISTEMA
+3.  INSTALACIÓN Y ACTIVACIÓN
+4.  CONFIGURACIÓN INICIAL
+5.  ACCESO AL DASHBOARD
+6.  FUNCIONALIDADES PRINCIPALES
+7.  SINCRONIZACIÓN DE PRODUCTOS
+8.  SINCRONIZACIÓN DE PEDIDOS
+9.  GESTIÓN DE CACHÉ
+10. CONFIGURACIÓN DE ENDPOINTS
+11. SISTEMA DE REINTENTOS
+12. MONITOREO DE MEMORIA
+13. DETECCIÓN AUTOMÁTICA
+14. LOGS Y DIAGNÓSTICO
+15. RESOLUCIÓN DE PROBLEMAS
+16. CONTACTO Y SOPORTE
+
+
+1. INTRODUCCIÓN
+================================================================================
+
+El Plugin "Mi Integración API" (Enterprise E-commerce Integration) es una
+herramienta profesional que conecta tu tienda WooCommerce con el sistema ERP
+Verial. Este plugin permite:
+
+- Sincronizar automáticamente productos, clientes y pedidos
+- Mantener actualizados los inventarios entre plataformas
+- Gestionar pedidos desde WooCommerce hacia Verial ERP
+- Monitorear el estado de la sincronización en tiempo real
+- Gestionar configuraciones avanzadas del sistema
+
+El plugin está diseñado para manejar tiendas de gran volumen con miles de
+productos y altas cantidades de pedidos diarios.
+
+
+2. REQUISITOS DEL SISTEMA
+================================================================================
+
+REQUISITOS MÍNIMOS:
+
+- WordPress: 6.0 o superior
+- PHP: 8.0 o superior
+- MySQL: 5.7 o superior
+- WooCommerce: 7.0 o superior
+- Memoria PHP: 256 MB (recomendado 512 MB)
+- Memoria WordPress: 64 MB
+- Conexión a Internet estable
+
+REQUISITOS RECOMENDADOS:
+
+- PHP: 8.1 o superior
+- Memoria PHP: 512 MB o más
+- Servidor con soporte cURL
+- Certificados SSL válidos para conexiones seguras
+- Tiempo de ejecución PHP: 300 segundos
+
+
+3. INSTALACIÓN Y ACTIVACIÓN
+================================================================================
+
+PASO 1: SUBIR EL PLUGIN
+------------------------
+1. Accede al panel de administración de WordPress
+2. Ve a Plugins > Añadir nuevo
+3. Haz clic en "Subir plugin"
+4. Selecciona el archivo mi-integracion-api.zip
+5. Haz clic en "Instalar ahora"
+
+PASO 2: ACTIVAR EL PLUGIN
+---------------------------
+1. Una vez instalado, haz clic en "Activar plugin"
+2. Verifica que WooCommerce esté activo
+3. Si WooCommerce no está activo, el plugin mostrará un aviso
+
+NOTA: El plugin requiere WooCommerce para funcionar correctamente.
+
+
+4. CONFIGURACIÓN INICIAL
+================================================================================
+
+ANTES DE COMENZAR
+------------------
+1. Asegúrate de tener las credenciales de acceso a la API de Verial
+2. Obtén la URL base del servicio web
+3. Solicita el número de sesión para tu tienda
+
+CONFIGURAR CREDENCIALES
+------------------------
+1. Ve a Mi Integración API > Endpoints
+2. Configura la URL base de la API de Verial
+3. Ingresa el número de sesión proporcionado por Verial
+4. Guarda los cambios
+
+URL BASE EJEMPLO:
+- Producción: http://tu-servidor:8000/WcfServiceLibraryVerial/
+- Test: http://x.verial.org:8000/WcfServiceLibraryVerial/
+
+NÚMERO DE SESIÓN:
+- Este número es proporcionado por Verial Soft
+- Es fijo y no cambia
+- Ejemplo para pruebas: 18
+
+
+5. ACCESO AL DASHBOARD
+================================================================================
+
+RUTA DE ACCESO
+--------------
+WordPress Admin > Mi Integración API > Dashboard
+
+URL DIRECTA:
+wp-admin/admin.php?page=mi-integracion-api
+
+EL DASHBOARD INCLUYE
+---------------------
+- Estado general del sistema
+- Métricas de sincronización
+- Contador de productos sincronizados
+- Historial de errores
+- Controles de sincronización
+- Acciones rápidas
+
+
+6. FUNCIONALIDADES PRINCIPALES
+================================================================================
+
+6.1 SINCRONIZACIÓN DE PRODUCTOS
+--------------------------------
+Sincroniza productos desde Verial a WooCommerce
+
+Características:
+- Sincronización masiva de productos
+- Actualización incremental (solo productos modificados)
+- Gestión automática de categorías
+- Importación de imágenes
+- Actualización de precios y stocks
+- Gestión de variaciones de productos
+
+6.2 SINCRONIZACIÓN DE PEDIDOS
+------------------------------
+Envía pedidos desde WooCommerce a Verial
+
+Características:
+- Creación automática de pedidos en Verial
+- Gestión de clientes automática
+- Envío de direcciones de entrega
+- Actualización de estado de pedidos
+- Gestión de métodos de pago
+- Tracking de estado de envío
+
+6.3 SISTEMA DE CACHÉ
+---------------------
+Optimiza el rendimiento del sistema
+
+Características:
+- Cache de respuestas de API
+- Reducción de llamadas a servidor
+- Mejora de velocidad de carga
+- Gestión automática de expiración
+- Limpieza programada
+
+6.4 GESTIÓN DE REINTENTOS
+--------------------------
+Reintentos automáticos en caso de error
+
+Características:
+- Configuración de intentos máximos
+- Intervalos de espera configurables
+- Reintentos exponenciales
+- Registro de fallos persistentes
+- Notificaciones de errores
+
+
+7. SINCRONIZACIÓN DE PRODUCTOS
+================================================================================
+
+7.1 SINCRONIZACIÓN MANUAL
+--------------------------
+Para iniciar una sincronización manual:
+
+1. Ve a Mi Integración API > Dashboard
+2. Localiza la sección "Sincronización de Productos"
+3. Haz clic en "Iniciar Sincronización"
+4. Monitorea el progreso en tiempo real
+5. El sistema mostrará el porcentaje de avance
+
+NOTA: La sincronización puede tardar varios minutos dependiendo de la
+cantidad de productos.
+
+7.2 SINCRONIZACIÓN AUTOMÁTICA
+------------------------------
+El plugin puede configurarse para sincronizar automáticamente:
+
+- Sincronización completa diaria
+- Actualizaciones incrementales cada hora
+- Sincronización en tiempo real (opcional)
+
+CONFIGURAR SINCRONIZACIÓN AUTOMÁTICA:
+1. Ve a Configuración > Ajustes
+2. Activa "Sincronización automática"
+3. Selecciona la frecuencia deseada
+4. Guarda los cambios
+
+7.3 TIPOS DE PRODUCTOS SINCRONIZADOS
+-------------------------------------
+El plugin sincroniza:
+
+- Productos simples
+- Productos variables
+- Productos agrupados
+- Productos externos
+
+DATOS SINCRONIZADOS:
+- Nombre y descripción
+- SKU y referencia
+- Precio y precio con impuestos
+- Stock y disponibilidad
+- Categorías y etiquetas
+- Atributos y variaciones
+- Imágenes (hasta 10 por producto)
+- Datos adicionales (peso, dimensiones)
+
+7.4 MAPEO DE CATEGORÍAS
+------------------------
+El sistema mapea automáticamente las categorías:
+
+VERIAL                   -> WOOCOMMERCE
+ID_Categoria            -> WooCommerce Category
+Nombre                   -> Name
+ID_Padre                -> Parent Category
+
+CONFIGURAR MAPEO MANUAL:
+1. Ve a Productos > Categorías
+2. Edita la categoría de WooCommerce
+3. Asigna el ID de categoría de Verial
+4. Guarda los cambios
+
+
+8. SINCRONIZACIÓN DE PEDIDOS
+================================================================================
+
+8.1 CREACIÓN AUTOMÁTICA DE PEDIDOS
+-----------------------------------
+Cuando un cliente completa una compra en WooCommerce:
+
+1. El plugin captura el evento
+2. Obtiene los datos del pedido
+3. Crea o actualiza el cliente en Verial
+4. Crea la dirección de envío
+5. Genera el pedido en Verial
+6. Actualiza el estado en WooCommerce
+
+8.2 DATOS ENVIADOS A VERIAL
+----------------------------
+El plugin envía la siguiente información:
+
+CLIENTE:
+- NIF/CIF
+- Nombre y apellidos
+- Razón social
+- Dirección completa
+- Teléfonos y email
+- Método de pago
+- Agente comisionista (si aplica)
+
+PEDIDO:
+- Fecha y hora
+- Referencia del pedido
+- Estado del pedido
+- Importe total (con y sin impuestos)
+- Impuestos desglosados
+- Portes y envío
+- Comentarios del cliente
+
+LÍNEAS DEL PEDIDO:
+- ID del artículo en Verial
+- Cantidad y unidades
+- Precio unitario
+- Descuentos aplicados
+- Importe de línea
+
+8.3 ESTADOS DE PEDIDOS
+-----------------------
+Estados posibles en Verial:
+
+0 - Pedido no existe en Verial
+1 - Recibido
+2 - En preparación
+3 - Preparado
+4 - Enviado
+
+CONSULTAR ESTADO:
+1. Ve a Mi Integración API > Sincronización de Pedidos
+2. Busca el pedido por ID o referencia
+3. Verás el estado actualizado
+
+8.4 GESTIÓN DE ERRORES EN PEDIDOS
+----------------------------------
+Si falla la creación de un pedido:
+
+1. El plugin registra el error
+2. Notifica al administrador
+3. Reintenta automáticamente (si está configurado)
+4. Guarda el pedido en modo "pendiente"
+5. Muestra el error en el dashboard
+
+RECUPERAR PEDIDO FALLIDO:
+1. Ve a Mi Integración API > Dashboard
+2. Localiza "Pedidos Pendientes"
+3. Haz clic en "Reintentar"
+4. Verifica el resultado
+
+
+9. GESTIÓN DE CACHÉ
+================================================================================
+
+9.1 QUÉ ES EL CACHÉ
+--------------------
+El sistema de caché almacena temporalmente las respuestas de la API para:
+
+- Reducir el número de llamadas al servidor
+- Mejorar la velocidad de carga
+- Optimizar el uso de recursos
+- Reducir la carga en el servidor de Verial
+
+9.2 TIPOS DE CACHÉ
+-------------------
+CACHE DE PRODUCTOS:
+- Tiempo de vida: Configurable (por defecto 24 horas)
+- Se actualiza: En cada sincronización
+- Contiene: Datos de productos y sus variaciones
+
+CACHE DE STOCK:
+- Tiempo de vida: Más corto (por defecto 6 horas)
+- Se actualiza: Con cada consulta de stock
+- Contiene: Disponibilidad y cantidad de productos
+
+CACHE DE CLIENTES:
+- Tiempo de vida: 12 horas
+- Se actualiza: Al crear/modificar clientes
+- Contiene: Datos de clientes y direcciones
+
+CACHE DE PRECIOS:
+- Tiempo de vida: Configurable
+- Se actualiza: En sincronización de productos
+- Contiene: Precios y condiciones de tarifa
+
+9.3 GESTIONAR CACHÉ
+--------------------
+LIMPIAR CACHÉ MANUALMENTE:
+1. Ve a Mi Integración API > Caché
+2. Haz clic en "Limpiar todo el caché"
+3. Confirma la acción
+
+LIMPIAR CACHÉ ESPECÍFICO:
+1. Ve a Mi Integración API > Caché
+2. Selecciona el tipo de caché a limpiar
+3. Haz clic en "Limpiar seleccionado"
+
+CONFIGURAR EXPIRACIÓN:
+1. Ve a Configuración > Caché
+2. Ajusta el tiempo de expiración
+3. Guarda los cambios
+
+AUTOLIMPIEZA:
+El sistema limpia automáticamente el caché:
+- Diariamente a las 2:00 AM
+- Cuando hay cambios en productos
+- Cuando el caché alcanza el tamaño límite
+
+
+10. CONFIGURACIÓN DE ENDPOINTS
+================================================================================
+
+10.1 QUÉ SON LOS ENDPOINTS
+---------------------------
+Los endpoints son las URLs de los servicios web de Verial que el plugin
+utiliza para comunicarse con el sistema ERP.
+
+10.2 ENDPOINTS PRINCIPALES
+--------------------------
+GET_ARTICULOS_WS:
+- Obtiene la lista de productos
+- Parámetros: x (sesión), fecha, hora, inicio, fin
+- Uso: Sincronización de productos
+
+GET_STOCK_ARTICULOS_WS:
+- Obtiene el stock de productos
+- Parámetros: x, id_articulo, art_fecha, art_hora
+- Uso: Actualización de inventarios
+
+GET_CLIENTES_WS:
+- Obtiene la lista de clientes
+- Parámetros: x, id_cliente, nif, fecha
+- Uso: Gestión de clientes
+
+NUEVO_DOC_CLIENTE_WS:
+- Crea un nuevo pedido en Verial
+- Parámetros: Datos completos del pedido
+- Uso: Envío de pedidos
+
+ESTADO_PEDIDOS_WS:
+- Consulta el estado de pedidos
+- Parámetros: IDs o referencias de pedidos
+- Uso: Tracking de pedidos
+
+10.3 CONFIGURAR ENDPOINTS
+--------------------------
+1. Ve a Mi Integración API > Endpoints
+2. Verifica que la URL base esté correcta
+3. Comprueba la conexión con "Test de Conexión"
+4. Revisa el número de sesión
+5. Guarda los cambios
+
+TEST DE CONEXIÓN:
+1. Haz clic en "Probar Conexión"
+2. El sistema intentará conectarse a Verial
+3. Verás el resultado en pantalla
+4. Si hay errores, revísalos y corrige
+
+
+11. SISTEMA DE REINTENTOS
+================================================================================
+
+11.1 OBJETIVO DEL SISTEMA
+--------------------------
+El sistema de reintentos maneja automáticamente los errores temporales:
+
+- Problemas de conexión a Internet
+- Servidor de Verial no disponible temporalmente
+- Timeouts de la API
+- Errores de validación temporales
+
+11.2 CONFIGURACIÓN
+-------------------
+CONFIGURAR REINTENTOS:
+1. Ve a Mi Integración API > Reintentos
+2. Establece el número máximo de intentos
+3. Configura el intervalo entre intentos
+4. Activa/desactiva reintentos exponenciales
+5. Guarda los cambios
+
+PARÁMETROS:
+- Máximo de intentos: 3-10 (recomendado 5)
+- Intervalo inicial: 30-120 segundos
+- Reintento exponencial: Activar (recomendado)
+
+EJEMPLO DE CONFIGURACIÓN ÓPTIMA:
+- Intentos máximos: 5
+- Intervalo inicial: 60 segundos
+- Reintento exponencial: Sí
+- Tiempo máximo total: ~30 minutos
+
+11.3 TIPOS DE ERRORES QUE REINTENTA
+-------------------------------------
+ERRORES AUTOMÁTICOS (reintentados):
+- Timeout de conexión
+- Servidor no responde (HTTP 500, 503)
+- Error de red temporal
+- Servidor sobrecargado
+
+ERRORES NO REINTENTADOS:
+- Error de autenticación
+- Datos incorrectos
+- Cliente ya existe
+- Módulo no contratado
+
+11.4 MONITOREO DE REINTENTOS
+----------------------------
+En el Dashboard verás:
+
+- Pedidos en reintento
+- Productos en reintento
+- Intentos realizados
+- Último intento
+- Estado actual
+
+REVISAR ESTADO:
+1. Ve a Mi Integración API > Dashboard
+2. Localiza "Sistema de Reintentos"
+3. Revisa los elementos pendientes
+4. Si hay fallos persistentes, revisa los logs
+
+
+12. MONITOREO DE MEMORIA
+================================================================================
+
+12.1 PROPÓSITO
+---------------
+El monitoreo de memoria controla el uso de recursos durante las
+sincronizaciones para evitar sobrecargas del servidor.
+
+12.2 MÉTRICAS MONITOREADAS
+---------------------------
+USO DE MEMORIA PHP:
+- Memoria actual usada
+- Límite del servidor
+- Pico de memoria alcanzado
+- Memoria disponible
+
+RENDIMIENTO:
+- Tiempo de ejecución de sincronización
+- Número de elementos procesados
+- Velocidad de procesamiento
+- Recursos del servidor
+
+12.3 VER USO DE MEMORIA
+------------------------
+1. Ve a Mi Integración API > Monitoreo de Memoria
+2. Verás gráficos de uso en tiempo real
+3. Revisa el historial de uso
+4. Analiza los picos de memoria
+
+12.4 OPTIMIZACIÓN
+-----------------
+Si el sistema muestra advertencias de memoria:
+
+1. Aumenta la memoria PHP en wp-config.php:
+   define('WP_MEMORY_LIMIT', '512M');
+
+2. Reduce el tamaño de lote de sincronización
+3. Desactiva plugins no necesarios durante sincronización
+4. Contacta con tu proveedor de hosting
+
+
+13. DETECCIÓN AUTOMÁTICA
+================================================================================
+
+13.1 QUÉ ES
+-----------
+La detección automática identifica productos o pedidos que requieren
+atención especial.
+
+13.2 TIPOS DE DETECCIÓN
+------------------------
+PRODUCTOS SIN SINCRONIZAR:
+- Productos en Verial que no están en WooCommerce
+- Productos con diferencias significativas
+- Productos con errores de mapeo
+
+STOCK DESAJUSTADO:
+- Diferencias entre stock en Verial y WooCommerce
+- Stocks negativos no resueltos
+- Sincronizaciones fallidas de stock
+
+PEDIDOS PENDIENTES:
+- Pedidos que no llegaron a Verial
+- Pedidos con errores de sincronización
+- Pedidos rechazados por validación
+
+13.3 USAR LA DETECCIÓN
+----------------------
+1. Ve a Mi Integración API > Detección Automática
+2. Revisa los elementos detectados
+3. Selecciona los elementos a sincronizar
+4. Haz clic en "Sincronizar Seleccionados"
+
+CONFIGURACIÓN:
+- Detección automática: Activar
+- Intervalo de detección: Diario
+- Notificaciones: Activar
+- Correo de notificación: Tu email
+
+
+14. LOGS Y DIAGNÓSTICO
+================================================================================
+
+14.1 SISTEMA DE LOGS
+---------------------
+El plugin registra automáticamente todas las operaciones:
+
+- Sincronizaciones de productos
+- Creación de pedidos
+- Errores y advertencias
+- Conexiones a la API
+- Optimizaciones del sistema
+
+14.2 VER LOS LOGS
+-----------------
+OPCIÓN 1 - DESDE EL DASHBOARD:
+1. Ve a Mi Integración API > Dashboard
+2. Localiza la sección "Últimos Eventos"
+3. Revisa los logs más recientes
+
+OPCIÓN 2 - ARCHIVOS DE LOG:
+Los logs se guardan en:
+- wp-content/uploads/mi-integracion-api-cache/
+- Formato: JSON
+- Tamaño máximo por archivo: 5 MB
+
+14.3 NIVELES DE LOG
+--------------------
+ERROR: Problemas críticos que requieren atención
+WARNING: Advertencias que pueden causar problemas
+INFO: Información general de operaciones
+DEBUG: Información detallada para desarrollo
+
+14.4 FILTRAR LOGS
+-----------------
+Desde el dashboard puedes filtrar por:
+
+- Tipo de evento (Error, Warning, Info, Debug)
+- Fecha
+- Módulo (Productos, Pedidos, Clientes)
+- Término de búsqueda
+
+14.5 EXPORTAR LOGS
+-------------------
+1. Ve a Mi Integración API > Logs
+2. Selecciona el rango de fechas
+3. Filtra los logs deseados
+4. Haz clic en "Exportar"
+5. Descarga el archivo CSV o JSON
+
+14.6 LIMPIAR LOGS
+------------------
+Los logs antiguos se eliminan automáticamente:
+
+- Conservar últimos 30 días (por defecto)
+- Conservar últimos 100.000 registros
+- Limpieza automática diaria a las 3:00 AM
+
+CONFIGURAR LIMPIEZA:
+1. Ve a Configuración > Logs
+2. Ajusta los días de conservación
+3. Establece el límite de registros
+4. Guarda los cambios
+
+
+15. RESOLUCIÓN DE PROBLEMAS
+================================================================================
+
+15.1 PROBLEMA: PRODUCTOS NO SE SINCRONIZAN
+------------------------------------------
+POSIBLES CAUSAS:
+- Falta de conexión con Verial
+- Error en las credenciales
+- Productos duplicados
+- Problemas de memoria
+
+SOLUCIÓN:
+1. Verifica la conexión en Endpoints
+2. Revisa las credenciales de la API
+3. Limpia el caché
+4. Revisa los logs en busca de errores específicos
+5. Reduce el tamaño de lote si hay problemas de memoria
+
+15.2 PROBLEMA: PEDIDOS NO SE ENVÍAN A VERIAL
+--------------------------------------------
+POSIBLES CAUSAS:
+- Cliente no existe en Verial
+- Datos incompletos en el pedido
+- Error de validación
+- Problema de conexión
+
+SOLUCIÓN:
+1. Verifica que el cliente esté creado en Verial
+2. Revisa los datos del pedido en WooCommerce
+3. Consulta los logs del error específico
+4. Verifica la conexión con Verial
+5. Reintenta el envío manualmente
+
+15.3 PROBLEMA: STOCK DESAJUSTADO
+---------------------------------
+POSIBLES CAUSAS:
+- Ventas realizadas en Verial directamente
+- Sincronización incompleta
+- Productos movidos manualmente
+- Error en el mapeo de productos
+
+SOLUCIÓN:
+1. Sincroniza nuevamente todos los productos
+2. Verifica el mapeo de productos
+3. Revisa si hay ventas manuales en Verial
+4. Usa la herramienta de detección automática
+5. Ajusta el stock manualmente si es necesario
+
+15.4 PROBLEMA: ERROR DE MEMORIA
+--------------------------------
+POSIBLES CAUSAS:
+- Lote de sincronización muy grande
+- Múltiples sincronizaciones simultáneas
+- Memoria PHP insuficiente
+- Plugins conflictivos
+
+SOLUCIÓN:
+1. Aumenta la memoria PHP en wp-config.php
+2. Reduce el tamaño de lote de sincronización
+3. Desactiva otros plugins durante sincronización
+4. Contacta con tu proveedor de hosting
+
+15.5 PROBLEMA: LA API NO RESPONDE
+----------------------------------
+POSIBLES CAUSAS:
+- Servidor de Verial caído
+- Problema de red
+- URL incorrecta del endpoint
+- Certificado SSL caducado
+
+SOLUCIÓN:
+1. Verifica el estado del servidor de Verial
+2. Revisa la conexión a Internet
+3. Confirma que la URL del endpoint sea correcta
+4. Actualiza los certificados SSL si es necesario
+5. Contacta con el soporte de Verial
+
+15.6 DIAGNÓSTICO AVANZADO
+--------------------------
+Para obtener información de diagnóstico completa:
+
+1. Ve a Mi Integración API > Configuración
+2. Haz clic en "Generar Informe de Diagnóstico"
+3. Descarga el archivo generado
+4. Envíalo al equipo de soporte
+
+EL INFORME CONTIENE:
+- Versión del plugin y WordPress
+- Configuración actual
+- Últimos errores registrados
+- Estado del sistema
+- Capacidades del servidor
+
+15.7 RESTAURAR CONFIGURACIÓN
+-----------------------------
+Si algo va mal, puedes restaurar la configuración:
+
+1. Ve a Configuración > Restaurar
+2. Selecciona un punto de restauración anterior
+3. Haz clic en "Restaurar"
+4. Confirma la acción
+
+NOTA: Esto restaurará todos los ajustes pero NO eliminará datos de
+productos o pedidos.
+
+
+16. CONTACTO Y SOPORTE
+================================================================================
+
+DESARROLLADOR
+-------------
+Autor: Christian
+Versión del Plugin: 2.0.0
+Sitio Web: https://www.verialerp.com
+
+SISTEMA DE SOPORTE
+------------------
+Para reportar problemas o solicitar ayuda:
+
+1. Genera un informe de diagnóstico
+2. Recopila logs relevantes
+3. Documenta los pasos para reproducir el problema
+4. Contacta con el equipo de soporte
+
+INFORMACIÓN TÉCNICA
+-------------------
+- API de Verial: VerialSoft
+- Versión mínima compatible: 1.8.0
+- Formato de comunicación: JSON
+- Método de autenticación: Número de sesión
+- Protocolo: HTTP/HTTPS
+- Puerto: 8000 (por defecto)
+
+DOCUMENTACIÓN ADICIONAL
+------------------------
+- Manual de Integración Verial (archivo: Manual integración servicio Web Verial.pdf)
+- Código del plugin con documentación inline
+- Dashboard HTML interactivo (docs/manual-usuario/)
+
+CONTRIBUIR
+----------
+Este plugin está en desarrollo activo. Si encuentras problemas:
+
+1. Revisa primero la sección de resolución de problemas
+2. Consulta los logs del sistema
+3. Genera un informe de diagnóstico
+4. Contacta con el equipo de desarrollo
+
+================================================================================
+FIN DEL MANUAL
+================================================================================
+
+Manual generado para: Plugin Mi Integración API v2.0.0
+Última actualización: 2025
+================================================================================
+

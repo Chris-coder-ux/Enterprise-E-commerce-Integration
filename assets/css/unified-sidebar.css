@@ -1,0 +1,786 @@
+/**
+ * Sidebar Unificado - Mi Integración API
+ * Estilos específicos para el sidebar unificado con funcionalidades avanzadas
+ * 
+ * @package MiIntegracionApi
+ * @subpackage Admin
+ */
+
+/* ========================================
+   SIDEBAR UNIFICADO
+   ======================================== */
+
+.mi-integracion-api-sidebar {
+  width: 280px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  height: fit-content;
+  position: sticky;
+  top: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.mi-integracion-api-sidebar.collapsed {
+  width: 60px;
+}
+
+.mi-integracion-api-sidebar.collapsed .unified-sidebar-content {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ========================================
+   HEADER DEL SIDEBAR
+   ======================================== */
+
+.unified-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.unified-sidebar-header h2 {
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.2px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar-toggle {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.sidebar-toggle:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+/* ========================================
+   CONTENIDO DEL SIDEBAR
+   ======================================== */
+
+.unified-sidebar-content {
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+/* ========================================
+   NAVEGACIÓN PRINCIPAL
+   ======================================== */
+
+.unified-nav-menu {
+  list-style: none;
+  margin: 0 0 24px 0;
+  padding: 0;
+}
+
+.unified-nav-item {
+  margin-bottom: 4px;
+}
+
+.unified-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.unified-nav-link:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  transform: translateX(4px);
+}
+
+.unified-nav-link.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.unified-nav-link.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 20px;
+  background: white;
+  border-radius: 0 2px 2px 0;
+}
+
+.nav-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.nav-icon.dashicons {
+  font-family: dashicons;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.nav-text {
+  flex: 1;
+}
+
+/* ========================================
+   SECCIÓN DE ACCIONES RÁPIDAS
+   ======================================== */
+
+.unified-actions-section {
+  margin-bottom: 24px;
+}
+
+.unified-actions-section h3 {
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.unified-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.unified-action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.unified-action-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.unified-action-btn i {
+  font-size: 16px;
+}
+
+/* ========================================
+   SECCIÓN DE CONFIGURACIÓN
+   ======================================== */
+
+.unified-config-section {
+  margin-bottom: 24px;
+}
+
+.unified-config-section h3 {
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.unified-config-item {
+  margin-bottom: 12px;
+}
+
+.unified-config-item label {
+  display: block;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.theme-switcher,
+.unified-input {
+  width: 100%;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: white;
+  font-size: 12px;
+  transition: all 0.3s ease;
+}
+
+.theme-switcher:focus,
+.unified-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+}
+
+.theme-switcher option {
+  background: #1e293b;
+  color: white;
+}
+
+/* ========================================
+   SECCIÓN DE BÚSQUEDA
+   ======================================== */
+
+.unified-search-section {
+  margin-bottom: 0;
+}
+
+.unified-search-input {
+  width: 100%;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: white;
+  font-size: 13px;
+  transition: all 0.3s ease;
+}
+
+.unified-search-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+}
+
+.unified-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+/* Dispositivos extra pequeños (móviles, 0px - 576px) */
+@media (max-width: 576px) {
+  .mi-integracion-api-sidebar {
+    width: 100%;
+    position: relative;
+    top: 0;
+    margin-bottom: 15px;
+  }
+
+  .mi-integracion-api-sidebar.collapsed {
+    width: 100%;
+  }
+
+  .mi-integracion-api-sidebar.collapsed .unified-sidebar-content {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .unified-actions-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .unified-action-btn {
+    padding: 8px 4px;
+    font-size: 10px;
+  }
+
+  .unified-action-btn i {
+    font-size: 14px;
+  }
+}
+
+/* Dispositivos pequeños (móviles landscape, 577px - 768px) */
+@media (min-width: 577px) and (max-width: 768px) {
+  .mi-integracion-api-sidebar {
+    width: 100%;
+    position: relative;
+    top: 0;
+    margin-bottom: 18px;
+  }
+
+  .mi-integracion-api-sidebar.collapsed {
+    width: 100%;
+  }
+
+  .mi-integracion-api-sidebar.collapsed .unified-sidebar-content {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .unified-actions-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Dispositivos medianos (tablets, 769px - 992px) */
+@media (min-width: 769px) and (max-width: 992px) {
+  .mi-integracion-api-sidebar {
+    width: 240px;
+  }
+}
+
+/* Dispositivos grandes (laptops, 993px - 1200px) */
+@media (min-width: 993px) and (max-width: 1200px) {
+  .mi-integracion-api-sidebar {
+    width: 260px;
+  }
+}
+
+/* Dispositivos extra grandes (desktops grandes, 1201px+) */
+@media (min-width: 1201px) {
+  .mi-integracion-api-sidebar {
+    width: 280px;
+  }
+}
+
+/* ========================================
+   MEJORAS DE ACCESIBILIDAD
+   ======================================== */
+
+/* Alto contraste */
+@media (prefers-contrast: high) {
+  .mi-integracion-api-sidebar {
+    border-width: 2px;
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+
+  .unified-nav-link {
+    border: 1px solid transparent;
+  }
+
+  .unified-nav-link:hover,
+  .unified-nav-link.active {
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+}
+
+/* Reducir movimiento */
+@media (prefers-reduced-motion: reduce) {
+  .mi-integracion-api-sidebar,
+  .unified-sidebar-content,
+  .unified-nav-link,
+  .unified-action-btn,
+  .theme-switcher,
+  .unified-input,
+  .unified-search-input {
+    transition: none;
+  }
+
+  .unified-nav-link:hover,
+  .unified-action-btn:hover {
+    transform: none;
+  }
+}
+
+/* Modo oscuro del sistema */
+@media (prefers-color-scheme: dark) {
+  .unified-nav-link,
+  .unified-action-btn,
+  .unified-config-item label,
+  .unified-actions-section h3,
+  .unified-config-section h3 {
+    color: rgba(255, 255, 255, 0.95);
+  }
+}
+
+/* ========================================
+   ESTADOS ESPECIALES
+   ======================================== */
+
+/* Estado de carga */
+.unified-sidebar-content.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Estado de error */
+.unified-sidebar-content.error {
+  border: 1px solid #e74c3c;
+}
+
+/* Estado de éxito */
+.unified-sidebar-content.success {
+  border: 1px solid #27ae60;
+}
+
+/* ========================================
+   ANIMACIONES
+   ======================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.unified-sidebar-content {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Animación de entrada para elementos del menú */
+.unified-nav-item {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.unified-nav-item:nth-child(1) { animation-delay: 0.1s; }
+.unified-nav-item:nth-child(2) { animation-delay: 0.2s; }
+.unified-nav-item:nth-child(3) { animation-delay: 0.3s; }
+.unified-nav-item:nth-child(4) { animation-delay: 0.4s; }
+.unified-nav-item:nth-child(5) { animation-delay: 0.5s; }
+.unified-nav-item:nth-child(6) { animation-delay: 0.6s; }
+.unified-nav-item:nth-child(7) { animation-delay: 0.7s; }
+
+/* ========================================
+   TEMAS
+   ======================================== */
+
+/* Tema por defecto (ya definido arriba) - usa los estilos base */
+
+/* Tema oscuro */
+.theme-dark {
+  --bg-body: #0a0a0a;
+  --bg-card: #1a1a1a;
+  --bg-sidebar: #0d1117;
+  --border-color: #30363d;
+  --text-primary: #f0f6fc;
+  --text-secondary: #8b949e;
+  --text-muted: #6e7681;
+  --hover-bg: #21262d;
+  --active-bg: #30363d;
+}
+
+.theme-dark .mi-integracion-api-admin {
+  background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+}
+
+.theme-dark .mi-integracion-api-sidebar {
+  background: rgba(13, 17, 23, 0.8);
+  border-color: rgba(48, 54, 61, 0.5);
+}
+
+.theme-dark .unified-sidebar-header {
+  border-bottom-color: rgba(48, 54, 61, 0.5);
+}
+
+.theme-dark .unified-nav-link {
+  color: rgba(240, 246, 252, 0.7);
+}
+
+.theme-dark .unified-nav-link:hover {
+  background: rgba(33, 38, 45, 0.6);
+  color: #f0f6fc;
+}
+
+.theme-dark .unified-nav-link.active {
+  background: linear-gradient(135deg, #238636 0%, #2ea043 100%);
+  color: #f0f6fc;
+}
+
+.theme-dark .unified-action-btn {
+  background: rgba(33, 38, 45, 0.6);
+  border-color: rgba(48, 54, 61, 0.5);
+  color: rgba(240, 246, 252, 0.7);
+}
+
+.theme-dark .unified-action-btn:hover {
+  background: rgba(48, 54, 61, 0.8);
+  color: #f0f6fc;
+}
+
+.theme-dark .theme-switcher,
+.theme-dark .unified-input,
+.theme-dark .unified-search-input {
+  background: rgba(13, 17, 23, 0.8);
+  border-color: rgba(48, 54, 61, 0.5);
+  color: #f0f6fc;
+}
+
+.theme-dark .theme-switcher:focus,
+.theme-dark .unified-input:focus,
+.theme-dark .unified-search-input:focus {
+  border-color: #238636;
+  box-shadow: 0 0 0 2px rgba(35, 134, 54, 0.1);
+}
+
+.theme-dark .unified-config-item label,
+.theme-dark .unified-actions-section h3,
+.theme-dark .unified-config-section h3 {
+  color: rgba(240, 246, 252, 0.8);
+}
+
+/* Tema claro */
+.theme-light {
+  --bg-body: #f6f8fa;
+  --bg-card: #ffffff;
+  --bg-sidebar: #f6f8fa;
+  --border-color: #d0d7de;
+  --text-primary: #24292f;
+  --text-secondary: #656d76;
+  --text-muted: #8c959f;
+  --hover-bg: #f3f4f6;
+  --active-bg: #e1e4e8;
+}
+
+.theme-light .mi-integracion-api-admin {
+  background: linear-gradient(135deg, #f6f8fa 0%, #e1e4e8 100%);
+}
+
+.theme-light .mi-integracion-api-sidebar {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(208, 215, 222, 0.8);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.theme-light .unified-sidebar-header {
+  border-bottom-color: rgba(208, 215, 222, 0.8);
+}
+
+.theme-light .unified-sidebar-header h2 {
+  color: #24292f;
+  text-shadow: none;
+  font-weight: 700;
+}
+
+.theme-light .unified-nav-link {
+  color: rgba(36, 41, 47, 0.9);
+}
+
+.theme-light .unified-nav-link:hover {
+  background: rgba(243, 244, 246, 0.8);
+  color: #24292f;
+}
+
+.theme-light .unified-nav-link.active {
+  background: linear-gradient(135deg, #0969da 0%, #0550ae 100%);
+  color: #ffffff;
+}
+
+.theme-light .unified-action-btn {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(208, 215, 222, 0.8);
+  color: rgba(36, 41, 47, 0.9);
+}
+
+.theme-light .unified-action-btn:hover {
+  background: rgba(243, 244, 246, 0.9);
+  color: #24292f;
+}
+
+.theme-light .theme-switcher,
+.theme-light .unified-input,
+.theme-light .unified-search-input {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(208, 215, 222, 0.8);
+  color: #24292f;
+}
+
+.theme-light .theme-switcher:focus,
+.theme-light .unified-input:focus,
+.theme-light .unified-search-input:focus {
+  border-color: #0969da;
+  box-shadow: 0 0 0 2px rgba(9, 105, 218, 0.1);
+}
+
+.theme-light .unified-config-item label,
+.theme-light .unified-actions-section h3,
+.theme-light .unified-config-section h3 {
+  color: #24292f;
+  font-weight: 600;
+}
+
+.theme-light .unified-search-input::placeholder {
+  color: rgba(36, 41, 47, 0.5);
+}
+
+/* Contenido principal en tema claro */
+.theme-light .mi-integracion-api-main-content {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(208, 215, 222, 0.8);
+}
+
+.theme-light .mi-integracion-api-main-content h1,
+.theme-light .mi-integracion-api-main-content h2,
+.theme-light .mi-integracion-api-main-content h3,
+.theme-light .mi-integracion-api-main-content h4,
+.theme-light .mi-integracion-api-main-content h5,
+.theme-light .mi-integracion-api-main-content h6 {
+  color: #24292f;
+  text-shadow: none;
+}
+
+.theme-light .mi-integracion-api-main-content p,
+.theme-light .mi-integracion-api-main-content span,
+.theme-light .mi-integracion-api-main-content div {
+  color: #24292f;
+}
+
+.theme-light .mi-integracion-api-main-content .card-title,
+.theme-light .mi-integracion-api-main-content .widget-title {
+  color: #24292f;
+  font-weight: 600;
+}
+
+.theme-light .mi-integracion-api-main-content .card-text,
+.theme-light .mi-integracion-api-main-content .widget-description {
+  color: #656d76;
+}
+
+.theme-light .mi-integracion-api-main-content .btn {
+  color: #24292f;
+}
+
+.theme-light .mi-integracion-api-main-content .form-control,
+.theme-light .mi-integracion-api-main-content .form-select {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-color: rgba(208, 215, 222, 0.8);
+  color: #24292f;
+}
+
+.theme-light .mi-integracion-api-main-content .form-control:focus,
+.theme-light .mi-integracion-api-main-content .form-select:focus {
+  border-color: #0969da;
+  box-shadow: 0 0 0 2px rgba(9, 105, 218, 0.1);
+}
+
+/* Tarjetas y widgets en tema claro */
+.theme-light .mi-integracion-api-main-content .card {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(208, 215, 222, 0.8);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.theme-light .mi-integracion-api-main-content .card-header {
+  background: rgba(248, 250, 252, 0.9);
+  border-bottom-color: rgba(208, 215, 222, 0.8);
+}
+
+.theme-light .mi-integracion-api-main-content .card-body {
+  color: #24292f;
+}
+
+.theme-light .mi-integracion-api-main-content .card-footer {
+  background: rgba(248, 250, 252, 0.9);
+  border-top-color: rgba(208, 215, 222, 0.8);
+}
+
+/* Elementos específicos del dashboard */
+.theme-light .mi-integracion-api-main-content .status-card,
+.theme-light .mi-integracion-api-main-content .metric-card {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(208, 215, 222, 0.8);
+}
+
+.theme-light .mi-integracion-api-main-content .status-indicator {
+  color: #24292f;
+}
+
+.theme-light .mi-integracion-api-main-content .metric-value {
+  color: #24292f;
+  font-weight: 600;
+}
+
+.theme-light .mi-integracion-api-main-content .metric-label {
+  color: #656d76;
+}
+
+/* Botones en tema claro */
+.theme-light .mi-integracion-api-main-content .btn-primary {
+  background: linear-gradient(135deg, #0969da 0%, #0550ae 100%);
+  border-color: #0550ae;
+  color: #ffffff;
+}
+
+.theme-light .mi-integracion-api-main-content .btn-secondary {
+  background: #f6f8fa;
+  border-color: #d0d7de;
+  color: #24292f;
+}
+
+.theme-light .mi-integracion-api-main-content .btn-outline-primary {
+  border-color: #0969da;
+  color: #0969da;
+}
+
+.theme-light .mi-integracion-api-main-content .btn-outline-primary:hover {
+  background: #0969da;
+  color: #ffffff;
+}
+
+/* ========================================
+   UTILIDADES
+   ======================================== */
+
+/* Ocultar elementos en modo colapsado */
+.mi-integracion-api-sidebar.collapsed .nav-text,
+.mi-integracion-api-sidebar.collapsed .unified-actions-section,
+.mi-integracion-api-sidebar.collapsed .unified-config-section,
+.mi-integracion-api-sidebar.collapsed .unified-search-section {
+  display: none;
+}
+
+/* Mostrar solo iconos en modo colapsado */
+.mi-integracion-api-sidebar.collapsed .unified-nav-link {
+  justify-content: center;
+  padding: 12px;
+}
+
+.mi-integracion-api-sidebar.collapsed .nav-icon {
+  margin: 0;
+}
+
+/* Indicador de estado del sidebar */
+.mi-integracion-api-sidebar::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -10px;
+  width: 4px;
+  height: 40px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 2px;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.mi-integracion-api-sidebar:hover::after {
+  opacity: 1;
+}

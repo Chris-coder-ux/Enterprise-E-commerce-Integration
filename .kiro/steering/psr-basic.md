@@ -1,0 +1,19 @@
+---
+inclusion: always
+---
+
+# Estándares PSR Básicos
+
+## PSR-1: Estándar de Codificación Básico
+- Los archivos DEBEN usar sólo etiquetas <?php y <?=
+- Los archivos PHP DEBEN usar sólo UTF-8 sin BOM
+- Los archivos DEBEN declarar símbolos (clases, funciones, constantes) o causar efectos secundarios (ej. salida, configuración), pero NO ambas
+- Los namespaces y clases DEBEN seguir PSR-4
+
+## PSR-12: Estilo de Código Extendido
+- Indentación: 4 espacios, NO tabs
+- Línea no debe exceder 80 caracteres (blando), 120 caracteres (duro)
+- Debe haber una línea en blanco después del namespace
+- Las palabras clave en lowercase: true, false, null
+- Visibilidad debe ser declarada en todas las propiedades y métodos
+- Abrir llave { en la misma línea para clases y métodos

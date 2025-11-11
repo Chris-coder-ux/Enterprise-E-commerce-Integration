@@ -1,0 +1,46 @@
+/* Archivo CSS para Mi Integración API - Página de configuración */
+
+.mi-integracion-api-settings {
+  max-width: 700px;
+  margin: 0 auto;
+  background: var(--mi-background-color-white, #fff);
+  border-radius: var(--mi-border-radius-md, 6px);
+  box-shadow: var(--mi-box-shadow-sm, 0 2px 8px rgba(0,0,0,0.04));
+  padding: var(--mi-spacing-xl, 32px) var(--mi-spacing-lg, 28px);
+}
+
+.mi-integracion-api-settings h2 {
+  color: var(--mi-color-primary, #0073aa);
+  margin-bottom: var(--mi-spacing-md, 18px);
+}
+
+.mi-integracion-api-settings label {
+  font-weight: var(--mi-font-weight-medium, 500);
+  margin-bottom: var(--mi-spacing-xs, 6px);
+  display: block;
+}
+
+.mi-integracion-api-settings input[type="text"],
+.mi-integracion-api-settings input[type="url"],
+.mi-integracion-api-settings input[type="password"],
+.mi-integracion-api-settings select {
+  width: 100%;
+  padding: var(--mi-spacing-xs, 8px) var(--mi-spacing-sm, 10px);
+  border: 1px solid var(--mi-border-color, #ccc);
+  border-radius: var(--mi-border-radius-sm, 3px);
+  margin-bottom: var(--mi-spacing-sm, 16px);
+}
+
+.mi-integracion-api-settings .button-primary {
+  background: var(--mi-color-primary, #0073aa);
+  color: var(--mi-color-white, #fff);
+  border: none;
+  border-radius: var(--mi-border-radius-sm, 3px);
+  padding: var(--mi-spacing-xs, 8px) var(--mi-spacing-md, 18px);
+  font-size: var(--mi-font-size-base, 15px);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.mi-integracion-api-settings .button-primary:hover {
+  background: var(--mi-color-primary-dark, #005177);
+}

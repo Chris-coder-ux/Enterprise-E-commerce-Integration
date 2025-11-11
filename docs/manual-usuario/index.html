@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Usuario - Dashboard Mi Integración API</title>
+    <link rel="stylesheet" href="manual-usuario.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="manual-container">
+        <!-- Header -->
+        <header class="manual-header">
+            <div class="header-content">
+                <h1><i class="fas fa-book"></i> Manual de Usuario - Dashboard Mi Integración API</h1>
+                <div class="version-info">Versión 2.0.0</div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="manual-nav">
+            <div class="nav-content">
+                <h3><i class="fas fa-list"></i> Índice</h3>
+                <ul class="nav-list">
+                    <li><a href="#introduccion"><i class="fas fa-target"></i> Introducción</a></li>
+                    <li><a href="#acceso-dashboard"><i class="fas fa-door-open"></i> Acceso al Dashboard</a></li>
+                    <li><a href="#estructura-dashboard"><i class="fas fa-sitemap"></i> Estructura del Dashboard</a></li>
+                    <li><a href="#navegacion-lateral"><i class="fas fa-compass"></i> Navegación Lateral</a></li>
+                    <li><a href="#seccion-principal"><i class="fas fa-desktop"></i> Sección Principal</a></li>
+                    <li><a href="#metricas-sistema"><i class="fas fa-chart-line"></i> Métricas del Sistema</a></li>
+                    <li><a href="#sincronizacion-productos"><i class="fas fa-sync"></i> Sincronización de Productos</a></li>
+                    <li><a href="#recomendaciones-sistema"><i class="fas fa-lightbulb"></i> Recomendaciones del Sistema</a></li>
+                    <li><a href="#acciones-rapidas"><i class="fas fa-bolt"></i> Acciones Rápidas</a></li>
+                    <li><a href="#configuracion"><i class="fas fa-cog"></i> Configuración</a></li>
+                    <li><a href="#solucion-problemas"><i class="fas fa-tools"></i> Solución de Problemas</a></li>
+                    <li><a href="#preguntas-frecuentes"><i class="fas fa-question-circle"></i> Preguntas Frecuentes</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="manual-content">
+            <!-- Introducción -->
+            <section id="introduccion" class="manual-section">
+                <h2><i class="fas fa-target"></i> Introducción</h2>
+                <p>El <strong>Dashboard Mi Integración API</strong> es el panel de control principal del plugin Enterprise E-commerce Integration que conecta tu tienda WooCommerce con el sistema ERP Verial. Este dashboard te permite:</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <i class="fas fa-eye"></i>
+                        <h3>Monitorear</h3>
+                        <p>el estado general del sistema en tiempo real</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-sync-alt"></i>
+                        <h3>Sincronizar</h3>
+                        <p>productos, clientes y pedidos entre plataformas</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-cogs"></i>
+                        <h3>Gestionar</h3>
+                        <p>configuraciones y ajustes del sistema</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-stethoscope"></i>
+                        <h3>Diagnosticar</h3>
+                        <p>problemas y optimizar el rendimiento</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-play-circle"></i>
+                        <h3>Controlar</h3>
+                        <p>procesos de sincronización masiva</p>
+                    </div>
+                </div>
+
+                <div class="characteristics-box">
+                    <h3><i class="fas fa-palette"></i> Características Principales</h3>
+                    <ul class="characteristics-list">
+                        <li><strong>Interfaz Unificada</strong>: Sidebar colapsible con navegación intuitiva</li>
+                        <li><strong>Monitoreo en Tiempo Real</strong>: Métricas actualizadas automáticamente</li>
+                        <li><strong>Sincronización Inteligente</strong>: Sistema de lotes optimizado</li>
+                        <li><strong>Diagnóstico Automático</strong>: Detección proactiva de problemas</li>
+                        <li><strong>Temas Personalizables</strong>: Soporte para temas claro, oscuro y por defecto</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Acceso al Dashboard -->
+            <section id="acceso-dashboard" class="manual-section">
+                <h2><i class="fas fa-door-open"></i> Acceso al Dashboard</h2>
+                
+                <div class="requirements-box">
+                    <h3><i class="fas fa-clipboard-check"></i> Requisitos Previos</h3>
+                    <ul class="requirements-list">
+                        <li><i class="fas fa-wordpress"></i> WordPress 6.0 o superior</li>
+                        <li><i class="fas fa-shopping-cart"></i> WooCommerce activo y funcional</li>
+                        <li><i class="fas fa-code"></i> PHP 8.0 o superior</li>
+                        <li><i class="fas fa-user-shield"></i> Permisos de administrador</li>
+                    </ul>
+                </div>
+
+                <div class="steps-box">
+                    <h3><i class="fas fa-list-ol"></i> Pasos para Acceder</h3>
+                    <ol class="steps-list">
+                        <li>Inicia sesión en tu panel de administración de WordPress</li>
+                        <li>En el menú lateral izquierdo, busca <strong>"Mi Integración API"</strong></li>
+                        <li>Haz clic en <strong>"Dashboard"</strong> para acceder al panel principal</li>
+                    </ol>
+                    <div class="direct-link">
+                        <strong>Ruta directa</strong>: <code>wp-admin/admin.php?page=mi-integracion-api</code>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Estructura del Dashboard -->
+            <section id="estructura-dashboard" class="manual-section">
+                <h2><i class="fas fa-sitemap"></i> Estructura del Dashboard</h2>
+                <p>El dashboard está organizado en dos secciones principales:</p>
+
+                <div class="structure-grid">
+                    <div class="structure-card sidebar-card">
+                        <h3><i class="fas fa-mobile-alt"></i> Sidebar Unificado (Izquierda)</h3>
+                        <ul>
+                            <li><strong>Navegación Principal</strong>: Enlaces a todas las secciones del plugin</li>
+                            <li><strong>Acciones Rápidas</strong>: Botones para operaciones comunes</li>
+                            <li><strong>Configuración</strong>: Ajustes de tema y precisión</li>
+                            <li><strong>Búsqueda</strong>: Buscador de elementos del menú</li>
+                        </ul>
+                    </div>
+                    <div class="structure-card content-card">
+                        <h3><i class="fas fa-chart-bar"></i> Contenido Principal (Derecha)</h3>
+                        <ul>
+                            <li><strong>Banner Informativo</strong>: Información visual del sistema</li>
+                            <li><strong>Estado del Sistema</strong>: Indicadores de salud general</li>
+                            <li><strong>Sincronización Masiva</strong>: Controles para sincronización de productos</li>
+                            <li><strong>Métricas del Sistema</strong>: Tarjetas con estadísticas clave</li>
+                            <li><strong>Recomendaciones</strong>: Sugerencias automáticas del sistema</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Navegación Lateral -->
+            <section id="navegacion-lateral" class="manual-section">
+                <h2><i class="fas fa-compass"></i> Navegación Lateral</h2>
+
+                <div class="menu-section">
+                    <h3><i class="fas fa-map-marker-alt"></i> Menú Principal</h3>
+                    <div class="table-container">
+                        <table class="menu-table">
+                            <thead>
+                                <tr>
+                                    <th>Icono</th>
+                                    <th>Sección</th>
+                                    <th>Descripción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><i class="fas fa-home"></i></td>
+                                    <td><strong>Dashboard</strong></td>
+                                    <td>Panel principal con métricas y controles</td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fas fa-search"></i></td>
+                                    <td><strong>Detección Automática</strong></td>
+                                    <td>Herramientas de detección y análisis</td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fas fa-shopping-cart"></i></td>
+                                    <td><strong>Sincronización de Pedidos</strong></td>
+                                    <td>Gestión de pedidos entre plataformas</td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fas fa-globe"></i></td>
+                                    <td><strong>Endpoints</strong></td>
+                                    <td>Configuración de conexiones API</td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fas fa-bolt"></i></td>
+                                    <td><strong>Caché</strong></td>
+                                    <td>Gestión del sistema de caché</td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fas fa-redo"></i></td>
+                                    <td><strong>Reintentos</strong></td>
+                                    <td>Configuración del sistema de reintentos</td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fas fa-chart-area"></i></td>
+                                    <td><strong>Monitoreo de Memoria</strong></td>
+                                    <td>Análisis de uso de memoria</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="actions-section">
+                    <h3><i class="fas fa-tools"></i> Acciones Rápidas</h3>
+                    <div class="table-container">
+                        <table class="actions-table">
+                            <thead>
+                                <tr>
+                                    <th>Botón</th>
+                                    <th>Función</th>
+                                    <th>Descripción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><i class="fas fa-sync-alt"></i> <strong>Sincronizar</strong></td>
+                                    <td>Inicia sincronización inmediata</td>
+                                    <td>Ejecuta sincronización de productos</td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fas fa-refresh"></i> <strong>Actualizar</strong></td>
+                                    <td>Actualiza datos del dashboard</td>
+                                    <td>Refresca métricas y estadísticas</td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fas fa-download"></i> <strong>Exportar</strong></td>
+                                    <td>Exporta datos del sistema</td>
+                                    <td>Genera reportes en formato CSV/JSON</td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fas fa-cog"></i> <strong>Config</strong></td>
+                                    <td>Acceso a configuración</td>
+                                    <td>Abre panel de ajustes avanzados</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="config-section">
+                    <h3><i class="fas fa-palette"></i> Configuración Visual</h3>
+                    
+                    <div class="config-grid">
+                        <div class="config-card">
+                            <h4><i class="fas fa-paint-brush"></i> Selector de Tema</h4>
+                            <ul>
+                                <li><strong>Por Defecto</strong>: Tema estándar de WordPress</li>
+                                <li><strong>Oscuro</strong>: Tema oscuro para uso nocturno</li>
+                                <li><strong>Claro</strong>: Tema claro optimizado para luz</li>
+                            </ul>
+                        </div>
+                        <div class="config-card">
+                            <h4><i class="fas fa-calculator"></i> Precisión de Datos</h4>
+                            <ul>
+                                <li><strong>Rango</strong>: 0-4 decimales</li>
+                                <li><strong>Valor por defecto</strong>: 2 decimales</li>
+                                <li><strong>Uso</strong>: Controla la precisión de porcentajes y métricas</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección Principal -->
+            <section id="seccion-principal" class="manual-section">
+                <h2><i class="fas fa-desktop"></i> Sección Principal</h2>
+
+                <div class="banner-section">
+                    <h3><i class="fas fa-theater-masks"></i> Banner Informativo</h3>
+                    <p>El banner superior muestra:</p>
+                    <ul>
+                        <li><strong>Título</strong>: "Sincronización Automática"</li>
+                        <li><strong>Descripción</strong>: Funcionalidad principal del plugin</li>
+                        <li><strong>Logo Visual</strong>: Representación gráfica de la integración</li>
+                        <li><strong>Animación</strong>: Sincronización entre Verial y WooCommerce</li>
+                    </ul>
+                </div>
+
+                <div class="health-section">
+                    <h3><i class="fas fa-hospital"></i> Estado General del Sistema</h3>
+                    
+                    <div class="health-indicators">
+                        <h4><i class="fas fa-heartbeat"></i> Indicadores de Salud</h4>
+                        <div class="health-grid">
+                            <div class="health-card healthy">
+                                <i class="fas fa-check-circle"></i>
+                                <span><strong>Saludable</strong>: Sistema funcionando correctamente</span>
+                            </div>
+                            <div class="health-card attention">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span><strong>Atención</strong>: Requiere monitoreo</span>
+                            </div>
+                            <div class="health-card warning">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span><strong>Advertencia</strong>: Problemas detectados</span>
+                            </div>
+                            <div class="health-card critical">
+                                <i class="fas fa-times-circle"></i>
+                                <span><strong>Crítico</strong>: Acción inmediata requerida</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="health-info">
+                        <h4><i class="fas fa-info-circle"></i> Información Mostrada</h4>
+                        <ul>
+                            <li><strong>Estado General</strong>: Evaluación automática del sistema</li>
+                            <li><strong>Última Verificación</strong>: Timestamp del último diagnóstico</li>
+                            <li><strong>Problemas Detectados</strong>: Contador de issues activos</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Métricas del Sistema -->
+            <section id="metricas-sistema" class="manual-section">
+                <h2><i class="fas fa-chart-line"></i> Métricas del Sistema</h2>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <i class="fas fa-brain"></i>
+                            <h3>Estado de Memoria</h3>
+                        </div>
+                        <ul>
+                            <li><strong>Porcentaje de Uso</strong>: Memoria actual vs límite configurado</li>
+                            <li><strong>Estado</strong>: Saludable, Alto, Crítico</li>
+                            <li><strong>Mensaje</strong>: Descripción del estado actual</li>
+                        </ul>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <i class="fas fa-redo"></i>
+                            <h3>Sistema de Reintentos</h3>
+                        </div>
+                        <ul>
+                            <li><strong>Tasa de Éxito</strong>: Porcentaje de operaciones exitosas</li>
+                            <li><strong>Estado</strong>: Excelente, Moderado, Bajo, Crítico</li>
+                            <li><strong>Políticas</strong>: Configuración por tipo de operación</li>
+                        </ul>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <i class="fas fa-bolt"></i>
+                            <h3>Sincronización</h3>
+                        </div>
+                        <ul>
+                            <li><strong>Estado</strong>: En progreso, Completada, Error</li>
+                            <li><strong>Progreso</strong>: Porcentaje de elementos procesados</li>
+                            <li><strong>Mensaje</strong>: Descripción detallada del estado</li>
+                        </ul>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <i class="fas fa-box"></i>
+                            <h3>Productos Sincronizados</h3>
+                        </div>
+                        <ul>
+                            <li><strong>Total</strong>: Número de productos sincronizados</li>
+                            <li><strong>Fuente</strong>: Base de datos de WooCommerce</li>
+                            <li><strong>Caché</strong>: Actualización cada 5 minutos</li>
+                        </ul>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <i class="fas fa-times-circle"></i>
+                            <h3>Errores Recientes</h3>
+                        </div>
+                        <ul>
+                            <li><strong>Contador</strong>: Errores en la última sincronización</li>
+                            <li><strong>Tipo</strong>: Errores de conexión, validación, etc.</li>
+                            <li><strong>Historial</strong>: Últimos errores registrados</li>
+                        </ul>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <i class="fas fa-clock"></i>
+                            <h3>Última Sincronización</h3>
+                        </div>
+                        <ul>
+                            <li><strong>Fecha y Hora</strong>: Timestamp de la última sincronización</li>
+                            <li><strong>Formato</strong>: dd/mm/yyyy hh:mm</li>
+                            <li><strong>Estado</strong>: "Nunca" si no hay sincronizaciones previas</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sincronización de Productos -->
+            <section id="sincronizacion-productos" class="manual-section">
+                <h2><i class="fas fa-sync"></i> Sincronización de Productos</h2>
+
+                <div class="sync-controls">
+                    <h3><i class="fas fa-sliders-h"></i> Controles de Sincronización</h3>
+                    
+                    <div class="control-grid">
+                        <div class="control-card">
+                            <h4><i class="fas fa-layer-group"></i> Selector de Lote</h4>
+                            <ul>
+                                <li><strong>Rango</strong>: 1-200 productos por lote</li>
+                                <li><strong>Opciones</strong>: 1, 5, 10, 20, 50, 100, 200</li>
+                                <li><strong>Valor por defecto</strong>: Configurado en BatchSizeHelper</li>
+                                <li><strong>Restricciones</strong>: Límites mínimos y máximos configurables</li>
+                            </ul>
+                        </div>
+                        <div class="control-card">
+                            <h4><i class="fas fa-play"></i> Botón de Sincronización</h4>
+                            <ul>
+                                <li><strong>Estado</strong>: Habilitado/Deshabilitado según sincronización activa</li>
+                                <li><strong>Confirmación</strong>: Diálogo de confirmación antes de iniciar</li>
+                                <li><strong>Progreso</strong>: Indicador visual del progreso</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="progress-section">
+                    <h3><i class="fas fa-chart-bar"></i> Barra de Progreso</h3>
+                    
+                    <div class="progress-info">
+                        <h4><i class="fas fa-info-circle"></i> Información Mostrada</h4>
+                        <ul>
+                            <li><strong>Progreso</strong>: Porcentaje completado</li>
+                            <li><strong>Elementos</strong>: Procesados/Total</li>
+                            <li><strong>Tiempo</strong>: Duración estimada restante</li>
+                            <li><strong>Errores</strong>: Contador de errores durante el proceso</li>
+                        </ul>
+                    </div>
+
+                    <div class="progress-controls">
+                        <h4><i class="fas fa-gamepad"></i> Controles de Progreso</h4>
+                        <ul>
+                            <li><strong>Mostrar/Ocultar Detalles</strong>: Toggle para información detallada</li>
+                            <li><strong>Cancelar Sincronización</strong>: Botón para detener el proceso</li>
+                            <li><strong>Actualización</strong>: Polling automático cada 5 segundos</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="locks-section">
+                    <h3><i class="fas fa-lock"></i> Sistema de Locks</h3>
+                    
+                    <div class="locks-protection">
+                        <h4><i class="fas fa-shield-alt"></i> Protección contra Duplicados</h4>
+                        <ul>
+                            <li><strong>Lock Global</strong>: Previene múltiples sincronizaciones simultáneas</li>
+                            <li><strong>Verificación PID</strong>: Comprueba que el proceso esté activo</li>
+                            <li><strong>Limpieza Automática</strong>: Libera locks obsoletos después de 30 minutos</li>
+                        </ul>
+                    </div>
+
+                    <div class="locks-states">
+                        <h4><i class="fas fa-toggle-on"></i> Estados de Lock</h4>
+                        <div class="state-grid">
+                            <div class="state-card active">
+                                <i class="fas fa-play"></i>
+                                <span><strong>Activo</strong>: Sincronización en curso</span>
+                            </div>
+                            <div class="state-card obsolete">
+                                <i class="fas fa-clock"></i>
+                                <span><strong>Obsoleto</strong>: Lock sin proceso activo</span>
+                            </div>
+                            <div class="state-card released">
+                                <i class="fas fa-unlock"></i>
+                                <span><strong>Liberado</strong>: Sin sincronización activa</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recomendaciones del Sistema -->
+            <section id="recomendaciones-sistema" class="manual-section">
+                <h2><i class="fas fa-lightbulb"></i> Recomendaciones del Sistema</h2>
+
+                <div class="recommendations-types">
+                    <h3><i class="fas fa-bullseye"></i> Tipos de Recomendaciones</h3>
+                    
+                    <div class="recommendation-grid">
+                        <div class="recommendation-card critical">
+                            <div class="recommendation-header">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <h4>Críticas</h4>
+                            </div>
+                            <ul>
+                                <li><strong>Memoria Crítica</strong>: Uso de memoria > 80%</li>
+                                <li><strong>Sistema de Reintentos Crítico</strong>: Tasa de éxito < 60%</li>
+                                <li><strong>Sincronización Fallida</strong>: Errores en proceso de sync</li>
+                            </ul>
+                        </div>
+
+                        <div class="recommendation-card high">
+                            <div class="recommendation-header">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <h4>Altas</h4>
+                            </div>
+                            <ul>
+                                <li><strong>Memoria Alta</strong>: Uso de memoria > 60%</li>
+                                <li><strong>Problemas de Conexión</strong>: Errores de API frecuentes</li>
+                            </ul>
+                        </div>
+
+                        <div class="recommendation-card medium">
+                            <div class="recommendation-header">
+                                <i class="fas fa-info-circle"></i>
+                                <h4>Medias</h4>
+                            </div>
+                            <ul>
+                            <li><strong>Optimización de Caché</strong>: Mejoras de rendimiento con flush segmentado, caché Hot/Cold, y LRU</li>
+                            <li><strong>Configuración de Lotes</strong>: Ajustes de tamaño de lote</li>
+                            <li><strong>Gestión Avanzada de Caché</strong>: Flush inteligente por segmentos, rotación automática, límite global</li>
+                            </ul>
+                        </div>
+
+                        <div class="recommendation-card low">
+                            <div class="recommendation-header">
+                                <i class="fas fa-check-circle"></i>
+                                <h4>Bajas</h4>
+                            </div>
+                            <ul>
+                                <li><strong>Sistema Saludable</strong>: Funcionamiento correcto</li>
+                                <li><strong>Mantenimiento Preventivo</strong>: Tareas de optimización</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recommendation-actions">
+                    <h3><i class="fas fa-tools"></i> Acciones Disponibles</h3>
+                    <p>Cada recomendación incluye botones de acción:</p>
+                    <ul>
+                        <li><strong>Ver Dashboard Específico</strong>: Enlace a sección relevante</li>
+                        <li><strong>Ejecutar Acción</strong>: Botón para resolver el problema</li>
+                        <li><strong>Ver Logs</strong>: Acceso a registros de errores</li>
+                        <li><strong>Configurar</strong>: Enlace a configuración relacionada</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Acciones Rápidas -->
+            <section id="acciones-rapidas" class="manual-section">
+                <h2><i class="fas fa-bolt"></i> Acciones Rápidas</h2>
+
+                <div class="quick-actions-grid">
+                    <div class="action-card">
+                        <div class="action-header">
+                            <i class="fas fa-sync-alt"></i>
+                            <h3>Sincronizar Ahora</h3>
+                        </div>
+                        <ul>
+                            <li><strong>Función</strong>: Inicia sincronización inmediata de productos</li>
+                            <li><strong>Confirmación</strong>: Diálogo de confirmación requerido</li>
+                            <li><strong>Progreso</strong>: Seguimiento en tiempo real</li>
+                            <li><strong>Cancelación</strong>: Posibilidad de detener el proceso</li>
+                        </ul>
+                    </div>
+
+                    <div class="action-card">
+                        <div class="action-header">
+                            <i class="fas fa-refresh"></i>
+                            <h3>Actualizar Datos</h3>
+                        </div>
+                        <ul>
+                            <li><strong>Función</strong>: Refresca todas las métricas del dashboard</li>
+                            <li><strong>Alcance</strong>: Métricas de memoria, reintentos, sincronización</li>
+                            <li><strong>Frecuencia</strong>: Manual o automática cada 30 segundos</li>
+                            <li><strong>Caché</strong>: Limpia caché de métricas obsoletas</li>
+                        </ul>
+                    </div>
+
+                    <div class="action-card">
+                        <div class="action-header">
+                            <i class="fas fa-download"></i>
+                            <h3>Exportar Datos</h3>
+                        </div>
+                        <ul>
+                            <li><strong>Formatos</strong>: CSV, JSON, XML</li>
+                            <li><strong>Datos</strong>: Métricas, logs, configuración</li>
+                            <li><strong>Filtros</strong>: Por fecha, tipo de evento, severidad</li>
+                            <li><strong>Descarga</strong>: Archivo generado automáticamente</li>
+                        </ul>
+                    </div>
+
+                    <div class="action-card">
+                        <div class="action-header">
+                            <i class="fas fa-cog"></i>
+                            <h3>Configuración</h3>
+                        </div>
+                        <ul>
+                            <li><strong>Acceso</strong>: Panel de configuración avanzada</li>
+                            <li><strong>Secciones</strong>: API, Sincronización, Caché, Reintentos</li>
+                            <li><strong>Validación</strong>: Verificación de parámetros</li>
+                            <li><strong>Guardado</strong>: Persistencia de configuración</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Configuración -->
+            <section id="configuracion" class="manual-section">
+                <h2><i class="fas fa-cog"></i> Configuración</h2>
+
+                <div class="config-visual">
+                    <h3><i class="fas fa-palette"></i> Configuración Visual</h3>
+                    
+                    <div class="config-options">
+                        <div class="config-option">
+                            <h4><i class="fas fa-paint-brush"></i> Selector de Tema</h4>
+                            <div class="code-block">
+                                <pre><code>// Opciones disponibles
+'default' => 'Por Defecto'
+'dark'    => 'Oscuro'
+'light'   => 'Claro'</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="config-option">
+                            <h4><i class="fas fa-calculator"></i> Precisión de Datos</h4>
+                            <ul>
+                                <li><strong>Rango</strong>: 0-4 decimales</li>
+                                <li><strong>Aplicación</strong>: Porcentajes, métricas numéricas</li>
+                                <li><strong>Persistencia</strong>: Guardado en opciones de WordPress</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="search-config">
+                    <h3><i class="fas fa-search"></i> Búsqueda en Menú</h3>
+                    <ul>
+                        <li><strong>Campo</strong>: Input de búsqueda en sidebar</li>
+                        <li><strong>Alcance</strong>: Elementos del menú de navegación</li>
+                        <li><strong>Filtrado</strong>: Búsqueda en tiempo real</li>
+                        <li><strong>Accesibilidad</strong>: Soporte para lectores de pantalla</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Solución de Problemas -->
+            <section id="solucion-problemas" class="manual-section">
+                <h2><i class="fas fa-tools"></i> Solución de Problemas</h2>
+
+                <div class="troubleshooting-section">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Problemas Comunes</h3>
+                    
+                    <div class="problem-grid">
+                        <div class="problem-card">
+                            <h4><i class="fas fa-sync"></i> Sincronización No Inicia</h4>
+                            <p><strong>Síntomas</strong>: Botón deshabilitado, mensaje de error</p>
+                            <div class="solutions">
+                                <strong>Soluciones</strong>:
+                                <ol>
+                                    <li>Verificar conexión a API de Verial</li>
+                                    <li>Comprobar configuración de sesión</li>
+                                    <li>Revisar logs de errores</li>
+                                    <li>Limpiar locks obsoletos</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="problem-card">
+                            <h4><i class="fas fa-chart-line"></i> Métricas No Se Actualizan</h4>
+                            <p><strong>Síntomas</strong>: Datos obsoletos, contadores incorrectos</p>
+                            <div class="solutions">
+                                <strong>Soluciones</strong>:
+                                <ol>
+                                    <li>Hacer clic en "Actualizar Datos"</li>
+                                    <li>Limpiar caché del navegador</li>
+                                    <li>Verificar configuración de polling</li>
+                                    <li>Revisar logs de AJAX</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="problem-card">
+                            <h4><i class="fas fa-memory"></i> Memoria Crítica</h4>
+                            <p><strong>Síntomas</strong>: Indicador rojo, recomendaciones críticas</p>
+                            <div class="solutions">
+                                <strong>Soluciones</strong>:
+                                <ol>
+                                    <li>Aumentar límite de memoria PHP</li>
+                                    <li>Reducir tamaño de lote de sincronización</li>
+                                    <li>Optimizar configuración de caché</li>
+                                    <li>Revisar plugins conflictivos</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="problem-card">
+                            <h4><i class="fas fa-redo"></i> Errores de Reintentos</h4>
+                            <p><strong>Síntomas</strong>: Tasa de éxito baja, errores frecuentes</p>
+                            <div class="solutions">
+                                <strong>Soluciones</strong>:
+                                <ol>
+                                    <li>Ajustar configuración de reintentos</li>
+                                    <li>Verificar estabilidad de conexión</li>
+                                    <li>Revisar timeouts de API</li>
+                                    <li>Optimizar políticas de reintento</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checklist-section">
+                    <h3><i class="fas fa-clipboard-check"></i> Checklist de Diagnóstico</h3>
+                    
+                    <div class="checklist-grid">
+                        <div class="checklist-card">
+                            <h4><i class="fas fa-check-circle"></i> Verificaciones Básicas</h4>
+                            <ul class="checklist">
+                                <li><input type="checkbox"> WooCommerce activo y funcional</li>
+                                <li><input type="checkbox"> Conexión a API de Verial estable</li>
+                                <li><input type="checkbox"> Configuración de sesión válida</li>
+                                <li><input type="checkbox"> Permisos de administrador correctos</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="checklist-card">
+                            <h4><i class="fas fa-cogs"></i> Verificaciones Avanzadas</h4>
+                            <ul class="checklist">
+                                <li><input type="checkbox"> Límites de memoria PHP adecuados</li>
+                                <li><input type="checkbox"> Configuración de timeouts apropiada</li>
+                                <li><input type="checkbox"> Sistema de caché funcionando</li>
+                                <li><input type="checkbox"> Logs sin errores críticos</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Preguntas Frecuentes -->
+            <section id="preguntas-frecuentes" class="manual-section">
+                <h2><i class="fas fa-question-circle"></i> Preguntas Frecuentes</h2>
+
+                <div class="faq-section">
+                    <h3><i class="fas fa-sync"></i> Sincronización</h3>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <strong>P: ¿Cuánto tiempo toma sincronizar todos los productos?</strong>
+                        </div>
+                        <div class="faq-answer">
+                            <strong>R:</strong> Depende del número de productos y tamaño de lote. Con 100 productos por lote, aproximadamente 1-2 minutos por cada 1000 productos.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <strong>P: ¿Puedo cancelar una sincronización en progreso?</strong>
+                        </div>
+                        <div class="faq-answer">
+                            <strong>R:</strong> Sí, usa el botón "Cancelar Sincronización" en la barra de progreso. El sistema liberará los locks automáticamente.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <strong>P: ¿Qué pasa si se interrumpe la conexión durante la sincronización?</strong>
+                        </div>
+                        <div class="faq-answer">
+                            <strong>R:</strong> El sistema de reintentos automáticos reintentará la operación. Los locks se liberarán después de 30 minutos de inactividad.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-section">
+                    <h3><i class="fas fa-chart-line"></i> Métricas</h3>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <strong>P: ¿Con qué frecuencia se actualizan las métricas?</strong>
+                        </div>
+                        <div class="faq-answer">
+                            <strong>R:</strong> Las métricas se actualizan automáticamente cada 30 segundos cuando el dashboard está abierto.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <strong>P: ¿Por qué muestra "Nunca" en última sincronización?</strong>
+                        </div>
+                        <div class="faq-answer">
+                            <strong>R:</strong> Esto indica que no se ha ejecutado ninguna sincronización desde la instalación del plugin.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <strong>P: ¿Cómo se calcula el porcentaje de memoria?</strong>
+                        </div>
+                        <div class="faq-answer">
+                            <strong>R:</strong> Se calcula como (memoria actual / límite configurado) × 100.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-section">
+                    <h3><i class="fas fa-cog"></i> Configuración</h3>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <strong>P: ¿Cómo cambio el tema del dashboard?</strong>
+                        </div>
+                        <div class="faq-answer">
+                            <strong>R:</strong> Usa el selector de tema en la sección de configuración del sidebar.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <strong>P: ¿Qué significa la precisión de datos?</strong>
+                        </div>
+                        <div class="faq-answer">
+                            <strong>R:</strong> Controla el número de decimales mostrados en porcentajes y métricas numéricas.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <strong>P: ¿Se guardan mis preferencias de configuración?</strong>
+                        </div>
+                        <div class="faq-answer">
+                            <strong>R:</strong> Sí, todas las configuraciones se guardan en la base de datos de WordPress.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-section">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Problemas</h3>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <strong>P: ¿Qué hago si el dashboard no carga?</strong>
+                        </div>
+                        <div class="faq-answer">
+                            <strong>R:</strong> Verifica que WooCommerce esté activo, revisa los logs de errores y asegúrate de tener permisos de administrador.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <strong>P: ¿Cómo reporto un error del sistema?</strong>
+                        </div>
+                        <div class="faq-answer">
+                            <strong>R:</strong> Usa la sección de logs para exportar información de errores y contacta al soporte técnico.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <strong>P: ¿Puedo usar el dashboard en dispositivos móviles?</strong>
+                        </div>
+                        <div class="faq-answer">
+                            <strong>R:</strong> Sí, el dashboard es responsive y se adapta a diferentes tamaños de pantalla.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Soporte Técnico -->
+            <section class="manual-section support-section">
+                <h2><i class="fas fa-headset"></i> Soporte Técnico</h2>
+
+                <div class="support-grid">
+                    <div class="support-card">
+                        <h3><i class="fas fa-envelope"></i> Contacto</h3>
+                        <ul>
+                            <li><strong>Email</strong>: soporte@verialerp.com</li>
+                            <li><strong>Web</strong>: https://www.verialerp.com</li>
+                            <li><strong>Documentación</strong>: Manual completo disponible en el plugin</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="support-card">
+                        <h3><i class="fas fa-clipboard-list"></i> Información para Soporte</h3>
+                        <p>Al contactar soporte, incluye:</p>
+                        <ul>
+                            <li>Versión del plugin</li>
+                            <li>Versión de WordPress y WooCommerce</li>
+                            <li>Logs de errores relevantes</li>
+                            <li>Descripción detallada del problema</li>
+                            <li>Pasos para reproducir el error</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Changelog -->
+            <section class="manual-section changelog-section">
+                <h2><i class="fas fa-history"></i> Changelog</h2>
+
+                <div class="changelog-grid">
+                    <div class="version-card">
+                        <h3><i class="fas fa-tag"></i> Versión 2.0.0</h3>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Dashboard unificado con sidebar colapsible</li>
+                            <li><i class="fas fa-check"></i> Sistema de métricas en tiempo real</li>
+                            <li><i class="fas fa-check"></i> Sincronización masiva optimizada</li>
+                            <li><i class="fas fa-check"></i> Diagnóstico automático del sistema</li>
+                            <li><i class="fas fa-check"></i> Temas personalizables</li>
+                            <li><i class="fas fa-check"></i> Sistema de recomendaciones inteligentes</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="version-card">
+                        <h3><i class="fas fa-tag"></i> Versión 1.0.0</h3>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Dashboard básico con métricas esenciales</li>
+                            <li><i class="fas fa-check"></i> Sincronización de productos</li>
+                            <li><i class="fas fa-check"></i> Sistema de logs y errores</li>
+                            <li><i class="fas fa-check"></i> Configuración básica</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="manual-footer">
+                <p><i class="fas fa-info-circle"></i> Este manual está actualizado para la versión 2.0.0 del plugin Mi Integración API. Para la versión más reciente, consulta la documentación oficial.</p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        // Smooth scrolling for navigation links
+        for (const anchor of document.querySelectorAll('a[href^="#"]')) {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        }
+
+        // Highlight current section in navigation
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('.manual-section');
+            const navLinks = document.querySelectorAll('.nav-list a');
+            
+            let current = '';
+            for (const section of sections) {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            }
+
+            for (const link of navLinks) {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,296 @@
+/**
+ * Dashboard Principal - Punto de Entrada
+ * 
+ * Este archivo orquesta todos los módulos del dashboard.
+ * Mantiene la compatibilidad con el código existente mientras
+ * organiza la inicialización de forma modular.
+ * 
+ * @file dashboard.js
+ * @since 1.0.0
+ * @author Christian
+ */
+
+/* global jQuery, miIntegracionApiDashboard */
+
+// ========================================
+// IMPORTS (Ajustar según sistema de módulos usado)
+// ========================================
+
+// Si usas ES6 modules:
+// import { ErrorHandler } from './core/ErrorHandler.js';
+// import { AjaxManager } from './core/AjaxManager.js';
+// import { PollingManager } from './managers/PollingManager.js';
+// ... etc
+
+// Si usas CommonJS:
+// const { ErrorHandler } = require('./core/ErrorHandler');
+// const { AjaxManager } = require('./core/AjaxManager');
+// ... etc
+
+// Si usas script tags (actual):
+// Los módulos se cargan antes de este archivo
+// y exponen sus clases/funciones globalmente
+
+// ========================================
+// VERIFICACIÓN DE DEPENDENCIAS
+// ========================================
+
+(function() {
+  'use strict';
+
+  // Verificar jQuery
+  if (typeof jQuery === 'undefined') {
+    console.error('jQuery no está disponible. El dashboard no funcionará.');
+    return;
+  }
+
+  // Verificar configuración
+  if (typeof miIntegracionApiDashboard === 'undefined') {
+    console.error('miIntegracionApiDashboard no está definido. El dashboard no funcionará.');
+    return;
+  }
+
+  // ========================================
+  // INICIALIZACIÓN PRINCIPAL
+  // ========================================
+
+  jQuery(document).ready(function($) {
+    console.log('🚀 Inicializando Dashboard...');
+
+    // 1. Inicializar sistemas base (core)
+    initializeCoreSystems();
+
+    // 2. Inicializar managers
+    initializeManagers();
+
+    // 3. Inicializar componentes UI
+    initializeUIComponents();
+
+    // 4. Inicializar sistema de sincronización
+    initializeSyncSystem();
+
+    // 5. Inicializar dashboards
+    initializeDashboards();
+
+    // 6. Inicializar controlador principal
+    initializeMainController();
+
+    // 7. Configurar eventos globales
+    setupGlobalEvents();
+
+    console.log('✅ Dashboard inicializado correctamente');
+  });
+
+  // ========================================
+  // FUNCIONES DE INICIALIZACIÓN
+  // ========================================
+
+  /**
+   * Inicializar sistemas core
+   */
+  function initializeCoreSystems() {
+    console.log('🔧 Inicializando sistemas core...');
+
+    // ErrorHandler ya está disponible globalmente
+    if (typeof ErrorHandler !== 'undefined') {
+      window.ErrorHandler = ErrorHandler;
+      console.log('  ✅ ErrorHandler inicializado');
+    }
+
+    // AjaxManager ya está disponible globalmente
+    if (typeof AjaxManager !== 'undefined') {
+      window.AjaxManager = AjaxManager;
+      console.log('  ✅ AjaxManager inicializado');
+    }
+
+    // SystemEventManager
+    if (typeof SystemEventManager !== 'undefined') {
+      SystemEventManager.init();
+      SystemEventManager.emitErrorHandlerReady();
+      console.log('  ✅ SystemEventManager inicializado');
+    }
+  }
+
+  /**
+   * Inicializar managers
+   */
+  function initializeManagers() {
+    console.log('📊 Inicializando managers...');
+
+    // PollingManager
+    if (typeof PollingManager !== 'undefined') {
+      window.pollingManager = new PollingManager();
+      console.log('  ✅ PollingManager inicializado');
+    }
+
+    // SyncStateManager
+    if (typeof SyncStateManager !== 'undefined') {
+      SyncStateManager.cleanupOnPageLoad();
+      console.log('  ✅ SyncStateManager inicializado');
+    }
+
+    // NonceManager
+    if (typeof NonceManager !== 'undefined') {
+      NonceManager.setupAutoRenewal();
+      console.log('  ✅ NonceManager inicializado');
+    }
+  }
+
+  /**
+   * Inicializar componentes UI
+   */
+  function initializeUIComponents() {
+    console.log('🎨 Inicializando componentes UI...');
+
+    // ToastManager
+    if (typeof ToastManager !== 'undefined') {
+      window.showToast = ToastManager.show;
+      console.log('  ✅ ToastManager inicializado');
+    }
+
+    // ProgressBar
+    if (typeof ProgressBar !== 'undefined') {
+      ProgressBar.initialize();
+      console.log('  ✅ ProgressBar inicializado');
+    }
+
+    // ConsoleManager
+    if (typeof ConsoleManager !== 'undefined') {
+      ConsoleManager.initialize();
+      console.log('  ✅ ConsoleManager inicializado');
+    }
+
+    // ResponsiveLayout
+    if (typeof ResponsiveLayout !== 'undefined') {
+      ResponsiveLayout.init();
+      console.log('  ✅ ResponsiveLayout inicializado');
+    }
+
+    // CardManager
+    if (typeof CardManager !== 'undefined') {
+      CardManager.initialize();
+      console.log('  ✅ CardManager inicializado');
+    }
+  }
+
+  /**
+   * Inicializar sistema de sincronización
+   */
+  function initializeSyncSystem() {
+    console.log('🔄 Inicializando sistema de sincronización...');
+
+    // SyncProgress
+    if (typeof SyncProgress !== 'undefined') {
+      window.checkSyncProgress = SyncProgress.check;
+      console.log('  ✅ SyncProgress inicializado');
+    }
+
+    // Phase1Manager
+    if (typeof Phase1Manager !== 'undefined') {
+      window.phase1Manager = new Phase1Manager();
+      console.log('  ✅ Phase1Manager inicializado');
+    }
+
+    // Phase2Manager
+    if (typeof Phase2Manager !== 'undefined') {
+      window.phase2Manager = new Phase2Manager();
+      console.log('  ✅ Phase2Manager inicializado');
+    }
+
+    // SyncController
+    if (typeof SyncController !== 'undefined') {
+      SyncController.initialize();
+      console.log('  ✅ SyncController inicializado');
+    }
+  }
+
+  /**
+   * Inicializar dashboards
+   */
+  function initializeDashboards() {
+    console.log('📊 Inicializando dashboards...');
+
+    // SyncDashboard
+    if (typeof SyncDashboard !== 'undefined' && jQuery('#sync-two-phase-dashboard').length) {
+      window.syncDashboard = new SyncDashboard();
+      console.log('  ✅ SyncDashboard inicializado');
+    }
+
+    // UnifiedDashboard
+    if (typeof UnifiedDashboard !== 'undefined') {
+      UnifiedDashboard.init();
+      SystemEventManager.emitUnifiedDashboardReady();
+      console.log('  ✅ UnifiedDashboard inicializado');
+    }
+  }
+
+  /**
+   * Inicializar controlador principal
+   */
+  function initializeMainController() {
+    console.log('🎯 Inicializando controlador principal...');
+
+    if (typeof UnifiedDashboardController !== 'undefined') {
+      UnifiedDashboardController.init();
+      console.log('  ✅ UnifiedDashboardController inicializado');
+    }
+  }
+
+  /**
+   * Configurar eventos globales
+   */
+  function setupGlobalEvents() {
+    console.log('⚙️ Configurando eventos globales...');
+
+    // Eventos de teclado
+    jQuery(document).on('keydown', function(e) {
+      // Ctrl + Enter para sincronizar
+      if (e.ctrlKey && e.keyCode === 13) {
+        const $syncBtn = jQuery('#mi-batch-sync-products');
+        if ($syncBtn.length && !$syncBtn.is(':disabled')) {
+          $syncBtn.trigger('click');
+          if (typeof showToast === 'function') {
+            showToast('Atajo de teclado: Ctrl+Enter para sincronizar', 'info', 3000);
+          }
+        }
+      }
+
+      // Escape para cancelar
+      if (e.keyCode === 27) {
+        const $cancelBtn = jQuery('#mi-cancel-sync');
+        if ($cancelBtn.length && $cancelBtn.is(':visible') && !$cancelBtn.is(':disabled')) {
+          $cancelBtn.trigger('click');
+        }
+      }
+    });
+
+    // Eventos de conexión
+    window.addEventListener('online', function() {
+      if (typeof showToast === 'function') {
+        showToast('Conexión restaurada', 'success', 3000);
+      }
+    });
+
+    window.addEventListener('offline', function() {
+      if (typeof showToast === 'function') {
+        showToast('Sin conexión a internet', 'warning', 5000);
+      }
+    });
+
+    console.log('  ✅ Eventos globales configurados');
+  }
+
+  // ========================================
+  // EXPORTS (si usas módulos)
+  // ========================================
+
+  // Si usas ES6 modules:
+  // export default { initializeCoreSystems, initializeManagers, ... };
+
+  // Si usas CommonJS:
+  // module.exports = { initializeCoreSystems, initializeManagers, ... };
+
+  // Si usas script tags, las funciones ya están disponibles globalmente
+
+})();
+

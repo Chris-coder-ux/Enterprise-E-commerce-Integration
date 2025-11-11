@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Sincronización de Pedidos - Mi Integración API</title>
+    <link rel="stylesheet" href="manual-usuario.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="manual-container">
+        <!-- Header -->
+        <header class="manual-header">
+            <div class="header-content">
+                <h1><i class="fas fa-shopping-cart"></i> Manual de Sincronización de Pedidos</h1>
+                <div class="version-info">Versión 2.0.0</div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="manual-nav">
+            <div class="nav-content">
+                <h3><i class="fas fa-list"></i> Índice</h3>
+                <ul class="nav-list">
+                    <li><a href="#introduccion"><i class="fas fa-info-circle"></i> Introducción</a></li>
+                    <li><a href="#como-funciona"><i class="fas fa-cogs"></i> ¿Cómo Funciona?</a></li>
+                    <li><a href="#tabla-pedidos"><i class="fas fa-table"></i> Tabla de Pedidos</a></li>
+                    <li><a href="#estados-sincronizacion"><i class="fas fa-info"></i> Estados de Sincronización</a></li>
+                    <li><a href="#acciones"><i class="fas fa-tools"></i> Acciones Disponibles</a></li>
+                    <li><a href="#filtros-busqueda"><i class="fas fa-filter"></i> Filtros y Búsqueda</a></li>
+                    <li><a href="#paginacion"><i class="fas fa-file-alt"></i> Paginación</a></li>
+                    <li><a href="#sincronizacion-masiva"><i class="fas fa-sync"></i> Sincronización Masiva</a></li>
+                    <li><a href="#estadisticas"><i class="fas fa-chart-bar"></i> Estadísticas</a></li>
+                    <li><a href="#solucion-problemas"><i class="fas fa-tools"></i> Solución de Problemas</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="manual-content">
+            <!-- Introducción -->
+            <section id="introduccion" class="manual-section">
+                <h2><i class="fas fa-info-circle"></i> Introducción</h2>
+                <p>El <strong>Sistema de Sincronización de Pedidos</strong> te permite gestionar y monitorear la sincronización de pedidos de WooCommerce con tu sistema ERP Verial en tiempo real.</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <i class="fas fa-sync-alt"></i>
+                        <h3>Sincronización Bidireccional</h3>
+                        <p>Sync de pedidos entre WooCommerce y Verial</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-eye"></i>
+                        <h3>Monitoreo en Vivo</h3>
+                        <p>Visualiza el estado de cada pedido en tiempo real</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-check-double"></i>
+                        <h3>Control Total</h3>
+                        <p>Sincroniza individual o masivamente los pedidos</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Estadísticas Detalladas</h3>
+                        <p>Seguimiento de rendimiento y métricas</p>
+                    </div>
+                </div>
+
+                <div class="characteristics-box">
+                    <h3><i class="fas fa-star"></i> Características Principales</h3>
+                    <ul class="characteristics-list">
+                        <li><strong>Sincronización Individual</strong>: Sincroniza pedidos de forma individual con un solo clic</li>
+                        <li><strong>Sincronización Masiva</strong>: Procesa múltiples pedidos simultáneamente</li>
+                        <li><strong>Vista Previa JSON</strong>: Visualiza el contenido antes de sincronizar</li>
+                        <li><strong>Reparación Automática</strong>: Intenta reparar pedidos con errores automáticamente</li>
+                        <li><strong>Filtros Avanzados</strong>: Filtra por estado, fecha y palabras clave</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Cómo Funciona -->
+            <section id="como-funciona" class="manual-section">
+                <h2><i class="fas fa-cogs"></i> ¿Cómo Funciona?</h2>
+                
+                <div class="process-steps">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3><i class="fas fa-download"></i> Selección del Pedido</h3>
+                        <p>Selecciona uno o varios pedidos de la tabla que deseas sincronizar con Verial.</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3><i class="fas fa-paper-plane"></i> Envío de Datos</h3>
+                        <p>El sistema envía los datos del pedido a la API de Verial en formato JSON.</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3><i class="fas fa-check-circle"></i> Confirmación</h3>
+                        <p>Recibe confirmación del sistema Verial y actualiza el estado del pedido.</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <h3><i class="fas fa-chart-bar"></i> Registro</h3>
+                        <p>El estado se registra en la base de datos y se muestra en el dashboard.</p>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h3><i class="fas fa-info-circle"></i> Tipo de Datos Sincronizados</h3>
+                    <div class="change-types">
+                        <div class="change-type">
+                            <i class="fas fa-user"></i>
+                            <strong>Información del Cliente:</strong> Nombre, dirección, contacto
+                        </div>
+                        <div class="change-type">
+                            <i class="fas fa-box"></i>
+                            <strong>Productos:</strong> Cantidad, precios, SKU
+                        </div>
+                        <div class="change-type">
+                            <i class="fas fa-dollar-sign"></i>
+                            <strong>Totales:</strong> Subtotal, impuestos, descuentos
+                        </div>
+                        <div class="change-type">
+                            <i class="fas fa-shipping-fast"></i>
+                            <strong>Envío:</strong> Método, coste, dirección de entrega
+                        </div>
+                        <div class="change-type">
+                            <i class="fas fa-credit-card"></i>
+                            <strong>Pago:</strong> Método, estado, transacción
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tabla de Pedidos -->
+            <section id="tabla-pedidos" class="manual-section">
+                <h2><i class="fas fa-table"></i> Tabla de Pedidos</h2>
+                
+                <div class="table-guide">
+                    <h3><i class="fas fa-columns"></i> Columnas de la Tabla</h3>
+                    <div class="table-columns">
+                        <div class="column-card">
+                            <h4><i class="fas fa-hashtag"></i> ID del Pedido</h4>
+                            <p>Identificador único del pedido en WooCommerce.</p>
+                        </div>
+                        <div class="column-card">
+                            <h4><i class="fas fa-user"></i> Cliente</h4>
+                            <p>Nombre y apellidos del cliente que realizó el pedido.</p>
+                        </div>
+                        <div class="column-card">
+                            <h4><i class="fas fa-calendar"></i> Fecha</h4>
+                            <p>Fecha y hora en que se creó el pedido.</p>
+                        </div>
+                        <div class="column-card">
+                            <h4><i class="fas fa-euro-sign"></i> Total</h4>
+                            <p>Importe total del pedido incluidos impuestos.</p>
+                        </div>
+                        <div class="column-card">
+                            <h4><i class="fas fa-info-circle"></i> Estado de Sincronización</h4>
+                            <p>Indica si el pedido está sincronizado con Verial.</p>
+                        </div>
+                        <div class="column-card">
+                            <h4><i class="fas fa-tools"></i> Acciones</h4>
+                            <p>Botones para sincronizar, ver detalles o reparar.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="interactive-features">
+                    <h3><i class="fas fa-mouse-pointer"></i> Funcionalidades Interactivas</h3>
+                    <ul>
+                        <li><strong>Clic en la fila:</strong> Abre el modal con detalles del pedido</li>
+                        <li><strong>Hover sobre acciones:</strong> Muestra tooltips descriptivos</li>
+                        <li><strong>Actualización automática:</strong> La tabla se actualiza cada 30 segundos</li>
+                        <li><strong>Ordenamiento:</strong> Haz clic en encabezados para ordenar columnas</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Estados de Sincronización -->
+            <section id="estados-sincronizacion" class="manual-section">
+                <h2><i class="fas fa-info"></i> Estados de Sincronización</h2>
+                
+                <div class="status-types">
+                    <div class="status-card success">
+                        <div class="status-icon">✅</div>
+                        <h3>Sincronizado</h3>
+                        <p>El pedido se ha enviado correctamente a Verial. Todos los datos están actualizados.</p>
+                        <div class="status-details">
+                            <strong>Color:</strong> Verde<br>
+                            <strong>Acción:</strong> Verificado
+                        </div>
+                    </div>
+                    
+                    <div class="status-card error">
+                        <div class="status-icon">❌</div>
+                        <h3>Error</h3>
+                        <p>La sincronización falló. El pedido no se pudo enviar a Verial.</p>
+                        <div class="status-details">
+                            <strong>Color:</strong> Rojo<br>
+                            <strong>Acción:</strong> Reintentar o reparar
+                        </div>
+                    </div>
+                    
+                    <div class="status-card pending">
+                        <div class="status-icon">⏳</div>
+                        <h3>Pendiente</h3>
+                        <p>El pedido está en cola esperando ser sincronizado.</p>
+                        <div class="status-details">
+                            <strong>Color:</strong> Amarillo<br>
+                            <strong>Acción:</strong> Esperando
+                        </div>
+                    </div>
+                    
+                    <div class="status-card never">
+                        <div class="status-icon">⬜</div>
+                        <h3>Nunca sincronizado</h3>
+                        <p>El pedido nunca se ha intentado sincronizar con Verial.</p>
+                        <div class="status-details">
+                            <strong>Color:</strong> Gris<br>
+                            <strong>Acción:</strong> Sincronizar
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Acciones Disponibles -->
+            <section id="acciones" class="manual-section">
+                <h2><i class="fas fa-tools"></i> Acciones Disponibles</h2>
+                
+                <div class="action-grid">
+                    <div class="action-card primary">
+                        <div class="action-header">
+                            <i class="fas fa-sync"></i>
+                            <h3>Sincronizar Pedido Individual</h3>
+                        </div>
+                        <p>Envía un pedido específico a la API de Verial.</p>
+                        <div class="action-steps">
+                            <ol>
+                                <li>Localiza el pedido en la tabla</li>
+                                <li>Haz clic en el botón de sincronización</li>
+                                <li>Espera la confirmación del sistema</li>
+                                <li>Verifica el cambio de estado</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="action-card success">
+                        <div class="action-header">
+                            <i class="fas fa-sync-alt"></i>
+                            <h3>Reparar Todos los Errores</h3>
+                        </div>
+                        <p>Intenta sincronizar automáticamente todos los pedidos con error.</p>
+                        <div class="action-features">
+                            <i class="fas fa-check"></i> Procesa múltiples pedidos<br>
+                            <i class="fas fa-check"></i> Muestra progreso en tiempo real<br>
+                            <i class="fas fa-check"></i> Registra todos los resultados
+                        </div>
+                    </div>
+
+                    <div class="action-card info">
+                        <div class="action-header">
+                            <i class="fas fa-eye"></i>
+                            <h3>Vista Previa JSON</h3>
+                        </div>
+                        <p>Visualiza el contenido JSON que se enviará a Verial antes de sincronizar.</p>
+                        <div class="action-features">
+                            <i class="fas fa-check"></i> Ver estructura completa<br>
+                            <i class="fas fa-check"></i> Validar datos antes de enviar<br>
+                            <i class="fas fa-check"></i> Copiar JSON para debugging
+                        </div>
+                    </div>
+
+                    <div class="action-card warning">
+                        <div class="action-header">
+                            <i class="fas fa-edit"></i>
+                            <h3>Editar Pedido en WooCommerce</h3>
+                        </div>
+                        <p>Accede directamente al editor del pedido en WooCommerce.</p>
+                        <div class="action-features">
+                            <i class="fas fa-check"></i> Abre en nueva pestaña<br>
+                            <i class="fas fa-check"></i> Ventana de administración<br>
+                            <i class="fas fa-check"></i> Vuelve automáticamente después
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Filtros y Búsqueda -->
+            <section id="filtros-busqueda" class="manual-section">
+                <h2><i class="fas fa-filter"></i> Filtros y Búsqueda</h2>
+                
+                <div class="filter-section">
+                    <h3><i class="fas fa-search"></i> Búsqueda de Pedidos</h3>
+                    <div class="search-guide">
+                        <div class="guide-card">
+                            <h4><i class="fas fa-magnifying-glass"></i> Campo de Búsqueda</h4>
+                            <p>Busca pedidos por:</p>
+                            <ul>
+                                <li><strong>ID del pedido:</strong> Introduce el número del pedido</li>
+                                <li><strong>Nombre del cliente:</strong> Busca por nombre o apellidos</li>
+                                <li><strong>Email del cliente:</strong> Introducir dirección de correo</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3><i class="fas fa-sliders-h"></i> Filtros por Estado</h3>
+                    <div class="filter-cards">
+                        <div class="filter-card">
+                            <h4><i class="fas fa-check"></i> Sincronizados</h4>
+                            <p>Muestra solo los pedidos que se han sincronizado correctamente con Verial.</p>
+                        </div>
+                        <div class="filter-card">
+                            <h4><i class="fas fa-times"></i> Con Errores</h4>
+                            <p>Filtra los pedidos que tuvieron problemas durante la sincronización.</p>
+                        </div>
+                        <div class="filter-card">
+                            <h4><i class="fas fa-clock"></i> Pendientes</h4>
+                            <p>Muestra los pedidos que están en la cola esperando sincronización.</p>
+                        </div>
+                        <div class="filter-card">
+                            <h4><i class="fas fa-circle"></i> No Sincronizados</h4>
+                            <p>Filtra pedidos que nunca se han intentado sincronizar.</p>
+                        </div>
+                    </div>
+
+                    <h3><i class="fas fa-calendar-alt"></i> Filtros por Fecha</h3>
+                    <p>Puedes filtrar los pedidos por rango de fechas:</p>
+                    <ul>
+                        <li><strong>Hoy:</strong> Pedidos del día actual</li>
+                        <li><strong>Ayer:</strong> Pedidos del día anterior</li>
+                        <li><strong>Esta semana:</strong> Últimos 7 días</li>
+                        <li><strong>Este mes:</strong> Pedidos del mes actual</li>
+                        <li><strong>Rango personalizado:</strong> Selecciona fechas específicas</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Paginación -->
+            <section id="paginacion" class="manual-section">
+                <h2><i class="fas fa-file-alt"></i> Paginación</h2>
+                
+                <div class="pagination-guide">
+                    <h3><i class="fas fa-cog"></i> Configuración</h3>
+                    <p>La tabla de pedidos utiliza paginación para optimizar el rendimiento cuando hay muchos pedidos.</p>
+                    
+                    <div class="pagination-info">
+                        <div class="info-card">
+                            <h4><i class="fas fa-sliders-h"></i> Elementos por Página</h4>
+                            <p>Por defecto se muestran <strong>20 pedidos por página</strong>, pero puedes cambiar este valor:</p>
+                            <code>Ir al selector de "Elementos por página" → Seleccionar cantidad deseada</code>
+                        </div>
+                        
+                        <div class="info-card">
+                            <h4><i class="fas fa-arrow-left"></i> Navegación</h4>
+                            <p>Usa los controles de paginación para navegar entre páginas:</p>
+                            <ul>
+                                <li><strong>Primera página:</strong> Saltar al inicio de la lista</li>
+                                <li><strong>Página anterior:</strong> Volver a la página anterior</li>
+                                <li><strong>Página siguiente:</strong> Avanzar a la siguiente página</li>
+                                <li><strong>Última página:</strong> Ir al final de la lista</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="info-card">
+                            <h4><i class="fas fa-info-circle"></i> Información de Página</h4>
+                            <p>La barra de paginación muestra:</p>
+                            <ul>
+                                <li>Número de página actual</li>
+                                <li>Total de páginas disponibles</li>
+                                <li>Número total de pedidos</li>
+                                <li>Rango actual mostrado (ej: "1-20 de 150")</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sincronización Masiva -->
+            <section id="sincronizacion-masiva" class="manual-section">
+                <h2><i class="fas fa-sync"></i> Sincronización Masiva</h2>
+                
+                <div class="bulk-sync-section">
+                    <h3><i class="fas fa-check-square"></i> Selección Múltiple</h3>
+                    <div class="bulk-guide">
+                        <div class="guide-card">
+                            <h4><i class="fas fa-mouse-pointer"></i> Cómo Seleccionar</h4>
+                            <ol>
+                                <li>Abre la página de Sincronización de Pedidos</li>
+                                <li>Marca las casillas de los pedidos que deseas sincronizar</li>
+                                <li>O usa "Seleccionar todos" para sincronizar todos los pendientes</li>
+                                <li>Haz clic en "Sincronizar Seleccionados"</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="guide-card">
+                            <h4><i class="fas fa-shield-alt"></i> Confirmación</h4>
+                            <p>Antes de iniciar la sincronización masiva, el sistema te pedirá confirmación porque:</p>
+                            <ul>
+                                <li>Esta acción puede tardar varios minutos</li>
+                                <li>Afecta múltiples pedidos simultáneamente</li>
+                                <li>Requiere conexión estable con la API de Verial</li>
+                                <li>No se puede cancelar una vez iniciada</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="progress-section">
+                        <h3><i class="fas fa-chart-line"></i> Barra de Progreso</h3>
+                        <p>Durante la sincronización masiva verás:</p>
+                        <ul>
+                            <li><strong>Progreso:</strong> Porcentaje completado</li>
+                            <li><strong>Contador:</strong> Pedidos procesados / Total</li>
+                            <li><strong>Tiempo estimado:</strong> Cuánto tiempo queda</li>
+                            <li><strong>Errores:</strong> Número de pedidos que fallaron</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Estadísticas -->
+            <section id="estadisticas" class="manual-section">
+                <h2><i class="fas fa-chart-bar"></i> Estadísticas</h2>
+                
+                <div class="stats-overview">
+                    <h3><i class="fas fa-chart-pie"></i> Tarjetas de Estadísticas</h3>
+                    <p>En la parte superior del dashboard verás cuatro tarjetas con estadísticas clave:</p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <i class="fas fa-clipboard-list"></i>
+                            <h4>Total de Pedidos</h4>
+                            <p>Número total de pedidos en tu tienda WooCommerce</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-check-circle"></i>
+                            <h4>Sincronizados</h4>
+                            <p>Cantidad de pedidos exitosamente sincronizados con Verial</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-times-circle"></i>
+                            <h4>Con Errores</h4>
+                            <p>Pedidos que tuvieron problemas durante la sincronización</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-clock"></i>
+                            <h4>Pendientes</h4>
+                            <p>Pedidos que aún no se han sincronizado con Verial</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-section">
+                    <h3><i class="fas fa-chart-area"></i> Gráficas Interactivas</h3>
+                    <p>El dashboard incluye dos gráficas para visualizar la actividad de sincronización:</p>
+                    
+                    <div class="chart-grid">
+                        <div class="chart-card">
+                            <h4><i class="fas fa-doughnut-chart"></i> Gráfica de Estados</h4>
+                            <p>Muestra la distribución de pedidos por estado de sincronización:</p>
+                            <ul>
+                                <li>Verde: Sincronizados</li>
+                                <li>Rojo: Con errores</li>
+                                <li>Amarillo: Pendientes</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="chart-card">
+                            <h4><i class="fas fa-line-chart"></i> Tendencias</h4>
+                            <p>Muestra la evolución de sincronizaciones en el tiempo:</p>
+                            <ul>
+                                <li>Línea verde: Pedidos sincronizados</li>
+                                <li>Línea roja: Pedidos con errores</li>
+                                <li>Periodo: Últimas 7 semanas</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Solución de Problemas -->
+            <section id="solucion-problemas" class="manual-section">
+                <h2><i class="fas fa-tools"></i> Solución de Problemas</h2>
+
+                <div class="troubleshooting-section">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Problemas Comunes</h3>
+                    
+                    <div class="problem-grid">
+                        <div class="problem-card">
+                            <h4><i class="fas fa-sync"></i> Pedido No Se Sincroniza</h4>
+                            <p><strong>Síntomas:</strong> El botón de sincronización no responde o muestra error</p>
+                            <div class="solutions">
+                                <strong>Soluciones:</strong>
+                                <ol>
+                                    <li>Verificar conexión con la API de Verial</li>
+                                    <li>Comprobar que el pedido tenga todos los datos necesarios</li>
+                                    <li>Revisar logs del sistema para ver el error específico</li>
+                                    <li>Verificar que el formato JSON sea válido</li>
+                                    <li>Intentar sincronizar de nuevo después de unos minutos</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="problem-card">
+                            <h4><i class="fas fa-times-circle"></i> Errores de Validación</h4>
+                            <p><strong>Síntomas:</strong> Mensaje de error al intentar sincronizar</p>
+                            <div class="solutions">
+                                <strong>Soluciones:</strong>
+                                <ol>
+                                    <li>Verificar que el cliente tenga dirección completa</li>
+                                    <li>Comprobar que los productos existan en Verial</li>
+                                    <li>Validar que los precios sean correctos</li>
+                                    <li>Revisar que el método de envío esté configurado</li>
+                                    <li>Usar la vista previa JSON para validar los datos</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="problem-card">
+                            <h4><i class="fas fa-hourglass-half"></i> Sincronización Muy Lenta</h4>
+                            <p><strong>Síntomas:</strong> El proceso tarda mucho en completarse</p>
+                            <div class="solutions">
+                                <strong>Soluciones:</strong>
+                                <ol>
+                                    <li>Reducir el número de pedidos sincronizados simultáneamente</li>
+                                    <li>Verificar la velocidad de conexión a Internet</li>
+                                    <li>Comprobar la carga del servidor de Verial</li>
+                                    <li>Optimizar la configuración del servidor</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="problem-card">
+                            <h4><i class="fas fa-ban"></i> Pedidos Marcados como Error Permanentemente</h4>
+                            <p><strong>Síntomas:</strong> Pedidos que no se pueden sincronizar aunque se reintenten</p>
+                            <div class="solutions">
+                                <strong>Soluciones:</strong>
+                                <ol>
+                                    <li>Usar la función "Reparar Todos los Errores"</li>
+                                    <li>Editar manualmente el pedido en WooCommerce</li>
+                                    <li>Verificar que los datos sean correctos antes de reintentar</li>
+                                    <li>Contactar con el soporte si el problema persiste</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="logs-section">
+                    <h3><i class="fas fa-file-alt"></i> Revisar Logs</h3>
+                    <p>Para obtener más información sobre errores de sincronización:</p>
+                    <ol>
+                        <li>Navega a la página de <strong>Logs del Sistema</strong></li>
+                        <li>Filtra por tipo "sincronización de pedidos"</li>
+                        <li>Busca el ID del pedido problemático</li>
+                        <li>Revisa el mensaje de error para identificar la causa</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="manual-footer">
+                <p><i class="fas fa-info-circle"></i> Este manual está actualizado para la versión 2.0.0 del sistema de Sincronización de Pedidos.</p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        // Smooth scrolling for navigation links
+        for (const anchor of document.querySelectorAll('a[href^="#"]')) {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        }
+
+        // Highlight current section
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('.manual-section');
+            const navLinks = document.querySelectorAll('.nav-list a');
+            
+            let current = '';
+            for (const section of sections) {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            }
+
+            for (const link of navLinks) {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

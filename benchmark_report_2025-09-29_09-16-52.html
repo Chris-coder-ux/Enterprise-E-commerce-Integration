@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Reporte de Benchmarking - Adaptadores</title>
+<style>
+body { font-family: Arial, sans-serif; margin: 20px; }
+.header { background: #f0f0f0; padding: 20px; border-radius: 5px; }
+.section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+.metric { display: inline-block; margin: 5px 10px; padding: 5px 10px; background: #e9e9e9; border-radius: 3px; }
+.chart { background: #f9f9f9; padding: 10px; margin: 10px 0; font-family: monospace; }
+.recommendation { background: #fff3cd; padding: 10px; margin: 5px 0; border-left: 4px solid #ffc107; }
+.warning { background: #f8d7da; padding: 10px; margin: 5px 0; border-left: 4px solid #dc3545; }
+</style>
+</head>
+<body>
+<div class='header'>
+<h1>📊 Reporte de Benchmarking - Adaptadores</h1>
+<p>Generado el: 2025-09-29 09:16:52</p>
+</div>
+<div class='section'>
+<pre>📊 REPORTE AVANZADO DE BENCHMARKING DE ADAPTADORES<br>
+================================================<br>
+<br>
+🖥️  INFORMACIÓN DEL SISTEMA<br>
+==========================<br>
+PHP Version: 8.4.12<br>
+Memory Limit: 128M<br>
+Max Execution Time: 0s<br>
+Peak Memory Usage: 39.25 MB<br>
+Timestamp: 2025-09-29 09:16:52<br>
+Iterations: 500<br>
+<br>
+📈 RESUMEN EJECUTIVO<br>
+===================<br>
+<br>
+🔧 WORDPRESS ADAPTER<br>
+===================<br>
+<br>
+📋 toWpError:<br>
+  ✅ Éxito:<br>
+    Tiempo: 0.00 μs ± 1.00 μs<br>
+    Memoria: 0 B ± 0 B<br>
+    Min/Max: 0.00 μs / 9.00 μs<br>
+  ❌ Error:<br>
+    Tiempo: 1.00 μs ± 1.00 μs<br>
+    Memoria: 2 B ± 35 B<br>
+    Min/Max: 1.00 μs / 3.00 μs<br>
+<br>
+📋 toWpRestResponse:<br>
+  ✅ Éxito:<br>
+    Tiempo: 2.00 μs ± 1.00 μs<br>
+    Memoria: 2 B ± 35 B<br>
+    Min/Max: 1.00 μs / 10.00 μs<br>
+  ❌ Error:<br>
+    Tiempo: 2.00 μs ± 1.00 μs<br>
+    Memoria: 3 B ± 66 B<br>
+    Min/Max: 1.00 μs / 8.00 μs<br>
+<br>
+📋 toRestApiFormat:<br>
+  ✅ Éxito:<br>
+    Tiempo: 2.00 μs ± 1.00 μs<br>
+    Memoria: 2 B ± 50 B<br>
+    Min/Max: 1.00 μs / 10.00 μs<br>
+  ❌ Error:<br>
+    Tiempo: 3.00 μs ± 1.00 μs<br>
+    Memoria: 3 B ± 67 B<br>
+    Min/Max: 2.00 μs / 13.00 μs<br>
+<br>
+📋 toAjaxFormat:<br>
+  ✅ Éxito:<br>
+    Tiempo: 1.00 μs ± 0.00 μs<br>
+    Memoria: 2 B ± 48 B<br>
+    Min/Max: 0.00 μs / 2.00 μs<br>
+  ❌ Error:<br>
+    Tiempo: 1.00 μs ± 1.00 μs<br>
+    Memoria: 3 B ± 65 B<br>
+    Min/Max: 0.00 μs / 11.00 μs<br>
+<br>
+📋 toCliFormat:<br>
+  ✅ Éxito:<br>
+    Tiempo: 0.00 μs ± 1.00 μs<br>
+    Memoria: 1 B ± 17 B<br>
+    Min/Max: 0.00 μs / 1.00 μs<br>
+  ❌ Error:<br>
+    Tiempo: 0.00 μs ± 1.00 μs<br>
+    Memoria: 1 B ± 17 B<br>
+    Min/Max: 0.00 μs / 2.00 μs<br>
+<br>
+🔄 SYNC RESPONSE<br>
+================<br>
+<br>
+📋 toArray:<br>
+  ✅ Éxito:<br>
+    Tiempo: 0.00 μs ± 0.00 μs<br>
+    Memoria: 1 B ± 17 B<br>
+    Min/Max: 0.00 μs / 1.00 μs<br>
+  ❌ Error:<br>
+    Tiempo: 1.00 μs ± 0.00 μs<br>
+    Memoria: 2 B ± 48 B<br>
+    Min/Max: 0.00 μs / 2.00 μs<br>
+<br>
+📋 toJson:<br>
+  ✅ Éxito:<br>
+    Tiempo: 307.00 μs ± 79.00 μs<br>
+    Memoria: 238 B ± 5.18 KB<br>
+    Min/Max: 219.00 μs / 585.00 μs<br>
+  ❌ Error:<br>
+    Tiempo: 2.00 μs ± 1.00 μs<br>
+    Memoria: 1 B ± 20 B<br>
+    Min/Max: 1.00 μs / 2.00 μs<br>
+<br>
+📋 toWpError:<br>
+  ✅ Éxito:<br>
+    Tiempo: 0.00 μs ± 0.00 μs<br>
+    Memoria: 0 B ± 0 B<br>
+    Min/Max: 0.00 μs / 1.00 μs<br>
+  ❌ Error:<br>
+    Tiempo: 1.00 μs ± 0.00 μs<br>
+    Memoria: 2 B ± 35 B<br>
+    Min/Max: 0.00 μs / 2.00 μs<br>
+<br>
+📋 toWpRestResponse:<br>
+  ✅ Éxito:<br>
+    Tiempo: 1.00 μs ± 0.00 μs<br>
+    Memoria: 2 B ± 35 B<br>
+    Min/Max: 0.00 μs / 2.00 μs<br>
+  ❌ Error:<br>
+    Tiempo: 1.00 μs ± 1.00 μs<br>
+    Memoria: 3 B ± 66 B<br>
+    Min/Max: 1.00 μs / 7.00 μs<br>
+<br>
+📊 ANÁLISIS DE RENDIMIENTO<br>
+==========================<br>
+<br>
+📏 ESCALABILIDAD POR TAMAÑO DE DATOS:<br>
+=====================================<br>
+<br>
+📋 small:<br>
+  toArray: 0.00 μs (memoria: 1 B, eficiencia: 99.999633789062%)<br>
+  toJson: 1.00 μs (memoria: 1 B, eficiencia: 99.994560546875%)<br>
+  toWpRestResponse: 1.00 μs (memoria: 2 B, eficiencia: 99.994228515625%)<br>
+  toAjaxFormat: 0.00 μs (memoria: 2 B, eficiencia: 99.998955078125%)<br>
+<br>
+📋 medium:<br>
+  toArray: 0.00 μs (memoria: 1 B, eficiencia: 99.999633789062%)<br>
+  toJson: 210.00 μs (memoria: 238 B, eficiencia: 98.833999023437%)<br>
+  toWpRestResponse: 1.00 μs (memoria: 2 B, eficiencia: 99.994228515625%)<br>
+  toAjaxFormat: 0.00 μs (memoria: 2 B, eficiencia: 99.998955078125%)<br>
+<br>
+📋 large:<br>
+  toArray: 0.00 μs (memoria: 1 B, eficiencia: 99.999633789062%)<br>
+  toJson: 30.55 ms (memoria: 26.62 KB, eficiencia: 36.691977539062%)<br>
+  toWpRestResponse: 1.00 μs (memoria: 2 B, eficiencia: 99.994228515625%)<br>
+  toAjaxFormat: 0.00 μs (memoria: 2 B, eficiencia: 99.998955078125%)<br>
+<br>
+📋 complex:<br>
+  toArray: 0.00 μs (memoria: 1 B, eficiencia: 99.999633789062%)<br>
+  toJson: 2.00 μs (memoria: 4 B, eficiencia: 99.988251953125%)<br>
+  toWpRestResponse: 1.00 μs (memoria: 2 B, eficiencia: 99.994228515625%)<br>
+  toAjaxFormat: 0.00 μs (memoria: 2 B, eficiencia: 99.998955078125%)<br>
+<br>
+🔄 RENDIMIENTO POR TIPO DE RESPUESTA:<br>
+=====================================<br>
+<br>
+📋 simple_success:<br>
+  toArray: 0.00 μs (memoria: 1 B, eficiencia: 99.999633789062%)<br>
+  toJson: 1.00 μs (memoria: 1 B, eficiencia: 99.9946875%)<br>
+  toWpError: 0.00 μs (memoria: 0 B, eficiencia: 100%)<br>
+  toWpRestResponse: 1.00 μs (memoria: 2 B, eficiencia: 99.994228515625%)<br>
+<br>
+📋 metadata_success:<br>
+  toArray: 0.00 μs (memoria: 1 B, eficiencia: 99.999633789062%)<br>
+  toJson: 1.00 μs (memoria: 1 B, eficiencia: 99.994624023437%)<br>
+  toWpError: 0.00 μs (memoria: 0 B, eficiencia: 100%)<br>
+  toWpRestResponse: 1.00 μs (memoria: 2 B, eficiencia: 99.994228515625%)<br>
+<br>
+📋 simple_error:<br>
+  toArray: 0.00 μs (memoria: 2 B, eficiencia: 99.998955078125%)<br>
+  toJson: 1.00 μs (memoria: 1 B, eficiencia: 99.994624023437%)<br>
+  toWpError: 1.00 μs (memoria: 2 B, eficiencia: 99.994228515625%)<br>
+  toWpRestResponse: 1.00 μs (memoria: 3 B, eficiencia: 99.993544921875%)<br>
+<br>
+📋 context_error:<br>
+  toArray: 0.00 μs (memoria: 2 B, eficiencia: 99.998955078125%)<br>
+  toJson: 1.00 μs (memoria: 1 B, eficiencia: 99.994501953125%)<br>
+  toWpError: 1.00 μs (memoria: 2 B, eficiencia: 99.994228515625%)<br>
+  toWpRestResponse: 1.00 μs (memoria: 3 B, eficiencia: 99.993544921875%)<br>
+<br>
+📊 GRÁFICOS DE RENDIMIENTO<br>
+==========================<br>
+<br>
+⏱️  TIEMPO POR MÉTODO:<br>
+=====================<br>
+<br>
+💡 RECOMENDACIONES DE OPTIMIZACIÓN<br>
+===================================<br>
+<br>
+📋 RECOMENDACIONES GENERALES:<br>
+  • Considerar implementar caching para respuestas frecuentes<br>
+  • Optimizar serialización JSON para datos grandes<br>
+  • Implementar lazy loading para objetos pesados<br>
+  • Monitorear uso de memoria en producción<br>
+  • Considerar pool de objetos para reutilización<br>
+<br>
+🎯 MÉTRICAS DE CALIDAD<br>
+=====================<br>
+Total de métodos evaluados: 0<br>
+Iteraciones por método: 500<br>
+</pre>
+</div>
+</body>
+</html>

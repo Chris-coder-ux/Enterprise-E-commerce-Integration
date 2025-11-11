@@ -1,0 +1,95 @@
+---
+inclusion: always
+---
+
+# Ejemplos de Implementación PSR
+
+## Ejemplo completo de Logger PSR-3
+```php
+<?php
+
+namespace App\Logger;
+
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
+
+class FileLogger implements LoggerInterface
+{
+    public function emergency(string $message, array $context = []): void
+    {
+        $this->log(LogLevel::EMERGENCY, $message, $context);
+    }
+    
+    public function alert(string $message, array $context = []): void
+    {
+        $this->log(LogLevel::ALERT, $message, $context);
+    }
+    
+    public function critical(string $message, array $context = []): void
+    {
+        $this->log(LogLevel::CRITICAL, $message, $context);
+    }
+    
+    public function error(string $message, array $context = []): void
+    {
+        $this->log(LogLevel::ERROR, $message, $context);
+    }
+    
+    public function warning(string $message, array $context = []): void
+    {
+        $this->log(LogLevel::WARNING, $message, $context);
+    }
+    
+    public function notice(string $message, array $context = []): void
+    {
+        $this->log(LogLevel::NOTICE, $message, $context);
+    }
+    
+    public function info(string $message, array $context = []): void
+    {
+        $this->log(LogLevel::INFO, $message, $context);
+    }
+    
+    public function debug(string $message, array $context = []): void
+    {
+        $this->log(LogLevel::DEBUG, $message, $context);
+    }
+    
+    public function log($level, string $message, array $context = []): void
+    {
+        // Implementación específica de logging
+        $timestamp = date('Y-m-d H:i:s');
+        $logMessage = "[$timestamp] [$level] $message " . json_encode($context) . PHP_EOL;
+        file_put_contents('app.log', $logMessage, FILE_APPEND);
+    }
+}
+
+<?php
+
+namespace App\Container;
+
+use Psr\Container\ContainerInterface;
+
+class Container implements ContainerInterface
+{
+    private array $services = [];
+    
+    public function get(string $id): mixed
+    {
+        if (!$this->has($id)) {
+            throw new ServiceNotFoundException("Service '$id' not found");
+        }
+        
+        return $this->services[$id];
+    }
+    
+    public function has(string $id): bool
+    {
+        return isset($this->services[$id]);
+    }
+    
+    public function set(string $id, mixed $service): void
+    {
+        $this->services[$id] = $service;
+    }
+}

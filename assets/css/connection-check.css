@@ -1,0 +1,74 @@
+/**
+ * Estilos para la página de verificación de conexión
+ * Extraído de templates/admin/connection-check.php
+ */
+
+.card {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+    margin-top: 20px;
+    padding: 20px;
+}
+
+.card h2 {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.connection-status {
+    margin: 15px 0;
+}
+
+.connection-details {
+    margin-top: 20px;
+}
+
+.connection-actions {
+    margin: 20px 0;
+}
+
+.troubleshooting-steps ol {
+    margin-left: 20px;
+}
+
+.troubleshooting-steps li {
+    margin-bottom: 15px;
+}
+
+.troubleshooting-steps p {
+    margin: 5px 0 0 20px;
+    color: #646970;
+}
+
+.dashicons-yes-alt {
+    color: #46b450;
+}
+
+.dashicons-dismiss {
+    color: #dc3232;
+}
+
+.notice {
+    margin: 5px 0 15px;
+}
+
+@media screen and (max-width: 782px) {
+    .form-table th {
+        width: 100%;
+        display: block;
+        padding-bottom: 0;
+    }
+    
+    .form-table td {
+        display: block;
+        padding-top: 0;
+    }
+    
+    .form-table input[type="text"],
+    .form-table input[type="url"],
+    .form-table input[type="password"] {
+        width: 100%;
+    }
+}
+

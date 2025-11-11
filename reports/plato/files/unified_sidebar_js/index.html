@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - unified-sidebar.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>unified-sidebar.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">75.23</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">409</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">43.64</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">2.68</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Sidebar Unificado - Mi Integración API
+ * JavaScript para funcionalidades del sidebar unificado
+ * 
+ * @package MiIntegracionApi
+ * @subpackage Admin
+ */
+
+(function($) {
+    &#039;use strict&#039;;
+
+    /**
+     * Clase principal del Sidebar Unificado
+     */
+    class UnifiedSidebar {
+        constructor() {
+            this.sidebar = $(&#039;.mi-integracion-api-sidebar&#039;);
+            this.sidebarToggle = $(&#039;.sidebar-toggle&#039;);
+            this.sidebarContent = $(&#039;.unified-sidebar-content&#039;);
+            this.navLinks = $(&#039;.unified-nav-link&#039;);
+            this.actionBtns = $(&#039;.unified-action-btn&#039;);
+            this.searchInput = $(&#039;.unified-search-input&#039;);
+            this.themeSwitcher = $(&#039;#theme-switcher&#039;);
+            this.precisionInput = $(&#039;#precision&#039;);
+            
+            this.init();
+        }
+
+        /**
+         * Inicializa todas las funcionalidades del sidebar
+         */
+        init() {
+            this.bindEvents();
+            this.setActiveMenuItem();
+            this.loadSavedSettings();
+        }
+
+        /**
+         * Vincula todos los eventos
+         */
+        bindEvents() {
+            // Toggle del sidebar
+            this.sidebarToggle.on(&#039;click&#039;, this.toggleSidebar.bind(this));
+
+            // Navegación activa
+            this.navLinks.on(&#039;click&#039;, this.setActiveNavItem.bind(this));
+
+            // Acciones rápidas
+            this.actionBtns.on(&#039;click&#039;, this.handleQuickAction.bind(this));
+
+            // Búsqueda en menú
+            this.searchInput.on(&#039;input&#039;, this.handleSearch.bind(this));
+
+            // Cambio de tema
+            this.themeSwitcher.on(&#039;change&#039;, this.handleThemeChange.bind(this));
+
+            // Configuración de precisión
+            this.precisionInput.on(&#039;change&#039;, this.handlePrecisionChange.bind(this));
+
+            // Eventos de teclado
+            $(document).on(&#039;keydown&#039;, this.handleKeyboardShortcuts.bind(this));
+
+            // Redimensionamiento de ventana
+            $(window).on(&#039;resize&#039;, this.handleResize.bind(this));
+        }
+
+        /**
+         * Toggle del sidebar (colapsar/expandir)
+         */
+        toggleSidebar() {
+            this.sidebar.toggleClass(&#039;collapsed&#039;);
+            
+            // Cambiar icono
+            const icon = this.sidebarToggle.find(&#039;i&#039;);
+            if (this.sidebar.hasClass(&#039;collapsed&#039;)) {
+                icon.removeClass(&#039;fa-chevron-left&#039;).addClass(&#039;fa-chevron-right&#039;);
+            } else {
+                icon.removeClass(&#039;fa-chevron-right&#039;).addClass(&#039;fa-chevron-left&#039;);
+            }
+
+            // Guardar estado
+            this.saveSidebarState();
+            
+            // Trigger evento personalizado
+            $(document).trigger(&#039;sidebar:toggled&#039;, [this.sidebar.hasClass(&#039;collapsed&#039;)]);
+        }
+
+        /**
+         * Establece el elemento de menú activo
+         */
+        setActiveMenuItem() {
+            const currentPage = this.getCurrentPage();
+            this.navLinks.removeClass(&#039;active&#039;);
+            this.navLinks.filter(`[data-page=&quot;${currentPage}&quot;]`).addClass(&#039;active&#039;);
+        }
+
+        /**
+         * Maneja el clic en elementos de navegación
+         */
+        setActiveNavItem(e) {
+            e.preventDefault();
+            
+            // Remover activo de todos los elementos
+            this.navLinks.removeClass(&#039;active&#039;);
+            
+            // Activar elemento actual
+            $(e.currentTarget).addClass(&#039;active&#039;);
+            
+            // Obtener URL del enlace
+            const url = $(e.currentTarget).attr(&#039;href&#039;);
+            
+            // Navegar si es necesario
+            if (url &amp;&amp; url !== &#039;#&#039;) {
+                window.location.href = url;
+            }
+        }
+
+        /**
+         * Maneja las acciones rápidas
+         */
+        handleQuickAction(e) {
+            e.preventDefault();
+            
+            const action = $(e.currentTarget).data(&#039;action&#039;);
+            const button = $(e.currentTarget);
+            
+            // Añadir efecto de clic
+            button.addClass(&#039;clicked&#039;);
+            setTimeout(() =&gt; button.removeClass(&#039;clicked&#039;), 200);
+            
+            // Ejecutar acción específica
+            switch(action) {
+                case &#039;sync&#039;:
+                    this.handleSyncAction();
+                    break;
+                case &#039;refresh&#039;:
+                    this.handleRefreshAction();
+                    break;
+                case &#039;export&#039;:
+                    this.handleExportAction();
+                    break;
+                case &#039;settings&#039;:
+                    this.handleSettingsAction();
+                    break;
+                default:
+                    console.warn(&#039;Acción no reconocida:&#039;, action);
+            }
+        }
+
+        /**
+         * Maneja la búsqueda en el menú
+         */
+        handleSearch(e) {
+            const searchTerm = $(e.currentTarget).val().toLowerCase();
+            const navItems = $(&#039;.unified-nav-item&#039;);
+            
+            navItems.each(function() {
+                const linkText = $(this).find(&#039;.nav-text&#039;).text().toLowerCase();
+                if (linkText.includes(searchTerm)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
+
+        /**
+         * Maneja el cambio de tema
+         */
+        handleThemeChange(e) {
+            const theme = $(e.currentTarget).val();
+            console.log(&#039;Tema cambiado a:&#039;, theme);
+            
+            // Aplicar tema
+            this.applyTheme(theme);
+            
+            // Guardar configuración
+            this.saveSettings(&#039;theme&#039;, theme);
+            
+            // Trigger evento personalizado
+            $(document).trigger(&#039;theme:changed&#039;, [theme]);
+        }
+
+        /**
+         * Maneja el cambio de precisión
+         */
+        handlePrecisionChange(e) {
+            const precision = $(e.currentTarget).val();
+            console.log(&#039;Precisión cambiada a:&#039;, precision);
+            
+            // Guardar configuración
+            this.saveSettings(&#039;precision&#039;, precision);
+            
+            // Trigger evento personalizado
+            $(document).trigger(&#039;precision:changed&#039;, [precision]);
+        }
+
+        /**
+         * Maneja atajos de teclado
+         */
+        handleKeyboardShortcuts(e) {
+            // Ctrl/Cmd + B para toggle del sidebar
+            if ((e.ctrlKey || e.metaKey) &amp;&amp; e.key === &#039;b&#039;) {
+                e.preventDefault();
+                this.toggleSidebar();
+            }
+            
+            // Escape para cerrar búsqueda
+            if (e.key === &#039;Escape&#039;) {
+                this.searchInput.val(&#039;&#039;).trigger(&#039;input&#039;);
+                this.searchInput.blur();
+            }
+        }
+
+        /**
+         * Maneja el redimensionamiento de ventana
+         */
+        handleResize() {
+            const windowWidth = $(window).width();
+            
+            // En móviles, expandir sidebar automáticamente
+            if (windowWidth &lt;= 768) {
+                this.sidebar.removeClass(&#039;collapsed&#039;);
+                this.sidebarToggle.find(&#039;i&#039;).removeClass(&#039;fa-chevron-right&#039;).addClass(&#039;fa-chevron-left&#039;);
+            }
+        }
+
+        /**
+         * Obtiene la página actual
+         */
+        getCurrentPage() {
+            const url = window.location.href;
+            const pageMatch = url.match(/[?&amp;]page=([^&amp;]+)/);
+            return pageMatch ? pageMatch[1] : &#039;dashboard&#039;;
+        }
+
+        /**
+         * Aplica un tema específico
+         */
+        applyTheme(theme) {
+            // Remover clases de tema existentes
+            $(&#039;body&#039;).removeClass(&#039;theme-dark theme-light theme-default&#039;);
+            
+            // Aplicar nuevo tema
+            if (theme !== &#039;default&#039;) {
+                $(&#039;body&#039;).addClass(`theme-${theme}`);
+            }
+        }
+
+        /**
+         * Guarda el estado del sidebar
+         */
+        saveSidebarState() {
+            const isCollapsed = this.sidebar.hasClass(&#039;collapsed&#039;);
+            localStorage.setItem(&#039;mia_sidebar_collapsed&#039;, isCollapsed);
+        }
+
+        /**
+         * Carga el estado guardado del sidebar
+         */
+        loadSidebarState() {
+            const isCollapsed = localStorage.getItem(&#039;mia_sidebar_collapsed&#039;) === &#039;true&#039;;
+            if (isCollapsed) {
+                this.sidebar.addClass(&#039;collapsed&#039;);
+                this.sidebarToggle.find(&#039;i&#039;).removeClass(&#039;fa-chevron-left&#039;).addClass(&#039;fa-chevron-right&#039;);
+            }
+        }
+
+        /**
+         * Guarda configuraciones
+         */
+        saveSettings(key, value) {
+            const settings = this.getSettings();
+            settings[key] = value;
+            localStorage.setItem(&#039;mia_sidebar_settings&#039;, JSON.stringify(settings));
+        }
+
+        /**
+         * Obtiene configuraciones guardadas
+         */
+        getSettings() {
+            const settings = localStorage.getItem(&#039;mia_sidebar_settings&#039;);
+            return settings ? JSON.parse(settings) : {};
+        }
+
+        /**
+         * Carga configuraciones guardadas
+         */
+        loadSavedSettings() {
+            const settings = this.getSettings();
+            
+            // Aplicar tema guardado
+            if (settings.theme) {
+                this.themeSwitcher.val(settings.theme);
+                this.applyTheme(settings.theme);
+            }
+            
+            // Aplicar precisión guardada
+            if (settings.precision) {
+                this.precisionInput.val(settings.precision);
+            }
+            
+            // Cargar estado del sidebar
+            this.loadSidebarState();
+        }
+
+        /**
+         * Acción de sincronización
+         */
+        handleSyncAction() {
+            if (typeof miIntegracionApiDashboard !== &#039;undefined&#039; &amp;&amp; miIntegracionApiDashboard.confirmSync) {
+                if (confirm(miIntegracionApiDashboard.confirmSync)) {
+                    this.triggerSync();
+                }
+            } else {
+                this.triggerSync();
+            }
+        }
+
+        /**
+         * Dispara la sincronización
+         */
+        triggerSync() {
+            // Buscar botón de sincronización en el dashboard
+            const syncButton = $(&#039;#mi-batch-sync-products&#039;);
+            if (syncButton.length) {
+                syncButton.trigger(&#039;click&#039;);
+            } else {
+                // Fallback: recargar página
+                window.location.reload();
+            }
+        }
+
+        /**
+         * Acción de actualización
+         */
+        handleRefreshAction() {
+            window.location.reload();
+        }
+
+        /**
+         * Acción de exportación
+         */
+        handleExportAction() {
+            // Implementar lógica de exportación
+            console.log(&#039;Exportando datos...&#039;);
+            alert(&#039;Funcionalidad de exportación en desarrollo&#039;);
+        }
+
+        /**
+         * Acción de configuración
+         */
+        handleSettingsAction() {
+            // Navegar a página de configuración de caché (configuración principal)
+            window.location.href = &#039;admin.php?page=mi-integracion-api-cache&#039;;
+        }
+
+        /**
+         * API pública para controlar el sidebar
+         */
+        collapse() {
+            if (!this.sidebar.hasClass(&#039;collapsed&#039;)) {
+                this.toggleSidebar();
+            }
+        }
+
+        expand() {
+            if (this.sidebar.hasClass(&#039;collapsed&#039;)) {
+                this.toggleSidebar();
+            }
+        }
+
+        isCollapsed() {
+            return this.sidebar.hasClass(&#039;collapsed&#039;);
+        }
+    }
+
+    /**
+     * Inicialización cuando el DOM está listo
+     */
+    $(document).ready(function() {
+        // Inicializar sidebar unificado
+        window.unifiedSidebar = new UnifiedSidebar();
+        
+        // Exponer API global
+        window.MiIntegracionApiSidebar = {
+            collapse: () =&gt; window.unifiedSidebar.collapse(),
+            expand: () =&gt; window.unifiedSidebar.expand(),
+            isCollapsed: () =&gt; window.unifiedSidebar.isCollapsed(),
+            toggle: () =&gt; window.unifiedSidebar.toggleSidebar()
+        };
+    });
+
+    /**
+     * Eventos personalizados del sidebar
+     */
+    $(document).on(&#039;sidebar:toggled&#039;, function(e, isCollapsed) {
+        console.log(&#039;Sidebar toggled:&#039;, isCollapsed ? &#039;collapsed&#039; : &#039;expanded&#039;);
+    });
+
+    $(document).on(&#039;theme:changed&#039;, function(e, theme) {
+        console.log(&#039;Theme changed to:&#039;, theme);
+    });
+
+    $(document).on(&#039;precision:changed&#039;, function(e, precision) {
+        console.log(&#039;Precision changed to:&#039;, precision);
+    });
+
+})(jQuery);</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

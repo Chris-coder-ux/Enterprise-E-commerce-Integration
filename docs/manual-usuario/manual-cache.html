@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Caché - Mi Integración API</title>
+    <link rel="stylesheet" href="manual-usuario.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="manual-container">
+        <!-- Header -->
+        <header class="manual-header">
+            <div class="header-content">
+                <h1><i class="fas fa-database"></i> Manual de Gestión de Caché</h1>
+                <div class="version-info">Versión 2.1.0</div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="manual-nav">
+            <div class="nav-content">
+                <h3><i class="fas fa-list"></i> Índice</h3>
+                <ul class="nav-list">
+                    <li><a href="#introduccion"><i class="fas fa-info-circle"></i> Introducción</a></li>
+                    <li><a href="#que-es-cache"><i class="fas fa-question-circle"></i> ¿Qué es el Caché?</a></li>
+                    <li><a href="#configuracion"><i class="fas fa-cog"></i> Configuración</a></li>
+                    <li><a href="#ttl"><i class="fas fa-clock"></i> TTL (Time To Live)</a></li>
+                    <li><a href="#estadisticas"><i class="fas fa-chart-bar"></i> Estadísticas</a></li>
+                    <li><a href="#gestion"><i class="fas fa-tools"></i> Gestión de Caché</a></li>
+                    <li><a href="#endpoints"><i class="fas fa-network-wired"></i> Endpoints en Caché</a></li>
+                    <li><a href="#funcionalidades-avanzadas"><i class="fas fa-rocket"></i> Funcionalidades Avanzadas</a></li>
+                    <li><a href="#recomendaciones"><i class="fas fa-lightbulb"></i> Recomendaciones</a></li>
+                    <li><a href="#solucion-problemas"><i class="fas fa-tools"></i> Solución de Problemas</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="manual-content">
+            <!-- Introducción -->
+            <section id="introduccion" class="manual-section">
+                <h2><i class="fas fa-info-circle"></i> Introducción</h2>
+                <p>El <strong>Sistema de Gestión de Caché</strong> te permite optimizar el rendimiento de tu integración almacenando respuestas de la API de Verial de forma inteligente.</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <h3>Rendimiento Mejorado</h3>
+                        <p>Respuestas más rápidas reduciendo llamadas a la API</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>Reducción de Carga</h3>
+                        <p>Menos solicitudes al servidor de Verial</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-cog"></i>
+                        <h3>Configuración Flexible</h3>
+                        <p>Control total sobre el comportamiento del caché</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Estadísticas en Vivo</h3>
+                        <p>Monitoreo del rendimiento del caché</p>
+                    </div>
+                </div>
+
+                <div class="characteristics-box">
+                    <h3><i class="fas fa-star"></i> Características Principales</h3>
+                    <ul class="characteristics-list">
+                        <li><strong>Almacenamiento Temporal:</strong> Guarda respuestas de la API durante un tiempo configurable (TTL)</li>
+                        <li><strong>Invalidación Automática:</strong> El caché se actualiza automáticamente después del TTL</li>
+                        <li><strong>Configuración por Endpoint:</strong> Configura TTL específico para cada tipo de endpoint</li>
+                        <li><strong>Estadísticas Detalladas:</strong> Ve el rendimiento del caché en tiempo real</li>
+                        <li><strong>Limpieza Manual:</strong> Limpia el caché cuando lo necesites</li>
+                        <li><strong>Flush Inteligente por Segmentos:</strong> Limpieza optimizada para grandes cantidades de datos</li>
+                        <li><strong>Caché en Dos Niveles (Hot/Cold):</strong> Sistema avanzado de almacenamiento optimizado</li>
+                        <li><strong>Límite Global con LRU:</strong> Control automático del tamaño del caché</li>
+                        <li><strong>Rotación Automática:</strong> Limpieza automática de lotes antiguos</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- ¿Qué es el Caché? -->
+            <section id="que-es-cache" class="manual-section">
+                <h2><i class="fas fa-question-circle"></i> ¿Qué es el Caché?</h2>
+                
+                <div class="info-box">
+                    <h3><i class="fas fa-lightbulb"></i> Concepto</h3>
+                    <p>El <strong>caché</strong> es un sistema de almacenamiento temporal que guarda las respuestas de la API de Verial para evitar realizar la misma petición múltiples veces.</p>
+                    <p>Cuando solicitas información que ya está en caché, el sistema devuelve los datos almacenados instantáneamente, sin necesidad de consultar Verial nuevamente.</p>
+                </div>
+
+                <div class="process-steps">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3><i class="fas fa-paper-plane"></i> Primera Solicitud</h3>
+                        <p>El sistema consulta la API de Verial y guarda la respuesta en caché.</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3><i class="fas fa-database"></i> Almacenamiento</h3>
+                        <p>La respuesta se guarda con un tiempo de expiración (TTL) configurado.</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3><i class="fas fa-bolt"></i> Solicitudes Posteriores</h3>
+                        <p>Las solicitudes idénticas devuelven datos del caché instantáneamente.</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <h3><i class="fas fa-sync-alt"></i> Actualización</h3>
+                        <p>Cuando el TTL expira, la próxima solicitud actualiza el caché.</p>
+                    </div>
+                </div>
+
+                <div class="change-types">
+                    <div class="change-type">
+                        <i class="fas fa-check-circle"></i>
+                        <strong>Ventajas:</strong> Mejor rendimiento y menor carga en el servidor
+                    </div>
+                    <div class="change-type">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Consideración:</strong> Los datos pueden estar desactualizados hasta que el TTL expire
+                    </div>
+                    <div class="change-type">
+                        <i class="fas fa-cog"></i>
+                        <strong>Configuración:</strong> Ajusta el TTL según la frecuencia de cambios de tus datos
+                    </div>
+                </div>
+            </section>
+
+            <!-- Configuración -->
+            <section id="configuracion" class="manual-section">
+                <h2><i class="fas fa-cog"></i> Configuración</h2>
+                
+                <div class="config-grid">
+                    <div class="config-card">
+                        <h4><i class="fas fa-sliders-h"></i> Panel de Configuración</h4>
+                        <p>Accede al panel de Caché desde el menú lateral de administración.</p>
+                        <p>Aquí encontrarás:</p>
+                        <ul>
+                            <li>Configuración global de TTL</li>
+                            <li>Configuración específica por endpoint</li>
+                            <li>Estadísticas de rendimiento</li>
+                            <li>Acciones de gestión</li>
+                            <li><strong>Flush Inteligente por Segmentos:</strong> Configuración de limpieza optimizada</li>
+                            <li><strong>Rotación de Caché de Lotes:</strong> Configuración de edad máxima de lotes</li>
+                            <li><strong>Límite Global con LRU:</strong> Control de tamaño máximo de caché</li>
+                            <li><strong>Caché en Dos Niveles:</strong> Configuración de Hot/Cold cache</li>
+                        </ul>
+                    </div>
+
+                    <div class="config-card">
+                        <h4><i class="fas fa-clock"></i> Configuración de TTL</h4>
+                        <p>Establece el tiempo de vida del caché:</p>
+                        <ul>
+                            <li><strong>3600 segundos (1 hora):</strong> Para datos que cambian poco</li>
+                            <li><strong>1800 segundos (30 min):</strong> Balance entre rendimiento y actualización</li>
+                            <li><strong>600 segundos (10 min):</strong> Para datos más dinámicos</li>
+                        </ul>
+                    </div>
+
+                    <div class="config-card">
+                        <h4><i class="fas fa-network-wired"></i> Configuración por Endpoint</h4>
+                        <p>Puedes configurar TTL diferentes para cada tipo de endpoint:</p>
+                        <ul>
+                            <li>Artículos (productos)</li>
+                            <li>Clientes</li>
+                            <li>Pedidos</li>
+                            <li>Stock</li>
+                            <li>Otros endpoints</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TTL -->
+            <section id="ttl" class="manual-section">
+                <h2><i class="fas fa-clock"></i> TTL (Time To Live)</h2>
+                
+                <div class="info-box">
+                    <h3><i class="fas fa-question-circle"></i> ¿Qué es el TTL?</h3>
+                    <p><strong>TTL</strong> (Time To Live) es el tiempo en segundos que los datos permanecerán guardados en el caché antes de ser considerados expirados.</p>
+                </div>
+
+                <div class="ttl-examples">
+                    <h3><i class="fas fa-list"></i> Ejemplos de TTL Recomendados</h3>
+                    
+                    <div class="ttl-grid">
+                        <div class="ttl-card short">
+                            <h4><i class="fas fa-sync-alt"></i> TTL Corto (300-600s)</h4>
+                            <p><strong>Para datos muy dinámicos:</strong></p>
+                            <ul>
+                                <li>Stock de productos</li>
+                                <li>Estado de pedidos</li>
+                                <li>Disponibilidad</li>
+                            </ul>
+                            <p><strong>Tiempo:</strong> 5-10 minutos</p>
+                        </div>
+
+                        <div class="ttl-card medium">
+                            <h4><i class="fas fa-balance-scale"></i> TTL Medio (1800-3600s)</h4>
+                            <p><strong>Para datos moderadamente dinámicos:</strong></p>
+                            <ul>
+                                <li>Precios</li>
+                                <li>Información de clientes</li>
+                                <li>Catálogos</li>
+                            </ul>
+                            <p><strong>Tiempo:</strong> 30 minutos - 1 hora</p>
+                        </div>
+
+                        <div class="ttl-card long">
+                            <h4><i class="fas fa-database"></i> TTL Largo (7200-86400s)</h4>
+                            <p><strong>Para datos estáticos:</strong></p>
+                            <ul>
+                                <li>Países, provincias, localidades</li>
+                                <li>Configuraciones</li>
+                                <li>Listas de referencia</li>
+                            </ul>
+                            <p><strong>Tiempo:</strong> 2 horas - 24 horas</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Importante</h4>
+                    <ul>
+                        <li><strong>TTL muy corto:</strong> Más actualizaciones pero mayor carga en el servidor</li>
+                        <li><strong>TTL muy largo:</strong> Menos carga pero posibles datos desactualizados</li>
+                        <li><strong>Balance:</strong> Elige el TTL según la frecuencia de cambio de tus datos</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Estadísticas -->
+            <section id="estadisticas" class="manual-section">
+                <h2><i class="fas fa-chart-bar"></i> Estadísticas</h2>
+                
+                <div class="stats-overview">
+                    <h3><i class="fas fa-chart-pie"></i> Dashboard de Estadísticas</h3>
+                    <p>El panel de Caché muestra estadísticas en tiempo real sobre el rendimiento del sistema:</p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <i class="fas fa-file-alt"></i>
+                            <h4>Total de Entradas</h4>
+                            <p>Número total de elementos guardados en caché</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-check-circle"></i>
+                            <h4>Hits</h4>
+                            <p>Número de solicitudes servidas desde el caché</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-times-circle"></i>
+                            <h4>Misses</h4>
+                            <p>Número de solicitudes que requirieron consultar la API</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-percentage"></i>
+                            <h4>Ratio de Éxito</h4>
+                            <p>Porcentaje de solicitudes servidas desde caché</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="health-grid">
+                    <div class="health-card healthy">
+                        <i class="fas fa-thumbs-up"></i>
+                        <div>
+                            <strong>Rendimiento Óptimo</strong>
+                            <p>Ratio > 70%</p>
+                        </div>
+                    </div>
+                    <div class="health-card attention">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <div>
+                            <strong>Necesita Atención</strong>
+                            <p>Ratio 50-70%</p>
+                        </div>
+                    </div>
+                    <div class="health-card warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div>
+                            <strong>Rendimiento Bajo</strong>
+                            <p>Ratio < 50%</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Gestión -->
+            <section id="gestion" class="manual-section">
+                <h2><i class="fas fa-tools"></i> Gestión de Caché</h2>
+                
+                <div class="control-grid">
+                    <div class="control-card">
+                        <h4><i class="fas fa-broom"></i> Limpiar Todo el Caché</h4>
+                        <p>Borra todos los datos almacenados en caché:</p>
+                        <ul>
+                            <li>Vacía completamente el caché</li>
+                            <li>La próxima solicitud se servirá desde la API</li>
+                            <li>Se reconstruirá el caché automáticamente</li>
+                            <li><strong>Flush Inteligente:</strong> Si hay más de 1000 transients, se usa limpieza por segmentos automáticamente</li>
+                        </ul>
+                    </div>
+
+                    <div class="control-card">
+                        <h4><i class="fas fa-sync"></i> Actualizar Caché</h4>
+                        <p>Fuerza la actualización de todos los elementos:</p>
+                        <ul>
+                            <li>Mantiene los datos en caché</li>
+                            <li>Actualiza la información de Verial</li>
+                            <li>Mantiene el rendimiento optimizado</li>
+                        </ul>
+                    </div>
+
+                    <div class="control-card">
+                        <h4><i class="fas fa-filter"></i> Limpiar por Tipo</h4>
+                        <p>Borra el caché de un endpoint específico:</p>
+                        <ul>
+                            <li>Selecciona el endpoint que deseas limpiar</li>
+                            <li>Solo afecta a ese tipo de datos</li>
+                            <li>Otros cachés permanecen intactos</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h3><i class="fas fa-info-circle"></i> Nota</h3>
+                    <p>Después de limpiar el caché, las primeras solicitudes serán más lentas mientras se reconstruye el caché. Esto es normal y esperado.</p>
+                    <p><strong>Flush Inteligente:</strong> Para sistemas con muchos transients, el sistema automáticamente usa flush segmentado para evitar bloqueos y timeouts durante la limpieza.</p>
+                </div>
+            </section>
+
+            <!-- Endpoints -->
+            <section id="endpoints" class="manual-section">
+                <h2><i class="fas fa-network-wired"></i> Endpoints en Caché</h2>
+                
+                <div class="endpoints-grid">
+                    <div class="endpoint-card">
+                        <h3><i class="fas fa-box"></i> Artículos</h3>
+                        <p>Productos y artículos del catálogo.</p>
+                        <div class="endpoint-info">
+                            <strong>TTL Recomendado:</strong> 3600 segundos (1 hora)<br>
+                            <strong>Endpoint:</strong> GetArticulosWS
+                        </div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <h3><i class="fas fa-users"></i> Clientes</h3>
+                        <p>Información de clientes.</p>
+                        <div class="endpoint-info">
+                            <strong>TTL Recomendado:</strong> 7200 segundos (2 horas)<br>
+                            <strong>Endpoint:</strong> GetClientesWS
+                        </div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <h3><i class="fas fa-cube"></i> Stock</h3>
+                        <p>Disponibilidad de productos.</p>
+                        <div class="endpoint-info">
+                            <strong>TTL Recomendado:</strong> 600 segundos (10 min)<br>
+                            <strong>Endpoint:</strong> GetStockArticulosWS
+                        </div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <h3><i class="fas fa-globe"></i> Ubicaciones</h3>
+                        <p>Países, provincias y localidades.</p>
+                        <div class="endpoint-info">
+                            <strong>TTL Recomendado:</strong> 86400 segundos (24 horas)<br>
+                            <strong>Endpoint:</strong> GetPaisesWS, GetProvinciasWS, GetLocalidadesWS
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Funcionalidades Avanzadas -->
+            <section id="funcionalidades-avanzadas" class="manual-section">
+                <h2><i class="fas fa-rocket"></i> Funcionalidades Avanzadas</h2>
+                
+                <!-- Flush Inteligente por Segmentos -->
+                <div class="advanced-feature-section">
+                    <h3><i class="fas fa-layer-group"></i> Flush Inteligente por Segmentos</h3>
+                    <p>El sistema incluye un <strong>flush inteligente por segmentos</strong> que optimiza la limpieza de caché cuando hay grandes cantidades de transients (más de 1000 por defecto).</p>
+                    
+                    <div class="feature-details">
+                        <h4><i class="fas fa-cog"></i> Configuración</h4>
+                        <p>Puedes configurar tres parámetros principales:</p>
+                        <ul>
+                            <li><strong>Umbral para activar flush segmentado:</strong> Número de transients que activa el modo segmentado (100-10000, default: 1000)</li>
+                            <li><strong>Tamaño de cada segmento:</strong> Número de transients procesados por lote (10-2000, default: 500)</li>
+                            <li><strong>Tiempo máximo de ejecución:</strong> Tiempo límite en segundos para evitar timeouts (5-300, default: 30)</li>
+                        </ul>
+                        
+                        <div class="info-box">
+                            <h4><i class="fas fa-info-circle"></i> ¿Cuándo se activa?</h4>
+                            <p>El sistema detecta automáticamente cuando hay más transients que el umbral configurado y activa el modo segmentado. Esto es especialmente útil para sistemas con ~8000 productos que pueden generar miles de transients.</p>
+                        </div>
+                        
+                        <div class="benefits-grid">
+                            <div class="benefit-card">
+                                <i class="fas fa-clock"></i>
+                                <h4>Sin Bloqueos</h4>
+                                <p>La limpieza se divide en segmentos pequeños, evitando bloqueos del sistema</p>
+                            </div>
+                            <div class="benefit-card">
+                                <i class="fas fa-shield-alt"></i>
+                                <h4>Sin Timeouts</h4>
+                                <p>Control de tiempo máximo previene timeouts durante la limpieza</p>
+                            </div>
+                            <div class="benefit-card">
+                                <i class="fas fa-memory"></i>
+                                <h4>Gestión de Memoria</h4>
+                                <p>Verificación y limpieza de memoria entre segmentos</p>
+                            </div>
+                            <div class="benefit-card">
+                                <i class="fas fa-chart-line"></i>
+                                <h4>Progreso Visible</h4>
+                                <p>Logging detallado del progreso de la limpieza</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Rotación de Caché de Lotes -->
+                <div class="advanced-feature-section">
+                    <h3><i class="fas fa-sync-alt"></i> Rotación de Caché de Lotes</h3>
+                    <p>El sistema incluye <strong>rotación automática de caché de lotes</strong> que elimina automáticamente lotes antiguos basándose en una ventana de tiempo configurable.</p>
+                    
+                    <div class="feature-details">
+                        <h4><i class="fas fa-cog"></i> Configuración</h4>
+                        <p>Puedes configurar la <strong>edad máxima de lotes</strong> en horas (1-24 horas, default: 3 horas).</p>
+                        
+                        <div class="info-box">
+                            <h4><i class="fas fa-lightbulb"></i> ¿Por qué es útil?</h4>
+                            <p>Con ~8000 productos, una sincronización puede tardar 3-4 horas, generando lotes en diferentes ventanas de tiempo. La rotación automática limpia lotes antiguos para evitar acumulación excesiva de caché.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Límite de Tamaño Global con LRU -->
+                <div class="advanced-feature-section">
+                    <h3><i class="fas fa-ruler"></i> Límite de Tamaño Global con LRU</h3>
+                    <p>El sistema implementa un <strong>límite global de tamaño de caché</strong> con evicción automática LRU (Least Recently Used) para mantener el caché dentro de límites razonables.</p>
+                    
+                    <div class="feature-details">
+                        <h4><i class="fas fa-cog"></i> Configuración</h4>
+                        <p>Puedes configurar el <strong>límite máximo de caché en MB</strong> (50-5000 MB, default: 500 MB).</p>
+                        
+                        <div class="info-box">
+                            <h4><i class="fas fa-chart-pie"></i> Funcionamiento</h4>
+                            <p>Cuando el tamaño total del caché excede el límite configurado, el sistema automáticamente elimina los elementos menos recientemente usados (LRU) para liberar espacio, preservando los datos más frecuentemente accedidos.</p>
+                        </div>
+                        
+                        <div class="stats-display">
+                            <p>El panel muestra:</p>
+                            <ul>
+                                <li><strong>Tamaño actual del caché:</strong> En MB</li>
+                                <li><strong>Límite configurado:</strong> En MB</li>
+                                <li><strong>Porcentaje de uso:</strong> Visualización del uso actual</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Caché en Dos Niveles (Hot/Cold) -->
+                <div class="advanced-feature-section">
+                    <h3><i class="fas fa-thermometer-half"></i> Caché en Dos Niveles (Hot/Cold)</h3>
+                    <p>El sistema implementa un <strong>caché en dos niveles</strong> que optimiza el almacenamiento según la frecuencia de acceso a los datos.</p>
+                    
+                    <div class="feature-details">
+                        <h4><i class="fas fa-fire"></i> Hot Cache (Caché Caliente)</h4>
+                        <p>Datos frecuentemente accedidos se almacenan en <strong>hot cache</strong> (transients de WordPress) para acceso rápido en memoria.</p>
+                        
+                        <h4><i class="fas fa-snowflake"></i> Cold Cache (Caché Fría)</h4>
+                        <p>Datos raramente accedidos se almacenan en <strong>cold cache</strong> (archivos comprimidos en disco) para ahorrar memoria.</p>
+                        
+                        <h4><i class="fas fa-cog"></i> Configuración</h4>
+                        <ul>
+                            <li><strong>Umbral para Hot Cache:</strong> Nivel de frecuencia requerido para mantener datos en hot cache (very_high, high, medium, low)</li>
+                            <li><strong>Migración automática:</strong> Activa o desactiva la migración automática entre hot y cold cache</li>
+                        </ul>
+                        
+                        <div class="migration-process">
+                            <h4><i class="fas fa-exchange-alt"></i> Proceso de Migración</h4>
+                            <div class="process-steps">
+                                <div class="step-card">
+                                    <div class="step-number">1</div>
+                                    <h3><i class="fas fa-chart-line"></i> Análisis</h3>
+                                    <p>El sistema analiza la frecuencia de acceso de cada elemento</p>
+                                </div>
+                                <div class="step-card">
+                                    <div class="step-number">2</div>
+                                    <h3><i class="fas fa-arrow-down"></i> Migración a Cold</h3>
+                                    <p>Datos de baja frecuencia se mueven a cold cache (comprimidos)</p>
+                                </div>
+                                <div class="step-card">
+                                    <div class="step-number">3</div>
+                                    <h3><i class="fas fa-arrow-up"></i> Promoción a Hot</h3>
+                                    <p>Datos de cold cache accedidos frecuentemente se promueven a hot cache</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="stats-display">
+                            <h4><i class="fas fa-chart-bar"></i> Estadísticas</h4>
+                            <p>El panel muestra estadísticas en tiempo real:</p>
+                            <ul>
+                                <li><strong>Hot Cache:</strong> Número de elementos y tamaño en MB</li>
+                                <li><strong>Cold Cache:</strong> Número de elementos y tamaño en MB</li>
+                                <li><strong>Total:</strong> Estadísticas combinadas</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="info-box">
+                            <h4><i class="fas fa-lightbulb"></i> Beneficios</h4>
+                            <ul>
+                                <li><strong>Ahorro de Memoria:</strong> Datos raramente accedidos se almacenan comprimidos en disco</li>
+                                <li><strong>Rendimiento:</strong> Datos frecuentemente accedidos permanecen en memoria para acceso rápido</li>
+                                <li><strong>Escalabilidad:</strong> Especialmente útil para sistemas con ~8000 productos</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recomendaciones -->
+            <section id="recomendaciones" class="manual-section">
+                <h2><i class="fas fa-lightbulb"></i> Recomendaciones</h2>
+                
+                <div class="recommendation-grid">
+                    <div class="recommendation-card medium">
+                        <div class="recommendation-header">
+                            <i class="fas fa-clock"></i>
+                            <h4>Ajustar TTL Según los Datos</h4>
+                        </div>
+                        <p>Configura TTL largos para datos que cambian poco (países, provincias) y TTL cortos para datos dinámicos (stock, precios).</p>
+                    </div>
+
+                    <div class="recommendation-card low">
+                        <div class="recommendation-header">
+                            <i class="fas fa-trash-alt"></i>
+                            <h4>Limpiar Caché Regularmente</h4>
+                        </div>
+                        <p>Limpia el caché periódicamente para asegurar que los datos estén actualizados.</p>
+                    </div>
+
+                    <div class="recommendation-card high">
+                        <div class="recommendation-header">
+                            <i class="fas fa-chart-line"></i>
+                            <h4>Monitorear Estadísticas</h4>
+                        </div>
+                        <p>Revisa las estadísticas de rendimiento para identificar oportunidades de optimización.</p>
+                    </div>
+
+                    <div class="recommendation-card medium">
+                        <div class="recommendation-header">
+                            <i class="fas fa-wrench"></i>
+                            <h4>Actualizar Antes de Cambios Importantes</h4>
+                        </div>
+                        <p>Si vas a realizar cambios importantes en tu catálogo, actualiza el caché manualmente.</p>
+                    </div>
+
+                    <div class="recommendation-card high">
+                        <div class="recommendation-header">
+                            <i class="fas fa-layer-group"></i>
+                            <h4>Configurar Flush Segmentado</h4>
+                        </div>
+                        <p>Para sistemas con muchos productos (~8000+), configura el flush segmentado para evitar bloqueos durante la limpieza de caché.</p>
+                    </div>
+
+                    <div class="recommendation-card high">
+                        <div class="recommendation-header">
+                            <i class="fas fa-thermometer-half"></i>
+                            <h4>Activar Caché en Dos Niveles</h4>
+                        </div>
+                        <p>Activa el caché en dos niveles (Hot/Cold) para optimizar el uso de memoria en sistemas grandes.</p>
+                    </div>
+
+                    <div class="recommendation-card medium">
+                        <div class="recommendation-header">
+                            <i class="fas fa-ruler"></i>
+                            <h4>Establecer Límite Global</h4>
+                        </div>
+                        <p>Configura un límite global de tamaño de caché para evitar que el sistema consuma demasiada memoria.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Solución de Problemas -->
+            <section id="solucion-problemas" class="manual-section">
+                <h2><i class="fas fa-tools"></i> Solución de Problemas</h2>
+
+                <div class="troubleshooting-section">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Problemas Comunes</h3>
+                    
+                    <div class="problem-grid">
+                        <div class="problem-card">
+                            <h4><i class="fas fa-exclamation-circle"></i> Datos Desactualizados</h4>
+                            <p><strong>Síntoma:</strong> Los datos mostrados no son los más recientes.</p>
+                            <div class="solutions">
+                                <strong>Soluciones:</strong>
+                                <ol>
+                                    <li>Reducir el TTL del endpoint afectado</li>
+                                    <li>Limpiar manualmente el caché de ese endpoint</li>
+                                    <li>Actualizar el caché completamente</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="problem-card">
+                            <h4><i class="fas fa-tachometer-alt"></i> Rendimiento Bajo</h4>
+                            <p><strong>Síntoma:</strong> El ratio de éxito del caché es bajo (< 50%).</p>
+                            <div class="solutions">
+                                <strong>Soluciones:</strong>
+                                <ol>
+                                    <li>Verificar que el caché esté habilitado</li>
+                                    <li>Aumentar el TTL si los datos cambian poco</li>
+                                    <li>Revisar que los parámetros de las solicitudes sean consistentes</li>
+                                    <li>Verificar el uso del disco del servidor</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="problem-card">
+                            <h4><i class="fas fa-database"></i> Caché No Se Actualiza</h4>
+                            <p><strong>Síntoma:</strong> El caché mantiene datos antiguos incluso después del TTL.</p>
+                            <div class="solutions">
+                                <strong>Soluciones:</strong>
+                                <ol>
+                                    <li>Limpiar manualmente el caché</li>
+                                    <li>Verificar que el tiempo del servidor sea correcto</li>
+                                    <li>Comprobar que no haya errores en los logs</li>
+                                    <li>Reiniciar el sistema de caché</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="problem-card">
+                            <h4><i class="fas fa-server"></i> Alto Uso de Memoria</h4>
+                            <p><strong>Síntoma:</strong> El sistema reporta alto uso de memoria.</p>
+                            <div class="solutions">
+                                <strong>Soluciones:</strong>
+                                <ol>
+                                    <li>Activar caché en dos niveles (Hot/Cold) para optimizar memoria</li>
+                                    <li>Configurar un límite global de tamaño de caché con LRU</li>
+                                    <li>Reducir el TTL para que se limpie más frecuentemente</li>
+                                    <li>Limpiar el caché periódicamente</li>
+                                    <li>Revisar si hay demasiadas entradas en caché</li>
+                                    <li>Considerar aumentar la memoria del servidor</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="problem-card">
+                            <h4><i class="fas fa-hourglass-half"></i> Timeout Durante Limpieza de Caché</h4>
+                            <p><strong>Síntoma:</strong> La limpieza de caché se interrumpe por timeout o bloquea el sistema.</p>
+                            <div class="solutions">
+                                <strong>Soluciones:</strong>
+                                <ol>
+                                    <li>Verificar que el flush segmentado esté activado (umbral configurado)</li>
+                                    <li>Ajustar el tamaño de segmento a un valor menor (ej: 300-400 transients)</li>
+                                    <li>Reducir el tiempo máximo de ejecución si es necesario</li>
+                                    <li>Limpiar el caché en horarios de menor tráfico</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="problem-card">
+                            <h4><i class="fas fa-database"></i> Caché Crece Demasiado</h4>
+                            <p><strong>Síntoma:</strong> El caché ocupa demasiado espacio y no se limpia automáticamente.</p>
+                            <div class="solutions">
+                                <strong>Soluciones:</strong>
+                                <ol>
+                                    <li>Configurar rotación automática de caché de lotes (edad máxima)</li>
+                                    <li>Establecer un límite global de tamaño con LRU</li>
+                                    <li>Activar migración automática Hot→Cold</li>
+                                    <li>Reducir TTLs para que los datos expiren más rápido</li>
+                                    <li>Limpiar manualmente el caché periódicamente</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="logs-section">
+                    <h3><i class="fas fa-file-alt"></i> Revisar Logs</h3>
+                    <p>Para obtener más información sobre problemas del caché:</p>
+                    <ol>
+                        <li>Navega a la página de <strong>Logs del Sistema</strong></li>
+                        <li>Filtra por "caché" o "cache"</li>
+                        <li>Busca entradas recientes con errores</li>
+                        <li>Revisa el mensaje de error para identificar la causa</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="manual-footer">
+                <p><i class="fas fa-info-circle"></i> Este manual está actualizado para la versión 2.1.0 del sistema de Gestión de Caché.</p>
+                <p><i class="fas fa-star"></i> Incluye las nuevas funcionalidades: Flush Inteligente por Segmentos, Caché en Dos Niveles (Hot/Cold), Límite Global con LRU, y Rotación Automática de Lotes.</p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        // Smooth scrolling for navigation links
+        for (const anchor of document.querySelectorAll('a[href^="#"]')) {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        }
+
+        // Highlight current section
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('.manual-section');
+            const navLinks = document.querySelectorAll('.nav-list a');
+            
+            let current = '';
+            for (const section of sections) {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            }
+
+            for (const link of navLinks) {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

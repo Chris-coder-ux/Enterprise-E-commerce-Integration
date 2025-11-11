@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Detección Automática - Mi Integración API</title>
+    <link rel="stylesheet" href="manual-usuario.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="manual-container">
+        <!-- Header -->
+        <header class="manual-header">
+            <div class="header-content">
+                <h1><i class="fas fa-search"></i> Manual de Detección Automática</h1>
+                <div class="version-info">Versión 2.0.0</div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="manual-nav">
+            <div class="nav-content">
+                <h3><i class="fas fa-list"></i> Índice</h3>
+                <ul class="nav-list">
+                    <li><a href="#introduccion"><i class="fas fa-info-circle"></i> Introducción</a></li>
+                    <li><a href="#como-funciona"><i class="fas fa-cogs"></i> ¿Cómo Funciona?</a></li>
+                    <li><a href="#activacion"><i class="fas fa-power-off"></i> Activación</a></li>
+                    <li><a href="#configuracion"><i class="fas fa-sliders-h"></i> Configuración</a></li>
+                    <li><a href="#monitoreo"><i class="fas fa-chart-line"></i> Monitoreo</a></li>
+                    <li><a href="#alertas"><i class="fas fa-bell"></i> Alertas del Sistema</a></li>
+                    <li><a href="#acciones-rapidas"><i class="fas fa-bolt"></i> Acciones Rápidas</a></li>
+                    <li><a href="#solucion-problemas"><i class="fas fa-tools"></i> Solución de Problemas</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="manual-content">
+            <!-- Introducción -->
+            <section id="introduccion" class="manual-section">
+                <h2><i class="fas fa-info-circle"></i> Introducción</h2>
+                <p>El <strong>Sistema de Detección Automática</strong> es una funcionalidad avanzada que monitorea continuamente tu catálogo de productos en Verial ERP y sincroniza automáticamente los cambios con tu tienda WooCommerce.</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <i class="fas fa-sync-alt"></i>
+                        <h3>Sincronización Automática</h3>
+                        <p>Sincroniza cambios en tiempo real sin intervención manual</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-clock"></i>
+                        <h3>Monitoreo Continuo</h3>
+                        <p>Verifica cambios cada 5 minutos configurable</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>Detección Inteligente</h3>
+                        <p>Identifica solo los productos con cambios reales</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-chart-bar"></i>
+                        <h3>Estadísticas en Vivo</h3>
+                        <p>Seguimiento de actividad y rendimiento</p>
+                    </div>
+                </div>
+
+                <div class="characteristics-box">
+                    <h3><i class="fas fa-lightbulb"></i> Beneficios Principales</h3>
+                    <ul class="characteristics-list">
+                        <li><strong>Ahorro de Tiempo</strong>: No necesitas sincronizar manualmente los productos</li>
+                        <li><strong>Actualización Continua</strong>: Tu catálogo siempre está actualizado</li>
+                        <li><strong>Detección Precisa</strong>: Solo actualiza los productos que realmente cambiaron</li>
+                        <li><strong>Rendimiento Optimizado</strong>: Procesa lotes inteligentemente para evitar sobrecargas</li>
+                        <li><strong>Alertas Inteligentes</strong>: Notificaciones cuando el stock está bajo</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Cómo Funciona -->
+            <section id="como-funciona" class="manual-section">
+                <h2><i class="fas fa-cogs"></i> ¿Cómo Funciona?</h2>
+                
+                <div class="process-steps">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3><i class="fas fa-download"></i> Adquisición de Datos</h3>
+                        <p>El sistema se conecta a la API de Verial y obtiene el estado actual de todos los productos.</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3><i class="fas fa-search"></i> Detección de Cambios</h3>
+                        <p>Compara los datos actuales con la última sincronización para identificar cambios.</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3><i class="fas fa-sync-alt"></i> Sincronización Selectiva</h3>
+                        <p>Actualiza solo los productos que han sufrido cambios en precio, stock o información.</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <h3><i class="fas fa-check-circle"></i> Verificación y Logs</h3>
+                        <p>Registra todas las operaciones en los logs del sistema para auditoría.</p>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h3><i class="fas fa-info-circle"></i> Tipos de Cambios Detectados</h3>
+                    <div class="change-types">
+                        <div class="change-type">
+                            <i class="fas fa-dollar-sign"></i>
+                            <strong>Precios:</strong> Cambios en precios de compra y venta
+                        </div>
+                        <div class="change-type">
+                            <i class="fas fa-warehouse"></i>
+                            <strong>Stock:</strong> Variaciones en la cantidad disponible
+                        </div>
+                        <div class="change-type">
+                            <i class="fas fa-tags"></i>
+                            <strong>Información:</strong> Descripciones, categorías, atributos
+                        </div>
+                        <div class="change-type">
+                            <i class="fas fa-images"></i>
+                            <strong>Imágenes:</strong> Nuevas imágenes o actualizaciones
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Activación -->
+            <section id="activacion" class="manual-section">
+                <h2><i class="fas fa-power-off"></i> Activación del Sistema</h2>
+                
+                <div class="activation-steps">
+                    <div class="activation-step">
+                        <h3><i class="fas fa-door-open"></i> Paso 1: Acceder al Dashboard</h3>
+                        <p>Navega al dashboard de Detección Automática desde el menú lateral o usando la URL:</p>
+                        <div class="direct-link">
+                            <code>wp-admin/admin.php?page=mia-detection-dashboard</code>
+                        </div>
+                    </div>
+                    
+                    <div class="activation-step">
+                        <h3><i class="fas fa-toggle-on"></i> Paso 2: Activar el Toggle</h3>
+                        <p>En el panel de control principal, localiza el toggle "Detección Automática" y actívalo.</p>
+                        <div class="toggle-demo">
+                            <div class="toggle-switch active">
+                                <div class="toggle-slider"></div>
+                            </div>
+                            <span>Estado: <strong>Activo</strong></span>
+                        </div>
+                    </div>
+                    
+                    <div class="activation-step">
+                        <h3><i class="fas fa-check-circle"></i> Paso 3: Verificar Estado</h3>
+                        <p>El indicador "Sistema Activo" confirmará que la detección automática está en funcionamiento.</p>
+                        <div class="status-demo">
+                            <div class="status-indicator active">
+                                <div class="pulse-dot"></div>
+                                <span>Sistema Activo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h4>Requisitos Previos</h4>
+                    <ul>
+                        <li>API de Verial correctamente configurada y accesible</li>
+                        <li>WooCommerce activo y funcional</li>
+                        <li>Permisos de administrador en WordPress</li>
+                        <li>Conexión estable a internet</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Configuración -->
+            <section id="configuracion" class="manual-section">
+                <h2><i class="fas fa-sliders-h"></i> Configuración</h2>
+
+                <div class="config-grid">
+                    <div class="config-card">
+                        <h3><i class="fas fa-clock"></i> Intervalo de Detección</h3>
+                        <p>Define la frecuencia con la que el sistema verificará cambios en Verial:</p>
+                        <ul>
+                            <li><strong>5 minutos</strong> - Verificación frecuente (recomendado para tiendas activas)</li>
+                            <li><strong>10 minutos</strong> - Balanceado entre rendimiento y actualización</li>
+                            <li><strong>15 minutos</strong> - Menos carga en el servidor</li>
+                            <li><strong>30 minutos</strong> - Ideal para catálogos estables</li>
+                        </ul>
+                    </div>
+
+                    <div class="config-card">
+                        <h3><i class="fas fa-layer-group"></i> Límite de Productos</h3>
+                        <p>Controla cuántos productos se procesan en cada ejecución:</p>
+                        <ul>
+                            <li><strong>Rango:</strong> 10 - 500 productos</li>
+                            <li><strong>Valor por defecto:</strong> 100 productos</li>
+                            <li><strong>Uso:</strong> Evita sobrecargas en catálogos grandes</li>
+                        </ul>
+                    </div>
+
+                    <div class="config-card">
+                        <h3><i class="fas fa-calendar-times"></i> Horario de Funcionamiento</h3>
+                        <p>Establece cuándo debe ejecutarse la detección automática:</p>
+                        <ul>
+                            <li><strong>Horario de Inicio:</strong> Define desde qué hora comenzar</li>
+                            <li><strong>Horario de Fin:</strong> Define hasta qué hora detenerse</li>
+                            <li><strong>Ventana de actividad:</strong> Durante horas laborales</li>
+                        </ul>
+                    </div>
+
+                    <div class="config-card">
+                        <h3><i class="fas fa-bell"></i> Umbral de Stock Bajo</h3>
+                        <p>Configura cuándo se activará la alerta de stock bajo:</p>
+                        <ul>
+                            <li><strong>Valor por defecto:</strong> 10 unidades</li>
+                            <li><strong>Personalizable:</strong> Ajusta según tu negocio</li>
+                            <li><strong>Notificaciones:</strong> Alertas automáticas cuando se alcance el umbral</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Monitoreo -->
+            <section id="monitoreo" class="manual-section">
+                <h2><i class="fas fa-chart-line"></i> Monitoreo y Estadísticas</h2>
+
+                <div class="monitoring-cards">
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <i class="fas fa-clock"></i>
+                            <h3>Última Ejecución</h3>
+                        </div>
+                        <div class="metric-value">Hace 5 minutos</div>
+                        <p>Tiempo transcurrido desde la última sincronización</p>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <i class="fas fa-sync"></i>
+                            <h3>Productos Sincronizados</h3>
+                        </div>
+                        <div class="metric-value">1,254</div>
+                        <p>Total de productos sincronizados en las últimas 24h</p>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <h3>Tiempo Promedio</h3>
+                        </div>
+                        <div class="metric-value">2.3s</div>
+                        <p>Duración promedio por producto procesado</p>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <i class="fas fa-bullseye"></i>
+                            <h3>Precisión</h3>
+                        </div>
+                        <div class="metric-value">99.2%</div>
+                        <p>Tasa de éxito en las sincronizaciones</p>
+                    </div>
+                </div>
+
+                <div class="chart-section">
+                    <h3><i class="fas fa-chart-area"></i> Gráfico de Actividad</h3>
+                    <p>El dashboard muestra un gráfico de líneas con la actividad de sincronización de las últimas 24 horas:</p>
+                    <ul>
+                        <li><strong>Eje X:</strong> Horas del día</li>
+                        <li><strong>Eje Y:</strong> Número de productos sincronizados</li>
+                        <li><strong>Línea azul:</strong> Representa la actividad de sincronización</li>
+                        <li><strong>Picos:</strong> Indican momentos de alta actividad</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Alertas del Sistema -->
+            <section id="alertas" class="manual-section">
+                <h2><i class="fas fa-bell"></i> Alertas del Sistema</h2>
+
+                <div class="alert-types">
+                    <div class="alert-card warning">
+                        <div class="alert-header">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h3>Stock Bajo</h3>
+                        </div>
+                        <p>Se activa cuando un producto tiene menos unidades de las configuradas en el umbral.</p>
+                        <div class="alert-example">
+                            <strong>Ejemplo:</strong> 8 productos con stock inferior a 10 unidades
+                        </div>
+                    </div>
+
+                    <div class="alert-card error">
+                        <div class="alert-header">
+                            <i class="fas fa-times-circle"></i>
+                            <h3>Errores de Conexión</h3>
+                        </div>
+                        <p>Se muestra cuando hay problemas para conectarse a la API de Verial.</p>
+                        <div class="alert-example">
+                            <strong>Acción:</strong> Verificar configuración de API y credenciales
+                        </div>
+                    </div>
+
+                    <div class="alert-card info">
+                        <div class="alert-header">
+                            <i class="fas fa-info-circle"></i>
+                            <h3>Sincronización Completa</h3>
+                        </div>
+                        <p>Confirma cuando una sincronización se ha completado exitosamente.</p>
+                        <div class="alert-example">
+                            <strong>Resultado:</strong> 145 productos actualizados sin errores
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert-management">
+                    <h3><i class="fas fa-cog"></i> Gestión de Alertas</h3>
+                    <ul>
+                        <li><strong>Ver Todos:</strong> Botón para ver todos los productos con alerta</li>
+                        <li><strong>Filtrar:</strong> Filtrar por tipo de alerta (stock, error, etc.)</li>
+                        <li><strong>Resolver:</strong> Posibilidad de resolver alertas manualmente</li>
+                        <li><strong>Exportar:</strong> Exportar reporte de alertas en CSV o JSON</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Acciones Rápidas -->
+            <section id="acciones-rapidas" class="manual-section">
+                <h2><i class="fas fa-bolt"></i> Acciones Rápidas</h2>
+
+                <div class="quick-actions-grid">
+                    <div class="action-card">
+                        <div class="action-header">
+                            <i class="fas fa-sync-alt"></i>
+                            <h3>Ejecutar Ahora</h3>
+                        </div>
+                        <p>Fuerza una sincronización inmediata sin esperar el intervalo programado.</p>
+                        <div class="action-features">
+                            <i class="fas fa-check"></i> Procesa todos los productos
+                            <i class="fas fa-check"></i> Actualiza solo cambios detectados
+                            <i class="fas fa-check"></i> Genera reporte detallado
+                        </div>
+                    </div>
+
+                    <div class="action-card">
+                        <div class="action-header">
+                            <i class="fas fa-pause"></i>
+                            <h3>Pausar Detección</h3>
+                        </div>
+                        <p>Detiene temporalmente la detección automática sin perder configuraciones.</p>
+                        <div class="action-features">
+                            <i class="fas fa-check"></i> Mantiene la configuración
+                            <i class="fas fa-check"></i> Puedes reanudar en cualquier momento
+                            <i class="fas fa-check"></i> No afecta sincronizaciones en curso
+                        </div>
+                    </div>
+
+                    <div class="action-card">
+                        <div class="action-header">
+                            <i class="fas fa-chart-bar"></i>
+                            <h3>Ver Reporte</h3>
+                        </div>
+                        <p>Genera un reporte detallado de todas las sincronizaciones realizadas.</p>
+                        <div class="action-features">
+                            <i class="fas fa-check"></i> Historial completo de sincronizaciones
+                            <i class="fas fa-check"></i> Estadísticas de rendimiento
+                            <i class="fas fa-check"></i> Exportar en múltiples formatos
+                        </div>
+                    </div>
+
+                    <div class="action-card">
+                        <div class="action-header">
+                            <i class="fas fa-filter"></i>
+                            <h3>Filtrar Productos</h3>
+                        </div>
+                        <p>Filtra los productos mostrados por diferentes criterios.</p>
+                        <div class="action-features">
+                            <i class="fas fa-check"></i> Todos los productos
+                            <i class="fas fa-check"></i> Solo actualizados
+                            <i class="fas fa-check"></i> Solo nuevos
+                            <i class="fas fa-check"></i> Con errores
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Solución de Problemas -->
+            <section id="solucion-problemas" class="manual-section">
+                <h2><i class="fas fa-tools"></i> Solución de Problemas</h2>
+
+                <div class="troubleshooting-section">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Problemas Comunes</h3>
+                    
+                    <div class="problem-grid">
+                        <div class="problem-card">
+                            <h4><i class="fas fa-power-off"></i> La Detección No Se Activa</h4>
+                            <p><strong>Síntomas:</strong> El toggle no responde o el sistema no inicia</p>
+                            <div class="solutions">
+                                <strong>Soluciones:</strong>
+                                <ol>
+                                    <li>Verificar que la API de Verial esté accesible</li>
+                                    <li>Comprobar los permisos de WordPress (manage_options)</li>
+                                    <li>Revisar los logs del sistema para errores</li>
+                                    <li>Limpiar caché del plugin</li>
+                                    <li>Verificar que WooCommerce esté activo</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="problem-card">
+                            <h4><i class="fas fa-times-circle"></i> Errores de Sincronización</h4>
+                            <p><strong>Síntomas:</strong> Productos no se actualizan o aparecen errores</p>
+                            <div class="solutions">
+                                <strong>Soluciones:</strong>
+                                <ol>
+                                    <li>Verificar conexión con la API de Verial</li>
+                                    <li>Comprobar credenciales de API</li>
+                                    <li>Revisar logs de errores específicos</li>
+                                    <li>Verificar que los productos existan en WooCommerce</li>
+                                    <li>Aumentar timeout de peticiones</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="problem-card">
+                            <h4><i class="fas fa-clock"></i> Sincronización Lenta</h4>
+                            <p><strong>Síntomas:</strong> El proceso tarda mucho en completar</p>
+                            <div class="solutions">
+                                <strong>Soluciones:</strong>
+                                <ol>
+                                    <li>Reducir el límite de productos por lote</li>
+                                    <li>Aumentar el intervalo de detección</li>
+                                    <li>Optimizar el servidor y aumentar memoria PHP</li>
+                                    <li>Verificar que no haya conflictos con otros plugins</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="problem-card">
+                            <h4><i class="fas fa-memory"></i> Alto Uso de Memoria</h4>
+                            <p><strong>Síntomas:</strong> El sistema se queda sin memoria durante la sincronización</p>
+                            <div class="solutions">
+                                <strong>Soluciones:</strong>
+                                <ol>
+                                    <li>Reducir el tamaño del lote de productos</li>
+                                    <li>Aumentar el límite de memoria PHP (memory_limit)</li>
+                                    <li>Ajustar el horario de funcionamiento a horas de menor tráfico</li>
+                                    <li>Revisar plugins que consuman mucha memoria</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="diagnostic-tools">
+                    <h3><i class="fas fa-stethoscope"></i> Herramientas de Diagnóstico</h3>
+                    <div class="diagnostic-grid">
+                        <div class="diagnostic-card">
+                            <h4><i class="fas fa-file-alt"></i> Logs del Sistema</h4>
+                            <p>Revisa los registros de actividad para identificar problemas:</p>
+                            <code>wp-content/uploads/logs/mi-integracion-api/</code>
+                        </div>
+                        <div class="diagnostic-card">
+                            <h4><i class="fas fa-network-wired"></i> Estado de la API</h4>
+                            <p>Verifica la conectividad con la API de Verial:</p>
+                            <code>Dashboard → Verial API (debe mostrar 🟢)</code>
+                        </div>
+                        <div class="diagnostic-card">
+                            <h4><i class="fas fa-database"></i> Verificar Base de Datos</h4>
+                            <p>Comprueba que los productos se están guardando correctamente:</p>
+                            <code>Productos → Verificar metadatos de Verial</code>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="manual-footer">
+                <p><i class="fas fa-info-circle"></i> Este manual está actualizado para la versión 2.0.0 del sistema de Detección Automática.</p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        // Smooth scrolling for navigation links
+        for (const anchor of document.querySelectorAll('a[href^="#"]')) {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        }
+
+        // Highlight current section
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('.manual-section');
+            const navLinks = document.querySelectorAll('.nav-list a');
+            
+            let current = '';
+            for (const section of sections) {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            }
+
+            for (const link of navLinks) {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Sistema de Reintentos - Mi Integración API</title>
+    <link rel="stylesheet" href="manual-usuario.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="manual-container">
+        <!-- Header -->
+        <header class="manual-header">
+            <div class="header-content">
+                <h1><i class="fas fa-redo-alt"></i> Manual de Sistema de Reintentos</h1>
+                <div class="version-info">Versión 2.0.0</div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="manual-nav">
+            <div class="nav-content">
+                <h3><i class="fas fa-list"></i> Índice</h3>
+                <ul class="nav-list">
+                    <li><a href="#introduccion"><i class="fas fa-info-circle"></i> Introducción</a></li>
+                    <li><a href="#que-son-reintentos"><i class="fas fa-question-circle"></i> ¿Qué son los Reintentos?</a></li>
+                    <li><a href="#configuracion"><i class="fas fa-cog"></i> Configuración</a></li>
+                    <li><a href="#politicas"><i class="fas fa-sliders-h"></i> Políticas de Reintento</a></li>
+                    <li><a href="#operaciones"><i class="fas fa-tasks"></i> Operaciones Específicas</a></li>
+                    <li><a href="#backoff"><i class="fas fa-wave-square"></i> Backoff y Jitter</a></li>
+                    <li><a href="#monitoreo"><i class="fas fa-chart-bar"></i> Monitoreo</a></li>
+                    <li><a href="#mejores-practicas"><i class="fas fa-check-circle"></i> Mejores Prácticas</a></li>
+                    <li><a href="#solucion-problemas"><i class="fas fa-tools"></i> Solución de Problemas</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="manual-content">
+            <!-- Introducción -->
+            <section id="introduccion" class="manual-section">
+                <h2><i class="fas fa-info-circle"></i> Introducción</h2>
+                <p>El <strong>Sistema de Reintentos Inteligente</strong> mejora la fiabilidad de la integración con Verial, reintentando automáticamente las operaciones que fallan debido a errores transitorios.</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <i class="fas fa-bolt"></i>
+                        <h3>Reintentos Automáticos</h3>
+                        <p>Sin intervención manual, reintenta operaciones fallidas</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Backoff Exponencial</h3>
+                        <p>Espera inteligentemente entre reintentos</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-sliders-h"></i>
+                        <h3>Configuración Flexible</h3>
+                        <p>Ajusta políticas según el tipo de error</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-chart-bar"></i>
+                        <h3>Monitoreo Avanzado</h3>
+                        <p>Estadísticas y métricas en tiempo real</p>
+                    </div>
+                </div>
+
+                <div class="characteristics-box">
+                    <h3><i class="fas fa-star"></i> Características Principales</h3>
+                    <ul class="characteristics-list">
+                        <li><strong>Reintentos Inteligentes:</strong> Detecta automáticamente errores transitorios y reintenta</li>
+                        <li><strong>Backoff Exponencial:</strong> Aumenta el tiempo de espera entre reintentos progresivamente</li>
+                        <li><strong>Jitter:</strong> Añade variabilidad aleatoria para evitar avalanchas de solicitudes</li>
+                        <li><strong>Políticas por Tipo de Error:</strong> Diferentes estrategias según la naturaleza del error</li>
+                        <li><strong>Configuración por Operación:</strong> Ajustes específicos para cada tipo de operación</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- ¿Qué son los Reintentos? -->
+            <section id="que-son-reintentos" class="manual-section">
+                <h2><i class="fas fa-question-circle"></i> ¿Qué son los Reintentos?</h2>
+                
+                <div class="info-box">
+                    <h3><i class="fas fa-lightbulb"></i> Concepto</h3>
+                    <p>Los <strong>reintentos</strong> son intentos automáticos de ejecutar una operación que falló, esperando que el problema sea temporal y se resuelva en un intento posterior.</p>
+                    <p>Errores típicos que justifican reintentos: timeouts de red, errores 500-503 del servidor, problemas temporales de conectividad.</p>
+                </div>
+
+                <div class="process-steps">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3><i class="fas fa-exclamation-triangle"></i> Error Detectado</h3>
+                        <p>Una operación falla (timeout, error 500, etc.).</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3><i class="fas fa-pause-circle"></i> Espera Inteligente</h3>
+                        <p>El sistema espera un tiempo antes del siguiente intento (backoff).</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3><i class="fas fa-redo-alt"></i> Reintento</h3>
+                        <p>Se ejecuta nuevamente la operación que falló.</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <h3><i class="fas fa-check-circle"></i> Resolución</h3>
+                        <p>Si tiene éxito, continúa. Si falla, repite el proceso hasta alcanzar el máximo de intentos.</p>
+                    </div>
+                </div>
+
+                <div class="change-types">
+                    <div class="change-type">
+                        <i class="fas fa-check-circle"></i>
+                        <strong>Útil para:</strong> Errores transitorios, problemas de red temporales, sobrecarga del servidor
+                    </div>
+                    <div class="change-type">
+                        <i class="fas fa-times-circle"></i>
+                        <strong>No útil para:</strong> Errores de validación permanente, errores de autenticación, datos incorrectos
+                    </div>
+                </div>
+            </section>
+
+            <!-- Configuración -->
+            <section id="configuracion" class="manual-section">
+                <h2><i class="fas fa-cog"></i> Configuración</h2>
+                
+                <div class="config-grid">
+                    <div class="config-card">
+                        <h4><i class="fas fa-toggle-on"></i> Habilitar/Deshabilitar Sistema</h4>
+                        <p>Activa o desactiva el sistema de reintentos globalmente.</p>
+                        <ul>
+                            <li><strong>Habilitado:</strong> El sistema reintenta operaciones fallidas</li>
+                            <li><strong>Deshabilitado:</strong> Los errores se reportan inmediatamente sin reintentos</li>
+                        </ul>
+                    </div>
+
+                    <div class="config-card">
+                        <h4><i class="fas fa-hashtag"></i> Intentos Máximos</h4>
+                        <p>Número máximo de veces que se intentará una operación.</p>
+                        <ul>
+                            <li><strong>Valor por defecto:</strong> 3 intentos</li>
+                            <li><strong>Recomendado:</strong> 3-5 intentos para la mayoría de operaciones</li>
+                            <li><strong>Operaciones críticas:</strong> Hasta 7-10 intentos</li>
+                        </ul>
+                    </div>
+
+                    <div class="config-card">
+                        <h4><i class="fas fa-clock"></i> Tiempo Base</h4>
+                        <p>Tiempo inicial de espera antes del primer reintento (en segundos).</p>
+                        <ul>
+                            <li><strong>Valor por defecto:</strong> 2 segundos</li>
+                            <li><strong>Rango:</strong> 1-10 segundos</li>
+                            <li><strong>Ajuste:</strong> Mayor para redes lentas, menor para respuestas rápidas</li>
+                        </ul>
+                    </div>
+
+                    <div class="config-card">
+                        <h4><i class="fas fa-exchange-alt"></i> Factor de Backoff</h4>
+                        <p>Multiplicador que aumenta el tiempo de espera en cada reintento.</p>
+                        <ul>
+                            <li><strong>Valor por defecto:</strong> 2.0 (doble cada vez)</li>
+                            <li><strong>Rango:</strong> 1.5 - 3.0</li>
+                            <li><strong>Ejemplo:</strong> 2s → 4s → 8s → 16s</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Políticas -->
+            <section id="politicas" class="manual-section">
+                <h2><i class="fas fa-sliders-h"></i> Políticas de Reintento</h2>
+                
+                <div class="policies-grid">
+                    <div class="policy-card aggressive">
+                        <h3><i class="fas fa-fire"></i> Política Agresiva</h3>
+                        <p><strong>Para:</strong> Errores de red, timeouts</p>
+                        <ul>
+                            <li><strong>Máximo intentos:</strong> 5-7</li>
+                            <li><strong>Usar cuando:</strong> Problemas de conectividad temporal</li>
+                            <li><strong>Ventaja:</strong> Alta probabilidad de éxito</li>
+                        </ul>
+                    </div>
+
+                    <div class="policy-card moderate">
+                        <h3><i class="fas fa-balance-scale"></i> Política Moderada</h3>
+                        <p><strong>Para:</strong> Errores 500-503 del servidor</p>
+                        <ul>
+                            <li><strong>Máximo intentos:</strong> 3-5</li>
+                            <li><strong>Usar cuando:</strong> El servidor está temporalmente sobrecargado</li>
+                            <li><strong>Ventaja:</strong> Balance entre éxito y carga</li>
+                        </ul>
+                    </div>
+
+                    <div class="policy-card conservative">
+                        <h3><i class="fas fa-shield-alt"></i> Política Conservadora</h3>
+                        <p><strong>Para:</strong> Errores 400, problemas de datos</p>
+                        <ul>
+                            <li><strong>Máximo intentos:</strong> 1-2</li>
+                            <li><strong>Usar cuando:</strong> Probable error permanente</li>
+                            <li><strong>Ventaja:</strong> Ahorra recursos</li>
+                        </ul>
+                    </div>
+
+                    <div class="policy-card none">
+                        <h3><i class="fas fa-ban"></i> Sin Reintento</h3>
+                        <p><strong>Para:</strong> Errores de validación</p>
+                        <ul>
+                            <li><strong>Máximo intentos:</strong> 0</li>
+                            <li><strong>Usar cuando:</strong> Error definitivo (datos inválidos)</li>
+                            <li><strong>Ventaja:</strong> No desperdicia tiempo</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Operaciones -->
+            <section id="operaciones" class="manual-section">
+                <h2><i class="fas fa-tasks"></i> Operaciones Específicas</h2>
+                
+                <div class="operations-grid">
+                    <div class="operation-card">
+                        <h3><i class="fas fa-box"></i> Sincronización de Productos</h3>
+                        <p><strong>Valor por defecto:</strong> 3 intentos</p>
+                        <p>Recomendado para operaciones de actualización de catálogo.</p>
+                    </div>
+
+                    <div class="operation-card">
+                        <h3><i class="fas fa-shopping-cart"></i> Sincronización de Pedidos</h3>
+                        <p><strong>Valor por defecto:</strong> 4 intentos</p>
+                        <p>Mayor número de reintentos por ser operaciones críticas.</p>
+                    </div>
+
+                    <div class="operation-card">
+                        <h3><i class="fas fa-users"></i> Sincronización de Clientes</h3>
+                        <p><strong>Valor por defecto:</strong> 3 intentos</p>
+                        <p>Balance entre importancia y uso de recursos.</p>
+                    </div>
+
+                    <div class="operation-card">
+                        <h3><i class="fas fa-cogs"></i> Llamadas a la API</h3>
+                        <p><strong>Valor por defecto:</strong> 5 intentos</p>
+                        <p>Máximo de reintentos para llamadas genéricas a Verial.</p>
+                    </div>
+
+                    <div class="operation-card">
+                        <h3><i class="fas fa-lock"></i> Operaciones SSL</h3>
+                        <p><strong>Valor por defecto:</strong> 3 intentos</p>
+                        <p>Para problemas de certificados SSL temporales.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Backoff -->
+            <section id="backoff" class="manual-section">
+                <h2><i class="fas fa-wave-square"></i> Backoff Exponencial y Jitter</h2>
+                
+                <div class="backoff-explanation">
+                    <h3><i class="fas fa-chart-line"></i> ¿Qué es el Backoff Exponencial?</h3>
+                    <p>El backoff exponencial aumenta el tiempo de espera entre cada reintento de forma exponencial.</p>
+                    
+                    <div class="code-example">
+                        <h4><i class="fas fa-calculator"></i> Ejemplo de Secuencia</h4>
+                        <ul>
+                            <li><strong>Intento 1:</strong> Falla después de 0s</li>
+                            <li><strong>Espera:</strong> 2s → <strong>Intento 2</strong></li>
+                            <li><strong>Espera:</strong> 4s → <strong>Intento 3</strong></li>
+                            <li><strong>Espera:</strong> 8s → <strong>Intento 4</strong></li>
+                            <li><strong>Espera:</strong> 16s → <strong>Intento 5</strong></li>
+                        </ul>
+                        <p><strong>Tiempo total:</strong> ~30 segundos</p>
+                    </div>
+                </div>
+
+                <div class="jitter-explanation">
+                    <h3><i class="fas fa-random"></i> ¿Qué es el Jitter?</h3>
+                    <p>El <strong>jitter</strong> añade variabilidad aleatoria al tiempo de espera para evitar que múltiples sistemas reintenten simultáneamente (problema "thundering herd").</p>
+                    
+                    <div class="info-card">
+                        <h4><i class="fas fa-info-circle"></i> Ejemplo con Jitter</h4>
+                        <ul>
+                            <li><strong>Sin jitter:</strong> Todos los sistemas esperan exactamente 4s</li>
+                            <li><strong>Con jitter:</strong> Unos esperan 3.7s, otros 4.2s, otros 3.9s</li>
+                            <li><strong>Resultado:</strong> Las solicitudes se distribuyen en el tiempo</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Monitoreo -->
+            <section id="monitoreo" class="manual-section">
+                <h2><i class="fas fa-chart-bar"></i> Monitoreo y Estadísticas</h2>
+                
+                <div class="monitoring-section">
+                    <h3><i class="fas fa-eye"></i> Métricas Disponibles</h3>
+                    
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <h4><i class="fas fa-redo-alt"></i> Total de Reintentos</h4>
+                            <p>Número total de reintentos ejecutados desde la última limpieza.</p>
+                        </div>
+
+                        <div class="metric-card">
+                            <h4><i class="fas fa-check-circle"></i> Reintentos Exitosos</h4>
+                            <p>Operaciones que fallaron inicialmente pero tuvieron éxito después de reintentar.</p>
+                        </div>
+
+                        <div class="metric-card">
+                            <h4><i class="fas fa-times-circle"></i> Reintentos Fallidos</h4>
+                            <p>Operaciones que fallaron después de todos los reintentos.</p>
+                        </div>
+
+                        <div class="metric-card">
+                            <h4><i class="fas fa-percentage"></i> Tasa de Éxito</h4>
+                            <p>Porcentaje de reintentos que resultaron en operaciones exitosas.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="health-indicators">
+                    <h3><i class="fas fa-heartbeat"></i> Indicadores de Salud</h3>
+                    <p>El sistema muestra indicadores para evaluar el rendimiento del sistema de reintentos:</p>
+                    
+                    <div class="health-grid">
+                        <div class="health-card healthy">
+                            <i class="fas fa-thumbs-up"></i>
+                            <div>
+                                <strong>Saludable</strong>
+                                <p>Tasa de éxito > 80%</p>
+                            </div>
+                        </div>
+                        <div class="health-card attention">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <div>
+                                <strong>Requiere Atención</strong>
+                                <p>Tasa de éxito 60-80%</p>
+                            </div>
+                        </div>
+                        <div class="health-card warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <div>
+                                <strong>Problema</strong>
+                                <p>Tasa de éxito < 60%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mejores Prácticas -->
+            <section id="mejores-practicas" class="manual-section">
+                <h2><i class="fas fa-check-circle"></i> Mejores Prácticas</h2>
+                
+                <div class="recommendation-grid">
+                    <div class="recommendation-card high">
+                        <div class="recommendation-header">
+                            <i class="fas fa-cog"></i>
+                            <h4>Ajustar Políticas por Tipo</h4>
+                        </div>
+                        <p>Configura políticas diferentes para errores de red, servidor y cliente según su naturaleza.</p>
+                    </div>
+
+                    <div class="recommendation-card medium">
+                        <div class="recommendation-header">
+                            <i class="fas fa-chart-line"></i>
+                            <h4>Monitorear Tasa de Éxito</h4>
+                        </div>
+                        <p>Revisa regularmente la tasa de éxito de reintentos para ajustar la configuración.</p>
+                    </div>
+
+                    <div class="recommendation-card medium">
+                        <div class="recommendation-header">
+                            <i class="fas fa-toggle-on"></i>
+                            <h4>Habilitar Jitter</h4>
+                        </div>
+                        <p>Activa el jitter para evitar avalanchas de solicitudes cuando se recupere el servidor.</p>
+                    </div>
+
+                    <div class="recommendation-card low">
+                        <div class="recommendation-header">
+                            <i class="fas fa-shield-alt"></i>
+                            <h4>Límites Conservadores</h4>
+                        </div>
+                        <p>No configures demasiados reintentos; puede indicar un problema permanente que requiere atención.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Solución de Problemas -->
+            <section id="solucion-problemas" class="manual-section">
+                <h2><i class="fas fa-tools"></i> Solución de Problemas</h2>
+
+                <div class="troubleshooting-section">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Problemas Comunes</h3>
+                    
+                    <div class="problem-grid">
+                        <div class="problem-card">
+                            <h4><i class="fas fa-exclamation-circle"></i> Todos los Reintentos Fallan</h4>
+                            <p><strong>Síntoma:</strong> Ningún reintento tiene éxito, operación falla finalmente.</p>
+                            <div class="solutions">
+                                <strong>Soluciones:</strong>
+                                <ol>
+                                    <li>Verificar conectividad con Verial</li>
+                                    <li>Revisar logs para ver el error específico</li>
+                                    <li>Verificar que los datos sean correctos</li>
+                                    <li>Intentar manualmente para confirmar el problema</li>
+                                    <li>Aumentar el número de reintentos si es un problema temporal</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="problem-card">
+                            <h4><i class="fas fa-clock"></i> Reintentos Demasiado Lentos</h4>
+                            <p><strong>Síntoma:</strong> El sistema tarda mucho en completar operaciones.</p>
+                            <div class="solutions">
+                                <strong>Soluciones:</strong>
+                                <ol>
+                                    <li>Reducir el tiempo base de espera</li>
+                                    <li>Reducir el factor de backoff</li>
+                                    <li>Reducir el número máximo de reintentos</li>
+                                    <li>Verificar que no haya problemas de red</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="problem-card">
+                            <h4><i class="fas fa-exclamation-triangle"></i> Sobreuso de Recursos</h4>
+                            <p><strong>Síntoma:</strong> El servidor se queda sin recursos por demasiados reintentos.</p>
+                            <div class="solutions">
+                                <strong>Soluciones:</strong>
+                                <ol>
+                                    <li>Reducir el número máximo de reintentos</li>
+                                    <li>Aumentar el tiempo base y backoff</li>
+                                    <li>Habilitar jitter para distribuir la carga</li>
+                                    <li>Revisar qué operaciones requieren reintentos más frecuentes</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="problem-card">
+                            <h4><i class="fas fa-ban"></i> Sistema No Reintenta</h4>
+                            <p><strong>Síntoma:</strong> El sistema reporta errores sin intentar reintentar.</p>
+                            <div class="solutions">
+                                <strong>Soluciones:</strong>
+                                <ol>
+                                    <li>Verificar que el sistema de reintentos esté habilitado</li>
+                                    <li>Comprobar que el número de intentos máximos no sea 0</li>
+                                    <li>Revisar las políticas de reintento</li>
+                                    <li>Verificar logs del sistema</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="logs-section">
+                    <h3><i class="fas fa-file-alt"></i> Revisar Logs</h3>
+                    <p>Para diagnosticar problemas de reintentos:</p>
+                    <ol>
+                        <li>Navega a la página de <strong>Logs del Sistema</strong></li>
+                        <li>Filtra por "reintentos" o "retry"</li>
+                        <li>Busca patrones en los errores</li>
+                        <li>Analiza el tiempo entre reintentos</li>
+                        <li>Identifica si es un problema específico de una operación</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="manual-footer">
+                <p><i class="fas fa-info-circle"></i> Este manual está actualizado para la versión 2.0.0 del Sistema de Reintentos.</p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        // Smooth scrolling for navigation links
+        for (const anchor of document.querySelectorAll('a[href^="#"]')) {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        }
+
+        // Highlight current section
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('.manual-section');
+            const navLinks = document.querySelectorAll('.nav-list a');
+            
+            let current = '';
+            for (const section of sections) {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            }
+
+            for (const link of navLinks) {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

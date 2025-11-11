@@ -1,0 +1,233 @@
+================================================================================
+LOGO RECOMENDADO PARA MI INTEGRACIÓN API
+================================================================================
+
+Basado en el análisis del código del plugin, aquí está la recomendación de logo.
+
+================================================================================
+CONCEPTO DEL LOGO
+================================================================================
+
+NOMBRE: "Integración Circular" o "Sincronización Bidireccional"
+
+DESCRIPCIÓN VISUAL:
+--------------------
+Logo compuesto por dos círculos que se superponen parcialmente en el centro,
+formando una especie de infinito (∞) o nudo de conexión. En la parte central
+donde se superponen, hay dos flechas circulares que muestran el flujo de datos
+en ambas direcciones (WooCommerce → Verial y Verial → WooCommerce).
+
+ELEMENTOS:
+----------
+1. CIRCULO SUPERIOR (IZQUIERDA): 
+   - Representa WooCommerce
+   - Color: Azul #2563eb (sólido)
+   
+2. CIRCULO INFERIOR (DERECHA):
+   - Representa Verial ERP
+   - Color: Azul oscuro #1d4ed8 (sólido)
+
+3. FLECHAS CIRCULARES (CENTRO):
+   - Dos flechas en forma de semicírculo
+   - Una en sentido horario (verde #22c55e)
+   - Una en sentido antihorario (verde #22c55e)
+   - Mostrando sincronización bidireccional
+
+4. LÍNEA DE CONEXIÓN:
+   - La superposición de los círculos forma visualmente un "link" o conexión
+   - Crea la sensación de unión entre ambos sistemas
+
+================================================================================
+COLORES OFICIALES
+================================================================================
+
+PRIMARIO (Principal):
+Azul #2563eb - Color corporativo, representa tecnología y confianza
+
+PRIMARIO DARK:
+Azul #1d4ed8 - Variante oscura, contraste en uno de los círculos
+
+ACENTO:
+Verde #22c55e - En las flechas, representa sincronización exitosa
+
+FONDO:
+Transparente - Para usar sobre cualquier superficie
+
+
+================================================================================
+ESPECIFICACIONES TÉCNICAS
+================================================================================
+
+TAMAÑOS:
+--------
+- 512x512 px (principal)
+- 1024x1024 px (alta resolución)
+- SVG (vectorial)
+- ICO para favicon (16x16, 32x32, 48x48)
+
+FORMATO:
+---------
+- PNG con fondo transparente
+- SVG como fuente vectorial
+- ICO para múltiples tamaños
+
+ESTILO:
+-------
+- Flat design (sin sombras 3D)
+- Líneas limpias de 2-3px de grosor
+- Sin gradientes complejos
+- Minimalista pero distintivo
+
+
+================================================================================
+PROMPT LISTO PARA USAR
+================================================================================
+
+COPIA Y PEGA ESTE PROMPT EN DALL-E, Midjourney o Stable Diffusion:
+
+"DALL-E / Midjourney / Stable Diffusion:
+
+Create a professional WordPress plugin logo: Two overlapping circles forming
+an infinity symbol style connection, upper circle blue #2563eb, lower circle
+darker blue #1d4ed8, two curved circular arrows in the center showing
+bidirectional sync in green #22c55e, flat design, minimalist, clean vector
+style, no shadows, no 3d effects, icon only no text, 512x512 pixels,
+transparent background, professional corporate tech brand"
+
+PARÁMETROS ADICIONALES (según herramienta):
+
+DALL-E:
+--style flat --quality high --ar 1:1
+
+Midjourney:
+--style raw --ar 1:1 --v 6.0 --no shadows --no 3d
+
+Stable Diffusion:
+--steps 30 --cfg 7 --sampler euler_a
+
+
+================================================================================
+VARIANTES DEL LOGO
+================================================================================
+
+VARIANTE 1: ULTRA SIMPLE
+-------------------------
+Solo las flechas circulares, sin los círculos de fondo
+Perfecta para iconos muy pequeños (16px)
+
+Prompt: "Circular sync arrows icon, two curved arrows forming a circle, blue
+#2563eb and green #22c55e, minimalist, flat design, 512x512 transparent"
+
+VARIANTE 2: CON BADGE
+---------------------
+Los dos círculos dentro de un badge o escudo tipo plugin
+Más clásico, estilo WordPress tradicional
+
+Prompt: "WordPress plugin badge logo, two interconnected circles with sync
+arrows inside, blue and green colors, shield shape frame, professional
+512x512 transparent"
+
+VARIANTE 3: ESTILO ISOMÉTRICO
+------------------------------
+Los círculos con perspectiva isométrica (3D plano)
+Más moderno y tech
+
+Prompt: "Isometric flat design logo, two connected circles in 3D flat
+perspective with sync arrows, blue #2563eb and green #22c55e, modern tech
+style, 512x512 transparent"
+
+
+================================================================================
+SUBTEXTO O TAGLINE (OPCIONAL)
+================================================================================
+
+Si necesitas texto debajo del logo:
+
+"Mi Integración API"
+o
+"WooCommerce ↔ Verial"
+
+Estilo de texto sugerido:
+- Fuente: Inter, sans-serif
+- Color: Gris oscuro #334155
+- Tamaño: Relativo al logo
+- Pesado: Medium (500)
+
+
+================================================================================
+CÓMO USAR EL LOGO
+================================================================================
+
+DÓNDE COLOCARLO:
+---------------
+1. Carpeta del plugin: /assets/images/logo.png
+2. Menú de WordPress: Ya está usando dashicons-rest-api
+3. Página de configuración del plugin
+4. Readme del proyecto
+5. Documentación
+
+CÓDIGO PARA IMPLEMENTARLO EN WORDPRESS:
+----------------------------------------
+Reemplazar en includes/Admin/AdminMenu.php línea 222:
+
+Cambiar de:
+"dashicons-rest-api"
+
+A:
+plugin_dir_url(__FILE__) . '../assets/images/logo.png'
+
+O mantener dashicons y agregar logo en páginas internas del plugin.
+
+
+================================================================================
+SUGERENCIAS FINALES
+================================================================================
+
+1. GENERA VARIAS VERSIONES:
+   - Prueba con diferentes herramientas (DALL-E, Midjourney, etc.)
+   - Compara resultados
+   - Elige la que mejor comunique "integración automática"
+
+2. CONSIGUE FEEDBACK:
+   - Muestra el logo a 3-5 personas
+   - Pregunta: "¿Qué representa esto?"
+   - Si no entienden "integración/sincronización", ajusta
+
+3. TEST DE TAMAÑOS:
+   - Verifica que se vea bien en 16px (favicon)
+   - Verifica que se vea bien en 512px (plugin page)
+   - Si pierde detalle, simplifica el diseño
+
+4. CONSISTENCIA DE BRANDING:
+   - Si Verial tiene colores corporativos, úsalos
+   - Si WooCommerce es tu marca principal, hazla más prominente
+   - Balancea ambos sistemas visualmente
+
+================================================================================
+ARCHIVOS FINALES QUE NECESITAS
+================================================================================
+
+□ logo-512.png (principal)
+□ logo-1024.png (alta resolución)
+□ logo.svg (vectorial)
+□ favicon.ico (16x16, 32x32, 48x48)
+□ logo-dark.png (opcional, para dark mode)
+
+Ubicación sugerida:
+wp-content/plugins/mi-integracion-api/assets/images/
+
+================================================================================
+PROMPT MÁS SIMPLE PARA EMPEZAR
+================================================================================
+
+Si quieres algo rápido y directo:
+
+"Logo WordPress plugin integration, two overlapping circles blue, circular
+arrows green in center, flat minimal, 512x512 transparent PNG"
+
+Este es el prompt más corto que captura el concepto esencial.
+
+================================================================================
+FIN DE LA DESCRIPCIÓN
+================================================================================
+
