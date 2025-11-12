@@ -11,7 +11,7 @@
  * @author Christian
  */
 
-/* global jQuery, miIntegracionApiDashboard, DASHBOARD_CONFIG, AjaxManager, pollingManager, checkSyncProgress, addConsoleLine, ajaxurl, ToastManager */
+/* global jQuery, miIntegracionApiDashboard, DASHBOARD_CONFIG, AjaxManager, pollingManager, checkSyncProgress, addConsoleLine, ajaxurl, ToastManager, SyncStateManager */
 
 /**
  * Clase SyncDashboard para gestionar el dashboard de dos fases
@@ -31,7 +31,8 @@ class SyncDashboard {
     this.phase2Timer = null;
     this.phase1StartTime = null;
     this.phase2StartTime = null;
-    this.phase2Starting = false; // ✅ PROTECCIÓN: Flag para evitar múltiples inicializaciones
+    // ✅ MIGRADO: Flag phase2Starting ahora se gestiona en SyncStateManager
+    // this.phase2Starting ya no es necesario, se usa SyncStateManager.getPhase2Starting()
     this.initializeEventListeners();
     this.loadCurrentStatus();
   }
@@ -170,14 +171,17 @@ class SyncDashboard {
    * @async
    */
   async startPhase2() {
-    // ✅ PROTECCIÓN: Evitar múltiples llamadas simultáneas
-    if (this.phase2Starting) {
+    // ✅ PROTECCIÓN: Evitar múltiples llamadas simultáneas usando SyncStateManager
+    if (typeof SyncStateManager !== 'undefined' && SyncStateManager.getPhase2Starting()) {
       // eslint-disable-next-line no-console
       console.warn('⚠️ Fase 2 ya se está iniciando, ignorando llamada duplicada');
       return;
     }
     
-    this.phase2Starting = true;
+    // Marcar como iniciando usando SyncStateManager
+    if (typeof SyncStateManager !== 'undefined' && SyncStateManager.setPhase2Starting) {
+      SyncStateManager.setPhase2Starting(true);
+    }
     
     // ✅ MEJORADO: Validar condiciones antes de iniciar (pero no bloquear el botón)
     // Obtener estado actual de sincronización
@@ -231,7 +235,10 @@ class SyncDashboard {
       // Preguntar confirmación al usuario
       const confirmed = confirm(message);
       if (!confirmed) {
-        this.phase2Starting = false; // Resetear flag si se cancela
+        // Resetear flag si se cancela usando SyncStateManager
+        if (typeof SyncStateManager !== 'undefined' && SyncStateManager.setPhase2Starting) {
+          SyncStateManager.setPhase2Starting(false);
+        }
         return; // El usuario canceló
       }
     }
@@ -248,7 +255,10 @@ class SyncDashboard {
       
       const confirmed = confirm(message);
       if (!confirmed) {
-        this.phase2Starting = false; // Resetear flag si se cancela
+        // Resetear flag si se cancela usando SyncStateManager
+        if (typeof SyncStateManager !== 'undefined' && SyncStateManager.setPhase2Starting) {
+          SyncStateManager.setPhase2Starting(false);
+        }
         return; // El usuario canceló
       }
     }
@@ -317,8 +327,10 @@ class SyncDashboard {
       this.updatePhaseStatus(2, 'error');
       this.enableButton('start-phase2');
     } finally {
-      // ✅ Resetear flag de inicio después de completar (exitoso o con error)
-      this.phase2Starting = false;
+      // ✅ Resetear flag de inicio después de completar (exitoso o con error) usando SyncStateManager
+      if (typeof SyncStateManager !== 'undefined' && SyncStateManager.setPhase2Starting) {
+        SyncStateManager.setPhase2Starting(false);
+      }
     }
   }
 
@@ -658,12 +670,9 @@ class SyncDashboard {
                 pollingManager.config.currentMode = 'active';
                 if (typeof pollingManager.startPolling === 'function' && typeof checkSyncProgress === 'function') {
                   const intervalId = pollingManager.startPolling('syncProgress', checkSyncProgress, pollingManager.config.currentInterval);
-                  if (typeof window !== 'undefined') {
-                    try {
-                      window.syncInterval = intervalId;
-                    } catch (error) {
-                      // Ignorar si no se puede asignar
-                    }
+                  // Guardar syncInterval usando SyncStateManager (mantiene compatibilidad con window.syncInterval)
+                  if (typeof SyncStateManager !== 'undefined' && SyncStateManager.setSyncInterval) {
+                    SyncStateManager.setSyncInterval(intervalId);
                   }
                 }
               }
@@ -776,8 +785,10 @@ class SyncDashboard {
           window.Phase2Manager.reset();
         }
         
-        // ✅ NUEVO: Resetear flag de inicio de Fase 2
-        this.phase2Starting = false;
+        // ✅ NUEVO: Resetear flag de inicio de Fase 2 usando SyncStateManager
+        if (typeof SyncStateManager !== 'undefined' && SyncStateManager.setPhase2Starting) {
+          SyncStateManager.setPhase2Starting(false);
+        }
         
         // ✅ NUEVO: Actualizar estado del dashboard
         this.updatePhaseStatus(2, 'pending');
@@ -1165,7 +1176,12 @@ class SyncDashboard {
                                     typeof pollingManager.isPollingActive === 'function' && 
                                     pollingManager.isPollingActive('syncProgress');
       
-      if (!(typeof window !== 'undefined' && window.phase2Initialized) && !pollingAlreadyActive) {
+      // ✅ MIGRADO: Usar SyncStateManager para verificar si Fase 2 está inicializada
+      const phase2Initialized = typeof SyncStateManager !== 'undefined' && SyncStateManager.getPhase2Initialized 
+        ? SyncStateManager.getPhase2Initialized() 
+        : (typeof window !== 'undefined' && window.phase2Initialized);
+      
+      if (!phase2Initialized && !pollingAlreadyActive) {
         this.startPollingIfNeeded();
       }
     } else if (phase2IsCompleted) {
@@ -1206,8 +1222,12 @@ class SyncDashboard {
    * @private
    */
   startPollingIfNeeded() {
-    // ✅ PROTECCIÓN CRÍTICA: Verificar si Phase2Manager ya está gestionando el polling
-    if (typeof window !== 'undefined' && window.phase2Initialized) {
+    // ✅ PROTECCIÓN CRÍTICA: Verificar si Phase2Manager ya está gestionando el polling usando SyncStateManager
+    const phase2Initialized = typeof SyncStateManager !== 'undefined' && SyncStateManager.getPhase2Initialized 
+      ? SyncStateManager.getPhase2Initialized() 
+      : (typeof window !== 'undefined' && window.phase2Initialized);
+    
+    if (phase2Initialized) {
       // Phase2Manager ya está gestionando el polling, no iniciar otro
       return;
     }

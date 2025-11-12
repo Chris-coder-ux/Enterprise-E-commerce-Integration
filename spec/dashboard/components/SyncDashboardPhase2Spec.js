@@ -22,7 +22,14 @@ describe('SyncDashboard - Funcionalidad Fase 2', function() {
     originalJQuery = window.jQuery;
     originalMiIntegracionApiDashboard = window.miIntegracionApiDashboard;
 
-    // Limpiar estado global
+    // ✅ ACTUALIZADO: Limpiar estado usando SyncStateManager
+    // Los flags ahora se gestionan a través de SyncStateManager, pero mantenemos
+    // compatibilidad hacia atrás limpiando window.* también
+    if (window.SyncStateManager && typeof window.SyncStateManager.resetPhase2State === 'function') {
+      window.SyncStateManager.resetPhase2State();
+    }
+    
+    // Limpiar estado global (compatibilidad hacia atrás)
     if (window.phase2Initialized !== undefined) {
       delete window.phase2Initialized;
     }
@@ -94,6 +101,69 @@ describe('SyncDashboard - Funcionalidad Fase 2', function() {
       stopPolling: jasmine.createSpy('stopPolling').and.returnValue(true),
       isPollingActive: jasmine.createSpy('isPollingActive').and.returnValue(false)
     };
+
+    // Mock de SyncStateManager con todos los métodos de Fase 2
+    // ✅ ACTUALIZADO: Mock completo de SyncStateManager con estado centralizado
+    const syncState = {
+      phase2Starting: false,
+      phase2Initialized: false,
+      phase2ProcessingBatch: false,
+      syncInterval: null,
+      phase2PollingInterval: null
+    };
+    
+    window.SyncStateManager = {
+      getPhase2Starting: jasmine.createSpy('getPhase2Starting').and.callFake(function() {
+        return syncState.phase2Starting;
+      }),
+      setPhase2Starting: jasmine.createSpy('setPhase2Starting').and.callFake(function(value) {
+        syncState.phase2Starting = value === true;
+      }),
+      getPhase2Initialized: jasmine.createSpy('getPhase2Initialized').and.callFake(function() {
+        return syncState.phase2Initialized;
+      }),
+      setPhase2Initialized: jasmine.createSpy('setPhase2Initialized').and.callFake(function(value) {
+        syncState.phase2Initialized = value === true;
+      }),
+      getPhase2ProcessingBatch: jasmine.createSpy('getPhase2ProcessingBatch').and.callFake(function() {
+        return syncState.phase2ProcessingBatch;
+      }),
+      setPhase2ProcessingBatch: jasmine.createSpy('setPhase2ProcessingBatch').and.callFake(function(value) {
+        syncState.phase2ProcessingBatch = value === true;
+      }),
+      getSyncInterval: jasmine.createSpy('getSyncInterval').and.callFake(function() {
+        return syncState.syncInterval;
+      }),
+      setSyncInterval: jasmine.createSpy('setSyncInterval').and.callFake(function(value) {
+        syncState.syncInterval = value;
+      }),
+      clearSyncInterval: jasmine.createSpy('clearSyncInterval').and.callFake(function() {
+        if (syncState.syncInterval !== null) {
+          try {
+            clearInterval(syncState.syncInterval);
+          } catch (e) {
+            // Ignorar errores
+          }
+          syncState.syncInterval = null;
+        }
+      }),
+      resetPhase2State: jasmine.createSpy('resetPhase2State').and.callFake(function() {
+        syncState.phase2Starting = false;
+        syncState.phase2Initialized = false;
+        syncState.phase2ProcessingBatch = false;
+        if (syncState.syncInterval !== null) {
+          try {
+            clearInterval(syncState.syncInterval);
+          } catch (e) {
+            // Ignorar errores
+          }
+          syncState.syncInterval = null;
+        }
+      })
+    };
+    
+    // Exponer estado interno para los tests (solo para verificación)
+    window._syncStateForTests = syncState;
 
     // Mock de checkSyncProgress
     window.checkSyncProgress = jasmine.createSpy('checkSyncProgress');
@@ -270,7 +340,10 @@ describe('SyncDashboard - Funcionalidad Fase 2', function() {
         return;
       }
 
-      window.phase2Initialized = true; // Phase2Manager ya está gestionando
+      // ✅ ACTUALIZADO: Usar SyncStateManager
+      if (window.SyncStateManager) {
+        window.SyncStateManager.setPhase2Initialized(true); // Phase2Manager ya está gestionando
+      }
       syncDashboardInstance.phase2Starting = false;
 
       mockAjax.and.callFake(function(options) {
@@ -488,7 +561,10 @@ describe('SyncDashboard - Funcionalidad Fase 2', function() {
         return;
       }
 
-      window.phase2Initialized = false;
+      // ✅ ACTUALIZADO: Usar SyncStateManager
+      if (window.SyncStateManager) {
+        window.SyncStateManager.setPhase2Initialized(false);
+      }
       window.pollingManager.isPollingActive.and.returnValue(true);
       window.pollingManager.intervals.set('syncProgress', { id: 12345 });
 
@@ -503,7 +579,10 @@ describe('SyncDashboard - Funcionalidad Fase 2', function() {
         return;
       }
 
-      window.phase2Initialized = false;
+      // ✅ ACTUALIZADO: Usar SyncStateManager
+      if (window.SyncStateManager) {
+        window.SyncStateManager.setPhase2Initialized(false);
+      }
       window.pollingManager.isPollingActive.and.returnValue(false);
       window.pollingManager.intervals.clear();
 
@@ -563,9 +642,15 @@ describe('SyncDashboard - Funcionalidad Fase 2', function() {
 
       // Simular estado activo
       window.phase2Initialized = true;
-      window.phase2Starting = true;
+      // ✅ ACTUALIZADO: Usar SyncStateManager
+      if (window.SyncStateManager) {
+        window.SyncStateManager.setPhase2Starting(true);
+      }
       syncDashboardInstance.phase2Starting = true;
-      window.syncInterval = 12345;
+      // ✅ ACTUALIZADO: Usar SyncStateManager
+      if (window.SyncStateManager) {
+        window.SyncStateManager.setSyncInterval(12345);
+      }
       window.pollingManager.intervals.set('syncProgress', { id: 12345 });
 
       window.confirm.and.returnValue(true);

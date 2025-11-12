@@ -323,7 +323,8 @@ function handleSuccess(response) {
 
       // Actualizar lastProgressValue si cambió usando SyncStateManager
       if (typeof SyncStateManager !== 'undefined' && SyncStateManager && typeof SyncStateManager.setLastProgressValue === 'function') {
-        if (typeof lastProgressValue !== 'undefined' && porcentaje !== lastProgressValue) {
+        const currentLastProgress = SyncStateManager.getLastProgressValue();
+        if (porcentaje !== currentLastProgress) {
           SyncStateManager.setLastProgressValue(porcentaje);
         }
       }
@@ -579,7 +580,11 @@ function handleMaxErrorsReached() {
  * @private
  */
 function handleTimeoutWarning(errorThreshold) {
-  if (inactiveProgressCounter === errorThreshold + 1) {
+  const inactiveCounter = typeof SyncStateManager !== 'undefined' && SyncStateManager.getInactiveProgressCounter 
+    ? SyncStateManager.getInactiveProgressCounter() 
+    : (typeof inactiveProgressCounter !== 'undefined' ? inactiveProgressCounter : 0);
+  
+  if (inactiveCounter === errorThreshold + 1) {
     showErrorFeedback(
       '<div class="mi-api-warning"><strong>El servidor está tardando en responder</strong><p>La sincronización podría estar funcionando en segundo plano. ' +
       'Espere unos minutos o verifique los registros para confirmar el estado.</p></div>',
@@ -596,15 +601,20 @@ function handleTimeoutWarning(errorThreshold) {
  */
 function handleTimeoutError() {
   const errorThreshold = getErrorThreshold('to_slow', 3);
+  const inactiveCounter = typeof SyncStateManager !== 'undefined' && SyncStateManager.getInactiveProgressCounter 
+    ? SyncStateManager.getInactiveProgressCounter() 
+    : (typeof inactiveProgressCounter !== 'undefined' ? inactiveProgressCounter : 0);
 
-  if (typeof inactiveProgressCounter === 'undefined' || inactiveProgressCounter <= errorThreshold) {
+  if (inactiveCounter <= errorThreshold) {
     return;
   }
 
   handleTimeoutWarning(errorThreshold);
 
   const maxErrors = getErrorThreshold('max_errors', 5);
-  if (inactiveProgressCounter > maxErrors) {
+  // ✅ CORREGIDO: Reutilizar inactiveCounter ya declarado arriba en lugar de redeclararlo
+  
+  if (inactiveCounter > maxErrors) {
     handleMaxErrorsReached();
   }
 }
@@ -677,9 +687,15 @@ function handleError(xhr, status, error) {
   // Si es un error de timeout (readyState 0 o status 0 con error vacío), dar un mensaje específico
   if (isTimeoutError(xhr, error)) {
     handleTimeoutError();
-  } else if (typeof inactiveProgressCounter !== 'undefined' && inactiveProgressCounter > 3) {
-    // Para otros tipos de errores, después de 3 intentos fallidos
-    handleGeneralError(xhr);
+  } else {
+    const inactiveCounter = typeof SyncStateManager !== 'undefined' && SyncStateManager.getInactiveProgressCounter 
+      ? SyncStateManager.getInactiveProgressCounter() 
+      : (typeof inactiveProgressCounter !== 'undefined' ? inactiveProgressCounter : 0);
+    
+    if (inactiveCounter > 3) {
+      // Para otros tipos de errores, después de 3 intentos fallidos
+      handleGeneralError(xhr);
+    }
   }
 }
 
