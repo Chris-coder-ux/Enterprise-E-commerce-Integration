@@ -31,6 +31,7 @@ class SyncDashboard {
     this.phase2Timer = null;
     this.phase1StartTime = null;
     this.phase2StartTime = null;
+    this.phase2Starting = false; // ✅ PROTECCIÓN: Flag para evitar múltiples inicializaciones
     this.initializeEventListeners();
     this.loadCurrentStatus();
   }
@@ -169,6 +170,15 @@ class SyncDashboard {
    * @async
    */
   async startPhase2() {
+    // ✅ PROTECCIÓN: Evitar múltiples llamadas simultáneas
+    if (this.phase2Starting) {
+      // eslint-disable-next-line no-console
+      console.warn('⚠️ Fase 2 ya se está iniciando, ignorando llamada duplicada');
+      return;
+    }
+    
+    this.phase2Starting = true;
+    
     // ✅ MEJORADO: Validar condiciones antes de iniciar (pero no bloquear el botón)
     // Obtener estado actual de sincronización
     let phase1Status = null;
@@ -196,7 +206,7 @@ class SyncDashboard {
     } catch (error) {
       // Si falla obtener el estado, continuar de todos modos
       // eslint-disable-next-line no-console
-        // Error silenciado - se continúa sin estado inicial
+      // Error silenciado - se continúa sin estado inicial
     }
     
     // ✅ NUEVO: Validar condiciones y mostrar advertencias si es necesario
@@ -221,6 +231,7 @@ class SyncDashboard {
       // Preguntar confirmación al usuario
       const confirmed = confirm(message);
       if (!confirmed) {
+        this.phase2Starting = false; // Resetear flag si se cancela
         return; // El usuario canceló
       }
     }
@@ -237,6 +248,7 @@ class SyncDashboard {
       
       const confirmed = confirm(message);
       if (!confirmed) {
+        this.phase2Starting = false; // Resetear flag si se cancela
         return; // El usuario canceló
       }
     }
@@ -287,22 +299,9 @@ class SyncDashboard {
         if (typeof addConsoleLine === 'function') {
           addConsoleLine('success', 'Fase 2 iniciada correctamente');
         }
-        // Iniciar polling para monitorear Fase 2
-        if (typeof pollingManager !== 'undefined' && pollingManager) {
-          pollingManager.config.currentInterval = pollingManager.config.intervals.active;
-          pollingManager.config.currentMode = 'active';
-          if (typeof pollingManager.startPolling === 'function' && typeof checkSyncProgress === 'function') {
-            const intervalId = pollingManager.startPolling('syncProgress', checkSyncProgress, pollingManager.config.currentInterval);
-            // Exponer syncInterval en window si existe (compatibilidad con código original)
-            if (typeof window !== 'undefined') {
-              try {
-                window.syncInterval = intervalId;
-              } catch (error) {
-                // Ignorar si no se puede asignar
-              }
-            }
-          }
-        }
+        // ✅ ELIMINADO: No iniciar polling aquí - Phase2Manager.handleSuccess() ya lo hace
+        // Esto evita múltiples inicializaciones y conflictos
+        // El polling se iniciará automáticamente desde Phase2Manager.handleSuccess()
       } else {
         const errorMsg = (response.data && response.data.message) || 'Error desconocido';
         if (typeof addConsoleLine === 'function') {
@@ -317,6 +316,9 @@ class SyncDashboard {
       }
       this.updatePhaseStatus(2, 'error');
       this.enableButton('start-phase2');
+    } finally {
+      // ✅ Resetear flag de inicio después de completar (exitoso o con error)
+      this.phase2Starting = false;
     }
   }
 
@@ -764,6 +766,19 @@ class SyncDashboard {
       });
 
       if (response.success) {
+        // ✅ MEJORADO: Detener polling antes de resetear
+        if (typeof pollingManager !== 'undefined' && pollingManager && typeof pollingManager.stopPolling === 'function') {
+          pollingManager.stopPolling('syncProgress');
+        }
+        
+        // ✅ NUEVO: Resetear flag de inicialización de Fase 2
+        if (typeof window !== 'undefined' && window.Phase2Manager && typeof window.Phase2Manager.reset === 'function') {
+          window.Phase2Manager.reset();
+        }
+        
+        // ✅ NUEVO: Resetear flag de inicio de Fase 2
+        this.phase2Starting = false;
+        
         // ✅ NUEVO: Actualizar estado del dashboard
         this.updatePhaseStatus(2, 'pending');
         this.stopTimer(2);
@@ -781,7 +796,7 @@ class SyncDashboard {
         }
 
         // ✅ NUEVO: Recargar estado para asegurar sincronización
-        await this.loadCurrentState();
+        await this.loadCurrentStatus();
       } else {
         const errorMsg = response.data && response.data.message 
           ? response.data.message 
@@ -1144,9 +1159,22 @@ class SyncDashboard {
       this.enableButton('mi-cancel-sync');
       jQuery('#mi-cancel-sync').show();
       // ✅ CORRECCIÓN: Iniciar polling automáticamente si hay sincronización en progreso
-      this.startPollingIfNeeded();
+      // ✅ MEJORADO: NO iniciar polling si ya está activo o si Phase2Manager ya lo gestiona
+      // ✅ CRÍTICO: Verificar también si el polling ya está activo para evitar múltiples inicializaciones
+      const pollingAlreadyActive = typeof pollingManager !== 'undefined' && pollingManager && 
+                                    typeof pollingManager.isPollingActive === 'function' && 
+                                    pollingManager.isPollingActive('syncProgress');
+      
+      if (!(typeof window !== 'undefined' && window.phase2Initialized) && !pollingAlreadyActive) {
+        this.startPollingIfNeeded();
+      }
     } else if (phase2IsCompleted) {
       // ✅ CORRECCIÓN: Solo marcar como completado si realmente se completó (total > 0 y procesados >= total)
+      // ✅ NUEVO: Resetear flag de inicialización de Fase 2 cuando se completa
+      if (typeof window !== 'undefined' && window.Phase2Manager && typeof window.Phase2Manager.reset === 'function') {
+        window.Phase2Manager.reset();
+      }
+      
       this.updatePhaseStatus(2, 'completed');
       this.stopTimer(2);
       this.updatePhase2Progress(data);
@@ -1155,6 +1183,11 @@ class SyncDashboard {
       jQuery('#mi-cancel-sync').hide();
     } else {
       // Si no está en progreso ni completada, resetear a estado pendiente
+      // ✅ NUEVO: Resetear flag de inicialización de Fase 2 cuando no hay sincronización activa
+      if (typeof window !== 'undefined' && window.Phase2Manager && typeof window.Phase2Manager.reset === 'function') {
+        window.Phase2Manager.reset();
+      }
+      
       this.updatePhaseStatus(2, 'pending');
       this.stopTimer(2);
       this.resetPhase2Progress();
@@ -1173,12 +1206,21 @@ class SyncDashboard {
    * @private
    */
   startPollingIfNeeded() {
+    // ✅ PROTECCIÓN CRÍTICA: Verificar si Phase2Manager ya está gestionando el polling
+    if (typeof window !== 'undefined' && window.phase2Initialized) {
+      // Phase2Manager ya está gestionando el polling, no iniciar otro
+      return;
+    }
+    
     // ✅ CORRECCIÓN: Verificar si el polling ya está activo
     if (typeof pollingManager !== 'undefined' && pollingManager) {
       // Verificar si ya hay un polling activo para 'syncProgress'
       const existingPolling = pollingManager.intervals && pollingManager.intervals.get && pollingManager.intervals.get('syncProgress');
       
-      if (!existingPolling && typeof checkSyncProgress === 'function') {
+      // ✅ PROTECCIÓN ADICIONAL: Verificar también con isPollingActive
+      const isActive = typeof pollingManager.isPollingActive === 'function' && pollingManager.isPollingActive('syncProgress');
+      
+      if (!existingPolling && !isActive && typeof checkSyncProgress === 'function') {
         // Configurar intervalo de 5 segundos (5000ms) para modo activo
         pollingManager.config.currentInterval = pollingManager.config.intervals.active || 5000;
         pollingManager.config.currentMode = 'active';

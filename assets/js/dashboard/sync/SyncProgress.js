@@ -23,12 +23,16 @@
  * @property {number} lastKnownItemsSynced - Últimos items sincronizados conocidos
  * @property {number} lastKnownTotalBatches - Total de lotes conocido
  * @property {number} lastKnownTotalItems - Total de items conocido
+ * @property {number} lastProgressTimestamp - Timestamp del último progreso detectado
+ * @property {number} autoProcessTimeout - Timeout para procesamiento automático de lotes
  */
 const trackingState = {
   lastKnownBatch: 0,
   lastKnownItemsSynced: 0,
   lastKnownTotalBatches: 0,
-  lastKnownTotalItems: 0
+  lastKnownTotalItems: 0,
+  lastProgressTimestamp: 0,
+  autoProcessTimeout: null
 };
 
 /**
@@ -166,8 +170,29 @@ function handleSuccess(response) {
       syncMeta = {
         in_progress: response.data.in_progress !== false,  // Más flexible para diferentes valores
         current_batch: response.data.current_batch || response.data.batch || response.data.current || 0,
-        total_batches: response.data.total_batches || response.data.total || 1
+        total_batches: response.data.total_batches || response.data.total || 1,
+        cancelled: response.data.cancelled === true || response.data.cancelled === 'true' // ✅ NUEVO: Detectar cancelación
       };
+      
+      // ✅ NUEVO: Si la sincronización fue cancelada, detener polling y resetear estado
+      if (syncMeta.cancelled) {
+        if (typeof stopProgressPolling === 'function') {
+          stopProgressPolling('Sincronización cancelada');
+        }
+        
+        // ✅ NUEVO: Resetear Phase2Manager si está disponible
+        if (typeof window !== 'undefined' && window.Phase2Manager && typeof window.Phase2Manager.reset === 'function') {
+          window.Phase2Manager.reset();
+        }
+        
+        // ✅ NUEVO: Detener polling directamente si stopProgressPolling no está disponible
+        if (typeof pollingManager !== 'undefined' && pollingManager && typeof pollingManager.stopPolling === 'function') {
+          pollingManager.stopPolling('syncProgress');
+        }
+        
+        resetTrackingState();
+        return; // No procesar más datos si está cancelada
+      }
 
       // DETECCIÓN DE CAMBIOS: Verificar si cambió el lote actual o los items procesados
       const batchChanged = syncMeta.current_batch !== trackingState.lastKnownBatch;
@@ -285,6 +310,15 @@ function handleSuccess(response) {
         trackingState.lastKnownItemsSynced = estadisticas.procesados;
         trackingState.lastKnownTotalBatches = syncMeta.total_batches;
         trackingState.lastKnownTotalItems = estadisticas.total;
+        
+        // ✅ NUEVO: Actualizar timestamp cuando hay progreso
+        trackingState.lastProgressTimestamp = Date.now();
+        
+        // Limpiar timeout si hay progreso (el backend está funcionando)
+        if (trackingState.autoProcessTimeout) {
+          clearTimeout(trackingState.autoProcessTimeout);
+          trackingState.autoProcessTimeout = null;
+        }
       }
 
       // Actualizar lastProgressValue si cambió usando SyncStateManager
@@ -321,15 +355,78 @@ function handleSuccess(response) {
         // Resetear variables de seguimiento
         resetTrackingState();
       } else if (syncMeta.in_progress) {
-        // Solo monitorear progreso - el backend maneja la continuación automáticamente
-        // No llamar a processNextBatch() - esto causa múltiples PIDs y race conditions
-        // El backend procesa todos los lotes automáticamente sin intervención del frontend
+        // ✅ NUEVO: Detectar lotes pendientes y procesarlos automáticamente si WordPress Cron no funciona
+        const currentBatch = syncMeta.current_batch || 0;
+        const totalBatches = syncMeta.total_batches || 1;
+        const hasPendingBatches = currentBatch < totalBatches;
+        
+        if (hasPendingBatches) {
+          // Verificar si el progreso se ha detenido (más de 15 segundos sin cambios)
+          // Solo verificar si no hay cambios significativos (no se actualizó el timestamp)
+          if (!hasSignificantChange) {
+            const timeSinceLastProgress = Date.now() - (trackingState.lastProgressTimestamp || Date.now());
+            const progressStalled = timeSinceLastProgress > 15000; // 15 segundos
+            
+            // Si el progreso se ha detenido y hay lotes pendientes, procesar automáticamente
+            if (progressStalled && !trackingState.autoProcessTimeout) {
+              // eslint-disable-next-line no-console
+              console.log('⚠️ Progreso detenido detectado, procesando siguiente lote automáticamente...', {
+                currentBatch,
+                totalBatches,
+                timeSinceLastProgress: Math.round(timeSinceLastProgress / 1000) + 's',
+                lastProgressTimestamp: trackingState.lastProgressTimestamp
+              });
+              
+              // Procesar siguiente lote automáticamente
+              processNextBatchAutomatically();
+            }
+          }
+        } else {
+          // No hay lotes pendientes, limpiar timeout
+          if (trackingState.autoProcessTimeout) {
+            clearTimeout(trackingState.autoProcessTimeout);
+            trackingState.autoProcessTimeout = null;
+          }
+        }
       }
     } else {
       // ✅ ELIMINADO: Mensajes de error en barras - ahora se muestra en consola en tiempo real
     }
   } else {
     // ✅ ELIMINADO: Mensajes de error en barras - ahora se muestra en consola en tiempo real
+  }
+}
+
+/**
+ * Procesa el siguiente lote automáticamente cuando WordPress Cron no funciona
+ * 
+ * Delega a Phase2Manager para mantener la separación de responsabilidades.
+ * Phase2Manager es responsable de la lógica de Fase 2, mientras que SyncProgress
+ * solo monitorea el progreso y detecta cuando es necesario procesar lotes.
+ *
+ * @returns {void}
+ * @private
+ */
+function processNextBatchAutomatically() {
+  // Evitar múltiples llamadas simultáneas usando timeout local
+  if (trackingState.autoProcessTimeout) {
+    return;
+  }
+  
+  // Configurar timeout para evitar llamadas repetidas
+  trackingState.autoProcessTimeout = setTimeout(() => {
+    trackingState.autoProcessTimeout = null;
+  }, 10000); // 10 segundos de cooldown
+  
+  // Delegar a Phase2Manager si está disponible
+  if (typeof window !== 'undefined' && window.Phase2Manager && typeof window.Phase2Manager.processNextBatchAutomatically === 'function') {
+    window.Phase2Manager.processNextBatchAutomatically();
+    
+    // Resetear timestamp para permitir siguiente verificación
+    trackingState.lastProgressTimestamp = Date.now();
+  } else {
+    // eslint-disable-next-line no-console
+    console.warn('⚠️ Phase2Manager no está disponible para procesar siguiente lote automáticamente');
   }
 }
 

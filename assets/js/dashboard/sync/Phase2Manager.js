@@ -13,6 +13,26 @@
 
 /* global jQuery, miIntegracionApiDashboard, DASHBOARD_CONFIG, DOM_CACHE, pollingManager, ErrorHandler, SyncStateManager, checkSyncProgress, window */
 
+// ✅ NUEVO: Sistema de throttling para logs de advertencia
+let lastWarningTime = 0;
+const WARNING_THROTTLE_MS = 5000; // Solo mostrar advertencia cada 5 segundos
+
+/**
+ * Log de advertencia con throttling para evitar spam en consola
+ *
+ * @param {string} message - Mensaje a mostrar
+ * @returns {void}
+ * @private
+ */
+function throttledWarn(message) {
+  const now = Date.now();
+  if (now - lastWarningTime > WARNING_THROTTLE_MS) {
+    // eslint-disable-next-line no-console
+    console.warn(message);
+    lastWarningTime = now;
+  }
+}
+
 /**
  * Maneja la respuesta exitosa de iniciar Fase 2
  *
@@ -20,6 +40,17 @@
  * @private
  */
 function handleSuccess() {
+  // ✅ PROTECCIÓN: Evitar múltiples inicializaciones con throttling
+  if (typeof window !== 'undefined' && window.phase2Initialized) {
+    throttledWarn('⚠️ Fase 2 ya fue inicializada, ignorando llamada duplicada');
+    return;
+  }
+
+  // Marcar como inicializado
+  if (typeof window !== 'undefined') {
+    window.phase2Initialized = true;
+  }
+
   // eslint-disable-next-line no-console
   console.log('✅ Fase 2 (productos) iniciada correctamente');
 
@@ -60,10 +91,24 @@ function handleSuccess() {
     SyncStateManager.setInactiveProgressCounter(0);
   }
 
+  // ✅ PROTECCIÓN: Verificar si ya hay polling activo antes de iniciar uno nuevo
+  if (typeof pollingManager !== 'undefined' && pollingManager && typeof pollingManager.isPollingActive === 'function') {
+    if (pollingManager.isPollingActive('syncProgress')) {
+      throttledWarn('⚠️ Polling de syncProgress ya está activo, no se iniciará uno nuevo');
+      return;
+    }
+  }
+
   // Iniciar polling para monitorear Fase 2
   // NOTA: checkSyncProgress ya emite eventos automáticamente cuando recibe datos
   if (typeof pollingManager !== 'undefined' && pollingManager && typeof pollingManager.startPolling === 'function' && typeof checkSyncProgress === 'function') {
     setTimeout(function() {
+      // ✅ PROTECCIÓN ADICIONAL: Verificar nuevamente antes de iniciar (por si acaso)
+      if (pollingManager.isPollingActive('syncProgress')) {
+        throttledWarn('⚠️ Polling de syncProgress ya está activo (verificación tardía), no se iniciará uno nuevo');
+        return;
+      }
+      
       const intervalId = pollingManager.startPolling('syncProgress', checkSyncProgress, pollingManager.config.currentInterval);
       // Exponer syncInterval en window si existe (compatibilidad con código original)
       if (typeof window !== 'undefined') {
@@ -133,8 +178,28 @@ function handleError(xhr, status, error) {
  * Phase2Manager.start();
  */
 function start() {
+  // ✅ PROTECCIÓN CRÍTICA: Evitar múltiples llamadas simultáneas
+  if (typeof window !== 'undefined' && window.phase2Starting) {
+    throttledWarn('⚠️ Fase 2 ya se está iniciando, ignorando llamada duplicada');
+    return;
+  }
+  
+  // ✅ PROTECCIÓN: Verificar si ya está inicializada
+  if (typeof window !== 'undefined' && window.phase2Initialized) {
+    throttledWarn('⚠️ Fase 2 ya fue inicializada, ignorando llamada duplicada');
+    return;
+  }
+  
+  // Marcar como iniciando
+  if (typeof window !== 'undefined') {
+    window.phase2Starting = true;
+  }
+  
   // Verificar dependencias críticas
   if (typeof jQuery === 'undefined') {
+    if (typeof window !== 'undefined') {
+      window.phase2Starting = false;
+    }
     if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.logError === 'function') {
       ErrorHandler.logError('jQuery no está disponible para Phase2Manager', 'PHASE2_START');
     }
@@ -143,6 +208,9 @@ function start() {
 
   // eslint-disable-next-line prefer-optional-chain
   if (typeof miIntegracionApiDashboard === 'undefined' || !miIntegracionApiDashboard || !miIntegracionApiDashboard.ajaxurl) {
+    if (typeof window !== 'undefined') {
+      window.phase2Starting = false;
+    }
     if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.logError === 'function') {
       ErrorHandler.logError('miIntegracionApiDashboard o ajaxurl no están disponibles', 'PHASE2_START');
     }
@@ -151,6 +219,9 @@ function start() {
 
   // eslint-disable-next-line prefer-optional-chain
   if (typeof DOM_CACHE === 'undefined' || !DOM_CACHE) {
+    if (typeof window !== 'undefined') {
+      window.phase2Starting = false;
+    }
     if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.logError === 'function') {
       ErrorHandler.logError('DOM_CACHE no está disponible', 'PHASE2_START');
     }
@@ -182,6 +253,11 @@ function start() {
       batch_size: batchSize
     },
     success: function(response) {
+      // ✅ Resetear flag de inicio después de recibir respuesta
+      if (typeof window !== 'undefined') {
+        window.phase2Starting = false;
+      }
+      
       if (response.success) {
         handleSuccess();
       } else {
@@ -191,7 +267,139 @@ function start() {
       }
     },
     error: function(xhr, status, error) {
+      // ✅ Resetear flag de inicio en caso de error
+      if (typeof window !== 'undefined') {
+        window.phase2Starting = false;
+      }
       handleError(xhr, status, error);
+    }
+  });
+}
+
+/**
+ * Resetea el estado de inicialización de Fase 2
+ * Útil cuando la sincronización se completa o se cancela
+ *
+ * @returns {void}
+ * @public
+ */
+function reset() {
+  // ✅ MEJORADO: Resetear flags de inicialización e inicio
+  if (typeof window !== 'undefined') {
+    window.phase2Initialized = false;
+    window.phase2Starting = false;
+  }
+  
+  // ✅ NUEVO: Detener polling de syncProgress si está activo
+  if (typeof pollingManager !== 'undefined' && pollingManager) {
+    if (typeof pollingManager.stopPolling === 'function') {
+      pollingManager.stopPolling('syncProgress');
+    }
+    // ✅ NUEVO: También detener todos los polling relacionados con syncProgress
+    if (typeof pollingManager.stopAllPolling === 'function') {
+      // Detener todos y luego reiniciar solo los necesarios si es necesario
+      pollingManager.stopAllPolling();
+    }
+  }
+  
+  // ✅ NUEVO: Limpiar intervalos globales si existen
+  if (typeof window !== 'undefined') {
+    if (window.syncInterval) {
+      try {
+        clearInterval(window.syncInterval);
+        window.syncInterval = null;
+      } catch (error) {
+        // Ignorar errores al limpiar
+      }
+    }
+    
+    // ✅ NUEVO: Limpiar cualquier otro intervalo relacionado
+    if (window.phase2PollingInterval) {
+      try {
+        clearInterval(window.phase2PollingInterval);
+        window.phase2PollingInterval = null;
+      } catch (error) {
+        // Ignorar errores al limpiar
+      }
+    }
+  }
+  
+  // ✅ NUEVO: Resetear flag de procesamiento de batch
+  if (typeof window !== 'undefined') {
+    window.phase2ProcessingBatch = false;
+  }
+  
+  // ✅ NUEVO: Resetear contador de throttling
+  lastWarningTime = 0;
+  
+  // ✅ NUEVO: Solo loguear si realmente se hizo algo (evitar spam)
+  // eslint-disable-next-line no-console
+  console.log('🔄 Estado de Fase 2 reseteado (polling detenido)');
+}
+
+/**
+ * Procesa el siguiente lote automáticamente cuando WordPress Cron no funciona
+ * 
+ * Esta función se llama desde SyncProgress.js cuando se detecta que hay lotes
+ * pendientes y el progreso se ha detenido (más de 15 segundos sin cambios).
+ * 
+ * @returns {void}
+ * @public
+ */
+function processNextBatchAutomatically() {
+  // Verificar que jQuery y miIntegracionApiDashboard estén disponibles
+  if (typeof jQuery === 'undefined' || typeof miIntegracionApiDashboard === 'undefined' || !miIntegracionApiDashboard.ajaxurl) {
+    // eslint-disable-next-line no-console
+    console.warn('⚠️ No se puede procesar siguiente lote automáticamente: jQuery o ajaxurl no disponibles');
+    return;
+  }
+  
+  // Evitar múltiples llamadas simultáneas usando un flag global
+  if (typeof window !== 'undefined' && window.phase2ProcessingBatch) {
+    // eslint-disable-next-line no-console
+    console.log('ℹ️ Ya hay un lote siendo procesado, esperando...');
+    return;
+  }
+  
+  // Marcar como procesando
+  if (typeof window !== 'undefined') {
+    window.phase2ProcessingBatch = true;
+  }
+  
+  // Llamar al endpoint de procesamiento de cola en background
+  jQuery.ajax({
+    url: miIntegracionApiDashboard.ajaxurl,
+    type: 'POST',
+    timeout: 30000, // 30 segundos de timeout
+    data: {
+      action: 'mia_process_queue_background',
+      nonce: miIntegracionApiDashboard.nonce || ''
+    },
+    success: function(response) {
+      // eslint-disable-next-line no-console
+      console.log('✅ Siguiente lote procesado automáticamente desde Phase2Manager', response);
+      
+      // Resetear flag después de un breve delay para permitir siguiente procesamiento
+      setTimeout(() => {
+        if (typeof window !== 'undefined') {
+          window.phase2ProcessingBatch = false;
+        }
+      }, 5000); // 5 segundos de cooldown
+    },
+    error: function(xhr, status, error) {
+      // eslint-disable-next-line no-console
+      console.warn('⚠️ Error al procesar siguiente lote automáticamente', {
+        status,
+        error,
+        xhr: xhr.status
+      });
+      
+      // Resetear flag incluso en caso de error
+      if (typeof window !== 'undefined') {
+        window.phase2ProcessingBatch = false;
+      }
+      
+      // No es crítico, WordPress Cron puede procesarlo más tarde
     }
   });
 }
@@ -200,7 +408,9 @@ function start() {
  * Objeto Phase2Manager con métodos públicos
  */
 const Phase2Manager = {
-  start
+  start,
+  reset,
+  processNextBatchAutomatically
 };
 
 /**
