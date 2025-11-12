@@ -19,12 +19,17 @@ Plugin de integración completa entre **Verial** y **WooCommerce** para WordPres
 
 ## 📦 Requisitos
 
-- WordPress 5.0+
-- WooCommerce 3.0+
-- PHP 7.4+
+- WordPress 6.0+ (recomendado 6.8+)
+- WooCommerce 7.0+ (recomendado 9.8+)
+- PHP 8.1+ (requerido por el plugin, compatible con WordPress 6.8)
 - Composer (para dependencias)
 - Extensión PHP cURL
 - Extensión PHP OpenSSL
+
+**Nota sobre PHP**: 
+- WordPress 6.8 requiere PHP 7.4 como mínimo, pero recomienda PHP 8.0+
+- Este plugin requiere PHP 8.1+ para aprovechar características modernas y mejor rendimiento
+- PHP 8.1 es compatible con WordPress 6.8 y es la versión recomendada
 
 ## 🛠️ Instalación
 
