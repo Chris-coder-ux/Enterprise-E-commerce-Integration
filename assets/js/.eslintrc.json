@@ -2,11 +2,12 @@
   "env": {
     "browser": true,
     "jquery": true,
-    "es6": true
+    "es6": true,
+    "node": true
   },
   "extends": "eslint:recommended",
   "parserOptions": {
-    "ecmaVersion": 8,
+    "ecmaVersion": 2020,
     "sourceType": "script"
   },
   "rules": {
@@ -16,12 +17,12 @@
     "semi": ["error", "always"],
     "no-console": ["warn", { "allow": ["error"] }],
     "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
-    "prefer-optional-chain": "off",
     "prefer-const": "warn",
     "no-var": "error",
     "object-shorthand": ["warn", "always"],
     "quote-props": ["warn", "as-needed"],
-    "no-undef": "error"
+    "no-undef": "error",
+    "no-redeclare": ["error", { "builtinGlobals": false }]
   },
   "globals": {
     "wp": "readonly",
@@ -32,6 +33,19 @@
     "miApiCacheAdmin": "readonly",
     "miApiCompat": "readonly",
     "mi_hpos_test": "readonly",
-    "gridjs": "readonly"
-  }
+    "gridjs": "readonly",
+    "jQuery": "readonly",
+    "window": "readonly",
+    "globalThis": "readonly",
+    "global": "readonly",
+    "showToast": "readonly"
+  },
+  "overrides": [
+    {
+      "files": ["**/utils/ApiClient.js"],
+      "parserOptions": {
+        "sourceType": "module"
+      }
+    }
+  ]
 }
