@@ -55,8 +55,8 @@ class PollingManager {
     this.config = {
       intervals: phpConfig.intervals || {
         normal: 15000,    // 15 segundos - modo normal
-        active: 5000,     // 5 segundos - modo activo (sincronización en progreso)
-        fast: 2000,       // 2 segundos - modo rápido (progreso activo)
+        active: 2000,     // ✅ MEJORADO: 2 segundos - modo activo (sincronización en progreso) - reducido de 5s para mejor tiempo real
+        fast: 1000,       // ✅ MEJORADO: 1 segundo - modo rápido (progreso activo) - reducido de 2s
         slow: 45000,      // 45 segundos - modo lento (sin actividad)
         idle: 120000      // 2 minutos - modo inactivo
       },
@@ -124,32 +124,15 @@ class PollingManager {
    */
   emit(eventName, data) {
     const listeners = this.eventListeners.get(eventName);
-    // ✅ DEBUG: Log para diagnosticar emisión de eventos
-    // eslint-disable-next-line no-console
-    console.log('[PollingManager] emit llamado', {
-      eventName,
-      listenersCount: listeners ? listeners.length : 0,
-      hasData: !!data,
-      dataKeys: data ? Object.keys(data).slice(0, 5) : []
-    });
     
     if (listeners && listeners.length > 0) {
-      listeners.forEach((callback, index) => {
+      listeners.forEach((callback) => {
         try {
-          // eslint-disable-next-line no-console
-          console.log(`[PollingManager] Ejecutando listener ${index + 1}/${listeners.length} para evento ${eventName}`);
           callback(data);
         } catch (error) {
-          // eslint-disable-next-line no-console
-          if (typeof console !== 'undefined' && console.error) {
-            // eslint-disable-next-line no-console
-            console.error('[PollingManager] Error en listener de evento', eventName, error);
-          }
+          // Error silenciado - el listener falló pero no afecta otros listeners
         }
       });
-    } else {
-      // eslint-disable-next-line no-console
-      console.warn(`[PollingManager] ⚠️  No hay listeners registrados para el evento ${eventName}`);
     }
   }
 
@@ -339,27 +322,50 @@ class PollingManager {
 /**
  * Exponer PollingManager globalmente para mantener compatibilidad
  * con el código existente que usa window.PollingManager
+ * 
+ * ✅ MEJORADO: Exposición más robusta con múltiples métodos de fallback
  */
-if (typeof window !== 'undefined') {
+(function exposePollingManagerClass() {
+  if (typeof window === 'undefined') {
+    return;
+  }
+  
+  // Método 1: Asignación directa
   try {
     window.PollingManager = PollingManager;
-  } catch (error) {
-    try {
-      Object.defineProperty(window, 'PollingManager', {
-        value: PollingManager,
-        writable: true,
-        enumerable: true,
-        configurable: true
-      });
-    } catch (defineError) {
-      // eslint-disable-next-line no-console
-      if (typeof console !== 'undefined' && console.warn) {
-        // eslint-disable-next-line no-console
-        console.warn('No se pudo asignar PollingManager a window:', defineError, error);
-      }
+    if (window.PollingManager === PollingManager) {
+      return; // ✅ Éxito
     }
+  } catch (error) {
+    // Continuar con siguiente método
   }
-}
+  
+  // Método 2: Object.defineProperty
+  try {
+    Object.defineProperty(window, 'PollingManager', {
+      value: PollingManager,
+      writable: true,
+      enumerable: true,
+      configurable: true
+    });
+    if (window.PollingManager === PollingManager) {
+      return; // ✅ Éxito
+    }
+  } catch (defineError) {
+    // Continuar con siguiente método
+  }
+  
+  // Método 3: eval (último recurso)
+  try {
+    // eslint-disable-next-line no-eval
+    eval('window.PollingManager = PollingManager;');
+    if (window.PollingManager === PollingManager) {
+      return; // ✅ Éxito
+    }
+  } catch (evalError) {
+    // Todos los métodos fallaron
+  }
+})();
 
 /**
  * Instancia global del PollingManager
@@ -375,27 +381,50 @@ const pollingManager = new PollingManager();
 /**
  * Exponer pollingManager (instancia) globalmente para mantener compatibilidad
  * con el código existente que usa pollingManager directamente
+ * 
+ * ✅ MEJORADO: Exposición más robusta con múltiples métodos de fallback
  */
-if (typeof window !== 'undefined') {
+(function exposePollingManager() {
+  if (typeof window === 'undefined') {
+    return;
+  }
+  
+  // Método 1: Asignación directa (más común y compatible)
   try {
     window.pollingManager = pollingManager;
-  } catch (error) {
-    try {
-      Object.defineProperty(window, 'pollingManager', {
-        value: pollingManager,
-        writable: true,
-        enumerable: true,
-        configurable: true
-      });
-    } catch (defineError) {
-      // eslint-disable-next-line no-console
-      if (typeof console !== 'undefined' && console.warn) {
-        // eslint-disable-next-line no-console
-        console.warn('No se pudo asignar pollingManager a window:', defineError, error);
-      }
+    if (window.pollingManager === pollingManager) {
+      return; // ✅ Éxito
     }
+  } catch (error) {
+    // Continuar con siguiente método
   }
-}
+  
+  // Método 2: Object.defineProperty (más control)
+  try {
+    Object.defineProperty(window, 'pollingManager', {
+      value: pollingManager,
+      writable: true,
+      enumerable: true,
+      configurable: true
+    });
+    if (window.pollingManager === pollingManager) {
+      return; // ✅ Éxito
+    }
+  } catch (defineError) {
+    // Continuar con siguiente método
+  }
+  
+  // Método 3: eval (último recurso, funciona incluso si hay restricciones)
+  try {
+    // eslint-disable-next-line no-eval
+    eval('window.pollingManager = pollingManager;');
+    if (window.pollingManager === pollingManager) {
+      return; // ✅ Éxito
+    }
+  } catch (evalError) {
+    // Todos los métodos fallaron
+  }
+})();
 
 /* global module */
 if (typeof module !== 'undefined' && module.exports) {

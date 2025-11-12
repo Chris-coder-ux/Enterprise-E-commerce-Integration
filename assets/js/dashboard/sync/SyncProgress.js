@@ -65,13 +65,6 @@ function getDomCache() {
  * SyncProgress.check();
  */
 function check() {
-  // Iniciando llamada AJAX para verificar progreso
-  // eslint-disable-next-line no-console
-  console.log('🔍 checkSyncProgress() ejecutándose...', {
-    timestamp: new Date().toISOString(),
-    lastKnownBatch: trackingState.lastKnownBatch || 0,
-    lastKnownItemsSynced: trackingState.lastKnownItemsSynced || 0
-  });
 
   // Verificar dependencias críticas
   if (typeof jQuery === 'undefined') {
@@ -146,15 +139,6 @@ function handleSuccess(response) {
 
   // ✅ CORRECCIÓN: Obtener DOM_CACHE de forma segura
   const DOM_CACHE = getDomCache();
-  if (!DOM_CACHE) {
-    // Si DOM_CACHE no está disponible, no podemos actualizar la UI, pero continuamos
-    // para no romper el flujo de actualización del dashboard
-    // eslint-disable-next-line no-console
-    if (typeof console !== 'undefined' && console.warn) {
-      // eslint-disable-next-line no-console
-      console.warn('DOM_CACHE no disponible en handleSuccess, continuando sin actualizar UI antigua');
-    }
-  }
 
   // Verificar si hay estadísticas disponibles
   let estadisticas = response.data.estadisticas || response.data.stats || response.data || {};
@@ -197,14 +181,6 @@ function handleSuccess(response) {
         const expectedItemsSynced = syncMeta.current_batch * 50; // 50 productos por lote
         if (expectedItemsSynced > trackingState.lastKnownItemsSynced) {
           estadisticas.procesados = expectedItemsSynced;
-          // eslint-disable-next-line no-console
-          console.log('🔧 CORRECCIÓN: Calculando items_synced esperado', {
-            current_batch: syncMeta.current_batch,
-            lastKnownBatch: trackingState.lastKnownBatch,
-            lastKnownItemsSynced: trackingState.lastKnownItemsSynced,
-            expectedItemsSynced: expectedItemsSynced,
-            correctedItemsSynced: estadisticas.procesados
-          });
         }
       }
 
@@ -258,11 +234,6 @@ function handleSuccess(response) {
           phase1Status: phase1Status,
           timestamp: Date.now()
         });
-        // eslint-disable-next-line no-console
-        console.log('[SyncProgress] ✅ Evento syncProgress emitido a través de PollingManager (Phase1Manager no activo)');
-      } else if (phase1ManagerActive) {
-        // eslint-disable-next-line no-console
-        console.log('[SyncProgress] ⏭️  Omitiendo emisión de evento (Phase1Manager ya está manejando el polling)');
       }
 
       // ✅ CORRECCIÓN: Actualizar dashboard completo usando updateDashboardFromStatus
@@ -274,33 +245,14 @@ function handleSuccess(response) {
           window.syncDashboard.updateDashboardFromStatus(response.data);
           
           // ✅ CENTRALIZADO: Actualizar consola DESPUÉS de actualizar el dashboard
-          // Esto asegura que solo haya una fuente de actualización de la consola
-          // NOTA: Ahora la consola se actualiza principalmente a través de eventos de PollingManager
-          // pero mantenemos este código como fallback para compatibilidad
-          // eslint-disable-next-line no-console
-          console.log('[SyncProgress] Intentando actualizar consola (fallback)...', {
-            hasUpdateSyncConsole: typeof updateSyncConsole === 'function',
-            hasWindowUpdateSyncConsole: typeof window !== 'undefined' && typeof window.updateSyncConsole === 'function',
-            hasConsoleManager: typeof window !== 'undefined' && window.ConsoleManager && typeof window.ConsoleManager.updateSyncConsole === 'function'
-          });
-          
           // Solo actualizar directamente si no hay sistema de eventos disponible
           if (typeof window === 'undefined' || !window.pollingManager || typeof window.pollingManager.emit !== 'function') {
             if (typeof updateSyncConsole === 'function') {
-              // eslint-disable-next-line no-console
-              console.log('[SyncProgress] Llamando updateSyncConsole directamente (sin eventos)');
               updateSyncConsole(response.data, phase1Status);
             } else if (typeof window !== 'undefined' && typeof window.updateSyncConsole === 'function') {
-              // eslint-disable-next-line no-console
-              console.log('[SyncProgress] Llamando window.updateSyncConsole (sin eventos)');
               window.updateSyncConsole(response.data, phase1Status);
             } else if (typeof window !== 'undefined' && window.ConsoleManager && typeof window.ConsoleManager.updateSyncConsole === 'function') {
-              // eslint-disable-next-line no-console
-              console.log('[SyncProgress] Llamando ConsoleManager.updateSyncConsole (sin eventos)');
               window.ConsoleManager.updateSyncConsole(response.data, phase1Status);
-            } else {
-              // eslint-disable-next-line no-console
-              console.error('[SyncProgress] ❌ No se encontró función updateSyncConsole disponible');
             }
           }
         } else {
@@ -552,9 +504,6 @@ function handleTimeoutError() {
     return;
   }
 
-  // eslint-disable-next-line no-console
-  console.warn(`Posible timeout o servidor sobrecargado (intento ${inactiveProgressCounter})`);
-
   handleTimeoutWarning(errorThreshold);
 
   const maxErrors = getErrorThreshold('max_errors', 5);
@@ -609,13 +558,9 @@ function handleError(xhr, status, error) {
       xhr: xhr,
       timestamp: Date.now()
     });
-    // eslint-disable-next-line no-console
-    console.log('[SyncProgress] ✅ Evento syncError emitido a través de PollingManager');
   }
 
   if (typeof ErrorHandler === 'undefined' || !ErrorHandler) {
-    // eslint-disable-next-line no-console
-    console.error('ErrorHandler no está disponible para manejar errores');
     return;
   }
 
@@ -696,11 +641,7 @@ if (typeof window !== 'undefined') {
         configurable: true
       });
     } catch (defineError) {
-      // eslint-disable-next-line no-console
-      if (typeof console !== 'undefined' && console.warn) {
-        // eslint-disable-next-line no-console
-        console.warn('No se pudo asignar SyncProgress a window:', defineError, error);
-      }
+      // Silenciar error de asignación
     }
   }
 }

@@ -128,8 +128,6 @@ class SyncDashboard {
             phase1Status: phase1Status,
             timestamp: Date.now()
           });
-          // eslint-disable-next-line no-console
-          console.log('[SyncDashboard] ✅ Evento syncProgress emitido inmediatamente al iniciar Fase 1');
         }
         
         // ✅ NUEVO: Iniciar polling de Phase1Manager para monitorear completitud
@@ -198,10 +196,7 @@ class SyncDashboard {
     } catch (error) {
       // Si falla obtener el estado, continuar de todos modos
       // eslint-disable-next-line no-console
-      if (typeof console !== 'undefined' && console.warn) {
-        // eslint-disable-next-line no-console
-        console.warn('No se pudo obtener el estado actual, continuando...', error);
-      }
+        // Error silenciado - se continúa sin estado inicial
     }
     
     // ✅ NUEVO: Validar condiciones y mostrar advertencias si es necesario
@@ -1061,15 +1056,8 @@ class SyncDashboard {
             phase1Status: phase1Status,
             timestamp: Date.now()
           });
-          // eslint-disable-next-line no-console
-          console.log('[SyncDashboard] ✅ Evento syncProgress emitido a través de PollingManager (carga inicial, sin polling activo)');
-        } else if (phase1ManagerActive || syncProgressActive) {
-          // eslint-disable-next-line no-console
-          console.log('[SyncDashboard] ⏭️  Omitiendo emisión de evento (ya hay polling activo)');
         } else {
           // Fallback: Solo si no hay sistema de eventos disponible
-          // eslint-disable-next-line no-console
-          console.warn('[SyncDashboard] ⚠️  PollingManager no está disponible, usando fallback directo');
           if (typeof window !== 'undefined' && typeof window.updateSyncConsole === 'function') {
             window.updateSyncConsole(response.data, phase1Status);
           } else if (typeof window !== 'undefined' && window.ConsoleManager && typeof window.ConsoleManager.updateSyncConsole === 'function') {
@@ -1079,7 +1067,7 @@ class SyncDashboard {
       }
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('Error cargando estado:', error);
+      // Error silenciado - se maneja internamente
     }
   }
 
@@ -1208,10 +1196,6 @@ class SyncDashboard {
         }
         
         // eslint-disable-next-line no-console
-        if (typeof console !== 'undefined' && console.log) {
-          // eslint-disable-next-line no-console
-          console.log('✅ Polling automático iniciado cada', pollingManager.config.currentInterval / 1000, 'segundos');
-        }
       }
     }
   }
@@ -1280,10 +1264,6 @@ if (typeof window !== 'undefined') {
       });
     } catch (defineError) {
       // eslint-disable-next-line no-console
-      if (typeof console !== 'undefined' && console.warn) {
-        // eslint-disable-next-line no-console
-        console.warn('No se pudo asignar SyncDashboard a window:', defineError, error);
-      }
     }
   }
 }
@@ -1304,17 +1284,10 @@ function initializeSyncDashboard() {
     try {
       // eslint-disable-next-line no-restricted-globals
       window.syncDashboard = new SyncDashboard();
-      // eslint-disable-next-line no-console
-      if (typeof console !== 'undefined' && console.log) {
-        // eslint-disable-next-line no-console
-        console.log('✅ SyncDashboard inicializado automáticamente');
-      }
     } catch (error) {
-      // eslint-disable-next-line no-console
-      if (typeof console !== 'undefined' && console.error) {
-        // eslint-disable-next-line no-console
-        console.error('❌ Error inicializando SyncDashboard:', error);
-      }
+      // Error silenciado - la inicialización falló
+      // eslint-disable-next-line no-unused-vars
+      void error;
     }
   }
 }

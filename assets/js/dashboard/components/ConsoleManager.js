@@ -19,26 +19,12 @@
   
   // ✅ Verificar si ya se ejecutó este script para evitar redeclaraciones
   if (typeof window !== 'undefined' && window.__ConsoleManagerLoaded) {
-    // eslint-disable-next-line no-console
-    console.warn('[ConsoleManager] ⚠️  Script ya cargado anteriormente, omitiendo segunda carga');
     return;
   }
   
   // Marcar que el script se está cargando
   if (typeof window !== 'undefined') {
     window.__ConsoleManagerLoaded = true;
-  }
-  
-  // ✅ DEBUG: Log INMEDIATO al inicio del script (antes de cualquier otra cosa)
-  try {
-    if (typeof window !== 'undefined' && window.console && window.console.log) {
-      window.console.log('[ConsoleManager] ⚡ Script ConsoleManager.js iniciado - PRIMERA LÍNEA EJECUTADA');
-    }
-  } catch (e) {
-    // Si incluso esto falla, el problema es grave
-    if (typeof window !== 'undefined' && window.console && window.console.error) {
-      window.console.error('[ConsoleManager] ❌ Error crítico al iniciar script:', e);
-    }
   }
   
   /**
@@ -119,25 +105,6 @@
     const $phase1Indicator = jQuery(SELECTORS.phase1Indicator);
     const $phase2Indicator = jQuery(SELECTORS.phase2Indicator);
     
-    // eslint-disable-next-line no-console
-    console.log('[ConsoleManager] initialize() llamado', {
-      hasConsole: $console.length > 0,
-      hasConsoleContent: $consoleContent.length > 0,
-      hasConsoleBody: $consoleBody.length > 0,
-      hasClearButton: $clearButton.length > 0,
-      hasToggleButton: $toggleButton.length > 0,
-      hasPhase1Indicator: $phase1Indicator.length > 0,
-      hasPhase2Indicator: $phase2Indicator.length > 0,
-      consoleSelector: SELECTORS.console,
-      consoleContentSelector: SELECTORS.consoleContent,
-      consoleBodySelector: SELECTORS.consoleBody,
-      clearButtonSelector: SELECTORS.clearButton,
-      toggleButtonSelector: SELECTORS.toggleButton,
-      phase1IndicatorSelector: SELECTORS.phase1Indicator,
-      phase2IndicatorSelector: SELECTORS.phase2Indicator,
-      consoleHTML: $console.length > 0 ? $console[0].outerHTML.substring(0, 200) : 'No encontrado',
-      consoleContentHTML: $consoleContent.length > 0 ? $consoleContent[0].outerHTML.substring(0, 200) : 'No encontrado'
-    });
     
     // ✅ VERIFICACIÓN: Si no se encuentran los elementos, mostrar error detallado
     if ($console.length === 0) {
@@ -162,146 +129,51 @@
     const existingLines = $consoleContent.find('.mia-console-line');
     if (existingLines.length === 0) {
       addLine('info', 'Consola de sincronización iniciada. Esperando actividad...');
-      // eslint-disable-next-line no-console
-      console.log('[ConsoleManager] ✅ Mensaje inicial añadido a la consola');
-    } else {
-      // eslint-disable-next-line no-console
-      console.log('[ConsoleManager] ℹ️  La consola ya tiene', existingLines.length, 'líneas existentes');
     }
   
     // Botón de limpiar consola
     if ($clearButton.length > 0) {
       $clearButton.on('click', function() {
-        // eslint-disable-next-line no-console
-        console.log('[ConsoleManager] Botón limpiar clickeado');
         clear();
         addLine('info', 'Consola limpiada');
       });
-      // eslint-disable-next-line no-console
-      console.log('[ConsoleManager] ✅ Event listener agregado a botón limpiar');
-    } else {
-      // eslint-disable-next-line no-console
-      console.error('[ConsoleManager] ❌ No se encontró botón limpiar:', SELECTORS.clearButton);
     }
   
     // Botón de minimizar/maximizar
     if ($toggleButton.length > 0) {
       $toggleButton.on('click', function() {
-        // eslint-disable-next-line no-console
-        console.log('[ConsoleManager] Botón toggle clickeado');
         toggle();
       });
-      // eslint-disable-next-line no-console
-      console.log('[ConsoleManager] ✅ Event listener agregado a botón toggle');
-    } else {
-      // eslint-disable-next-line no-console
-      console.error('[ConsoleManager] ❌ No se encontró botón toggle:', SELECTORS.toggleButton);
     }
   
     // ✅ NUEVO: Suscribirse a eventos de sincronización del PollingManager
     // Prevenir suscripciones duplicadas usando una bandera estática
     const hasSubscribed = initialize.hasSubscribedToEvents === true;
     if (hasSubscribed) {
-      // eslint-disable-next-line no-console
-      console.log('[ConsoleManager] ℹ️  Ya está suscrito a eventos de PollingManager');
       return;
     }
   
     // Si no está suscrito, proceder con la suscripción
     if (typeof window !== 'undefined' && window.pollingManager) {
-      // ✅ DEBUG: Verificar que PollingManager tiene los métodos necesarios
       const hasOnMethod = typeof window.pollingManager.on === 'function';
-      const hasEmitMethod = typeof window.pollingManager.emit === 'function';
-      
-      // eslint-disable-next-line no-console
-      console.log('[ConsoleManager] Verificando PollingManager antes de suscribirse...', {
-        hasPollingManager: typeof window.pollingManager !== 'undefined',
-        hasOnMethod,
-        hasEmitMethod,
-        pollingManagerType: typeof window.pollingManager,
-        pollingManagerKeys: window.pollingManager ? Object.keys(window.pollingManager).slice(0, 10) : []
-      });
       
       if (!hasOnMethod) {
-        // eslint-disable-next-line no-console
-        console.error('[ConsoleManager] ❌ PollingManager no tiene método on()');
         return;
       }
       
       // Suscribirse a eventos de progreso de sincronización
       window.pollingManager.on('syncProgress', function(data) {
-        // ✅ DEBUG: Extraer valores directamente para logs más claros
-        const phase1Status = data && data.phase1Status ? data.phase1Status : null;
-        const syncData = data && data.syncData ? data.syncData : null;
-        
-        const phase1InProgressValue = phase1Status ? phase1Status.in_progress : null;
-        const phase1CompletedValue = phase1Status ? phase1Status.completed : null;
-        const phase2InProgressValue = syncData ? syncData.in_progress : null;
-        const phase2CompletedValue = syncData ? syncData.is_completed : null;
-        
-        // eslint-disable-next-line no-console
-        console.log('[ConsoleManager] ✅ Evento syncProgress recibido', {
-          hasData: !!data,
-          hasSyncData: !!syncData,
-          hasPhase1Status: !!phase1Status,
-          dataKeys: data ? Object.keys(data) : []
-        });
-        
-        // ✅ DEBUG: Log separado con valores críticos para diagnóstico
-        // eslint-disable-next-line no-console
-        console.log('[ConsoleManager] 🔍 VALORES CRÍTICOS DE ESTADO:', {
-          'phase1Status.in_progress': phase1InProgressValue,
-          'phase1Status.completed': phase1CompletedValue,
-          'phase1Status.products_processed': phase1Status ? phase1Status.products_processed : null,
-          'phase1Status.total_products': phase1Status ? phase1Status.total_products : null,
-          'phase1Status.last_processed_id': phase1Status ? phase1Status.last_processed_id : null,
-          'syncData.in_progress': phase2InProgressValue,
-          'syncData.is_completed': phase2CompletedValue,
-          'syncData.estadisticas': syncData && syncData.estadisticas ? {
-            procesados: syncData.estadisticas.procesados,
-            total: syncData.estadisticas.total
-          } : null,
-          'Tipo de phase1Status.in_progress': typeof phase1InProgressValue,
-          'Tipo de syncData.in_progress': typeof phase2InProgressValue,
-          'phase1Status completo': phase1Status,
-          'syncData completo': syncData
-        });
         if (data && data.syncData) {
           updateSyncConsole(data.syncData, data.phase1Status);
-        } else {
-          // eslint-disable-next-line no-console
-          console.warn('[ConsoleManager] ⚠️  Evento syncProgress recibido sin syncData', data);
         }
       });
   
       // Suscribirse a eventos de error
       window.pollingManager.on('syncError', function(error) {
-        // eslint-disable-next-line no-console
-        console.error('[ConsoleManager] ✅ Evento syncError recibido', error);
         addLine('error', error.message || 'Error en sincronización');
       });
   
       initialize.hasSubscribedToEvents = true;
-      // eslint-disable-next-line no-console
-      console.log('[ConsoleManager] ✅ Suscrito a eventos de PollingManager (syncProgress y syncError)');
-      
-      // ✅ DEBUG: Verificar que la suscripción funcionó
-      // Intentar obtener los listeners registrados (si PollingManager lo permite)
-      if (window.pollingManager.eventListeners && typeof window.pollingManager.eventListeners.get === 'function') {
-        const syncProgressListeners = window.pollingManager.eventListeners.get('syncProgress');
-        // eslint-disable-next-line no-console
-        console.log('[ConsoleManager] Verificación de suscripción:', {
-          syncProgressListenersCount: syncProgressListeners ? syncProgressListeners.length : 0,
-          syncErrorListenersCount: window.pollingManager.eventListeners.get('syncError') ? window.pollingManager.eventListeners.get('syncError').length : 0
-        });
-      }
-    } else {
-      // eslint-disable-next-line no-console
-      console.warn('[ConsoleManager] ⚠️  PollingManager no está disponible para suscripción de eventos', {
-        hasWindow: typeof window !== 'undefined',
-        hasPollingManager: typeof window !== 'undefined' && typeof window.pollingManager !== 'undefined',
-        pollingManagerValue: typeof window !== 'undefined' ? window.pollingManager : 'window undefined'
-      });
     }
   }
   
@@ -420,25 +292,7 @@
       }
     }
   
-    // ✅ DEBUG: Log siempre activo para diagnosticar problemas
-    // eslint-disable-next-line no-console
-    console.log('[ConsoleManager] updateSyncConsole llamado', {
-      phase1Status: phase1Status ? {
-        in_progress: phase1Status.in_progress,
-        last_processed_id: phase1Status.last_processed_id,
-        last_product_images: phase1Status.last_product_images,
-        last_product_duplicates: phase1Status.last_product_duplicates,
-        products_processed: phase1Status.products_processed,
-        total_products: phase1Status.total_products
-      } : null,
-      syncData: syncData ? {
-        in_progress: syncData.in_progress,
-        is_completed: syncData.is_completed
-      } : null,
-      trackingState: Object.assign({}, trackingState),
-      consoleFound: $console.length > 0,
-      contentFound: $consoleContent.length > 0
-    });
+    // ✅ REMOVIDO: Debug innecesario que se ejecuta constantemente (cada 2 segundos durante polling)
   
     // Actualizar indicadores de fase
     updatePhaseIndicators(syncData, phase1Status);
@@ -507,12 +361,6 @@
     const $consoleContent = jQuery(SELECTORS.consoleContent);
     
     // ✅ DEBUG: Log para diagnosticar
-    // eslint-disable-next-line no-console
-    console.log('[ConsoleManager] addProgressLines llamado', {
-      hasConsoleContent: $consoleContent.length > 0,
-      phase1Status,
-      syncData
-    });
     
     // ✅ PROTECCIÓN: Validar que phase1Status existe antes de usarlo
     if (!phase1Status || typeof phase1Status !== 'object') {
@@ -530,18 +378,6 @@
     const hasRealProgress = (phase1Status.products_processed > 0) || (phase1Status.total_products > 0);
     const shouldShowProgress = phase1InProgress || (hasRealProgress && (phase1Paused || phase1Cancelled));
     
-    // ✅ DEBUG: Log de estados
-    // eslint-disable-next-line no-console
-    console.log('[ConsoleManager] Estados detectados', {
-      phase1InProgress,
-      phase1Completed,
-      phase1Paused,
-      phase1Cancelled,
-      phase2InProgress,
-      phase2Completed,
-      hasRealProgress,
-      shouldShowProgress
-    });
   
     // ✅ NUEVO: Mostrar métricas de limpieza de caché para Fase 1
     if (phase1InProgress && phase1Status && phase1Status.last_cleanup_metrics) {
@@ -582,27 +418,8 @@
     }
   
     // ✅ NUEVO: Mostrar mensaje cuando Fase 1 inicia (solo una vez)
-    // ✅ DEBUG: Log para diagnosticar por qué no se muestra el mensaje
-    if (phase1InProgress) {
-      // eslint-disable-next-line no-console
-      console.log('[ConsoleManager] 🔍 Fase 1 en progreso detectada, verificando condiciones para mensaje inicial:', {
-        phase1InProgress,
-        hasPhase1Status: !!phase1Status,
-        lastProductsProcessed: trackingState.lastProductsProcessed,
-        products_processed: phase1Status ? phase1Status.products_processed : 'N/A',
-        total_products: phase1Status ? phase1Status.total_products : 'N/A',
-        condition1: phase1InProgress,
-        condition2: !!phase1Status,
-        condition3: trackingState.lastProductsProcessed === 0,
-        condition4: phase1Status ? phase1Status.products_processed === 0 : false,
-        allConditionsMet: phase1InProgress && phase1Status && trackingState.lastProductsProcessed === 0 && (phase1Status ? phase1Status.products_processed === 0 : false)
-      });
-    }
-    
     if (phase1InProgress && phase1Status && trackingState.lastProductsProcessed === 0 && phase1Status.products_processed === 0) {
       const totalProducts = phase1Status.total_products || 0;
-      // eslint-disable-next-line no-console
-      console.log('[ConsoleManager] ✅ Mostrando mensaje de inicio de Fase 1', { totalProducts });
       addLine('phase1', `Iniciando Fase 1: Sincronización de imágenes${totalProducts > 0 ? ` para ${totalProducts} productos` : ''}...`);
       trackingState.lastProductsProcessed = -1; // Marcar que ya mostramos el mensaje inicial
     }
@@ -631,19 +448,6 @@
       // 1. Estaba en progreso y ahora está pausada/cancelada (cambio de estado)
       // 2. O si hay un cambio significativo en el progreso mientras está pausada/cancelada
       const shouldShow = (wasInProgress && stateChanged) || (progressChanged && wasInProgress);
-      
-      // ✅ DEBUG: Log para diagnosticar
-      // eslint-disable-next-line no-console
-      console.log('[ConsoleManager] 🔍 Verificando si mostrar estado pausado/cancelado:', {
-        wasInProgress,
-        stateChanged,
-        progressChanged,
-        shouldShow,
-        phase1Paused,
-        phase1Cancelled,
-        currentProductsProcessed,
-        lastProductsProcessed: trackingState.lastProductsProcessed
-      });
       
       if (shouldShow) {
         let statusMsg = phase1Paused ? 'Fase 1 pausada' : 'Fase 1 cancelada';
@@ -683,20 +487,6 @@
       trackingState.wasInProgress = false;
     }
     
-    // ✅ DEBUG: Log para diagnosticar por qué no se muestra durante sincronización activa
-    // eslint-disable-next-line no-console
-    console.log('[ConsoleManager] 🔍 Verificando Fase 1 en progreso:', {
-      phase1InProgress,
-      hasPhase1Status: !!phase1Status,
-      phase1Status: phase1Status ? {
-        in_progress: phase1Status.in_progress,
-        products_processed: phase1Status.products_processed,
-        total_products: phase1Status.total_products,
-        last_processed_id: phase1Status.last_processed_id
-      } : null,
-      willEnterBlock: phase1InProgress && phase1Status
-    });
-    
     // Fase 1 en progreso
     if (phase1InProgress && phase1Status) {
       const phase1Percent = phase1Status.total_products > 0
@@ -707,14 +497,17 @@
       // Verificar si hay un nuevo producto procesado
       const currentProductId = phase1Status.last_processed_id || 0;
       const currentProductsProcessed = phase1Status.products_processed || 0;
+      const currentImagesProcessed = phase1Status.images_processed || 0;
       const productChanged = currentProductId > 0 && currentProductId !== trackingState.lastProductId;
       const productsProcessedChanged = currentProductsProcessed !== trackingState.lastProductsProcessed;
+      const imagesProcessedChanged = currentImagesProcessed !== trackingState.lastImagesProcessed;
       
       // ✅ CORRECCIÓN: Resetear tracking si products_processed cambió de 0 a un valor positivo
       if (trackingState.lastProductsProcessed === -1 && currentProductsProcessed > 0) {
         trackingState.lastProductsProcessed = 0;
       }
       
+      // ✅ MEJORADO: Mostrar mensaje por cada producto procesado (más frecuente)
       if (productChanged && currentProductId > 0) {
         const lastProductImages = phase1Status.last_product_images !== undefined ? phase1Status.last_product_images : 0;
         const lastProductDuplicates = phase1Status.last_product_duplicates !== undefined ? phase1Status.last_product_duplicates : 0;
@@ -743,33 +536,23 @@
         trackingState.lastProductId = currentProductId;
       }
   
-      // ✅ MEJORADO: Mostrar resumen general cuando cambia el número de productos procesados
-      // ✅ CORRECCIÓN: Mostrar más frecuentemente para feedback en tiempo real
-      // Mostrar cada producto al inicio (primeros 5), luego cada 5 productos, y siempre cuando cambia
-      if (productsProcessedChanged && currentProductsProcessed > 0) {
-        const isFirstFew = currentProductsProcessed <= 5;
-        const isMultipleOf5 = currentProductsProcessed % 5 === 0;
-        const hasSignificantChange = (currentProductsProcessed - trackingState.lastSummaryProducts) >= 5;
-        const shouldShowSummary = isFirstFew || isMultipleOf5 || hasSignificantChange || 
-                                   currentProductsProcessed === 1;
+      // ✅ MEJORADO: Mostrar resumen general cuando cambia el número de productos o imágenes procesados
+      // ✅ OPTIMIZADO: Mostrar más frecuentemente para mejor feedback visual
+      // Mostrar cada vez que cambia products_processed o images_processed
+      if ((productsProcessedChanged || imagesProcessedChanged) && currentProductsProcessed > 0) {
+        const imagesProcessed = phase1Status.images_processed || 0;
+        const duplicatesSkipped = phase1Status.duplicates_skipped || 0;
+        const errors = phase1Status.errors || 0;
         
-        // ✅ DEBUG: Log para diagnosticar por qué no se muestra
-        // eslint-disable-next-line no-console
-        console.log('[ConsoleManager] 🔍 Verificando si mostrar resumen:', {
-          currentProductsProcessed,
-          lastSummaryProducts: trackingState.lastSummaryProducts,
-          productsProcessedChanged,
-          isFirstFew,
-          isMultipleOf5,
-          hasSignificantChange,
-          shouldShowSummary
-        });
+        // ✅ MEJORADO: Mostrar resumen cada vez que hay un cambio, pero evitar duplicados
+        // Verificar si el último mensaje es diferente
+        const lastLine = $consoleContent.find('.mia-console-line').last();
+        const lastMessage = lastLine.find('.mia-console-message').text();
+        const newSummaryMsg = `Fase 1: ${currentProductsProcessed}/${phase1Status.total_products || 0} productos procesados, ${imagesProcessed} imágenes sincronizadas`;
+        const isDifferentMessage = !lastMessage.includes(`Fase 1: ${currentProductsProcessed}/${phase1Status.total_products || 0} productos procesados`);
         
-        if (shouldShowSummary) {
-          const imagesProcessed = phase1Status.images_processed || 0;
-          const duplicatesSkipped = phase1Status.duplicates_skipped || 0;
-          const errors = phase1Status.errors || 0;
-          
+        // Mostrar si es un mensaje diferente o si es uno de los primeros 10 productos
+        if (isDifferentMessage || currentProductsProcessed <= 10) {
           let summaryMsg = `Fase 1: ${currentProductsProcessed}/${phase1Status.total_products || 0} productos procesados`;
           summaryMsg += `, ${imagesProcessed} imágenes sincronizadas`;
           if (duplicatesSkipped > 0) {
@@ -780,25 +563,14 @@
           }
           summaryMsg += ` (${phase1Percent}%)`;
           
-          // eslint-disable-next-line no-console
-          console.log('[ConsoleManager] ✅ Mostrando resumen de progreso:', summaryMsg);
           addLine('info', summaryMsg);
           trackingState.lastSummaryProducts = currentProductsProcessed;
-        } else {
-          // eslint-disable-next-line no-console
-          console.log('[ConsoleManager] ⏭️  Omitiendo resumen (no cumple condiciones)');
         }
         
-        // Actualizar tracking siempre, incluso si no mostramos el resumen
+        // ✅ IMPORTANTE: Actualizar tracking siempre, incluso si no mostramos el resumen
+        // Esto asegura que el tracking esté actualizado para la próxima verificación
         trackingState.lastProductsProcessed = currentProductsProcessed;
-        trackingState.lastImagesProcessed = phase1Status.images_processed || 0;
-      } else if (!productsProcessedChanged) {
-        // ✅ DEBUG: Log cuando no hay cambio en productos procesados
-        // eslint-disable-next-line no-console
-        console.log('[ConsoleManager] ⏭️  No hay cambio en productos procesados:', {
-          currentProductsProcessed,
-          lastProductsProcessed: trackingState.lastProductsProcessed
-        });
+        trackingState.lastImagesProcessed = currentImagesProcessed;
       }
     }
   
@@ -992,42 +764,20 @@
     MAX_LINES
   };
   
-  // ✅ DEBUG: Log inmediato para verificar que ConsoleManager se creó
-  // eslint-disable-next-line no-console
-  console.log('[ConsoleManager] Objeto ConsoleManager creado', {
-    hasInitialize: typeof initialize === 'function',
-    hasAddLine: typeof addLine === 'function',
-    hasUpdateSyncConsole: typeof updateSyncConsole === 'function',
-    ConsoleManagerType: typeof ConsoleManager,
-    ConsoleManagerKeys: ConsoleManager ? Object.keys(ConsoleManager) : []
-  });
-  
   /**
    * Exponer ConsoleManager globalmente para mantener compatibilidad
    * con el código existente que usa window.ConsoleManager, window.updateSyncConsole y window.addConsoleLine
    * 
    * ✅ MEJORADO: Múltiples intentos de exposición para asegurar que se exponga correctamente
    */
-  // ✅ DEBUG: Log antes de intentar exponer
-  // eslint-disable-next-line no-console
-  console.log('[ConsoleManager] Intentando exponer globalmente...', {
-    hasWindow: typeof window !== 'undefined',
-    ConsoleManagerType: typeof ConsoleManager,
-    ConsoleManagerDefined: typeof ConsoleManager !== 'undefined',
-    ConsoleManagerValue: ConsoleManager ? 'defined' : 'null/undefined'
-  });
   
   // Función para exponer ConsoleManager con múltiples métodos de fallback
   function exposeConsoleManager() {
     if (typeof window === 'undefined') {
-      // eslint-disable-next-line no-console
-      console.error('[ConsoleManager] ❌ window no está disponible, no se puede exponer ConsoleManager');
       return false;
     }
   
     if (typeof ConsoleManager === 'undefined' || !ConsoleManager) {
-      // eslint-disable-next-line no-console
-      console.error('[ConsoleManager] ❌ ConsoleManager no está definido antes de exponer');
       return false;
     }
   
@@ -1039,17 +789,10 @@
       
       // Verificar que se expuso correctamente
       if (typeof window.ConsoleManager !== 'undefined' && window.ConsoleManager === ConsoleManager) {
-        // eslint-disable-next-line no-console
-        console.log('[ConsoleManager] ✅ Exposición global completada (asignación directa)', {
-          hasConsoleManager: typeof window.ConsoleManager !== 'undefined',
-          hasUpdateSyncConsole: typeof window.updateSyncConsole === 'function',
-          hasAddConsoleLine: typeof window.addConsoleLine === 'function'
-        });
         return true;
       }
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn('[ConsoleManager] ⚠️  Error en asignación directa:', error);
+      // Silenciar error, intentar siguiente método
     }
   
     // Método 2: Object.defineProperty
@@ -1075,17 +818,10 @@
       
       // Verificar que se expuso correctamente
       if (typeof window.ConsoleManager !== 'undefined') {
-        // eslint-disable-next-line no-console
-        console.log('[ConsoleManager] ✅ Exposición global completada (defineProperty)', {
-          hasConsoleManager: typeof window.ConsoleManager !== 'undefined',
-          hasUpdateSyncConsole: typeof window.updateSyncConsole === 'function',
-          hasAddConsoleLine: typeof window.addConsoleLine === 'function'
-        });
         return true;
       }
     } catch (defineError) {
-      // eslint-disable-next-line no-console
-      console.warn('[ConsoleManager] ⚠️  Error en defineProperty:', defineError);
+      // Silenciar error, intentar siguiente método
     }
   
     // Método 3: eval (último recurso)
@@ -1094,13 +830,13 @@
       eval('window.ConsoleManager = ConsoleManager; window.updateSyncConsole = updateSyncConsole; window.addConsoleLine = addLine;');
       
       if (typeof window.ConsoleManager !== 'undefined') {
-        // eslint-disable-next-line no-console
-        console.log('[ConsoleManager] ✅ Exposición completada usando eval (último recurso)');
         return true;
       }
     } catch (evalError) {
-      // eslint-disable-next-line no-console
-      console.error('[ConsoleManager] ❌ Error crítico: No se pudo exponer ConsoleManager de ninguna forma', evalError);
+      // Solo loggear error crítico si todos los métodos fallan
+      if (typeof console !== 'undefined' && console.error) {
+        console.error('[ConsoleManager] ❌ Error crítico: No se pudo exponer ConsoleManager', evalError);
+      }
     }
   
     return false;
@@ -1110,32 +846,19 @@
   try {
     if (!exposeConsoleManager()) {
       // Si falla, intentar de nuevo después de un breve delay
-      // Esto puede ayudar si hay algún problema de timing
       setTimeout(function() {
         try {
-          if (!exposeConsoleManager()) {
-            // eslint-disable-next-line no-console
-            console.error('[ConsoleManager] ❌ No se pudo exponer ConsoleManager después de múltiples intentos', {
-              ConsoleManagerDefined: typeof ConsoleManager !== 'undefined',
-              ConsoleManagerValue: typeof ConsoleManager !== 'undefined' ? (ConsoleManager ? 'truthy' : 'falsy') : 'undefined',
-              windowAvailable: typeof window !== 'undefined',
-              error: 'Verifica la consola para errores anteriores'
-            });
-          }
+          exposeConsoleManager();
         } catch (timeoutError) {
-          // eslint-disable-next-line no-console
-          console.error('[ConsoleManager] ❌ Error en setTimeout de exposición:', timeoutError);
+          // Silenciar error de timeout
         }
       }, 50);
     }
   } catch (exposeError) {
-    // eslint-disable-next-line no-console
-    console.error('[ConsoleManager] ❌ Error crítico al intentar exponer ConsoleManager:', exposeError, {
-      ConsoleManagerDefined: typeof ConsoleManager !== 'undefined',
-      ConsoleManagerValue: typeof ConsoleManager !== 'undefined' ? (ConsoleManager ? 'truthy' : 'falsy') : 'undefined',
-      windowAvailable: typeof window !== 'undefined',
-      stack: exposeError.stack
-    });
+    // Solo loggear error crítico
+    if (typeof console !== 'undefined' && console.error) {
+      console.error('[ConsoleManager] ❌ Error crítico al exponer:', exposeError);
+    }
   }
   
   /**
@@ -1165,23 +888,12 @@
         }
       }, 50);
       
-      // Timeout después de 5 segundos
-      setTimeout(function() {
-        clearInterval(checkPollingManager);
-        if (typeof window === 'undefined' || !window.pollingManager) {
-          // eslint-disable-next-line no-console
-          console.error('[ConsoleManager] ❌ PollingManager no está disponible después de 5 segundos');
-        }
       }, 5000);
     });
   } else if (typeof window !== 'undefined' && typeof window.addEventListener !== 'undefined') {
-    // Fallback: usar DOMContentLoaded si jQuery no está disponible
     window.addEventListener('DOMContentLoaded', function() {
-      // Esperar un poco más para que jQuery se cargue
       setTimeout(function() {
         if (typeof jQuery !== 'undefined' && typeof ConsoleManager !== 'undefined' && ConsoleManager && typeof ConsoleManager.initialize === 'function') {
-          // eslint-disable-next-line no-console
-          console.log('[ConsoleManager] DOM listo (fallback), intentando inicializar...');
           ConsoleManager.initialize();
         }
       }, 100);

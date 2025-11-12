@@ -10,7 +10,7 @@
  * @author Christian
  */
 
-/* global jQuery, miIntegracionApiDashboard, ErrorHandler, AjaxManager, SystemEventManager, SELECTORS, DASHBOARD_CONFIG, ConsoleManager, SyncStateManager, NonceManager, SyncProgress */
+/* global miIntegracionApiDashboard, ErrorHandler, AjaxManager, SystemEventManager, SELECTORS, DASHBOARD_CONFIG, ConsoleManager, SyncStateManager, NonceManager, SyncProgress */
 
 // ========================================
 // VERIFICACIÓN DE DEPENDENCIAS

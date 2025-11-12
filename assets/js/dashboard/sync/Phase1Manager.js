@@ -78,26 +78,6 @@ function checkPhase1Complete() {
       if (progressResponse.success && progressResponse.data) {
         const phase1Status = progressResponse.data.phase1_images || {};
 
-        // ✅ DEBUG: Log para ver qué devuelve el backend
-        // eslint-disable-next-line no-console
-        console.log('[Phase1Manager] 🔍 Respuesta del backend (checkPhase1Complete):', {
-          'phase1Status.in_progress': phase1Status.in_progress,
-          'phase1Status.completed': phase1Status.completed,
-          'phase1Status.products_processed': phase1Status.products_processed,
-          'phase1Status.total_products': phase1Status.total_products,
-          'phase1Status.last_processed_id': phase1Status.last_processed_id,
-          'phase1Status.images_processed': phase1Status.images_processed,
-          'syncData.in_progress': progressResponse.data.in_progress,
-          'syncData.is_completed': progressResponse.data.is_completed,
-          'Tipo phase1Status.in_progress': typeof phase1Status.in_progress,
-          'Valor real phase1Status.in_progress': phase1Status.in_progress === true ? 'TRUE' : phase1Status.in_progress === false ? 'FALSE' : String(phase1Status.in_progress)
-        });
-        
-        // ✅ DEBUG: Log separado con el objeto completo para inspección manual
-        // eslint-disable-next-line no-console
-        console.log('[Phase1Manager] 🔍 Objeto completo phase1Status del backend:', phase1Status);
-        // eslint-disable-next-line no-console
-        console.log('[Phase1Manager] 🔍 Objeto completo progressResponse.data del backend:', progressResponse.data);
 
         // ✅ NUEVO: Emitir evento de progreso a través de PollingManager
         // Esto permite que ConsoleManager y otros suscriptores reciban actualizaciones
@@ -107,24 +87,13 @@ function checkPhase1Complete() {
             phase1Status: phase1Status,
             timestamp: Date.now()
           });
-          // eslint-disable-next-line no-console
-          console.log('[Phase1Manager] ✅ Evento syncProgress emitido a través de PollingManager');
         } else {
           // Fallback: Intentar actualizar consola directamente si no hay sistema de eventos
-          // eslint-disable-next-line no-console
-          console.warn('[Phase1Manager] ⚠️  PollingManager no está disponible, usando fallback directo');
           if (typeof window !== 'undefined') {
             if (typeof window.updateSyncConsole === 'function') {
-              // eslint-disable-next-line no-console
-              console.log('[Phase1Manager] Llamando window.updateSyncConsole (fallback)');
               window.updateSyncConsole(progressResponse.data, phase1Status);
             } else if (window.ConsoleManager && typeof window.ConsoleManager.updateSyncConsole === 'function') {
-              // eslint-disable-next-line no-console
-              console.log('[Phase1Manager] Llamando ConsoleManager.updateSyncConsole (fallback)');
               window.ConsoleManager.updateSyncConsole(progressResponse.data, phase1Status);
-            } else {
-              // eslint-disable-next-line no-console
-              console.warn('[Phase1Manager] ⚠️  No se encontró función updateSyncConsole disponible (fallback)');
             }
           }
         }
@@ -135,8 +104,6 @@ function checkPhase1Complete() {
         }
 
         if (isPhase1Completed(phase1Status)) {
-          // eslint-disable-next-line no-console
-          console.log('✅ Fase 1 completada, iniciando Fase 2...');
           phase1Complete = true;
 
           // Detener polling de Fase 1
@@ -145,24 +112,14 @@ function checkPhase1Complete() {
           // Iniciar Fase 2 (sincronización de productos)
           if (typeof startPhase2 === 'function') {
             startPhase2();
-          } else {
-            // eslint-disable-next-line no-console
+          } else if (typeof console !== 'undefined' && console.error) {
             console.error('startPhase2 no está disponible');
           }
-        } else if (phase1Status.in_progress) {
-          // Fase 1 aún en progreso, continuar monitoreando
-          // eslint-disable-next-line no-console
-          console.log('⏳ Fase 1 en progreso:', {
-            products_processed: phase1Status.products_processed || 0,
-            total_products: phase1Status.total_products || 0,
-            images_processed: phase1Status.images_processed || 0
-          });
         }
       }
     },
     error: function() {
-      // eslint-disable-next-line no-console
-      console.warn('Error al verificar progreso de Fase 1');
+      // Error silenciado - el polling continuará
     }
   });
 }
@@ -192,11 +149,13 @@ function startPolling() {
     SyncStateManager.setInactiveProgressCounter(0);
   }
 
-  // Iniciar polling para Fase 1 (verificar cada 5 segundos)
-  phase1PollingInterval = setInterval(checkPhase1Complete, 5000);
+  // ✅ MEJORADO: Reducir intervalo de polling para feedback más cercano a tiempo real
+  // Cambiado de 5 segundos a 2 segundos para mejor experiencia de usuario
+  // Nota: Esto aumenta la carga del servidor, pero mejora significativamente la percepción de tiempo real
+  phase1PollingInterval = setInterval(checkPhase1Complete, 2000);
 
-  // También verificar inmediatamente después de 2 segundos
-  setTimeout(checkPhase1Complete, 2000);
+  // También verificar inmediatamente después de 1 segundo para feedback instantáneo
+  setTimeout(checkPhase1Complete, 1000);
 }
 
 /**
@@ -220,8 +179,6 @@ function stopPolling() {
  * @private
  */
 function handleSuccess(response) {
-  // eslint-disable-next-line no-console
-  console.log('✅ Fase 1 (imágenes) iniciada correctamente');
 
   // Verificar si el proceso ya está en progreso o se acaba de iniciar
   if (response.data && response.data.in_progress) {
@@ -256,8 +213,6 @@ function handleSuccess(response) {
       phase1Status: phase1Status,
       timestamp: Date.now()
     });
-    // eslint-disable-next-line no-console
-    console.log('[Phase1Manager] ✅ Evento syncProgress emitido inmediatamente al iniciar Fase 1');
   }
 
   // Iniciar polling para monitorear Fase 1
@@ -274,8 +229,6 @@ function handleSuccess(response) {
  */
 function handleErrorResponse(response, originalText) {
   const errorMsg = (response.data && response.data.message) || 'Error desconocido';
-  // eslint-disable-next-line no-console
-  console.error('❌ Error al iniciar Fase 1:', errorMsg);
 
   if (DOM_CACHE && DOM_CACHE.$feedback) {
     DOM_CACHE.$feedback.text('Error al iniciar Fase 1: ' + errorMsg);
@@ -305,9 +258,6 @@ function handleErrorResponse(response, originalText) {
  * @private
  */
 function handleAjaxError(xhr, status, error, originalText) {
-  // Error al iniciar Fase 1
-  // eslint-disable-next-line no-console
-  console.error('❌ Error AJAX al iniciar Fase 1:', error);
 
   if (DOM_CACHE && DOM_CACHE.$feedback) {
     DOM_CACHE.$feedback.text('Error al iniciar Fase 1: ' + (error || 'Error de comunicación'));
@@ -328,8 +278,6 @@ function handleAjaxError(xhr, status, error, originalText) {
   // Verificar si es un error de nonce y recargar página (patrón existente)
   // eslint-disable-next-line prefer-optional-chain
   if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.error_type === 'invalid_nonce') {
-    // eslint-disable-next-line no-console
-    console.warn('Nonce inválido detectado, recargando página...');
     // Usar el patrón existente de recarga de página
     setTimeout(function() {
       if (typeof window !== 'undefined' && window.location) {
@@ -339,12 +287,8 @@ function handleAjaxError(xhr, status, error, originalText) {
     return false;
   }
 
-  const timeStamp = new Date().toISOString();
-
   // Manejar timeout específicamente
   if (status === 'timeout') {
-    // eslint-disable-next-line no-console
-    console.warn(`[${timeStamp}] Timeout en la solicitud inicial - la sincronización está en curso (proceso largo)`);
     if (DOM_CACHE && DOM_CACHE.$feedback) {
       DOM_CACHE.$feedback.text('Fase 1: Sincronización en curso (proceso largo, puede tardar varios minutos)...');
     }
@@ -396,9 +340,6 @@ function start(batchSize, originalText) {
     }
     return;
   }
-
-  // eslint-disable-next-line no-console
-  console.log('🚀 Iniciando sincronización en dos fases: Fase 1 (imágenes) primero...');
 
   if (DOM_CACHE.$feedback) {
     DOM_CACHE.$feedback.text('Fase 1: Sincronizando imágenes...');
