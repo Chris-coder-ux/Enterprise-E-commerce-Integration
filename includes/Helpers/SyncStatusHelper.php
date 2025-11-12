@@ -102,14 +102,7 @@ class SyncStatusHelper
             return false;
         }
         
-        // Log detallado para debugging
-        self::getLogger()->debug('Intentando guardar estado de sincronización', [
-            'option_name' => self::SYNC_STATUS_OPTION,
-            'status_keys' => array_keys($status),
-            'current_sync_keys' => isset($status['current_sync']) ? array_keys($status['current_sync']) : 'NO_CURRENT_SYNC',
-            'total_batches' => $status['current_sync']['total_batches'] ?? 'NO_DEFINIDO',
-            'in_progress' => $status['current_sync']['in_progress'] ?? 'NO_DEFINIDO'
-        ]);
+        // ✅ REMOVIDO: Debug innecesario que se ejecuta constantemente en cada actualización de estado
         
         // Intentar guardar con reintentos
         $max_retries = 3;
@@ -146,12 +139,8 @@ class SyncStatusHelper
                 'retry_count' => $retry_count,
                 'status_size' => strlen(serialize($status))
             ]);
-        } else {
-            self::getLogger()->debug('Estado de sincronización guardado exitosamente', [
-                'option_name' => self::SYNC_STATUS_OPTION,
-                'retry_count' => $retry_count
-            ]);
         }
+        // ✅ REMOVIDO: Debug innecesario que se ejecuta constantemente en cada actualización exitosa
         
         return $result;
     }
@@ -308,8 +297,7 @@ class SyncStatusHelper
      */
     public static function setInProgress(bool $inProgress, array $additionalData = []): bool
     {
-        // DEBUG: Log de setInProgress
-        error_log('[MIA DEBUG] SyncStatusHelper::setInProgress() - inProgress: ' . ($inProgress ? 'true' : 'false') . ', additionalData: ' . json_encode($additionalData));
+        // ✅ REMOVIDO: Debug innecesario
         $status = self::getSyncStatus();
         $status['current_sync']['in_progress'] = $inProgress;
         $status['current_sync']['last_update'] = time();
@@ -371,13 +359,7 @@ class SyncStatusHelper
         // Actualizar timestamp de última modificación
         $status['current_sync']['last_update'] = time();
         
-        // Log detallado para debugging
-        self::getLogger()->debug('Actualizando estado de sincronización', [
-            'data_keys' => array_keys($data),
-            'preserved_fields' => array_keys($preserved_values),
-            'total_batches' => $status['current_sync']['total_batches'] ?? 'NO_DEFINIDO',
-            'in_progress' => $status['current_sync']['in_progress'] ?? 'NO_DEFINIDO'
-        ]);
+        // ✅ REMOVIDO: Debug innecesario que se ejecuta frecuentemente
         
         return self::saveSyncStatus($status);
     }
@@ -729,19 +711,7 @@ class SyncStatusHelper
             'phase1_images' => $phase1_images
         ]);
         
-        // DEBUG: Log para verificar qué se está recuperando (solo si WP_DEBUG está habilitado)
-        if (defined('WP_DEBUG') && WP_DEBUG && defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
-            self::getLogger()->debug('getCurrentSyncInfo() recuperado', [
-                'items_synced' => $current_sync['items_synced'] ?? 'NO_DEFINIDO',
-                'current_batch' => $current_sync['current_batch'] ?? 'NO_DEFINIDO',
-                'total_batches' => $current_sync['total_batches'] ?? 'NO_DEFINIDO',
-                'in_progress' => $current_sync['in_progress'] ?? 'NO_DEFINIDO',
-                'phase1_in_progress' => $phase1_images['in_progress'] ?? false,
-                'phase1_products_processed' => $phase1_images['products_processed'] ?? 0,
-                'phase1_total_products' => $phase1_images['total_products'] ?? 0,
-                'cache_cleared' => true
-            ]);
-        }
+        // ✅ REMOVIDO: Debug innecesario que se ejecuta constantemente (cada 2 segundos durante polling)
         
         return $result;
     }

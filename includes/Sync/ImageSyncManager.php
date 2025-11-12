@@ -252,276 +252,23 @@ class ImageSyncManager
                 }
             }
 
-            // 2. Obtener todos los IDs de productos
-            $product_ids = $this->getAllProductIds();
-            $total_products = count($product_ids);
-
-            // ✅ NUEVO: Actualizar estado de Fase 1 en SyncStatusHelper
-            SyncStatusHelper::updatePhase1Images([
-                'in_progress' => true,
-                'total_products' => $total_products,
-                'products_processed' => 0,
-                'images_processed' => 0,
-                'duplicates_skipped' => 0,
-                'errors' => 0,
-                'last_processed_id' => 0
-            ]);
-
-            $this->logger->info('Iniciando sincronización masiva de imágenes', [
-                'total_products' => $total_products,
+            // 2. ✅ OPTIMIZADO: Procesar imágenes de forma incremental mientras se obtienen IDs
+            // Esto permite que las imágenes empiecen a aparecer inmediatamente en lugar de esperar
+            // a obtener todos los IDs primero (que puede tardar 30-50 segundos)
+            $this->logger->info('Iniciando sincronización masiva de imágenes (modo incremental)', [
                 'resume_from' => $resume_from_product_id,
-                'resume_mode' => $resume
+                'resume_mode' => $resume,
+                'batch_size' => $batch_size
             ]);
-
-            // 3. Procesar imágenes por producto
-            $start_index = $resume_from_product_id
-                ? array_search($resume_from_product_id, $product_ids, true)
-                : 0;
-
-            if ($start_index === false) {
-                $this->logger->warning('ID de producto del checkpoint no encontrado en lista, iniciando desde el principio', [
-                    'checkpoint_product_id' => $resume_from_product_id
-                ]);
-                $start_index = 0;
-            } else {
-                // Continuar desde el siguiente producto
-                $start_index++;
-            }
-
-            // 4. Procesar imágenes por lotes (batch processing)
-            // ✅ CRÍTICO: Ajustar batch_size automáticamente para grandes volúmenes
-            // Para 4900 imágenes, usar batch_size más pequeño para evitar saturación
-            $estimated_total_images = $total_products * 5; // Estimación: ~5 imágenes por producto
-            if ($estimated_total_images > 2000) {
-                // Para más de 2000 imágenes, usar batch_size muy pequeño
-                $batch_size = max(1, min($batch_size, 5)); // Máximo 5 productos por batch
-                $this->logger->info('Batch size reducido automáticamente para grandes volúmenes', [
-                    'estimated_images' => $estimated_total_images,
-                    'adjusted_batch_size' => $batch_size,
-                    'reason' => 'Prevenir saturación de WordPress con grandes volúmenes de imágenes'
-                ]);
-            } else {
-                // Validar y ajustar batch_size para optimizar memoria
-                $batch_size = max(1, min($batch_size, 100)); // Entre 1 y 100 productos por batch
-            }
-            $this->currentBatchSize = $batch_size; // Inicializar batch size actual
             
-            $this->logger->info('Configuración de procesamiento por lotes', [
-                'batch_size' => $batch_size,
-                'total_products' => $total_products,
-                'estimated_batches' => ceil(($total_products - $start_index) / $batch_size),
-                'adaptive_batch_enabled' => true
-            ]);
+            // Procesar imágenes de forma incremental
+            $result = $this->syncAllImagesIncremental($resume_from_product_id, $batch_size, $stats);
+            
+            // Extraer estadísticas del resultado incremental
+            $total_products = $result['total_products'] ?? 0;
+            $stats = $result['stats'] ?? $stats;
 
-            $batch_number = 0;
-            $batch_start_time = microtime(true);
-            $batch_start_memory = memory_get_usage(true);
-            $batch_processed = 0;
-
-            // ✅ OPTIMIZADO: Procesar en lotes para reducir uso de memoria
-            for ($i = $start_index; $i < count($product_ids); $i += $this->currentBatchSize) {
-                $batch_end = min($i + $this->currentBatchSize, count($product_ids));
-                $current_batch = array_slice($product_ids, $i, $batch_end - $i);
-                
-                $this->logger->debug('Procesando lote de productos', [
-                    'batch_number' => $batch_number,
-                    'batch_start_index' => $i,
-                    'batch_end_index' => $batch_end - 1,
-                    'batch_size' => count($current_batch),
-                    'total_processed' => $stats['total_processed']
-                ]);
-
-                // Procesar cada producto del lote actual
-                foreach ($current_batch as $product_id) {
-                // ✅ MEJORADO: Verificar múltiples señales de detención antes de procesar cada producto
-                // 1. Verificar flag de detención inmediata (establecido por script de detención) - SIN CACHÉ
-                if ($this->checkStopImmediatelyFlag()) {
-                    $this->logger->info('Sincronización de imágenes detenida por flag de detención inmediata', [
-                        'products_processed' => $stats['total_processed'],
-                        'total_products' => $total_products,
-                        'last_processed_id' => $stats['last_processed_id'] ?? 0
-                    ]);
-                    
-                    // Limpiar flag
-                    delete_option('mia_images_sync_stop_immediately');
-                    delete_option('mia_images_sync_stop_timestamp');
-                    
-                    // Guardar checkpoint antes de detenerse
-                    $this->saveCheckpoint($stats);
-                    
-                    // Actualizar estado para reflejar la detención
-                    SyncStatusHelper::updatePhase1Images([
-                        'in_progress' => false,
-                        'paused' => true,
-                        'products_processed' => $stats['total_processed'],
-                        'images_processed' => $stats['total_attachments'],
-                        'duplicates_skipped' => $stats['duplicates_skipped'],
-                        'errors' => $stats['errors'],
-                        'last_processed_id' => $stats['last_processed_id'] ?? 0
-                    ]);
-                    
-                    // Salir de ambos bucles (for y foreach)
-                    break 2;
-                }
-                
-                // 2. Verificar si la sincronización está pausada en el estado
-                $phase1_status = SyncStatusHelper::getCurrentSyncInfo();
-                $phase1_images = $phase1_status['phase1_images'] ?? [];
-                if (!empty($phase1_images['paused']) && $phase1_images['paused'] === true) {
-                    $this->logger->info('Sincronización de imágenes pausada por el usuario', [
-                        'products_processed' => $stats['total_processed'],
-                        'total_products' => $total_products,
-                        'last_processed_id' => $stats['last_processed_id'] ?? 0
-                    ]);
-                    
-                    // Guardar checkpoint antes de detenerse para poder reanudar después
-                    $this->saveCheckpoint($stats);
-                    
-                    // Actualizar estado para reflejar la pausa
-                    SyncStatusHelper::updatePhase1Images([
-                        'in_progress' => false,
-                        'paused' => true,
-                        'products_processed' => $stats['total_processed'],
-                        'images_processed' => $stats['total_attachments'],
-                        'duplicates_skipped' => $stats['duplicates_skipped'],
-                        'errors' => $stats['errors'],
-                        'last_processed_id' => $stats['last_processed_id'] ?? 0
-                    ]);
-                    
-                    // Salir de ambos bucles (for y foreach)
-                    break 2;
-                }
-                $result = $this->processProductImages($product_id);
-
-                $stats['total_processed']++;
-                $stats['total_attachments'] += $result['attachments'];
-                $stats['duplicates_skipped'] += $result['duplicates'];
-                $stats['errors'] += $result['errors'];
-                $stats['last_processed_id'] = $product_id;
-                $batch_processed++;
-                
-                // ✅ MEJORADO: Limpiar cache después de cada producto si tiene muchas imágenes
-                // Esto ayuda a prevenir acumulación de memoria cuando hay productos con muchas imágenes
-                if ($result['attachments'] > 5 || $result['duplicates'] > 5) {
-                    // Producto con muchas imágenes - limpiar cache inmediatamente
-                    $this->clearProductCache($product_id);
-                }
-                
-                // ✅ NUEVO: Actualizar estado después de cada producto para feedback en tiempo real
-                // Esto permite que la consola muestre el progreso imagen por imagen
-                SyncStatusHelper::updatePhase1Images([
-                    'products_processed' => $stats['total_processed'],
-                    'images_processed' => $stats['total_attachments'],
-                    'duplicates_skipped' => $stats['duplicates_skipped'],
-                    'errors' => $stats['errors'],
-                    'last_processed_id' => $product_id,
-                    'last_product_images' => $result['attachments'],
-                    'last_product_duplicates' => $result['duplicates'],
-                    'last_product_errors' => $result['errors']
-                ]);
-                }
-                
-                // ✅ OPTIMIZADO: Ajustar batch size y throttling basándose en rendimiento
-                $this->adjustBatchSizeBasedOnPerformance($stats, $start_time);
-                
-                // ✅ CRÍTICO: Delay entre batches para evitar saturación de WordPress
-                // Aumentar delay si hay muchas imágenes procesadas
-                $delay_between_batches = 5; // Delay base: 5 segundos
-                if ($stats['total_processed'] > 100) {
-                    $delay_between_batches = 10; // 10 segundos si ya llevamos muchas
-                }
-                if ($stats['total_processed'] > 500) {
-                    $delay_between_batches = 15; // 15 segundos para volúmenes muy grandes
-                }
-                
-                // Solo hacer delay si no es el último batch
-                if ($i + $this->currentBatchSize < count($product_ids)) {
-                    $this->logger->debug('Pausa entre batches para evitar saturación', [
-                        'delay_seconds' => $delay_between_batches,
-                        'products_processed' => $stats['total_processed'],
-                        'total_products' => $total_products
-                    ]);
-                    sleep($delay_between_batches);
-                    
-                    // ✅ CRÍTICO: Limpiar memoria agresivamente después del delay
-                    gc_collect_cycles();
-                }
-                
-                // ✅ MEJORADO: Coordinación de limpiezas para evitar duplicación
-                // clearMemoryPeriodically() ya incluye limpieza adaptativa completa
-                // Solo ejecutar clearBatchCache() si no se ejecutó limpieza en clearMemoryPeriodically
-                $memoryStats = $this->getMemoryStats();
-                $memoryUsagePercent = $memoryStats['usage_percentage'] ?? 0;
-                $cleanupInterval = $this->getAdaptiveCleanupInterval($memoryUsagePercent);
-                $shouldRunBatchCache = ($stats['total_processed'] % $cleanupInterval !== 0);
-                
-                // ✅ OPTIMIZADO: Limpiar memoria después de cada lote (con frecuencia adaptativa)
-                $this->clearMemoryPeriodically($stats['total_processed']);
-                
-                // ✅ MEJORADO: Limpieza adicional solo si no se ejecutó limpieza periódica
-                // Esto evita duplicación de operaciones
-                if ($shouldRunBatchCache) {
-                    $this->clearBatchCache();
-                }
-
-                // Registrar métricas cada N productos
-                if ($stats['total_processed'] % $this->config->metricsInterval === 0) {
-                    $batch_duration = microtime(true) - $batch_start_time;
-                    $batch_memory_used = memory_get_usage(true) - $batch_start_memory;
-                    $this->recordMetrics($batch_number, $stats, $batch_duration, $batch_memory_used);
-                    
-                    // Reiniciar contadores del batch
-                    $batch_number++;
-                    $batch_start_time = microtime(true);
-                    $batch_start_memory = memory_get_usage(true);
-                    $batch_processed = 0;
-                }
-
-                // Guardar checkpoint cada N productos
-                if ($this->shouldSaveCheckpoint($stats['total_processed'])) {
-                    // Calcular porcentaje de progreso
-                    $progress_percentage = $this->calculateProgressPercentage($stats['total_processed'], $total_products);
-                    $stats['progress_percentage'] = $progress_percentage;
-                    $stats['total_products'] = $total_products;
-                    
-                    $current_peak_memory = memory_get_peak_usage(true);
-                    $this->saveCheckpoint($stats);
-                    $this->logger->debug('Checkpoint guardado', [
-                        'total_processed' => $stats['total_processed'],
-                        'last_processed_id' => $stats['last_processed_id'],
-                        'progress_percentage' => $progress_percentage,
-                        'current_memory_mb' => round(memory_get_usage(true) / 1024 / 1024, 2),
-                        'peak_memory_mb' => round($current_peak_memory / 1024 / 1024, 2)
-                    ]);
-                }
-
-                // ✅ OPTIMIZADO: Logging de progreso del batch
-                $this->logger->debug('Lote procesado', [
-                    'batch_number' => $batch_number,
-                    'batch_size' => count($current_batch),
-                    'total_processed' => $stats['total_processed'],
-                    'memory_after_batch_mb' => round(memory_get_usage(true) / 1024 / 1024, 2),
-                    'peak_memory_mb' => round(memory_get_peak_usage(true) / 1024 / 1024, 2)
-                ]);
-            }
-
-            // Registrar métricas finales del último batch incompleto
-            if ($batch_processed > 0) {
-                $batch_duration = microtime(true) - $batch_start_time;
-                $batch_memory_used = memory_get_usage(true) - $batch_start_memory;
-                $this->recordMetrics($batch_number, $stats, $batch_duration, $batch_memory_used);
-                
-                // ✅ MEJORADO: Actualizar estado al final del último batch incompleto
-                SyncStatusHelper::updatePhase1Images([
-                    'products_processed' => $stats['total_processed'],
-                    'images_processed' => $stats['total_attachments'],
-                    'duplicates_skipped' => $stats['duplicates_skipped'],
-                    'errors' => $stats['errors'],
-                    'last_processed_id' => $stats['last_processed_id']
-                ]);
-            }
-
-            // 5. Calcular métricas finales
+            // 3. Calcular métricas finales
             $end_time = microtime(true);
             $end_memory = memory_get_usage(true);
             $peak_memory_end = memory_get_peak_usage(true);
@@ -609,6 +356,224 @@ class ImageSyncManager
                 set_time_limit((int)$original_max_execution_time);
             }
         }
+    }
+
+    /**
+     * Procesa imágenes de forma incremental mientras obtiene IDs de productos.
+     *
+     * En lugar de obtener todos los IDs primero (que puede tardar 30-50 segundos),
+     * este método obtiene IDs en lotes y procesa imágenes tan pronto como tiene
+     * un lote disponible. Esto permite que las imágenes empiecen a aparecer inmediatamente.
+     *
+     * @param   int|null $resume_from_product_id ID del producto desde el que reanudar (null si no es resume).
+     * @param   int      $batch_size Tamaño del lote para procesamiento.
+     * @param   array    $stats Estadísticas iniciales.
+     * @return  array Array con estadísticas y total de productos.
+     */
+    private function syncAllImagesIncremental(?int $resume_from_product_id, int $batch_size, array $stats): array
+    {
+        $product_ids_processed = [];
+        $page_size = $this->config->pageSize;
+        $inicio = 1;
+        $page_count = 0;
+        $total_products = 0;
+        $start_index = 0;
+        $should_resume = ($resume_from_product_id !== null);
+        
+        // Si es resume, necesitamos encontrar el punto de inicio
+        if ($should_resume) {
+            $this->logger->info('Buscando punto de reanudación en modo incremental', [
+                'resume_from_product_id' => $resume_from_product_id
+            ]);
+        }
+        
+        // Ajustar batch_size automáticamente
+        $estimated_total_images = 0; // Se actualizará cuando tengamos más información
+        if ($estimated_total_images > 2000) {
+            $batch_size = max(1, min($batch_size, 5));
+        } else {
+            $batch_size = max(1, min($batch_size, 100));
+        }
+        $this->currentBatchSize = $batch_size;
+        
+        // Obtener IDs y procesar imágenes página por página
+        while (true) {
+            // Verificar señales de detención antes de obtener cada página
+            if ($this->checkStopImmediatelyFlag()) {
+                $this->logger->info('Sincronización detenida durante obtención de IDs');
+                break;
+            }
+            
+            $phase1_status = SyncStatusHelper::getCurrentSyncInfo();
+            $phase1_images = $phase1_status['phase1_images'] ?? [];
+            if (!empty($phase1_images['paused']) && $phase1_images['paused'] === true) {
+                $this->logger->info('Sincronización pausada durante obtención de IDs');
+                break;
+            }
+            
+            // Throttling entre páginas
+            $delay_to_use = $this->throttler->getDelay();
+            if ($page_count > 0 && $delay_to_use > 0) {
+                usleep((int)($delay_to_use * 1000000));
+            }
+            
+            $fin = $inicio + $page_size - 1;
+            
+            $params = [
+                'x' => $this->apiConnector->get_session_number(),
+                'id_articulo' => 0,
+                'inicio' => $inicio,
+                'fin' => $fin
+            ];
+            
+            $response = $this->apiConnector->get('GetArticulosWS', $params);
+            
+            if (!$response->isSuccess()) {
+                $this->logger->warning('Error obteniendo productos', [
+                    'inicio' => $inicio,
+                    'fin' => $fin,
+                    'error' => $response->getMessage()
+                ]);
+                break;
+            }
+            
+            $data = $response->getData();
+            
+            // Intentar diferentes formatos de respuesta
+            $articulos = null;
+            if (isset($data['Articulos'])) {
+                $articulos = $data['Articulos'];
+            } elseif (isset($data['articulos'])) {
+                $articulos = $data['articulos'];
+            } elseif (isset($data['body'])) {
+                $json_data = json_decode($data['body'], true);
+                if ($json_data && isset($json_data['Articulos'])) {
+                    $articulos = $json_data['Articulos'];
+                } elseif ($json_data && isset($json_data['articulos'])) {
+                    $articulos = $json_data['articulos'];
+                }
+            }
+            
+            $articulos = is_array($articulos) ? $articulos : [];
+            
+            if (empty($articulos)) {
+                $this->logger->info('No se encontraron más artículos', [
+                    'inicio' => $inicio,
+                    'fin' => $fin,
+                    'page_count' => $page_count
+                ]);
+                break;
+            }
+            
+            // Extraer IDs de esta página
+            $page_product_ids = [];
+            foreach ($articulos as $articulo) {
+                if (!empty($articulo['Id'])) {
+                    $product_id = (int)$articulo['Id'];
+                    $page_product_ids[] = $product_id;
+                    $product_ids_processed[] = $product_id;
+                }
+            }
+            
+            $total_products = count($product_ids_processed);
+            
+            // ✅ CRÍTICO: Actualizar total_products en el estado tan pronto como tengamos información
+            SyncStatusHelper::updatePhase1Images([
+                'total_products' => $total_products,
+                'in_progress' => true
+            ]);
+            
+            // Si es resume, buscar el punto de inicio en esta página
+            if ($should_resume && $start_index === 0) {
+                $found_index = array_search($resume_from_product_id, $page_product_ids, true);
+                if ($found_index !== false) {
+                    $start_index = $found_index + 1; // Continuar desde el siguiente
+                    $should_resume = false; // Ya encontramos el punto de inicio
+                    $this->logger->info('Punto de reanudación encontrado', [
+                        'resume_from_product_id' => $resume_from_product_id,
+                        'index_in_page' => $found_index,
+                        'start_index' => $start_index
+                    ]);
+                } else {
+                    // No está en esta página, saltar todos los productos de esta página
+                    $start_index = 0;
+                    $this->logger->debug('Punto de reanudación no encontrado en esta página, saltando', [
+                        'page_product_ids_count' => count($page_product_ids)
+                    ]);
+                }
+            }
+            
+            // Procesar imágenes de los productos de esta página
+            $page_start_index = $should_resume ? 0 : $start_index;
+            for ($i = $page_start_index; $i < count($page_product_ids); $i++) {
+                $product_id = $page_product_ids[$i];
+                
+                // Verificar señales de detención antes de procesar cada producto
+                if ($this->checkStopImmediatelyFlag()) {
+                    $this->logger->info('Sincronización detenida durante procesamiento');
+                    break 2; // Salir de ambos bucles
+                }
+                
+                $phase1_status = SyncStatusHelper::getCurrentSyncInfo();
+                $phase1_images = $phase1_status['phase1_images'] ?? [];
+                if (!empty($phase1_images['paused']) && $phase1_images['paused'] === true) {
+                    $this->logger->info('Sincronización pausada durante procesamiento');
+                    break 2; // Salir de ambos bucles
+                }
+                
+                // Procesar imágenes del producto
+                $result = $this->processProductImages($product_id);
+                
+                $stats['total_processed']++;
+                $stats['total_attachments'] += $result['attachments'];
+                $stats['duplicates_skipped'] += $result['duplicates'];
+                $stats['errors'] += $result['errors'];
+                $stats['last_processed_id'] = $product_id;
+                
+                // Actualizar estado después de cada producto
+                SyncStatusHelper::updatePhase1Images([
+                    'products_processed' => $stats['total_processed'],
+                    'images_processed' => $stats['total_attachments'],
+                    'duplicates_skipped' => $stats['duplicates_skipped'],
+                    'errors' => $stats['errors'],
+                    'last_processed_id' => $product_id,
+                    'total_products' => $total_products
+                ]);
+                
+                // Limpiar memoria periódicamente
+                if ($stats['total_processed'] % 10 === 0) {
+                    $this->clearMemoryPeriodically($stats['total_processed']);
+                }
+                
+                // Guardar checkpoint periódicamente
+                if ($this->shouldSaveCheckpoint($stats['total_processed'])) {
+                    $this->saveCheckpoint($stats);
+                }
+            }
+            
+            // Resetear start_index para la siguiente página
+            $start_index = 0;
+            
+            // Si obtenemos menos productos de los esperados, es la última página
+            if (count($articulos) < $page_size) {
+                break;
+            }
+            
+            $inicio = $fin + 1;
+            $page_count++;
+        }
+        
+        $this->logger->info('Sincronización incremental completada', [
+            'total_products' => $total_products,
+            'total_processed' => $stats['total_processed'],
+            'total_attachments' => $stats['total_attachments'],
+            'pages_processed' => $page_count + 1
+        ]);
+        
+        return [
+            'stats' => $stats,
+            'total_products' => $total_products
+        ];
     }
 
     /**
