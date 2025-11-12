@@ -3166,11 +3166,25 @@ class BatchProcessor
             $sku = $verial_product['ReferenciaBarras'] ?? 'ID_' . ($verial_product['Id'] ?? 'unknown');
             
             // ✅ CORREGIDO: Mapeo correcto del producto con batch_cache
-            $wc_product = MapProduct::verial_to_wc($verial_product, [], $batch_data);
+            // ✅ CRÍTICO: Capturar excepciones del mapeo para evitar rollback de toda la transacción
+            try {
+                $wc_product = MapProduct::verial_to_wc($verial_product, [], $batch_data);
+            } catch (\Throwable $e) {
+                // Capturar cualquier excepción en el mapeo (incluyendo errores de código como isDebugEnabled)
+                $this->getLogger()->error('Excepción al mapear producto de Verial a WooCommerce', [
+                    'sku' => $sku,
+                    'verial_id' => $verial_product['Id'] ?? 'N/A',
+                    'error' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString()
+                ]);
+                return $this->buildErrorResponse('Error al mapear producto: ' . $e->getMessage(), 0);
+            }
             
             // ✅ VERIFICACIÓN: Asegurar que el mapeo fue exitoso
             if ($wc_product === null) {
-                $this->getLogger()->error('Error al mapear producto de Verial a WooCommerce', [
+                $this->getLogger()->error('Error al mapear producto de Verial a WooCommerce (retornó null)', [
                     'sku' => $sku,
                     'verial_id' => $verial_product['Id'] ?? 'N/A',
                     'product_keys' => array_keys($verial_product)
@@ -4784,16 +4798,33 @@ class BatchProcessor
             if (is_numeric($image)) {
                 $attachment_id = (int)$image;
                 
-                // Verificar que el attachment existe
-                $attachment = get_post($attachment_id);
-                if ($attachment && get_post_type($attachment_id) === 'attachment') {
-                    $this->getLogger()->debug("Imagen procesada desde attachment ID ({$context})", [
-                        'product_id' => $product_id,
-                        'attachment_id' => $attachment_id
-                    ]);
+                // ✅ OPTIMIZACIÓN CRÍTICA: Validar que es un número positivo válido sin consultar BD
+                // En la arquitectura de dos fases, los attachment_ids vienen de get_attachments_by_article_id()
+                // que ya valida que existen. Solo verificamos formato básico aquí.
+                if ($attachment_id > 0) {
+                    // ✅ OPTIMIZACIÓN: Solo verificar existencia si está en modo DEBUG
+                    // En producción, confiamos en que los IDs son válidos (vienen de consultas SQL)
+                    if (defined('WP_DEBUG') && WP_DEBUG) {
+                        $attachment = get_post($attachment_id);
+                        if (!$attachment || get_post_type($attachment_id) !== 'attachment') {
+                            $this->getLogger()->warning("Attachment ID no válido", [
+                                'product_id' => $product_id,
+                                'attachment_id' => $attachment_id
+                            ]);
+                            return false;
+                        }
+                    }
+                    
+                    // ✅ OPTIMIZADO: Log solo en modo DEBUG para evitar spam
+                    if (defined('WP_DEBUG') && WP_DEBUG) {
+                        $this->getLogger()->debug("Imagen procesada desde attachment ID ({$context})", [
+                            'product_id' => $product_id,
+                            'attachment_id' => $attachment_id
+                        ]);
+                    }
                     return $attachment_id;
                 } else {
-                    $this->getLogger()->warning("Attachment ID no válido", [
+                    $this->getLogger()->warning("Attachment ID no válido (no es positivo)", [
                         'product_id' => $product_id,
                         'attachment_id' => $attachment_id
                     ]);

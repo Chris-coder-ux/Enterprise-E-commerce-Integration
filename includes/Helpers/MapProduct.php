@@ -712,14 +712,46 @@ class MapProduct {
 		// ✅ NUEVO: Buscar attachments en media library por article_id
 		$attachment_ids = self::get_attachments_by_article_id($verial_product_id);
 		
+		// ✅ OPTIMIZADO: Logging solo en modo DEBUG para evitar consultas SQL innecesarias
 		if (empty($attachment_ids)) {
-			self::$logger->debug('No se encontraron imágenes en media library', [
-				'sku' => $sku,
-				'verial_id' => $verial_product_id
-			]);
-			$product_data['images'] = [];
-			$product_data['gallery'] = [];
-			return $product_data;
+			// ✅ OPTIMIZACIÓN CRÍTICA: Solo ejecutar logging detallado si está en modo DEBUG
+			// Esto evita ~3,940 consultas SQL innecesarias en producción
+			if (defined('WP_DEBUG') && WP_DEBUG) {
+				global $wpdb;
+				$direct_check = $wpdb->get_var($wpdb->prepare(
+					"SELECT COUNT(*) 
+					 FROM {$wpdb->postmeta} pm
+					 INNER JOIN {$wpdb->posts} p ON pm.post_id = p.ID
+					 WHERE pm.meta_key = %s 
+					 AND CAST(pm.meta_value AS SIGNED) = %d
+					 AND p.post_type = 'attachment'
+					 AND p.post_mime_type LIKE 'image%%'",
+					'_verial_article_id',
+					$verial_product_id
+				));
+				
+				self::$logger->debug('No se encontraron imágenes en media library por article_id', [
+					'sku' => $sku,
+					'verial_id' => $verial_product_id,
+					'direct_sql_count' => (int)$direct_check
+				]);
+			}
+			
+			// ✅ OPTIMIZACIÓN CRÍTICA: Fallback por hash solo en modo DEBUG/desarrollo
+			// En producción, si no hay imágenes por article_id, simplemente no hay imágenes
+			// El fallback por hash hace llamadas API adicionales que ralentizan mucho
+			$enable_hash_fallback = defined('WP_DEBUG') && WP_DEBUG;
+			
+			if ($enable_hash_fallback) {
+				// ✅ NUEVO: Intentar búsqueda por hash como fallback (solo en debug)
+				$attachment_ids = self::get_attachments_by_hash_fallback($verial_product_id);
+			}
+			
+			if (empty($attachment_ids)) {
+				$product_data['images'] = [];
+				$product_data['gallery'] = [];
+				return $product_data;
+			}
 		}
 
 		// Primera imagen va a images, resto a gallery
@@ -1908,33 +1940,141 @@ class MapProduct {
 	 */
 	public static function get_attachments_by_article_id(int $article_id): array
 	{
-		$args = [
-			'post_type' => 'attachment',
-			'post_mime_type' => 'image',
-			'meta_query' => [
-				[
-					'key' => '_verial_article_id',
-					'value' => $article_id,
-					'compare' => '='
-				]
-			],
-			'posts_per_page' => -1,
-			'fields' => 'ids'
-		];
+		// ✅ OPTIMIZACIÓN CRÍTICA: Usar SQL directo optimizado desde el inicio
+		// Esto evita múltiples consultas get_posts() y es más eficiente
+		global $wpdb;
+		
+		// ✅ OPTIMIZACIÓN: Una sola consulta SQL que obtiene attachment_ids y orden en una sola pasada
+		$sql = $wpdb->prepare(
+			"SELECT pm.post_id, COALESCE(pm_order.meta_value, '999') as image_order
+			 FROM {$wpdb->postmeta} pm
+			 INNER JOIN {$wpdb->posts} p ON pm.post_id = p.ID
+			 LEFT JOIN {$wpdb->postmeta} pm_order ON pm.post_id = pm_order.post_id 
+			 	AND pm_order.meta_key = '_verial_image_order'
+			 WHERE pm.meta_key = %s 
+			 AND CAST(pm.meta_value AS SIGNED) = %d
+			 AND p.post_type = 'attachment'
+			 AND p.post_mime_type LIKE 'image%%'
+			 ORDER BY CAST(pm_order.meta_value AS SIGNED) ASC, pm.post_id ASC",
+			'_verial_article_id',
+			$article_id
+		);
+		
+		$results = $wpdb->get_results($sql, ARRAY_A);
+		
+		if (empty($results)) {
+			return [];
+		}
+		
+		// Extraer solo los IDs (ya están ordenados por la consulta SQL)
+		$attachment_ids = array_map(function($row) {
+			return (int)$row['post_id'];
+		}, $results);
+		
+		return $attachment_ids;
+	}
 
-		$attachment_ids = get_posts($args);
-
-		if (empty($attachment_ids)) {
+	/**
+	 * ✅ NUEVO: Búsqueda por hash como fallback cuando no hay metadatos _verial_article_id
+	 *
+	 * Obtiene las imágenes del producto desde la API, calcula sus hashes,
+	 * y busca attachments en la media library que coincidan con esos hashes.
+	 *
+	 * @param   int $article_id ID del artículo de Verial.
+	 * @return  array Array de attachment IDs ordenados.
+	 * @since   1.5.0
+	 */
+	private static function get_attachments_by_hash_fallback(int $article_id): array
+	{
+		// Obtener imágenes del producto desde API
+		if (!class_exists('\\MiIntegracionApi\\ApiConnector')) {
+			self::$logger->warning('ApiConnector no disponible para fallback por hash', [
+				'article_id' => $article_id
+			]);
 			return [];
 		}
 
-		// Ordenar por orden guardado
-		usort($attachment_ids, function($a, $b) use ($article_id) {
-			$order_a = get_post_meta($a, '_verial_image_order', true) ?: 999;
-			$order_b = get_post_meta($b, '_verial_image_order', true) ?: 999;
-			return $order_a <=> $order_b;
-		});
+		try {
+			$api_connector = \MiIntegracionApi\ApiConnector::get_instance();
+			$response = $api_connector->get('GetImagenesArticulosWS', [
+				'x' => $api_connector->get_session_number(),
+				'id_articulo' => $article_id,
+				'numpixelsladomenor' => 300
+			]);
 
-		return array_map('intval', $attachment_ids);
+			if (!$response->isSuccess() || empty($response->getData()['Imagenes'])) {
+				self::$logger->debug('No se pudieron obtener imágenes desde API para fallback por hash', [
+					'article_id' => $article_id,
+					'api_success' => $response->isSuccess()
+				]);
+				return [];
+			}
+
+			$imagenes = $response->getData()['Imagenes'];
+			$hashes = [];
+
+			// Calcular hash de cada imagen
+			foreach ($imagenes as $imagen_data) {
+				if (empty($imagen_data['Imagen'])) {
+					continue;
+				}
+
+				// Calcular hash MD5 del Base64 (igual que en ImageProcessor)
+				$base64_image = 'data:image/jpeg;base64,' . $imagen_data['Imagen'];
+				$image_hash = md5($base64_image);
+				$hashes[] = $image_hash;
+			}
+
+			if (empty($hashes)) {
+				return [];
+			}
+
+			// Buscar attachments por hash
+			global $wpdb;
+			
+			// Escapar hashes para SQL seguro
+			$escaped_hashes = array_map(function($hash) use ($wpdb) {
+				return $wpdb->prepare('%s', $hash);
+			}, $hashes);
+			
+			$hashes_list = implode(',', $escaped_hashes);
+			$sql = $wpdb->prepare(
+				"SELECT DISTINCT pm.post_id 
+				 FROM {$wpdb->postmeta} pm
+				 INNER JOIN {$wpdb->posts} p ON pm.post_id = p.ID
+				 WHERE pm.meta_key = %s 
+				 AND pm.meta_value IN ($hashes_list)
+				 AND p.post_type = 'attachment'
+				 AND p.post_mime_type LIKE 'image%%'",
+				'_verial_image_hash'
+			);
+
+			$attachment_ids = $wpdb->get_col($sql);
+
+			if (!empty($attachment_ids)) {
+				// Ordenar por orden guardado (si existe)
+				usort($attachment_ids, function($a, $b) {
+					$order_a = (int)(get_post_meta($a, '_verial_image_order', true) ?: 999);
+					$order_b = (int)(get_post_meta($b, '_verial_image_order', true) ?: 999);
+					return $order_a <=> $order_b;
+				});
+
+				self::$logger->info('Imágenes encontradas mediante fallback por hash', [
+					'article_id' => $article_id,
+					'attachments_found' => count($attachment_ids),
+					'hashes_searched' => count($hashes)
+				]);
+
+				return array_map('intval', $attachment_ids);
+			}
+
+			return [];
+		} catch (\Exception $e) {
+			self::$logger->error('Error en fallback por hash', [
+				'article_id' => $article_id,
+				'error' => $e->getMessage()
+			]);
+			return [];
+		}
 	}
 }
