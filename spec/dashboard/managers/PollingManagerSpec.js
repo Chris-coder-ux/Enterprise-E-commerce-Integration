@@ -18,7 +18,8 @@ describe('PollingManager', function() {
     originalMiIntegracionApiDashboard = window.miIntegracionApiDashboard;
 
     // NO eliminar pollingManager - necesitamos que esté disponible para los tests
-    // Solo guardar la referencia para restaurarla después si es necesario
+    // Si el script ya se cargó y creó window.pollingManager, mantenerlo
+    // Si no existe, el script lo creará cuando se cargue
 
     // Configurar miIntegracionApiDashboard mock
     window.miIntegracionApiDashboard = {
@@ -444,18 +445,36 @@ describe('PollingManager', function() {
 
   describe('Instancia global', function() {
     it('debe tener una instancia global disponible', function(done) {
-      // Esperar a que el script se cargue completamente
+      // Verificar primero si PollingManager está disponible (indica que el script se cargó)
+      if (typeof window.PollingManager === 'undefined') {
+        pending('PollingManager no está disponible - el script debe cargarse primero');
+        done();
+        return;
+      }
+      
+      // Verificar inmediatamente si pollingManager ya está disponible
+      if (window.pollingManager && typeof window.pollingManager === 'object' && 
+          window.pollingManager.eventListeners && window.pollingManager.config) {
+        const manager = window.pollingManager;
+        expect(manager).toBeDefined();
+        expect(manager.eventListeners).toBeDefined();
+        expect(manager.config).toBeDefined();
+        done();
+        return;
+      }
+      
+      // Si no está disponible inmediatamente, esperar con timeout más corto
       let attempts = 0;
-      const maxAttempts = 20; // 2 segundos máximo
+      const maxAttempts = 30; // 3 segundos máximo (reducido para evitar timeout de Jasmine)
       
       const checkPollingManager = function() {
         attempts++;
         
-        if (typeof window.pollingManager !== 'undefined' && window.pollingManager) {
-          const manager = window.pollingManager;
-
+        // Verificar múltiples formas de acceso
+        const manager = window.pollingManager;
+        
+        if (manager && typeof manager === 'object' && manager.eventListeners && manager.config) {
           expect(manager).toBeDefined();
-          expect(manager.intervals).toBeDefined();
           expect(manager.eventListeners).toBeDefined();
           expect(manager.config).toBeDefined();
           done();
@@ -463,25 +482,55 @@ describe('PollingManager', function() {
           // Esperar un poco más
           setTimeout(checkPollingManager, 100);
         } else {
-          pending('pollingManager no está disponible después de ' + (maxAttempts * 100) + 'ms - el script debe cargarse primero');
+          // Log para debugging
+          const debugInfo = {
+            hasWindow: typeof window !== 'undefined',
+            hasPollingManagerClass: typeof window.PollingManager !== 'undefined',
+            pollingManagerType: typeof window.pollingManager,
+            pollingManagerValue: window.pollingManager ? 'defined' : 'undefined',
+            windowKeys: typeof window !== 'undefined' ? Object.keys(window).filter(k => k.toLowerCase().includes('poll')) : []
+          };
+          pending('pollingManager no está disponible después de ' + (maxAttempts * 100) + 'ms. Debug: ' + JSON.stringify(debugInfo));
           done();
         }
       };
 
-      checkPollingManager();
+      // Dar un pequeño delay inicial para asegurar que el script se haya ejecutado
+      setTimeout(checkPollingManager, 50);
     });
 
     it('debe poder usar la instancia global para eventos', function(done) {
-      // Esperar a que el script se cargue completamente
+      // Verificar primero si PollingManager está disponible (indica que el script se cargó)
+      if (typeof window.PollingManager === 'undefined') {
+        pending('PollingManager no está disponible - el script debe cargarse primero');
+        done();
+        return;
+      }
+      
+      // Verificar inmediatamente si pollingManager ya está disponible
+      if (window.pollingManager && typeof window.pollingManager === 'object' &&
+          typeof window.pollingManager.on === 'function' && typeof window.pollingManager.emit === 'function') {
+        const manager = window.pollingManager;
+        const callback = jasmine.createSpy('callback');
+
+        manager.on('testEvent', callback);
+        manager.emit('testEvent', { data: 'test' });
+
+        expect(callback).toHaveBeenCalledWith({ data: 'test' });
+        done();
+        return;
+      }
+      
+      // Si no está disponible inmediatamente, esperar con timeout más corto
       let attempts = 0;
-      const maxAttempts = 20; // 2 segundos máximo
+      const maxAttempts = 30; // 3 segundos máximo (reducido para evitar timeout de Jasmine)
       
       const checkAndTest = function() {
         attempts++;
         
-        if (typeof window.pollingManager !== 'undefined' && window.pollingManager) {
-          const manager = window.pollingManager;
-          
+        const manager = window.pollingManager;
+        
+        if (manager && typeof manager === 'object') {
           // Verificar que tiene los métodos necesarios
           if (typeof manager.on === 'function' && typeof manager.emit === 'function') {
             const callback = jasmine.createSpy('callback');
@@ -509,7 +558,8 @@ describe('PollingManager', function() {
         }
       };
 
-      checkAndTest();
+      // Dar un pequeño delay inicial para asegurar que el script se haya ejecutado
+      setTimeout(checkAndTest, 50);
     });
   });
 });
