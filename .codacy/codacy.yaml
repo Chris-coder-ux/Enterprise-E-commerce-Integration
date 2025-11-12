@@ -3,6 +3,7 @@ runtimes:
     - go@1.22.3
     - java@17.0.10
     - node@22.2.0
+    - php@8.1
     - python@3.11.11
 tools:
     - dartanalyzer@3.7.2

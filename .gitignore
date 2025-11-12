@@ -1,74 +1,58 @@
-
-
-# Ignore cursor AI rules
-.cursor/rules/codacy.mdc
-
-# Dependencies
-node_modules/
-vendor/
+# Composer
+/vendor/
 composer.lock
-package-lock.json
-yarn.lock
 
-# WordPress core
-wp-config.php
-wp-config-*.php
-wp-content/advanced-cache.php
-wp-content/backup-db/
-wp-content/backups/
-wp-content/blogs.dir/
-wp-content/cache/
-wp-content/upgrade/
-wp-content/uploads/
-wp-content/wp-cache-config.php
-wp-content/object-cache.php
-wp-content/debug.log
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
 
-# Environment files
-.env
-.env.*
-!.env.example
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
 
 # Logs
 *.log
 logs/
+*.log.*
 
-# IDE specific files
-.idea/
-.vscode/
-*.sublime-workspace
-*.sublime-project
-.phpunit.result.cache
-.php-cs-fixer.cache
+# Cache
+cache/
+*.cache
 
-# OS generated files
+# WordPress
+wp-config.php
+wp-content/uploads/
+wp-content/upgrade/
+wp-content/backup-db/
+wp-content/advanced-cache.php
+wp-content/wp-cache-config.php
+wp-content/cache/
+wp-content/backups/
+
+# Build
+*.zip
+*.tar.gz
+build/
+dist/
+
+# OS
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
 
-# Cache directories
-.cache/
-.temp/
+# Tests
+.phpunit.result.cache
+coverage/
 
-# Local development
-wp-content/plugins/hello.php
-wp-content/plugins/akismet/
+# Reports
+reports/plato/
+*.zip
 
-# Debug files
-debug.log
-*.log
-
-# Verial specific
-/cache/
-/logs/
-/api_connector/debug.log
-
-# Ignore all dotfiles except .gitignore and .htaccess
-.*
-!.gitignore
-!.htaccess
-!.editorconfig
+# SonarQube (eliminado)
+.sonarqube-scanner/
+.sonar/
+.scannerwork/
+sonar-scanner
