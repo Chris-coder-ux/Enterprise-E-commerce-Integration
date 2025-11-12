@@ -12,7 +12,7 @@ parameters:
         - backups
         - logs
 
-    baseline: phpstan-baseline.neon
+    # baseline: phpstan-baseline.neon  # Comentado porque el archivo no existe
 
     bootstrapFiles:
         - bootstrap-phpstan.php

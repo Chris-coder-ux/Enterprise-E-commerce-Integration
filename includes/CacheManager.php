@@ -5084,4 +5084,344 @@ class CacheManager {
 		// Retornar ruta completa
 		return $this->cache_dir . '/cold/' . $filename;
 	}
+
+	/**
+	 * ✅ NUEVO: Obtiene un valor del cold cache (archivo comprimido).
+	 * 
+	 * @param   string  $cacheKey    Clave del caché
+	 * @return  mixed   Valor almacenado o false si no existe o está expirado
+	 * @since   1.0.0
+	 */
+	private function getFromColdCache(string $cacheKey): mixed
+	{
+		if ($this->cache_dir === null) {
+			return false;
+		}
+
+		$filePath = $this->getColdCacheFilePath($cacheKey);
+		
+		if (!file_exists($filePath) || !is_readable($filePath)) {
+			return false;
+		}
+
+		try {
+			// Verificar metadata para ver si está expirado
+			$metaOptionName = 'mia_cold_cache_meta_' . $cacheKey;
+			$meta = get_option($metaOptionName);
+			
+			if ($meta && is_array($meta)) {
+				if (isset($meta['expires_at']) && $meta['expires_at'] < time()) {
+					// Expirado, eliminar
+					$this->removeFromColdCache($cacheKey);
+					return false;
+				}
+			}
+
+			// Leer archivo comprimido
+			$compressedData = file_get_contents($filePath);
+			if ($compressedData === false) {
+				return false;
+			}
+
+			// Descomprimir
+			$uncompressedData = gzuncompress($compressedData);
+			if ($uncompressedData === false) {
+				return false;
+			}
+
+			// Deserializar
+			$value = maybe_unserialize($uncompressedData);
+			
+			return $value !== false ? $value : false;
+		} catch (Exception $e) {
+			$this->logger->error('Error obteniendo de cold cache', [
+				'cache_key' => $cacheKey,
+				'error' => $e->getMessage()
+			]);
+			return false;
+		}
+	}
+
+	/**
+	 * ✅ NUEVO: Almacena un valor en cold cache (archivo comprimido).
+	 * 
+	 * @param   string  $cacheKey    Clave del caché
+	 * @param   mixed   $value       Valor a almacenar
+	 * @param   int     $ttl         Tiempo de vida en segundos
+	 * @return  bool    True si se almacenó correctamente
+	 * @since   1.0.0
+	 */
+	private function storeInColdCache(string $cacheKey, mixed $value, int $ttl): bool
+	{
+		if ($this->cache_dir === null) {
+			return false;
+		}
+
+		$coldDir = $this->cache_dir . '/cold';
+		
+		// Crear directorio si no existe
+		if (!is_dir($coldDir)) {
+			if (!wp_mkdir_p($coldDir)) {
+				$this->logger->error('No se pudo crear directorio de cold cache', [
+					'dir' => $coldDir
+				]);
+				return false;
+			}
+			
+			// Crear archivos de seguridad
+			$securityFiles = [
+				'.htaccess' => 'deny from all',
+				'index.php' => '<?php // Silence is golden'
+			];
+			
+			foreach ($securityFiles as $filename => $content) {
+				$filePath = $coldDir . '/' . $filename;
+				if (!file_exists($filePath)) {
+					file_put_contents($filePath, $content);
+				}
+			}
+		}
+
+		$filePath = $this->getColdCacheFilePath($cacheKey);
+		
+		try {
+			// Serializar y comprimir
+			$serializedData = serialize($value);
+			$compressedData = gzcompress($serializedData, 6); // Nivel de compresión 6 (balanceado)
+			
+			if ($compressedData === false) {
+				return false;
+			}
+
+			// Escribir archivo
+			$result = file_put_contents($filePath, $compressedData, LOCK_EX);
+			
+			if ($result === false) {
+				return false;
+			}
+
+			// Guardar metadata
+			$expiresAt = $ttl > 0 ? time() + $ttl : 0;
+			$meta = [
+				'cache_key' => $cacheKey,
+				'created_at' => time(),
+				'expires_at' => $expiresAt,
+				'ttl' => $ttl,
+				'size_bytes' => strlen($compressedData)
+			];
+			
+			update_option('mia_cold_cache_meta_' . $cacheKey, $meta, false);
+			
+			return true;
+		} catch (Exception $e) {
+			$this->logger->error('Error almacenando en cold cache', [
+				'cache_key' => $cacheKey,
+				'error' => $e->getMessage()
+			]);
+			return false;
+		}
+	}
+
+	/**
+	 * ✅ NUEVO: Elimina un valor del cold cache.
+	 * 
+	 * @param   string  $cacheKey    Clave del caché
+	 * @return  bool    True si se eliminó correctamente
+	 * @since   1.0.0
+	 */
+	private function removeFromColdCache(string $cacheKey): bool
+	{
+		if ($this->cache_dir === null) {
+			return false;
+		}
+
+		$filePath = $this->getColdCacheFilePath($cacheKey);
+		
+		$fileDeleted = false;
+		if (file_exists($filePath)) {
+			$fileDeleted = @unlink($filePath);
+		}
+
+		// Eliminar metadata
+		delete_option('mia_cold_cache_meta_' . $cacheKey);
+		
+		return $fileDeleted || !file_exists($filePath);
+	}
+
+	/**
+	 * ✅ NUEVO: Promueve un valor de cold cache a hot cache.
+	 * 
+	 * @param   string  $cacheKey    Clave del caché
+	 * @param   mixed   $value       Valor a promover
+	 * @return  bool    True si se promovió correctamente
+	 * @since   1.0.0
+	 */
+	private function promoteToHotCache(string $cacheKey, mixed $value): bool
+	{
+		// Obtener metadata para recuperar TTL
+		$metaOptionName = 'mia_cold_cache_meta_' . $cacheKey;
+		$meta = get_option($metaOptionName);
+		
+		$ttl = 0;
+		if ($meta && is_array($meta) && isset($meta['ttl'])) {
+			// Calcular TTL restante
+			if (isset($meta['expires_at']) && $meta['expires_at'] > time()) {
+				$ttl = $meta['expires_at'] - time();
+			} else {
+				$ttl = $meta['ttl'] ?? $this->default_ttl;
+			}
+		} else {
+			$ttl = $this->default_ttl;
+		}
+
+		// Almacenar en hot cache
+		$result = set_transient($cacheKey, $value, $ttl);
+		
+		if ($result) {
+			// Eliminar de cold cache
+			$this->removeFromColdCache($cacheKey);
+		}
+		
+		return $result;
+	}
+
+	/**
+	 * ✅ NUEVO: Determina si un valor debe almacenarse en hot cache basándose en frecuencia de acceso.
+	 * 
+	 * @param   string  $cacheKey    Clave del caché
+	 * @return  bool    True si debe usar hot cache, false para cold cache
+	 * @since   1.0.0
+	 */
+	private function shouldUseHotCache(string $cacheKey): bool
+	{
+		// Obtener métricas de uso si existen
+		$usageMetrics = get_option('mia_transient_usage_metrics_' . $cacheKey, []);
+		
+		if (empty($usageMetrics) || !isset($usageMetrics['access_frequency'])) {
+			// Sin métricas, usar hot cache por defecto (nuevos datos)
+			return true;
+		}
+		
+		$accessFrequency = $usageMetrics['access_frequency'];
+		$hotCacheThreshold = get_option('mia_hot_cache_threshold', 'medium');
+		
+		$frequencyScores = [
+			'very_high' => 100,
+			'high' => 75,
+			'medium' => 50,
+			'low' => 25,
+			'very_low' => 10,
+			'never' => 0
+		];
+		
+		$frequencyScore = $frequencyScores[$accessFrequency] ?? 0;
+		$thresholdScore = $frequencyScores[$hotCacheThreshold] ?? 50;
+		
+		// Si la frecuencia de acceso es mayor o igual al threshold, usar hot cache
+		return $frequencyScore >= $thresholdScore;
+	}
+
+	/**
+	 * ✅ NUEVO: Migra datos de hot cache a cold cache basándose en baja frecuencia de acceso.
+	 * 
+	 * @return  array   Resultado con 'migrated_count' y 'skipped_count'
+	 * @since   1.0.0
+	 */
+	public function performHotToColdMigration(): array
+	{
+		$result = [
+			'migrated_count' => 0,
+			'skipped_count' => 0,
+			'errors' => []
+		];
+		
+		if ($this->cache_dir === null) {
+			return $result;
+		}
+		
+		$hotCacheThreshold = get_option('mia_hot_cache_threshold', 'medium');
+		$frequencyScores = [
+			'very_high' => 100,
+			'high' => 75,
+			'medium' => 50,
+			'low' => 25,
+			'very_low' => 10,
+			'never' => 0
+		];
+		$thresholdScore = $frequencyScores[$hotCacheThreshold] ?? 50;
+		
+		try {
+			global $wpdb;
+			
+			// Obtener todos los transients del sistema de caché
+			$sql = $wpdb->prepare(
+				"SELECT option_name, option_value FROM {$wpdb->options} 
+				WHERE option_name LIKE %s 
+				AND option_name NOT LIKE %s",
+				'_transient_' . $this->cache_prefix . '%',
+				'_transient_timeout_%'
+			);
+			
+			$transients = $wpdb->get_results($sql, ARRAY_A);
+			
+			if (empty($transients)) {
+				return $result;
+			}
+			
+			foreach ($transients as $transient) {
+				$cacheKey = str_replace('_transient_', '', $transient['option_name']);
+				
+				// Obtener métricas de uso
+				$usageMetrics = get_option('mia_transient_usage_metrics_' . $cacheKey, []);
+				
+				if (empty($usageMetrics) || !isset($usageMetrics['access_frequency'])) {
+					// Sin métricas, saltar (mantener en hot cache)
+					$result['skipped_count']++;
+					continue;
+				}
+				
+				$accessFrequency = $usageMetrics['access_frequency'];
+				$frequencyScore = $frequencyScores[$accessFrequency] ?? 0;
+				
+				// Si la frecuencia es menor que el threshold, migrar a cold cache
+				if ($frequencyScore < $thresholdScore) {
+					try {
+						$value = maybe_unserialize($transient['option_value']);
+						
+						// Obtener TTL desde metadata
+						$metadata = $this->get_cache_metadata($cacheKey);
+						$ttl = $metadata['ttl'] ?? $this->default_ttl;
+						
+						// Almacenar en cold cache
+						if ($this->storeInColdCache($cacheKey, $value, $ttl)) {
+							// Eliminar de hot cache
+							delete_transient($cacheKey);
+							$result['migrated_count']++;
+						} else {
+							$result['skipped_count']++;
+							$result['errors'][] = "Error almacenando en cold cache: {$cacheKey}";
+						}
+					} catch (Exception $e) {
+						$result['skipped_count']++;
+						$result['errors'][] = "Error migrando {$cacheKey}: " . $e->getMessage();
+						$this->logger->warning('Error migrando a cold cache', [
+							'cache_key' => $cacheKey,
+							'error' => $e->getMessage()
+						]);
+					}
+				} else {
+					// Frecuencia alta, mantener en hot cache
+					$result['skipped_count']++;
+				}
+			}
+		} catch (Exception $e) {
+			$result['errors'][] = "Error general en migración: " . $e->getMessage();
+			$this->logger->error('Error en migración hot→cold', [
+				'error' => $e->getMessage(),
+				'trace' => $e->getTraceAsString()
+			]);
+		}
+		
+		return $result;
+	}
 }

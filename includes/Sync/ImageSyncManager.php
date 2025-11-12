@@ -162,8 +162,10 @@ class ImageSyncManager
         // Aumentar memoria a 512M si es posible (o mantener el actual si es mayor)
         $current_memory_bytes = $this->parseMemoryLimit($original_memory_limit);
         $target_memory_bytes = 512 * 1024 * 1024; // 512MB
+        $memory_increased = false;
         if ($current_memory_bytes < $target_memory_bytes) {
             ini_set('memory_limit', '512M');
+            $memory_increased = true;
             $this->logger->info('Límite de memoria aumentado temporalmente para sincronización masiva', [
                 'original' => $original_memory_limit,
                 'new' => '512M'
@@ -175,6 +177,14 @@ class ImageSyncManager
         
         // ✅ CRÍTICO: Desactivar generación de thumbnails al inicio
         $this->disableThumbnailGeneration();
+        
+        // ✅ NUEVO: Guardar información técnica para mostrar en consola
+        SyncStatusHelper::updatePhase1Images([
+            'thumbnails_disabled' => true,
+            'memory_limit_increased' => $memory_increased,
+            'memory_limit_original' => $memory_increased ? $original_memory_limit : null,
+            'memory_limit_new' => $memory_increased ? '512M' : null
+        ]);
         
         try {
             // ✅ MEJORADO: Verificar flag de detención inmediata ANTES de empezar (sin caché)
@@ -246,6 +256,14 @@ class ImageSyncManager
                         'checkpoint_timestamp' => $checkpoint['timestamp'] ?? 0,
                         'last_processed_id' => $resume_from_product_id,
                         'stats' => $stats
+                    ]);
+                    
+                    // ✅ NUEVO: Guardar información de checkpoint cargado para mostrar en consola
+                    SyncStatusHelper::updatePhase1Images([
+                        'checkpoint_loaded' => true,
+                        'checkpoint_loaded_from_id' => $resume_from_product_id,
+                        'checkpoint_loaded_timestamp' => $checkpoint['timestamp'] ?? 0,
+                        'checkpoint_loaded_products_processed' => $stats['total_processed'] ?? 0
                     ]);
                 } else {
                     $this->logger->warning('Se solicitó reanudar pero no se encontró checkpoint, iniciando desde el principio');
@@ -530,13 +548,17 @@ class ImageSyncManager
                 $stats['errors'] += $result['errors'];
                 $stats['last_processed_id'] = $product_id;
                 
-                // Actualizar estado después de cada producto
+                // ✅ CORRECCIÓN: Actualizar estado después de cada producto incluyendo valores del último producto
+                // Esto permite que la consola muestre mensajes por cada producto procesado
                 SyncStatusHelper::updatePhase1Images([
                     'products_processed' => $stats['total_processed'],
                     'images_processed' => $stats['total_attachments'],
                     'duplicates_skipped' => $stats['duplicates_skipped'],
                     'errors' => $stats['errors'],
                     'last_processed_id' => $product_id,
+                    'last_product_images' => $result['attachments'], // ✅ NUEVO: Imágenes del último producto
+                    'last_product_duplicates' => $result['duplicates'], // ✅ NUEVO: Duplicados del último producto
+                    'last_product_errors' => $result['errors'], // ✅ NUEVO: Errores del último producto
                     'total_products' => $total_products
                 ]);
                 
@@ -798,6 +820,10 @@ class ImageSyncManager
             
             // ✅ MEJORADO: Limpiar array completo de imágenes después de procesarlas
             unset($imagenes, $data, $response);
+            
+            // ✅ NUEVO: Limpiar caché específico de este producto después de procesarlo completamente
+            // Esto libera memoria de productos ya procesados sin afectar productos pendientes
+            $this->clearProductSpecificCache($product_id);
 
             return $stats;
         } catch (Exception $e) {
@@ -1235,6 +1261,58 @@ class ImageSyncManager
     }
 
     /**
+     * Limpia caché específico de un producto después de procesarlo completamente.
+     *
+     * Limpia patrones específicos del sistema de caché de la aplicación:
+     * - `imagenes_articulo_{$product_id}_*`: Caché de imágenes del producto
+     * - `batch_data_product_{$product_id}_*`: Caché de batch data del producto
+     *
+     * ✅ SEGURO: No causa duplicados porque:
+     * - La detección de duplicados usa metadatos en BD (`_verial_image_hash`)
+     * - El caché solo almacena respuestas temporales de la API
+     * - Limpiar caché NO afecta la detección de duplicados
+     *
+     * @param   int $product_id ID del producto procesado.
+     * @return  void
+     * @since   1.5.0
+     */
+    private function clearProductSpecificCache(int $product_id): void
+    {
+        if (!class_exists('\\MiIntegracionApi\\CacheManager')) {
+            return;
+        }
+        
+        try {
+            $cacheManager = \MiIntegracionApi\CacheManager::get_instance();
+            
+            // Limpiar caché de imágenes de este producto específico (ya procesado)
+            $imagesPattern = "imagenes_articulo_{$product_id}_*";
+            $imagesCleared = $cacheManager->delete_by_pattern($imagesPattern);
+            
+            // También limpiar caché de batch_data de este producto
+            $batchPattern = "batch_data_product_{$product_id}_*";
+            $batchCleared = $cacheManager->delete_by_pattern($batchPattern);
+            
+            // Log solo si se limpió algo (evitar spam de logs)
+            if ($imagesCleared > 0 || $batchCleared > 0) {
+                $this->logger->debug('Caché específico del producto limpiado después de procesar', [
+                    'product_id' => $product_id,
+                    'images_cleared' => $imagesCleared,
+                    'batch_cleared' => $batchCleared,
+                    'reason' => 'product_fully_processed'
+                ]);
+            }
+        } catch (\Exception $e) {
+            // No crítico, solo loguear (no debe interrumpir el procesamiento)
+            $this->logger->debug('Error limpiando caché específico del producto (no crítico)', [
+                'product_id' => $product_id,
+                'error' => $e->getMessage(),
+                'exception' => get_class($e)
+            ]);
+        }
+    }
+
+    /**
      * Limpia el cache de un producto específico y sus attachments.
      *
      * @param   int $product_id ID del producto.
@@ -1379,6 +1457,12 @@ class ImageSyncManager
         $this->logger->debug('Checkpoint guardado', [
             'last_processed_id' => $checkpoint['last_processed_id'],
             'timestamp' => $checkpoint['timestamp']
+        ]);
+        
+        // ✅ NUEVO: Guardar información de checkpoint guardado para mostrar en consola
+        SyncStatusHelper::updatePhase1Images([
+            'last_checkpoint_saved_id' => $checkpoint['last_processed_id'],
+            'last_checkpoint_saved_timestamp' => $checkpoint['timestamp']
         ]);
     }
 

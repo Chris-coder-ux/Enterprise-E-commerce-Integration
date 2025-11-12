@@ -699,6 +699,20 @@ class ImageProcessor implements ImageProcessorInterface
         \update_post_meta($attachment_id, '_verial_image_hash', $image_hash);
         \update_post_meta($attachment_id, '_verial_image_order', $order);
 
+        // ✅ NUEVO: Verificar que los metadatos se guardaron correctamente
+        $saved_article_id = \get_post_meta($attachment_id, '_verial_article_id', true);
+        if ($saved_article_id != $article_id) {
+            $this->logger->error('Error: Metadato _verial_article_id no se guardó correctamente', [
+                'attachment_id' => $attachment_id,
+                'expected' => $article_id,
+                'expected_type' => gettype($article_id),
+                'saved' => $saved_article_id,
+                'saved_type' => gettype($saved_article_id),
+                'comparison' => ($saved_article_id == $article_id) ? 'loose_equal' : 'not_equal',
+                'strict_comparison' => ($saved_article_id === $article_id) ? 'strict_equal' : 'not_strict_equal'
+            ]);
+        }
+
         // ✅ REMOVIDO: Log de debug por cada imagen (genera demasiado ruido)
         // Solo se registran errores o resúmenes periódicos
 

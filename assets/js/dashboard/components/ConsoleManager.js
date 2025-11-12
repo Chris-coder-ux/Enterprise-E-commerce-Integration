@@ -75,7 +75,11 @@
     lastSummaryProducts: 0,
     wasPaused: false,
     wasCancelled: false,
-    wasInProgress: false // ✅ NUEVO: Trackear si estaba en progreso para detectar cambios de estado
+    wasInProgress: false, // ✅ NUEVO: Trackear si estaba en progreso para detectar cambios de estado
+    lastCheckpointSavedId: 0, // ✅ NUEVO: Trackear último checkpoint guardado para evitar duplicados
+    initialCacheClearedShown: false, // ✅ NUEVO: Trackear si ya se mostró mensaje de limpieza inicial
+    checkpointLoadedShown: false, // ✅ NUEVO: Trackear si ya se mostró mensaje de checkpoint cargado
+    technicalInfoShown: false // ✅ NUEVO: Trackear si ya se mostraron mensajes técnicos informativos
   };
   
   /**
@@ -417,11 +421,51 @@
       }
     }
   
-    // ✅ NUEVO: Mostrar mensaje cuando Fase 1 inicia (solo una vez)
+      // ✅ NUEVO: Mostrar mensaje cuando Fase 1 inicia (solo una vez)
     if (phase1InProgress && phase1Status && trackingState.lastProductsProcessed === 0 && phase1Status.products_processed === 0) {
       const totalProducts = phase1Status.total_products || 0;
       addLine('phase1', `Iniciando Fase 1: Sincronización de imágenes${totalProducts > 0 ? ` para ${totalProducts} productos` : ''}...`);
       trackingState.lastProductsProcessed = -1; // Marcar que ya mostramos el mensaje inicial
+    }
+    
+    // ✅ NUEVO: Mostrar mensaje de limpieza inicial de caché (solo una vez)
+    if (phase1InProgress && phase1Status && phase1Status.initial_cache_cleared && !trackingState.initialCacheClearedShown) {
+      const clearedCount = phase1Status.initial_cache_cleared_count || 0;
+      const cacheMsg = clearedCount > 0 
+        ? `Caché inicial limpiada: ${clearedCount} entradas eliminadas`
+        : 'Caché inicial limpiada';
+      addLine('info', cacheMsg);
+      trackingState.initialCacheClearedShown = true;
+    }
+    
+    // ✅ NUEVO: Mostrar mensaje de checkpoint cargado (solo una vez)
+    if (phase1InProgress && phase1Status && phase1Status.checkpoint_loaded && phase1Status.checkpoint_loaded_from_id && !trackingState.checkpointLoadedShown) {
+      const checkpointId = phase1Status.checkpoint_loaded_from_id;
+      const checkpointProducts = phase1Status.checkpoint_loaded_products_processed || 0;
+      addLine('info', `Reanudando desde checkpoint: Producto #${checkpointId} (${checkpointProducts} productos ya procesados)`);
+      trackingState.checkpointLoadedShown = true;
+    }
+    
+    // ✅ NUEVO: Mostrar mensajes informativos técnicos (solo una vez al inicio)
+    if (phase1InProgress && phase1Status && phase1Status.products_processed === 0 && !trackingState.technicalInfoShown) {
+      // Mensaje de thumbnails desactivados
+      if (phase1Status.thumbnails_disabled) {
+        addLine('info', 'Generación de thumbnails desactivada temporalmente (se generarán automáticamente después de la sincronización)');
+      }
+      
+      // Mensaje de límite de memoria aumentado
+      if (phase1Status.memory_limit_increased && phase1Status.memory_limit_original && phase1Status.memory_limit_new) {
+        addLine('info', `Límite de memoria aumentado temporalmente: ${phase1Status.memory_limit_original} → ${phase1Status.memory_limit_new}`);
+      }
+      
+      trackingState.technicalInfoShown = true;
+    }
+    
+    // ✅ NUEVO: Mostrar mensaje cuando se guarda un checkpoint (cada vez que cambia)
+    if (phase1InProgress && phase1Status && phase1Status.last_checkpoint_saved_id && phase1Status.last_checkpoint_saved_id !== trackingState.lastCheckpointSavedId) {
+      const checkpointId = phase1Status.last_checkpoint_saved_id;
+      addLine('info', `Checkpoint guardado: Producto #${checkpointId}`);
+      trackingState.lastCheckpointSavedId = checkpointId;
     }
   
     // ✅ NUEVO: Mostrar estado cuando está pausada o cancelada pero hay progreso real
@@ -507,12 +551,15 @@
         trackingState.lastProductsProcessed = 0;
       }
       
-      // ✅ MEJORADO: Mostrar mensaje por cada producto procesado (más frecuente)
+      // ✅ MEJORADO: Mostrar mensaje por cada producto procesado
+      // ✅ CORRECCIÓN: Verificar que tenemos datos del último producto antes de mostrar
       if (productChanged && currentProductId > 0) {
         const lastProductImages = phase1Status.last_product_images !== undefined ? phase1Status.last_product_images : 0;
         const lastProductDuplicates = phase1Status.last_product_duplicates !== undefined ? phase1Status.last_product_duplicates : 0;
         const lastProductErrors = phase1Status.last_product_errors !== undefined ? phase1Status.last_product_errors : 0;
         
+        // ✅ CORRECCIÓN: Solo mostrar si tenemos información del producto (incluso si es 0)
+        // Esto asegura que siempre mostramos algo cuando se procesa un producto
         let productMsg = `Producto #${currentProductId}: `;
         const parts = [];
         
@@ -537,31 +584,39 @@
       }
   
       // ✅ MEJORADO: Mostrar resumen general cuando cambia el número de productos o imágenes procesados
-      // ✅ OPTIMIZADO: Mostrar más frecuentemente para mejor feedback visual
-      // Mostrar cada vez que cambia products_processed o images_processed
+      // ✅ CORRECCIÓN: Mostrar resumen cada cierto número de productos o cuando cambian significativamente los totales
       if ((productsProcessedChanged || imagesProcessedChanged) && currentProductsProcessed > 0) {
         const imagesProcessed = phase1Status.images_processed || 0;
         const duplicatesSkipped = phase1Status.duplicates_skipped || 0;
         const errors = phase1Status.errors || 0;
         
-        // ✅ MEJORADO: Mostrar resumen cada vez que hay un cambio, pero evitar duplicados
-        // Verificar si el último mensaje es diferente
-        const lastLine = $consoleContent.find('.mia-console-line').last();
-        const lastMessage = lastLine.find('.mia-console-message').text();
-        const newSummaryMsg = `Fase 1: ${currentProductsProcessed}/${phase1Status.total_products || 0} productos procesados, ${imagesProcessed} imágenes sincronizadas`;
-        const isDifferentMessage = !lastMessage.includes(`Fase 1: ${currentProductsProcessed}/${phase1Status.total_products || 0} productos procesados`);
+        // ✅ CORRECCIÓN: Mostrar resumen cada 5 productos o cuando cambian los totales significativamente
+        // Esto asegura feedback regular sin saturar la consola
+        const shouldShowSummary = 
+          currentProductsProcessed % 5 === 0 || // Cada 5 productos
+          currentProductsProcessed === 1 || // Primer producto
+          currentProductsProcessed === phase1Status.total_products || // Último producto
+          (productsProcessedChanged && currentProductsProcessed !== trackingState.lastSummaryProducts); // Cambio significativo
         
-        // Mostrar si es un mensaje diferente o si es uno de los primeros 10 productos
-        if (isDifferentMessage || currentProductsProcessed <= 10) {
+        if (shouldShowSummary) {
           let summaryMsg = `Fase 1: ${currentProductsProcessed}/${phase1Status.total_products || 0} productos procesados`;
-          summaryMsg += `, ${imagesProcessed} imágenes sincronizadas`;
+          summaryMsg += `, ${imagesProcessed} imagen${imagesProcessed !== 1 ? 'es' : ''} sincronizada${imagesProcessed !== 1 ? 's' : ''}`;
           if (duplicatesSkipped > 0) {
-            summaryMsg += `, ${duplicatesSkipped} duplicados omitidos`;
+            summaryMsg += `, ${duplicatesSkipped} duplicado${duplicatesSkipped !== 1 ? 's' : ''} omitido${duplicatesSkipped !== 1 ? 's' : ''}`;
           }
           if (errors > 0) {
-            summaryMsg += `, ${errors} errores`;
+            summaryMsg += `, ${errors} error${errors !== 1 ? 'es' : ''}`;
           }
           summaryMsg += ` (${phase1Percent}%)`;
+          
+          // ✅ NUEVO: Agregar velocidad de procesamiento al resumen
+          if (phase1Status.start_time && phase1Status.start_time > 0) {
+            const elapsedSeconds = (Math.floor(Date.now() / 1000) - phase1Status.start_time);
+            if (elapsedSeconds > 0) {
+              const speed = (currentProductsProcessed / elapsedSeconds).toFixed(2);
+              summaryMsg += ` | Velocidad: ${speed} productos/seg`;
+            }
+          }
           
           addLine('info', summaryMsg);
           trackingState.lastSummaryProducts = currentProductsProcessed;
@@ -693,6 +748,10 @@
     trackingState.lastProductsProcessed = 0;
     trackingState.lastImagesProcessed = 0;
     trackingState.lastSummaryProducts = 0;
+    trackingState.lastCheckpointSavedId = 0;
+    trackingState.initialCacheClearedShown = false;
+    trackingState.checkpointLoadedShown = false;
+    trackingState.technicalInfoShown = false;
   }
   
   /**

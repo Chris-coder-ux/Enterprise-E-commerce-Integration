@@ -65,5 +65,10 @@ $view_name = $wpdb->prefix . 'mia_sync_history';
 $wpdb->query("DROP VIEW IF EXISTS `{$view_name}`");
 
 // Limpiar metadatos de productos y categorías
-$wpdb->query("DELETE FROM {$wpdb->postmeta} WHERE meta_key LIKE '_verial_%'");
+// ✅ CORRECCIÓN: NO eliminar metadatos de attachments (imágenes) para preservar asociaciones
+// Solo eliminar metadatos de productos (post_type = 'product') y categorías
+$wpdb->query("DELETE pm FROM {$wpdb->postmeta} pm 
+    INNER JOIN {$wpdb->posts} p ON pm.post_id = p.ID 
+    WHERE pm.meta_key LIKE '_verial_%' 
+    AND p.post_type = 'product'");
 $wpdb->query("DELETE FROM {$wpdb->termmeta} WHERE meta_key LIKE '_verial_%'");
