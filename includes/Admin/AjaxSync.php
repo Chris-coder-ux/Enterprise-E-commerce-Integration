@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Módulo de sincronización vía AJAX
  *
@@ -15,13 +17,11 @@
  * @package     MiIntegracionApi\Admin
  * @since       1.0.0
  * @version     2.1.0
- * @author      Christian <christian@example.com>
+ * @author      Christian <crisito29@hotmail.com>
  * @copyright   Copyright (c) 2025, Your Company
  * @license     GPL-2.0+
  * @link        https://example.com/plugin-docs/sync
  */
-
-declare(strict_types=1);
 
 namespace MiIntegracionApi\Admin;
 
@@ -899,7 +899,26 @@ class AjaxSync {
 					'last_product_duplicates' => (int) ($phase1_info['last_product_duplicates'] ?? 0),
 					'last_product_errors' => (int) ($phase1_info['last_product_errors'] ?? 0),
 					// ✅ NUEVO: Métricas de limpieza de caché
-					'last_cleanup_metrics' => $phase1_info['last_cleanup_metrics'] ?? null
+					'last_cleanup_metrics' => $phase1_info['last_cleanup_metrics'] ?? null,
+					// ✅ NUEVO: Información de limpieza inicial de caché
+					'initial_cache_cleared' => !empty($phase1_info['initial_cache_cleared']) ? true : false,
+					'initial_cache_cleared_count' => (int) ($phase1_info['initial_cache_cleared_count'] ?? 0),
+					'initial_cache_cleared_timestamp' => (int) ($phase1_info['initial_cache_cleared_timestamp'] ?? 0),
+					// ✅ NUEVO: Información de checkpoint cargado (reanudación)
+					'checkpoint_loaded' => !empty($phase1_info['checkpoint_loaded']) ? true : false,
+					'checkpoint_loaded_from_id' => (int) ($phase1_info['checkpoint_loaded_from_id'] ?? 0),
+					'checkpoint_loaded_timestamp' => (int) ($phase1_info['checkpoint_loaded_timestamp'] ?? 0),
+					'checkpoint_loaded_products_processed' => (int) ($phase1_info['checkpoint_loaded_products_processed'] ?? 0),
+					// ✅ NUEVO: Información de último checkpoint guardado
+					'last_checkpoint_saved_id' => (int) ($phase1_info['last_checkpoint_saved_id'] ?? 0),
+					'last_checkpoint_saved_timestamp' => (int) ($phase1_info['last_checkpoint_saved_timestamp'] ?? 0),
+					// ✅ NUEVO: Información de tiempo de inicio para calcular velocidad
+					'start_time' => (int) ($phase1_info['start_time'] ?? 0),
+					// ✅ NUEVO: Información técnica (thumbnails, memoria)
+					'thumbnails_disabled' => !empty($phase1_info['thumbnails_disabled']) ? true : false,
+					'memory_limit_increased' => !empty($phase1_info['memory_limit_increased']) ? true : false,
+					'memory_limit_original' => !empty($phase1_info['memory_limit_original']) ? $phase1_info['memory_limit_original'] : null,
+					'memory_limit_new' => !empty($phase1_info['memory_limit_new']) ? $phase1_info['memory_limit_new'] : null
 				],
 				// ✅ NUEVO: Métricas de limpieza de caché para Fase 2
 				'last_cleanup_metrics' => $sync_info['current_sync']['last_cleanup_metrics'] ?? null
@@ -1930,7 +1949,12 @@ class AjaxSync {
 	public static function process_queue_background_callback(): void
 	{
 		// Verificar nonce para seguridad
-		if (!wp_verify_nonce($_POST['nonce'] ?? '', 'mia_queue_nonce')) {
+		// ✅ MEJORADO: Aceptar tanto el nonce específico de la cola como el nonce del dashboard
+		$nonce = $_POST['nonce'] ?? '';
+		$valid_nonce = wp_verify_nonce($nonce, 'mia_queue_nonce') || 
+		               wp_verify_nonce($nonce, 'mi_integracion_api_nonce_dashboard');
+		
+		if (!$valid_nonce) {
 			wp_die('Nonce verification failed', 'Security Error', ['response' => 403]);
 		}
 		
@@ -2102,7 +2126,10 @@ class AjaxSync {
 	}
 
 	/**
-	 * Limpia los flags de pausa/cancelación para iniciar una nueva sincronización
+	 * Limpia los flags de pausa/cancelación y caché para iniciar una nueva sincronización
+	 *
+	 * ✅ MEJORADO: Añadida limpieza completa del caché del sistema para evitar
+	 * datos obsoletos e inconsistencias, consistente con Fase 2.
 	 *
 	 * @return void
 	 * @since 1.5.0
@@ -2118,12 +2145,34 @@ class AjaxSync {
 			'cancelled' => false
 		]);
 
-		// Limpiar caché para asegurar que los cambios se reflejen
+		// ✅ NUEVO: Limpiar caché completo del sistema solo en nuevas sincronizaciones
+		// Esto asegura que empezamos con caché limpia y evitamos datos obsoletos
+		// No afecta reanudaciones (resume) porque usan checkpoint de BD, no caché
+		if (class_exists('\MiIntegracionApi\CacheManager')) {
+			$cache_manager = \MiIntegracionApi\CacheManager::get_instance();
+			$result = $cache_manager->clear_all_cache();
+			
+			self::logInfo('🧹 Caché completamente limpiada al inicio de Fase 1', [
+				'cleared_count' => $result,
+				'reason' => 'fresh_start_for_phase1',
+				'stage' => 'initial_cleanup',
+				'user_id' => get_current_user_id()
+			]);
+			
+			// ✅ NUEVO: Guardar información de limpieza inicial en estado para mostrar en consola
+			\MiIntegracionApi\Helpers\SyncStatusHelper::updatePhase1Images([
+				'initial_cache_cleared' => true,
+				'initial_cache_cleared_count' => $result,
+				'initial_cache_cleared_timestamp' => time()
+			]);
+		}
+
+		// Limpiar caché de WordPress para asegurar que los cambios se reflejen
 		if (function_exists('wp_cache_flush')) {
 			wp_cache_flush();
 		}
 
-		self::logInfo('Flags de pausa/cancelación limpiados para nueva sincronización', [
+		self::logInfo('Flags de pausa/cancelación y caché limpiados para nueva sincronización', [
 			'user_id' => get_current_user_id()
 		]);
 	}
