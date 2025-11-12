@@ -769,16 +769,7 @@ class AjaxSync {
 			// Delegar a SyncStatusHelper
 			$sync_info = \MiIntegracionApi\Helpers\SyncStatusHelper::getCurrentSyncInfo();
 			
-			// DEBUG: Log para verificar qué datos recibe el endpoint (solo si WP_DEBUG está habilitado)
-			if (defined('WP_DEBUG') && WP_DEBUG && defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
-				error_log('[MIA DEBUG] get_sync_progress_callback - Datos recibidos: ' . json_encode([
-					'items_synced' => $sync_info['items_synced'] ?? 'NO_DEFINIDO',
-					'current_batch' => $sync_info['current_batch'] ?? 'NO_DEFINIDO',
-					'total_batches' => $sync_info['total_batches'] ?? 'NO_DEFINIDO',
-					'total_items' => $sync_info['total_items'] ?? 'NO_DEFINIDO',
-					'in_progress' => $sync_info['in_progress'] ?? 'NO_DEFINIDO'
-				]));
-			}
+		// ✅ REMOVIDO: Debug innecesario que se ejecuta en cada petición (cada 2 segundos)
 			
 			// ✅ CORRECCIÓN: Si no hay sincronización activa, resetear todos los valores a 0
 			$in_progress = !empty($sync_info['in_progress']) && $sync_info['in_progress'] === true;
@@ -829,10 +820,7 @@ class AjaxSync {
 				}
 			}
 			
-			// DEBUG: Log para verificar qué datos de phase1_images se están recibiendo (solo si WP_DEBUG está habilitado)
-			if (defined('WP_DEBUG') && WP_DEBUG && defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
-				error_log('[MIA DEBUG] get_sync_progress_callback - phase1_images recibido: ' . json_encode($phase1_info));
-			}
+		// ✅ REMOVIDO: Debug innecesario que se ejecuta en cada petición (cada 2 segundos)
 			
 			$phase1_porcentaje = 0.0;
 			// ✅ CORRECCIÓN: Usar valores reales siempre que existan, incluso si está pausada o cancelada
@@ -917,17 +905,7 @@ class AjaxSync {
 				'last_cleanup_metrics' => $sync_info['current_sync']['last_cleanup_metrics'] ?? null
 			];
 			
-			// DEBUG: Log de la respuesta que se envía al frontend (solo si WP_DEBUG está habilitado)
-			if (defined('WP_DEBUG') && WP_DEBUG && defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
-				error_log('[MIA DEBUG] get_sync_progress_callback - Respuesta enviada: ' . json_encode([
-					'items_synced' => $items_synced,
-					'total_items' => $total_items,
-					'porcentaje' => $porcentaje,
-					'current_batch' => $sync_info['current_batch'] ?? 0,
-					'total_batches' => $sync_info['total_batches'] ?? 0,
-					'phase1_images' => $response['phase1_images'] ?? 'NO_DEFINIDO'
-				]));
-			}
+		// ✅ REMOVIDO: Debug innecesario que se ejecuta en cada petición (cada 2 segundos)
 			
 			wp_send_json_success($response);
 		} catch (\Throwable $e) {
@@ -1003,10 +981,7 @@ class AjaxSync {
 		$logger->info('Test API ejecutado', $debug_info);
 		
 		// También log de error para que aparezca en los logs principales
-		error_log('[Mi Integración API DEBUG] test_api llamada desde: ' . 
-			($debug_info['referer'] ?? 'DIRECTO') . ' | User Agent: ' . 
-			($debug_info['user_agent'] ?? 'UNKNOWN') . ' | POST: ' . 
-			json_encode($debug_info['post_data']));
+		// ✅ REMOVIDO: Debug innecesario (la información ya se registra en el logger)
 		
 		// Use the unified security validation instead of check_ajax_referer
 		if (!self::validateAjaxSecurity('nonce', 'mi_integracion_api_nonce_dashboard')) {
@@ -1541,28 +1516,25 @@ class AjaxSync {
      */
     public static function sync_products_batch(): void {
         
-        // DEBUG: Verificar que el endpoint se está ejecutando
-        error_log('[MIA DEBUG] AjaxSync::sync_products_batch() - ENDPOINT EJECUTÁNDOSE');
-        
         // Validación básica de seguridad
         if (!self::validateAjaxSecurity('nonce', 'mi_integracion_api_nonce_dashboard')) {
-            error_log('[MIA DEBUG] AjaxSync::sync_products_batch() - Validación de seguridad falló');
+            // ✅ REMOVIDO: Debug innecesario
             return;
         }
 
-        error_log('[MIA DEBUG] AjaxSync::sync_products_batch() - Validación de seguridad exitosa');
+        // ✅ REMOVIDO: Debug innecesario
 
         try {
             // Extraer parámetros
             $filters = $_REQUEST['filters'] ?? [];
             
-            error_log('[MIA DEBUG] AjaxSync::sync_products_batch() - Llamando a Sync_Manager::handle_sync_request - filters: ' . json_encode($filters));
+            // ✅ REMOVIDO: Debug innecesario
             
             // Delegar toda la lógica de producción a Sync_Manager
             $sync_manager = \MiIntegracionApi\Core\Sync_Manager::get_instance();
             $result = $sync_manager->handle_sync_request($filters);
             
-            error_log('[MIA DEBUG] AjaxSync::sync_products_batch() - Resultado de handle_sync_request - is_wp_error: ' . (is_wp_error($result) ? 'true' : 'false') . ' - result: ' . json_encode($result));
+            // ✅ REMOVIDO: Debug innecesario
             
             // Enviar respuesta usando SecurityValidator (con adaptador inteligente)
             if (is_wp_error($result)) {
@@ -1572,7 +1544,7 @@ class AjaxSync {
             }
 
         } catch (\Throwable $e) {
-            error_log('[MIA DEBUG] AjaxSync::sync_products_batch() - Excepción: ' . $e->getMessage());
+            // ✅ REMOVIDO: Debug innecesario (el error ya se registra en el logger)
             \MiIntegracionApi\Helpers\SecurityValidator::sendAjaxError('Error interno: ' . $e->getMessage());
         }
     }
@@ -2058,182 +2030,282 @@ class AjaxSync {
 		}
 
 		try {
-			// Validar que ImageSyncManager esté disponible
-			if (!class_exists('\\MiIntegracionApi\\Sync\\ImageSyncManager')) {
-				wp_send_json_error([
-					'message' => 'ImageSyncManager no está disponible. Verifica que el autoloader esté actualizado.'
-				]);
-				return;
+			// Validar parámetros y clase ImageSyncManager
+			$params = self::validateSyncImagesParams();
+			if ($params === null) {
+				return; // Ya se envió respuesta de error
 			}
 
-			// Obtener parámetros
-			$resume = isset($_POST['resume']) && $_POST['resume'] === 'true';
-			$batch_size = isset($_POST['batch_size']) ? (int)$_POST['batch_size'] : 10;
+			$resume = $params['resume'];
+			$batch_size = $params['batch_size'];
 
-			// Validar batch_size
-			if ($batch_size < 1 || $batch_size > 100) {
-				wp_send_json_error([
-					'message' => 'Tamaño de lote inválido. Debe estar entre 1 y 100.'
-				]);
-				return;
-			}
-
-			// ✅ OPTIMIZADO: Verificar si ya hay una sincronización en progreso
-			$phase1_status = \MiIntegracionApi\Helpers\SyncStatusHelper::getCurrentSyncInfo();
-			$phase1_images = $phase1_status['phase1_images'] ?? [];
-			
-			// ✅ NUEVO: Si NO es resume, limpiar flags de pausa/cancelación para iniciar una nueva sincronización
+			// Limpiar flags si es nueva sincronización
 			if (!$resume) {
-				// Limpiar flag de detención inmediata
-				delete_option('mia_images_sync_stop_immediately');
-				delete_option('mia_images_sync_stop_timestamp');
-				
-				// Limpiar estado de pausa y cancelación
-				\MiIntegracionApi\Helpers\SyncStatusHelper::updatePhase1Images([
-					'paused' => false,
-					'cancelled' => false
-				]);
-				
-				// Limpiar caché para asegurar que los cambios se reflejen
-				if (function_exists('wp_cache_flush')) {
-					wp_cache_flush();
-				}
-				
-				self::logInfo('Flags de pausa/cancelación limpiados para nueva sincronización', [
-					'user_id' => get_current_user_id()
-				]);
-			}
-			
-			if (!empty($phase1_images['in_progress']) && $phase1_images['in_progress'] === true) {
-				wp_send_json_success([
-					'message' => 'Sincronización de imágenes ya en progreso',
-					'in_progress' => true,
-					'data' => [
-						'products_processed' => $phase1_images['products_processed'] ?? 0,
-						'total_products' => $phase1_images['total_products'] ?? 0
-					]
-				]);
-				return;
+				self::cleanupPhase1FlagsForNewSync();
 			}
 
-			// Obtener instancias necesarias
-			$apiConnector = \MiIntegracionApi\Core\ApiConnector::get_instance();
-			$logger = new \MiIntegracionApi\Helpers\Logger('image-sync');
-
-			// Log de inicio
-			self::logInfo('Iniciando sincronización de imágenes vía AJAX (modo background)', [
-				'resume' => $resume,
-				'batch_size' => $batch_size,
-				'user_id' => get_current_user_id()
-			]);
-
-			// ✅ NUEVO: Verificar flag de detención inmediata ANTES de iniciar el proceso
-			// (solo si es resume, porque si no es resume ya lo limpiamos arriba)
-			if ($resume) {
-				$stop_immediately = get_option('mia_images_sync_stop_immediately', false);
-				if ($stop_immediately) {
-					wp_send_json_error([
-						'message' => 'Sincronización de imágenes detenida por flag de detención inmediata',
-						'stopped' => true
-					]);
-					return;
-				}
-			}
-			
-			// ✅ ACTUALIZADO: Verificar estado de cancelación ANTES de iniciar el proceso
-			// (solo si es resume, porque si no es resume ya lo limpiamos arriba)
-			if ($resume) {
-				$phase1_status_check = \MiIntegracionApi\Helpers\SyncStatusHelper::getCurrentSyncInfo();
-				$phase1_images_check = $phase1_status_check['phase1_images'] ?? [];
-				if (!empty($phase1_images_check['cancelled']) && $phase1_images_check['cancelled'] === true) {
-					wp_send_json_error([
-						'message' => 'Sincronización de imágenes fue cancelada. Por favor, inicia una nueva sincronización.',
-						'cancelled' => true
-					]);
-					return;
-				}
+			// Verificar si ya hay sincronización en progreso
+			if (self::checkPhase1InProgress()) {
+				return; // Ya se envió respuesta
 			}
 
-			// Obtener instancias necesarias
-			$imageSyncManager = new \MiIntegracionApi\Sync\ImageSyncManager($apiConnector, $logger);
-
-			// ✅ CRÍTICO: Actualizar estado a "in_progress" ANTES de ejecutar syncAllImages
-			// Esto asegura que cuando el frontend consulte el estado inmediatamente después,
-			// ya esté marcado como "en progreso" y no como "pausado"
-			// Obtener total de productos para el estado inicial
-			$product_ids = $imageSyncManager->getAllProductIds();
-			$total_products = count($product_ids);
-			
-			\MiIntegracionApi\Helpers\SyncStatusHelper::updatePhase1Images([
-				'in_progress' => true,
-				'paused' => false,
-				'cancelled' => false,
-				'total_products' => $total_products,
-				'products_processed' => 0,
-				'images_processed' => 0,
-				'duplicates_skipped' => 0,
-				'errors' => 0,
-				'last_processed_id' => 0
-			]);
-			
-			// Limpiar caché para asegurar que el estado se refleje inmediatamente
-			if (function_exists('wp_cache_flush')) {
-				wp_cache_flush();
+			// Validar condiciones para resume
+			if ($resume && !self::validateResumeConditions()) {
+				return; // Ya se envió respuesta de error
 			}
-			
-			// ✅ OPTIMIZADO: Aumentar timeout para permitir proceso largo
-			// El timeout del AJAX en el frontend es de 240 segundos, pero el proceso puede tardar más
-			set_time_limit(0); // Sin límite de tiempo en el servidor
-			ini_set('max_execution_time', '0');
-			ignore_user_abort(true);
 
-			// Log de inicio
-			self::logInfo('Iniciando sincronización de imágenes vía AJAX', [
-				'resume' => $resume,
-				'batch_size' => $batch_size,
-				'total_products' => $total_products,
-				'user_id' => get_current_user_id()
-			]);
+			// Inicializar sincronización
+			$imageSyncManager = self::initializePhase1Sync($batch_size);
 
-			// Ejecutar sincronización (puede tardar varios minutos)
+			// Ejecutar sincronización
 			$result = $imageSyncManager->syncAllImages($resume, $batch_size);
 
-			// Preparar respuesta
-			$response = [
-				'success' => true,
-				'message' => 'Sincronización de imágenes completada',
-				'data' => [
-					'total_processed' => $result['total_processed'] ?? 0,
-					'total_attachments' => $result['total_attachments'] ?? 0,
-					'total_errors' => $result['errors'] ?? 0,
-					'duplicates_skipped' => $result['duplicates_skipped'] ?? 0,
-					'checkpoint_saved' => $result['checkpoint_saved'] ?? false,
-					'completed' => $result['completed'] ?? false
-				]
-			];
-
-			// Log de éxito
-			self::logInfo('Sincronización de imágenes completada vía AJAX', [
-				'result' => $response['data'],
-				'user_id' => get_current_user_id()
-			]);
-
-			wp_send_json_success($response);
+			// Enviar respuesta exitosa
+			self::sendSyncImagesSuccess($result);
 
 		} catch (\Exception $e) {
-			// Log de error
-			self::logError('Error durante sincronización de imágenes vía AJAX', [
-				'error' => $e->getMessage(),
-				'file' => $e->getFile(),
-				'line' => $e->getLine(),
-				'trace' => $e->getTraceAsString(),
-				'user_id' => get_current_user_id()
-			]);
-
-			wp_send_json_error([
-				'message' => 'Error durante sincronización de imágenes: ' . $e->getMessage()
-			]);
+			self::handleSyncImagesError($e);
 		}
+	}
+
+	/**
+	 * Valida los parámetros de sincronización de imágenes
+	 *
+	 * @return array<string, mixed>|null Array con 'resume' y 'batch_size' si es válido, null si hay error
+	 * @since 1.5.0
+	 */
+	private static function validateSyncImagesParams(): ?array {
+		// Validar que ImageSyncManager esté disponible
+		if (!class_exists('\\MiIntegracionApi\\Sync\\ImageSyncManager')) {
+			wp_send_json_error([
+				'message' => 'ImageSyncManager no está disponible. Verifica que el autoloader esté actualizado.'
+			]);
+			return null;
+		}
+
+		// Obtener parámetros
+		$resume = isset($_POST['resume']) && $_POST['resume'] === 'true';
+		$batch_size = isset($_POST['batch_size']) ? (int)$_POST['batch_size'] : 10;
+
+		// Validar batch_size
+		if ($batch_size < 1 || $batch_size > 100) {
+			wp_send_json_error([
+				'message' => 'Tamaño de lote inválido. Debe estar entre 1 y 100.'
+			]);
+			return null;
+		}
+
+		return [
+			'resume' => $resume,
+			'batch_size' => $batch_size
+		];
+	}
+
+	/**
+	 * Limpia los flags de pausa/cancelación para iniciar una nueva sincronización
+	 *
+	 * @return void
+	 * @since 1.5.0
+	 */
+	private static function cleanupPhase1FlagsForNewSync(): void {
+		// Limpiar flag de detención inmediata
+		delete_option('mia_images_sync_stop_immediately');
+		delete_option('mia_images_sync_stop_timestamp');
+
+		// Limpiar estado de pausa y cancelación
+		\MiIntegracionApi\Helpers\SyncStatusHelper::updatePhase1Images([
+			'paused' => false,
+			'cancelled' => false
+		]);
+
+		// Limpiar caché para asegurar que los cambios se reflejen
+		if (function_exists('wp_cache_flush')) {
+			wp_cache_flush();
+		}
+
+		self::logInfo('Flags de pausa/cancelación limpiados para nueva sincronización', [
+			'user_id' => get_current_user_id()
+		]);
+	}
+
+	/**
+	 * Verifica si ya hay una sincronización de imágenes en progreso
+	 *
+	 * @return bool True si hay sincronización en progreso (y ya se envió respuesta), false si no
+	 * @since 1.5.0
+	 */
+	private static function checkPhase1InProgress(): bool {
+		$phase1_status = \MiIntegracionApi\Helpers\SyncStatusHelper::getCurrentSyncInfo();
+		$phase1_images = $phase1_status['phase1_images'] ?? [];
+
+		$is_in_progress = isset($phase1_images['in_progress']) && $phase1_images['in_progress'] === true;
+		if (!$is_in_progress) {
+			return false;
+		}
+
+		// Enviar respuesta de sincronización en progreso
+		$products_processed = isset($phase1_images['products_processed']) ? (int)$phase1_images['products_processed'] : 0;
+		$total_products = isset($phase1_images['total_products']) ? (int)$phase1_images['total_products'] : 0;
+
+		wp_send_json_success([
+			'message' => 'Sincronización de imágenes ya en progreso',
+			'in_progress' => true,
+			'data' => [
+				'products_processed' => $products_processed,
+				'total_products' => $total_products
+			]
+		]);
+		return true;
+	}
+
+	/**
+	 * Valida las condiciones para reanudar una sincronización
+	 *
+	 * @return bool True si las condiciones son válidas, false si hay error (y ya se envió respuesta)
+	 * @since 1.5.0
+	 */
+	private static function validateResumeConditions(): bool {
+		// Verificar flag de detención inmediata
+		$stop_immediately = get_option('mia_images_sync_stop_immediately', false);
+		if ($stop_immediately) {
+			wp_send_json_error([
+				'message' => 'Sincronización de imágenes detenida por flag de detención inmediata',
+				'stopped' => true
+			]);
+			return false;
+		}
+
+		// Verificar estado de cancelación
+		$phase1_status_check = \MiIntegracionApi\Helpers\SyncStatusHelper::getCurrentSyncInfo();
+		$phase1_images_check = $phase1_status_check['phase1_images'] ?? [];
+		if (!empty($phase1_images_check['cancelled']) && $phase1_images_check['cancelled'] === true) {
+			wp_send_json_error([
+				'message' => 'Sincronización de imágenes fue cancelada. Por favor, inicia una nueva sincronización.',
+				'cancelled' => true
+			]);
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Inicializa la sincronización de imágenes y configura el estado inicial
+	 *
+	 * @param int $batch_size Tamaño de lote para la sincronización
+	 * @return \MiIntegracionApi\Sync\ImageSyncManager Instancia del ImageSyncManager
+	 * @since 1.5.0
+	 */
+	private static function initializePhase1Sync(int $batch_size): \MiIntegracionApi\Sync\ImageSyncManager {
+		// Obtener instancias necesarias
+		$apiConnector = \MiIntegracionApi\Core\ApiConnector::get_instance();
+		$logger = new \MiIntegracionApi\Helpers\Logger('image-sync');
+
+		// Log de inicio
+		self::logInfo('Iniciando sincronización de imágenes vía AJAX (modo incremental)', [
+			'resume' => isset($_POST['resume']) && $_POST['resume'] === 'true',
+			'batch_size' => $batch_size,
+			'user_id' => get_current_user_id(),
+			'note' => 'Las imágenes se procesarán de forma incremental mientras se obtienen los IDs'
+		]);
+
+		// Crear instancia de ImageSyncManager
+		$imageSyncManager = new \MiIntegracionApi\Sync\ImageSyncManager($apiConnector, $logger);
+
+		// Actualizar estado a "in_progress" INMEDIATAMENTE
+		\MiIntegracionApi\Helpers\SyncStatusHelper::updatePhase1Images([
+			'in_progress' => true,
+			'paused' => false,
+			'cancelled' => false,
+			'total_products' => 0, // Se actualizará cuando se obtengan los IDs
+			'products_processed' => 0,
+			'images_processed' => 0,
+			'duplicates_skipped' => 0,
+			'errors' => 0,
+			'last_processed_id' => 0
+		]);
+
+		// Limpiar caché para asegurar que el estado se refleje inmediatamente
+		if (function_exists('wp_cache_flush')) {
+			wp_cache_flush();
+		}
+
+		// Configurar timeout para proceso largo
+		set_time_limit(0);
+		ini_set('max_execution_time', '0');
+		ignore_user_abort(true);
+
+		return $imageSyncManager;
+	}
+
+	/**
+	 * Prepara y envía la respuesta exitosa de sincronización de imágenes
+	 *
+	 * @param array<string, mixed> $result Resultado de la sincronización
+	 * @return void
+	 * @since 1.5.0
+	 */
+	private static function sendSyncImagesSuccess(array $result): void {
+		$response_data = self::buildSyncImagesResponseData($result);
+		$response = [
+			'success' => true,
+			'message' => 'Sincronización de imágenes completada',
+			'data' => $response_data
+		];
+
+		// Log de éxito
+		self::logInfo('Sincronización de imágenes completada vía AJAX', [
+			'result' => $response_data,
+			'user_id' => get_current_user_id()
+		]);
+
+		wp_send_json_success($response);
+	}
+
+	/**
+	 * Construye los datos de respuesta para sincronización de imágenes
+	 *
+	 * @param array<string, mixed> $result Resultado de la sincronización
+	 * @return array<string, mixed> Datos de respuesta formateados
+	 * @since 1.5.0
+	 */
+	private static function buildSyncImagesResponseData(array $result): array {
+		$total_processed = isset($result['total_processed']) ? (int)$result['total_processed'] : 0;
+		$total_attachments = isset($result['total_attachments']) ? (int)$result['total_attachments'] : 0;
+		$total_errors = isset($result['errors']) ? (int)$result['errors'] : 0;
+		$duplicates_skipped = isset($result['duplicates_skipped']) ? (int)$result['duplicates_skipped'] : 0;
+		$checkpoint_saved = isset($result['checkpoint_saved']) ? (bool)$result['checkpoint_saved'] : false;
+		$completed = isset($result['completed']) ? (bool)$result['completed'] : false;
+
+		return [
+			'total_processed' => $total_processed,
+			'total_attachments' => $total_attachments,
+			'total_errors' => $total_errors,
+			'duplicates_skipped' => $duplicates_skipped,
+			'checkpoint_saved' => $checkpoint_saved,
+			'completed' => $completed
+		];
+	}
+
+	/**
+	 * Maneja errores durante la sincronización de imágenes
+	 *
+	 * @param \Exception $e Excepción capturada
+	 * @return void
+	 * @since 1.5.0
+	 */
+	private static function handleSyncImagesError(\Exception $e): void {
+		self::logError('Error durante sincronización de imágenes vía AJAX', [
+			'error' => $e->getMessage(),
+			'file' => $e->getFile(),
+			'line' => $e->getLine(),
+			'trace' => $e->getTraceAsString(),
+			'user_id' => get_current_user_id()
+		]);
+
+		wp_send_json_error([
+			'message' => 'Error durante sincronización de imágenes: ' . $e->getMessage()
+		]);
 	}
 
 	/**
@@ -2248,69 +2320,159 @@ class AjaxSync {
 		}
 
 		try {
-			$status = \MiIntegracionApi\Helpers\SyncStatusHelper::getSyncStatus();
-			$phase1_images = $status['phase1_images'] ?? [];
-
-			if (empty($phase1_images['in_progress']) || !$phase1_images['in_progress']) {
-				wp_send_json_error([
-					'message' => 'No hay sincronización de imágenes en progreso'
-				]);
-				return;
-			}
-
-			// ✅ NUEVO: Establecer flag de detención inmediata
-			update_option('mia_images_sync_stop_immediately', true);
-			update_option('mia_images_sync_stop_timestamp', time());
-			
-			// Limpiar caché para asegurar que el flag se detecte
-			if (function_exists('wp_cache_flush')) {
-				wp_cache_flush();
-			}
-			
-			// Escribir directamente en base de datos
-			global $wpdb;
-			if (isset($wpdb) && $wpdb) {
-				$wpdb->query($wpdb->prepare("
-					INSERT INTO {$wpdb->options} (option_name, option_value, autoload)
-					VALUES (%s, %s, 'yes')
-					ON DUPLICATE KEY UPDATE option_value = %s
-				", 'mia_images_sync_stop_immediately', '1', '1'));
-			}
-
-			// Marcar como cancelada (no pausada)
-			$phase1_images['in_progress'] = false;
-			$phase1_images['paused'] = false;
-			$phase1_images['cancelled'] = true;
-			$phase1_images['last_update'] = time();
-
-			$status['phase1_images'] = $phase1_images;
-			\MiIntegracionApi\Helpers\SyncStatusHelper::saveSyncStatus($status);
-
-			// ✅ NUEVO: Eliminar checkpoint para que no se pueda reanudar
-			delete_option('mia_images_sync_checkpoint');
-
-			$logger = new \MiIntegracionApi\Helpers\Logger('image-sync');
-			$logger->info('Sincronización de imágenes cancelada', [
-				'products_processed' => $phase1_images['products_processed'] ?? 0,
-				'total_products' => $phase1_images['total_products'] ?? 0,
-				'user_id' => get_current_user_id()
-			]);
-
-			wp_send_json_success([
-				'message' => 'Sincronización de imágenes cancelada',
-				'phase1_images' => $phase1_images
-			]);
-
+			self::processCancelPhase1Images();
 		} catch (\Exception $e) {
-			self::logError('Error al cancelar sincronización de imágenes', [
-				'error' => $e->getMessage(),
-				'user_id' => get_current_user_id()
-			]);
-
-			wp_send_json_error([
-				'message' => 'Error al cancelar sincronización: ' . $e->getMessage()
-			]);
+			self::handleCancelPhase1Error($e);
 		}
+	}
+
+	/**
+	 * Procesa la cancelación de sincronización de Fase 1
+	 *
+	 * @return void
+	 * @throws \Exception Si ocurre un error durante el proceso
+	 * @since 1.5.0
+	 */
+	private static function processCancelPhase1Images(): void {
+		$phase1_images = self::getPhase1ImagesStatus();
+		
+		if (!self::isPhase1InProgress($phase1_images)) {
+			wp_send_json_error([
+				'message' => 'No hay sincronización de imágenes en progreso'
+			]);
+			return;
+		}
+
+		// Establecer flags de detención y limpiar caché
+		self::setStopFlagsAndClearCache();
+		
+		// Actualizar estado a cancelado
+		$updated_status = self::markPhase1AsCancelled($phase1_images);
+		
+		// Eliminar checkpoint
+		delete_option('mia_images_sync_checkpoint');
+		
+		// Registrar evento
+		self::logPhase1Cancel($updated_status);
+		
+		wp_send_json_success([
+			'message' => 'Sincronización de imágenes cancelada',
+			'phase1_images' => $updated_status
+		]);
+	}
+
+	/**
+	 * Verifica si la sincronización de Fase 1 está en progreso
+	 *
+	 * @param array<string, mixed> $phase1_images Estado de phase1_images
+	 * @return bool True si está en progreso, false en caso contrario
+	 * @since 1.5.0
+	 */
+	private static function isPhase1InProgress(array $phase1_images): bool {
+		return !empty($phase1_images['in_progress']) && $phase1_images['in_progress'] === true;
+	}
+
+	/**
+	 * Establece los flags de detención inmediata y limpia la caché
+	 *
+	 * @return void
+	 * @since 1.5.0
+	 */
+	private static function setStopFlagsAndClearCache(): void {
+		// Establecer flag de detención inmediata
+		update_option('mia_images_sync_stop_immediately', true);
+		update_option('mia_images_sync_stop_timestamp', time());
+		
+		// Limpiar caché para asegurar que el flag se detecte
+		self::flushCacheIfAvailable();
+		
+		// Escribir directamente en base de datos
+		self::writeStopFlagToDatabase();
+	}
+
+	/**
+	 * Limpia la caché si está disponible
+	 *
+	 * @return void
+	 * @since 1.5.0
+	 */
+	private static function flushCacheIfAvailable(): void {
+		if (function_exists('wp_cache_flush')) {
+			wp_cache_flush();
+		}
+	}
+
+	/**
+	 * Escribe el flag de detención directamente en la base de datos
+	 *
+	 * @return void
+	 * @since 1.5.0
+	 */
+	private static function writeStopFlagToDatabase(): void {
+		global $wpdb;
+		if (!isset($wpdb) || !$wpdb) {
+			return;
+		}
+		
+		$wpdb->query($wpdb->prepare("
+			INSERT INTO {$wpdb->options} (option_name, option_value, autoload)
+			VALUES (%s, %s, 'yes')
+			ON DUPLICATE KEY UPDATE option_value = %s
+		", 'mia_images_sync_stop_immediately', '1', '1'));
+	}
+
+	/**
+	 * Marca la sincronización de Fase 1 como cancelada
+	 *
+	 * @param array<string, mixed> $phase1_images Estado actual de phase1_images
+	 * @return array<string, mixed> Estado actualizado de phase1_images
+	 * @since 1.5.0
+	 */
+	private static function markPhase1AsCancelled(array $phase1_images): array {
+		$phase1_images['in_progress'] = false;
+		$phase1_images['paused'] = false;
+		$phase1_images['cancelled'] = true;
+		$phase1_images['last_update'] = time();
+
+		$status = \MiIntegracionApi\Helpers\SyncStatusHelper::getSyncStatus();
+		$status['phase1_images'] = $phase1_images;
+		\MiIntegracionApi\Helpers\SyncStatusHelper::saveSyncStatus($status);
+
+		return $phase1_images;
+	}
+
+	/**
+	 * Registra el evento de cancelación de sincronización de Fase 1
+	 *
+	 * @param array<string, mixed> $phase1_images Estado de phase1_images
+	 * @return void
+	 * @since 1.5.0
+	 */
+	private static function logPhase1Cancel(array $phase1_images): void {
+		$logger = new \MiIntegracionApi\Helpers\Logger('image-sync');
+		$logger->info('Sincronización de imágenes cancelada', [
+			'products_processed' => $phase1_images['products_processed'] ?? 0,
+			'total_products' => $phase1_images['total_products'] ?? 0,
+			'user_id' => get_current_user_id()
+		]);
+	}
+
+	/**
+	 * Maneja errores durante la cancelación de sincronización de Fase 1
+	 *
+	 * @param \Exception $e Excepción capturada
+	 * @return void
+	 * @since 1.5.0
+	 */
+	private static function handleCancelPhase1Error(\Exception $e): void {
+		self::logError('Error al cancelar sincronización de imágenes', [
+			'error' => $e->getMessage(),
+			'user_id' => get_current_user_id()
+		]);
+
+		wp_send_json_error([
+			'message' => 'Error al cancelar sincronización: ' . $e->getMessage()
+		]);
 	}
 
 	/**
@@ -2325,56 +2487,140 @@ class AjaxSync {
 		}
 
 		try {
-			$status = \MiIntegracionApi\Helpers\SyncStatusHelper::getSyncStatus();
-			$phase1_images = $status['phase1_images'] ?? [];
-
-			if (empty($phase1_images['paused']) || !$phase1_images['paused']) {
-				wp_send_json_error([
-					'message' => 'La sincronización de imágenes no está pausada'
-				]);
-				return;
-			}
-
-			// Obtener batch size del selector o usar valor por defecto
-			$batch_size = isset($_POST['batch_size']) ? (int)$_POST['batch_size'] : 50;
-			if ($batch_size < 1 || $batch_size > 100) {
-				$batch_size = 50;
-			}
-
-			// Marcar como en progreso
-			$phase1_images['in_progress'] = true;
-			$phase1_images['paused'] = false;
-			$phase1_images['last_update'] = time();
-
-			$status['phase1_images'] = $phase1_images;
-			\MiIntegracionApi\Helpers\SyncStatusHelper::saveSyncStatus($status);
-
-			$logger = new \MiIntegracionApi\Helpers\Logger('image-sync');
-			$logger->info('Sincronización de imágenes reanudada', [
-				'products_processed' => $phase1_images['products_processed'] ?? 0,
-				'total_products' => $phase1_images['total_products'] ?? 0,
-				'batch_size' => $batch_size,
-				'user_id' => get_current_user_id()
-			]);
-
-			// Reanudar sincronización: marcar como en progreso
-			// El frontend llamará al endpoint de sincronización para continuar
-
-			wp_send_json_success([
-				'message' => 'Sincronización de imágenes reanudada',
-				'phase1_images' => $phase1_images
-			]);
-
+			self::processResumePhase1Images();
 		} catch (\Exception $e) {
-			self::logError('Error al reanudar sincronización de imágenes', [
-				'error' => $e->getMessage(),
-				'user_id' => get_current_user_id()
-			]);
-
-			wp_send_json_error([
-				'message' => 'Error al reanudar sincronización: ' . $e->getMessage()
-			]);
+			self::handleResumePhase1Error($e);
 		}
+	}
+
+	/**
+	 * Procesa la reanudación de sincronización de Fase 1
+	 *
+	 * @return void
+	 * @throws \Exception Si ocurre un error durante el proceso
+	 * @since 1.5.0
+	 */
+	private static function processResumePhase1Images(): void {
+		$phase1_images = self::getPhase1ImagesStatus();
+		
+		if (!self::isPhase1Paused($phase1_images)) {
+			wp_send_json_error([
+				'message' => 'La sincronización de imágenes no está pausada'
+			]);
+			return;
+		}
+
+		$batch_size = self::normalizeBatchSize($_POST['batch_size'] ?? null);
+		$updated_status = self::resumePhase1ImagesStatus($phase1_images);
+		
+		self::logPhase1Resume($updated_status, $batch_size);
+		
+		wp_send_json_success([
+			'message' => 'Sincronización de imágenes reanudada',
+			'phase1_images' => $updated_status
+		]);
+	}
+
+	/**
+	 * Obtiene el estado actual de Fase 1 (imágenes)
+	 *
+	 * @return array<string, mixed> Estado de phase1_images
+	 * @since 1.5.0
+	 */
+	private static function getPhase1ImagesStatus(): array {
+		$status = \MiIntegracionApi\Helpers\SyncStatusHelper::getSyncStatus();
+		return $status['phase1_images'] ?? [];
+	}
+
+	/**
+	 * Verifica si la sincronización de Fase 1 está pausada
+	 *
+	 * @param array<string, mixed> $phase1_images Estado de phase1_images
+	 * @return bool True si está pausada, false en caso contrario
+	 * @since 1.5.0
+	 */
+	private static function isPhase1Paused(array $phase1_images): bool {
+		return !empty($phase1_images['paused']) && $phase1_images['paused'] === true;
+	}
+
+	/**
+	 * Normaliza el tamaño de lote a un valor válido
+	 *
+	 * @param mixed $batch_size Valor del batch_size a normalizar
+	 * @return int Tamaño de lote normalizado (entre 1 y 100, por defecto 50)
+	 * @since 1.5.0
+	 */
+	private static function normalizeBatchSize($batch_size): int {
+		$default_batch_size = 50;
+		$min_batch_size = 1;
+		$max_batch_size = 100;
+		
+		if ($batch_size === null) {
+			return $default_batch_size;
+		}
+		
+		$batch_size = (int) $batch_size;
+		
+		if ($batch_size < $min_batch_size || $batch_size > $max_batch_size) {
+			return $default_batch_size;
+		}
+		
+		return $batch_size;
+	}
+
+	/**
+	 * Actualiza el estado de Fase 1 para reanudar la sincronización
+	 *
+	 * @param array<string, mixed> $phase1_images Estado actual de phase1_images
+	 * @return array<string, mixed> Estado actualizado de phase1_images
+	 * @since 1.5.0
+	 */
+	private static function resumePhase1ImagesStatus(array $phase1_images): array {
+		$phase1_images['in_progress'] = true;
+		$phase1_images['paused'] = false;
+		$phase1_images['last_update'] = time();
+
+		$status = \MiIntegracionApi\Helpers\SyncStatusHelper::getSyncStatus();
+		$status['phase1_images'] = $phase1_images;
+		\MiIntegracionApi\Helpers\SyncStatusHelper::saveSyncStatus($status);
+
+		return $phase1_images;
+	}
+
+	/**
+	 * Registra el evento de reanudación de sincronización de Fase 1
+	 *
+	 * @param array<string, mixed> $phase1_images Estado de phase1_images
+	 * @param int                  $batch_size     Tamaño de lote utilizado
+	 * @return void
+	 * @since 1.5.0
+	 */
+	private static function logPhase1Resume(array $phase1_images, int $batch_size): void {
+		$logger = new \MiIntegracionApi\Helpers\Logger('image-sync');
+		$logger->info('Sincronización de imágenes reanudada', [
+			'products_processed' => $phase1_images['products_processed'] ?? 0,
+			'total_products' => $phase1_images['total_products'] ?? 0,
+			'batch_size' => $batch_size,
+			'user_id' => get_current_user_id()
+		]);
+	}
+
+	/**
+	 * Maneja errores durante la reanudación de sincronización de Fase 1
+	 *
+	 * @param \Exception $e Excepción capturada
+	 * @return void
+	 * @since 1.5.0
+	 */
+	private static function handleResumePhase1Error(\Exception $e): void {
+		self::logError('Error al reanudar sincronización de imágenes', [
+			'error' => $e->getMessage(),
+			'user_id' => get_current_user_id()
+		]);
+
+		wp_send_json_error([
+			'message' => 'Error al reanudar sincronización: ' . $e->getMessage()
+		]);
 	}
 
 	/**
