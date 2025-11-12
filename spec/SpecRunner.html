@@ -72,7 +72,13 @@
         // Cargar ErrorHandler.js para poder testearlo
         '../assets/js/dashboard/core/ErrorHandler.js',
         // Cargar PollingManager.js para poder testearlo
-        '../assets/js/dashboard/managers/PollingManager.js'
+        '../assets/js/dashboard/managers/PollingManager.js',
+        // ✅ NUEVO: Cargar Phase2Manager.js para análisis de Fase 2
+        '../assets/js/dashboard/sync/Phase2Manager.js',
+        // ✅ NUEVO: Cargar SyncDashboard.js para análisis de Fase 2
+        '../assets/js/dashboard/components/SyncDashboard.js',
+        // ✅ NUEVO: Cargar SyncProgress.js (dependencia de Phase2Manager)
+        '../assets/js/dashboard/sync/SyncProgress.js'
       ];
 
       // Cargar archivos fuente
@@ -94,7 +100,10 @@
         const specFiles = [
           'dashboard/components/ConsoleManagerSpec.js',
           'dashboard/core/ErrorHandlerSpec.js',
-          'dashboard/managers/PollingManagerSpec.js'
+          'dashboard/managers/PollingManagerSpec.js',
+          // ✅ NUEVO: Tests de Fase 2
+          'dashboard/sync/Phase2ManagerSpec.js',
+          'dashboard/components/SyncDashboardPhase2Spec.js'
         ];
 
         let specIndex = 0;
