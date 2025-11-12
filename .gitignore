@@ -56,3 +56,4 @@ reports/plato/
 .sonar/
 .scannerwork/
 sonar-scanner
+.cursor/
