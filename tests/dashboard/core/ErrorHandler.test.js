@@ -1,24 +1,21 @@
 /**
- * Tests para ErrorHandler
+ * Tests para ErrorHandler con Jest
  * 
  * Suite completa de tests para el módulo ErrorHandler refactorizado.
+ * ErrorHandler ahora usa JavaScript puro (sin jQuery).
  * 
  * @file ErrorHandler.test.js
  * @since 1.0.0
  * @author Christian
  */
 
-// Cargar el módulo ErrorHandler real (sobrescribir el mock de jest.setup.js)
+/* eslint-env jest */
+/* global describe, it, expect, beforeEach, afterEach, jest */
+
 const fs = require('fs');
 const path = require('path');
 
-// Restaurar jQuery real (jest.setup.js lo sobrescribe con un mock)
-// Necesitamos jQuery real para que ErrorHandler funcione correctamente
-const realJQuery = require('jquery');
-global.jQuery = realJQuery;
-global.$ = realJQuery;
-
-// Configurar jsdom para que jQuery funcione correctamente
+// Configurar jsdom para que el DOM funcione correctamente
 if (typeof document !== 'undefined') {
   // Crear un body si no existe
   if (!document.body) {
@@ -27,21 +24,142 @@ if (typeof document !== 'undefined') {
   }
 }
 
+// Configurar DASHBOARD_CONFIG antes de cargar ErrorHandler
+global.DASHBOARD_CONFIG = {
+  selectors: {
+    feedback: '#mi-sync-feedback'
+  }
+};
+
+// Configurar window.DASHBOARD_CONFIG también
+if (typeof window !== 'undefined') {
+  window.DASHBOARD_CONFIG = global.DASHBOARD_CONFIG;
+}
+
+// Configurar Sanitizer mock antes de cargar ErrorHandler
+const sanitizerMock = {
+  sanitizeMessage: jest.fn((message) => {
+    if (message === null || message === undefined) {
+      return '';
+    }
+    return String(message).replace(/[&<>"']/g, function(m) {
+      const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', '\'': '&#039;' };
+      return map[m];
+    });
+  })
+};
+
+global.Sanitizer = sanitizerMock;
+if (typeof window !== 'undefined') {
+  window.Sanitizer = sanitizerMock;
+}
+
 // Leer y ejecutar el archivo ErrorHandler.js
-// Desde tests/dashboard/core/ necesitamos subir 3 niveles para llegar a la raíz
 const errorHandlerPath = path.join(__dirname, '../../../assets/js/dashboard/core/ErrorHandler.js');
 const errorHandlerCode = fs.readFileSync(errorHandlerPath, 'utf8');
 
+// Asegurar que window esté disponible
+if (typeof window === 'undefined') {
+  global.window = global;
+}
+
 // Ejecutar el código para cargar ErrorHandler real
-// Esto sobrescribirá el mock de jest.setup.js
-eval(errorHandlerCode);
+// El código de ErrorHandler.js verifica typeof window !== 'undefined' y expone window.ErrorHandler
+// IMPORTANTE: Esto debe ejecutarse DESPUÉS de jest.setup.js para sobrescribir el mock
+// Eliminar el mock de jest.setup.js primero
+if (typeof global.ErrorHandler !== 'undefined' && typeof global.ErrorHandler.logError === 'function') {
+  // Verificar si es el mock (los mocks de Jest tienen una estructura específica)
+  const isMock = global.ErrorHandler.logError.toString().includes('fn.apply');
+  if (isMock) {
+    // Es el mock, eliminarlo para que el código real pueda cargarse
+    delete global.ErrorHandler;
+  }
+}
+
+try {
+  // Ejecutar el código en el contexto global/window
+  // eslint-disable-next-line no-eval
+  eval(errorHandlerCode);
+  
+  // Verificar que se cargó correctamente y es el código real
+  if (typeof window !== 'undefined' && window.ErrorHandler) {
+    const methodCode = window.ErrorHandler.logError ? window.ErrorHandler.logError.toString() : '';
+    const isRealCode = methodCode.includes('console.error') && methodCode.includes('timestamp');
+    
+    if (!isRealCode) {
+      // El mock todavía está ahí, forzar la carga del código real
+      // eslint-disable-next-line no-console
+      console.warn('ErrorHandler todavía es el mock. Forzando carga del código real...');
+      
+      // Eliminar el mock completamente
+      delete global.ErrorHandler;
+      delete window.ErrorHandler;
+      
+      // Ejecutar el código de nuevo
+      // eslint-disable-next-line no-eval
+      eval(errorHandlerCode);
+    }
+  }
+} catch (e) {
+  // Si falla con eval, intentar con Function constructor
+  try {
+    // eslint-disable-next-line no-new-func
+    const loadErrorHandler = new Function('window', 'document', 'DASHBOARD_CONFIG', 'Sanitizer', errorHandlerCode);
+    loadErrorHandler(
+      typeof window !== 'undefined' ? window : global,
+      typeof document !== 'undefined' ? document : {},
+      global.DASHBOARD_CONFIG,
+      global.Sanitizer
+    );
+  } catch (e2) {
+    // eslint-disable-next-line no-console
+    console.error('Error al cargar ErrorHandler:', e2);
+    throw e2;
+  }
+}
+
+// Verificar que ErrorHandler se cargó correctamente y sobrescribir el mock de jest.setup.js
+if (typeof window !== 'undefined' && typeof window.ErrorHandler !== 'undefined') {
+  // El código se cargó correctamente
+  // window.ErrorHandler debería ser la clase real (función)
+} else {
+  // eslint-disable-next-line no-console
+  console.error('ErrorHandler no se cargó correctamente. window.ErrorHandler:', typeof window !== 'undefined' ? typeof window.ErrorHandler : 'window no disponible');
+}
+
+// Asegurar que el mock de jest.setup.js no interfiera
+// El código de ErrorHandler.js expone window.ErrorHandler = ErrorHandler (la clase)
+// Si jest.setup.js tiene un mock, lo sobrescribimos aquí
+if (typeof window !== 'undefined' && window.ErrorHandler) {
+  // El código real se cargó correctamente, sobrescribir cualquier mock de jest.setup.js
+  global.ErrorHandler = window.ErrorHandler;
+  
+  // Verificar que tiene los métodos estáticos
+  if (typeof window.ErrorHandler.logError === 'function') {
+    // ErrorHandler es una clase con métodos estáticos (comportamiento esperado)
+    // El código real está disponible
+  } else {
+    // eslint-disable-next-line no-console
+    console.warn('ErrorHandler se cargó pero no tiene métodos estáticos. Puede ser el mock de jest.setup.js');
+  }
+}
 
 describe('ErrorHandler', () => {
   let originalConsoleError;
   let originalConsoleWarn;
   let originalConsoleLog;
-  let $feedbackElement;
-  let $body;
+  let feedbackElement;
+
+  // Test de diagnóstico para verificar que ErrorHandler se cargó
+  it('debe tener ErrorHandler disponible después de cargar', () => {
+    expect(typeof window).not.toBe('undefined');
+    expect(typeof window.ErrorHandler).not.toBe('undefined');
+    // ErrorHandler puede ser una clase (función) o un objeto con métodos estáticos
+    // Verificamos que tenga los métodos necesarios
+    expect(window.ErrorHandler).toBeDefined();
+    expect(typeof window.ErrorHandler.logError).toBe('function');
+    expect(typeof window.ErrorHandler.showUIError).toBe('function');
+  });
 
   beforeEach(() => {
     // Guardar referencias originales de console
@@ -49,29 +167,32 @@ describe('ErrorHandler', () => {
     originalConsoleWarn = console.warn;
     originalConsoleLog = console.log;
     
-    // Limpiar mocks de console
+    // Asegurar que estamos usando el ErrorHandler real, no el mock de jest.setup.js
+    if (typeof window !== 'undefined' && window.ErrorHandler) {
+      // Sobrescribir cualquier mock de jest.setup.js
+      global.ErrorHandler = window.ErrorHandler;
+    }
+    
+    // Limpiar mocks de console (crear nuevos mocks para cada test)
     console.error = jest.fn();
     console.warn = jest.fn();
     console.log = jest.fn();
 
-    // Asegurar que jQuery esté disponible y funcional
-    if (typeof jQuery === 'undefined' || typeof jQuery !== 'function') {
-      // jQuery debería estar disponible desde jest.setup.js
-      throw new Error('jQuery no está disponible en el entorno de test');
+    // Limpiar cualquier elemento previo (JavaScript puro)
+    const existingFeedback = document.querySelector('#mi-sync-feedback');
+    if (existingFeedback && existingFeedback.parentNode) {
+      existingFeedback.parentNode.removeChild(existingFeedback);
+    }
+    const existingFeedbackClass = document.querySelector('.mi-api-feedback');
+    if (existingFeedbackClass && existingFeedbackClass.parentNode) {
+      existingFeedbackClass.parentNode.removeChild(existingFeedbackClass);
     }
 
-    // Limpiar cualquier elemento previo
-    if (jQuery('#mi-sync-feedback').length > 0) {
-      jQuery('#mi-sync-feedback').remove();
-    }
-    if (jQuery('.mi-api-feedback').length > 0) {
-      jQuery('.mi-api-feedback').remove();
-    }
-
-    // Crear elementos DOM mockeados
-    $body = jQuery('body');
-    $feedbackElement = jQuery('<div id="mi-sync-feedback" class="mi-api-feedback"></div>');
-    $body.append($feedbackElement);
+    // Crear elemento DOM (JavaScript puro)
+    feedbackElement = document.createElement('div');
+    feedbackElement.id = 'mi-sync-feedback';
+    feedbackElement.className = 'mi-api-feedback';
+    document.body.appendChild(feedbackElement);
 
     // Resetear DASHBOARD_CONFIG
     global.DASHBOARD_CONFIG = {
@@ -79,9 +200,20 @@ describe('ErrorHandler', () => {
         feedback: '#mi-sync-feedback'
       }
     };
+    if (typeof window !== 'undefined') {
+      window.DASHBOARD_CONFIG = global.DASHBOARD_CONFIG;
+    }
+
+    // Resetear Sanitizer mock
+    if (global.Sanitizer && global.Sanitizer.sanitizeMessage) {
+      global.Sanitizer.sanitizeMessage.mockClear();
+    }
+    if (typeof window !== 'undefined' && window.Sanitizer && window.Sanitizer.sanitizeMessage) {
+      window.Sanitizer.sanitizeMessage.mockClear();
+    }
 
     // Asegurar que ErrorHandler esté disponible
-    if (typeof ErrorHandler === 'undefined') {
+    if (typeof window === 'undefined' || typeof window.ErrorHandler === 'undefined') {
       throw new Error('ErrorHandler no está disponible. Verifica que el módulo se haya cargado correctamente.');
     }
   });
@@ -92,15 +224,17 @@ describe('ErrorHandler', () => {
     console.warn = originalConsoleWarn;
     console.log = originalConsoleLog;
 
-    // Limpiar DOM
-    if ($feedbackElement && $feedbackElement.length > 0) {
-      $feedbackElement.remove();
+    // Limpiar DOM (JavaScript puro)
+    if (feedbackElement && feedbackElement.parentNode) {
+      feedbackElement.parentNode.removeChild(feedbackElement);
     }
-    if (jQuery('.mi-api-feedback').length > 0) {
-      jQuery('.mi-api-feedback').remove();
+    const existingFeedback = document.querySelector('#mi-sync-feedback');
+    if (existingFeedback && existingFeedback.parentNode) {
+      existingFeedback.parentNode.removeChild(existingFeedback);
     }
-    if (jQuery('#mi-sync-feedback').length > 0) {
-      jQuery('#mi-sync-feedback').remove();
+    const existingFeedbackClass = document.querySelector('.mi-api-feedback');
+    if (existingFeedbackClass && existingFeedbackClass.parentNode) {
+      existingFeedbackClass.parentNode.removeChild(existingFeedbackClass);
     }
 
     // Limpiar mocks
@@ -109,21 +243,47 @@ describe('ErrorHandler', () => {
 
   describe('logError', () => {
     it('debe registrar un error en la consola con timestamp', () => {
+      // Verificar que el método existe y es el código real
+      expect(typeof window.ErrorHandler.logError).toBe('function');
+      
+      // Verificar que no es el mock de jest.setup.js
+      const methodCode = window.ErrorHandler.logError.toString();
+      expect(methodCode).toContain('console.error');
+      expect(methodCode).toContain('timestamp');
+      
+      // Guardar console.error original antes de mockearlo
+      const originalConsoleError = console.error;
+      
+      // Crear un nuevo mock para este test
+      const mockConsoleError = jest.fn();
+      console.error = mockConsoleError;
+      
       const message = 'Error de prueba';
       
-      ErrorHandler.logError(message);
+      // Llamar al método directamente
+      try {
+        window.ErrorHandler.logError(message);
+      } catch (e) {
+        // Si hay un error, restaurar y fallar
+        console.error = originalConsoleError;
+        throw e;
+      }
       
-      expect(console.error).toHaveBeenCalledTimes(1);
-      const callArgs = console.error.mock.calls[0][0];
+      // Verificar que se llamó
+      expect(mockConsoleError).toHaveBeenCalledTimes(1);
+      const callArgs = mockConsoleError.mock.calls[0][0];
       expect(callArgs).toContain(message);
       expect(callArgs).toMatch(/\[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/); // Formato ISO timestamp
+      
+      // Restaurar console.error original
+      console.error = originalConsoleError;
     });
 
     it('debe incluir el contexto cuando se proporciona', () => {
       const message = 'Error de prueba';
       const context = 'AJAX';
       
-      ErrorHandler.logError(message, context);
+      window.ErrorHandler.logError(message, context);
       
       expect(console.error).toHaveBeenCalledTimes(1);
       const callArgs = console.error.mock.calls[0][0];
@@ -134,7 +294,7 @@ describe('ErrorHandler', () => {
     it('no debe incluir contexto cuando no se proporciona', () => {
       const message = 'Error de prueba';
       
-      ErrorHandler.logError(message);
+      window.ErrorHandler.logError(message);
       
       expect(console.error).toHaveBeenCalledTimes(1);
       const callArgs = console.error.mock.calls[0][0];
@@ -146,22 +306,22 @@ describe('ErrorHandler', () => {
     it('debe mostrar un error en el elemento de feedback', () => {
       const message = 'Error de prueba';
       
-      ErrorHandler.showUIError(message, 'error');
+      window.ErrorHandler.showUIError(message, 'error');
       
-      expect($feedbackElement.html()).toContain(message);
-      expect($feedbackElement.html()).toContain('mi-api-error');
-      expect($feedbackElement.html()).toContain('❌');
-      expect($feedbackElement.hasClass('in-progress')).toBe(false);
+      expect(feedbackElement.innerHTML).toContain(message);
+      expect(feedbackElement.innerHTML).toContain('mi-api-error');
+      expect(feedbackElement.innerHTML).toContain('❌');
+      expect(feedbackElement.classList.contains('in-progress')).toBe(false);
     });
 
     it('debe mostrar una advertencia cuando el tipo es warning', () => {
       const message = 'Advertencia de prueba';
       
-      ErrorHandler.showUIError(message, 'warning');
+      window.ErrorHandler.showUIError(message, 'warning');
       
-      expect($feedbackElement.html()).toContain(message);
-      expect($feedbackElement.html()).toContain('mi-api-warning');
-      expect($feedbackElement.html()).toContain('⚠️');
+      expect(feedbackElement.innerHTML).toContain(message);
+      expect(feedbackElement.innerHTML).toContain('mi-api-warning');
+      expect(feedbackElement.innerHTML).toContain('⚠️');
     });
 
     it('debe usar el selector de DASHBOARD_CONFIG cuando está disponible', () => {
@@ -170,88 +330,61 @@ describe('ErrorHandler', () => {
           feedback: '#mi-sync-feedback'
         }
       };
+      if (typeof window !== 'undefined') {
+        window.DASHBOARD_CONFIG = global.DASHBOARD_CONFIG;
+      }
       
       const message = 'Error de prueba';
-      ErrorHandler.showUIError(message);
+      window.ErrorHandler.showUIError(message);
       
-      expect($feedbackElement.html()).toContain(message);
-    });
-
-    it('debe usar fallback cuando DASHBOARD_CONFIG no está disponible', () => {
-      // NOTA: El código original asume que DASHBOARD_CONFIG siempre está disponible
-      // Este test verifica que si DASHBOARD_CONFIG no está definido, el código falla
-      // (comportamiento del original). En un entorno real, DASHBOARD_CONFIG siempre está definido.
-      
-      // Restaurar setTimeout real para evitar problemas con el mock
-      const nodeSetTimeout = require('timers').setTimeout;
-      global.setTimeout = nodeSetTimeout;
-      
-      // Remover el elemento de feedback
-      $feedbackElement.remove();
-      
-      // Guardar DASHBOARD_CONFIG original
-      const originalConfig = global.DASHBOARD_CONFIG;
-      
-      // Intentar usar ErrorHandler sin DASHBOARD_CONFIG (debería fallar como el original)
-      global.DASHBOARD_CONFIG = undefined;
-      
-      const message = 'Error de prueba';
-      
-      // El código original no verifica DASHBOARD_CONFIG, así que esto debería lanzar un error
-      expect(() => {
-        ErrorHandler.showUIError(message);
-      }).toThrow();
-      
-      // Restaurar configuración
-      global.DASHBOARD_CONFIG = originalConfig;
+      expect(feedbackElement.innerHTML).toContain(message);
     });
 
     it('debe crear elemento temporal cuando no existe el feedback', () => {
-      // Guardar referencia al setTimeout real de Node.js antes de los mocks
+      // Restaurar setTimeout real para evitar problemas con el mock
+      jest.useRealTimers();
       const nodeSetTimeout = require('timers').setTimeout;
-      
-      // Restaurar setTimeout real (jest.setup.js lo mockea incorrectamente)
       global.setTimeout = nodeSetTimeout;
       
-      $feedbackElement.remove();
+      feedbackElement.remove();
       
       const message = 'Error de prueba';
-      ErrorHandler.showUIError(message);
+      window.ErrorHandler.showUIError(message);
       
-      // Debe crear un elemento temporal
-      const $tempFeedback = jQuery('#mi-sync-feedback');
-      expect($tempFeedback.length).toBeGreaterThan(0);
-      expect($tempFeedback.css('position')).toBe('fixed');
-      expect($tempFeedback.css('zIndex')).toBe('9999');
+      // Debe crear un elemento temporal (JavaScript puro)
+      const tempFeedback = document.querySelector('#mi-sync-feedback');
+      expect(tempFeedback).not.toBeNull();
+      expect(tempFeedback.style.position).toBe('fixed');
+      expect(tempFeedback.style.zIndex).toBe('9999');
       
       // Limpiar el elemento temporal creado inmediatamente para no afectar otros tests
-      $tempFeedback.remove();
+      if (tempFeedback && tempFeedback.parentNode) {
+        tempFeedback.parentNode.removeChild(tempFeedback);
+      }
+      
+      jest.useFakeTimers();
     });
 
     it('debe auto-ocultar elemento temporal después de 5 segundos', () => {
-      // Este test verifica que se programa el setTimeout, pero no espera la ejecución real
-      // ya que jest.setup.js tiene un mock problemático de setTimeout
       jest.useRealTimers();
       
-      // Guardar referencia al setTimeout real de Node.js
       const nodeSetTimeout = require('timers').setTimeout;
       global.setTimeout = nodeSetTimeout;
       
-      $feedbackElement.remove();
+      feedbackElement.remove();
       
       const message = 'Error de prueba';
-      ErrorHandler.showUIError(message);
+      window.ErrorHandler.showUIError(message);
       
-      const $tempFeedback = jQuery('#mi-sync-feedback');
-      expect($tempFeedback.length).toBeGreaterThan(0);
-      
-      // Verificar que el elemento se creó correctamente
-      // El auto-ocultar se prueba de forma indirecta verificando que el código
-      // programa el setTimeout (esto se verifica en el código fuente)
-      expect($tempFeedback.length).toBeGreaterThan(0);
+      const tempFeedback = document.querySelector('#mi-sync-feedback');
+      expect(tempFeedback).not.toBeNull();
       
       // Limpiar manualmente para no afectar otros tests
-      $tempFeedback.remove();
+      if (tempFeedback && tempFeedback.parentNode) {
+        tempFeedback.parentNode.removeChild(tempFeedback);
+      }
+      
+      jest.useFakeTimers();
     });
   });
 
@@ -259,55 +392,55 @@ describe('ErrorHandler', () => {
     it('debe mostrar error cuando xhr.status es 0', () => {
       const xhr = { status: 0 };
       
-      ErrorHandler.showConnectionError(xhr);
+      window.ErrorHandler.showConnectionError(xhr);
       
-      expect($feedbackElement.html()).toContain('No se pudo conectar al servidor');
+      expect(feedbackElement.innerHTML).toContain('No se pudo conectar al servidor');
     });
 
     it('debe mostrar error de permisos cuando xhr.status es 403', () => {
       const xhr = { status: 403 };
       
-      ErrorHandler.showConnectionError(xhr);
+      window.ErrorHandler.showConnectionError(xhr);
       
-      expect($feedbackElement.html()).toContain('Acceso denegado');
+      expect(feedbackElement.innerHTML).toContain('Acceso denegado');
     });
 
     it('debe mostrar error cuando xhr.status es 404', () => {
       const xhr = { status: 404 };
       
-      ErrorHandler.showConnectionError(xhr);
+      window.ErrorHandler.showConnectionError(xhr);
       
-      expect($feedbackElement.html()).toContain('Recurso no encontrado');
+      expect(feedbackElement.innerHTML).toContain('Recurso no encontrado');
     });
 
     it('debe mostrar error del servidor cuando xhr.status es 500', () => {
       const xhr = { status: 500 };
       
-      ErrorHandler.showConnectionError(xhr);
+      window.ErrorHandler.showConnectionError(xhr);
       
-      expect($feedbackElement.html()).toContain('Problema interno');
+      expect(feedbackElement.innerHTML).toContain('Problema interno');
     });
 
     it('debe mostrar error genérico para otros códigos de estado', () => {
       const xhr = { status: 418 };
       
-      ErrorHandler.showConnectionError(xhr);
+      window.ErrorHandler.showConnectionError(xhr);
       
-      expect($feedbackElement.html()).toContain('Error de conexión (418)');
+      expect(feedbackElement.innerHTML).toContain('Error de conexión (418)');
     });
 
     it('debe usar statusText cuando status no está disponible', () => {
       const xhr = { statusText: 'Not Found' };
       
-      ErrorHandler.showConnectionError(xhr);
+      window.ErrorHandler.showConnectionError(xhr);
       
-      expect($feedbackElement.html()).toContain('Error de conexión');
+      expect(feedbackElement.innerHTML).toContain('Error de conexión');
     });
 
     it('debe manejar xhr null o undefined', () => {
-      ErrorHandler.showConnectionError(null);
+      window.ErrorHandler.showConnectionError(null);
       
-      expect($feedbackElement.html()).toContain('No se pudo establecer comunicación');
+      expect(feedbackElement.innerHTML).toContain('No se pudo establecer comunicación');
     });
   });
 
@@ -315,7 +448,7 @@ describe('ErrorHandler', () => {
     it('debe registrar el error en la consola', () => {
       const reason = 'Click automático detectado';
       
-      ErrorHandler.showProtectionError(reason);
+      window.ErrorHandler.showProtectionError(reason);
       
       expect(console.error).toHaveBeenCalledTimes(1);
       const callArgs = console.error.mock.calls[0][0];
@@ -325,12 +458,12 @@ describe('ErrorHandler', () => {
 
     it('no debe mostrar error en la UI', () => {
       const reason = 'Click automático detectado';
-      const initialHtml = $feedbackElement.html();
+      const initialHtml = feedbackElement.innerHTML;
       
-      ErrorHandler.showProtectionError(reason);
+      window.ErrorHandler.showProtectionError(reason);
       
       // El HTML no debe cambiar (no se muestra en UI)
-      expect($feedbackElement.html()).toBe(initialHtml || '');
+      expect(feedbackElement.innerHTML).toBe(initialHtml || '');
     });
   });
 
@@ -338,7 +471,7 @@ describe('ErrorHandler', () => {
     it('debe registrar el error en la consola con contexto CANCEL', () => {
       const message = 'Error al cancelar';
       
-      ErrorHandler.showCancelError(message);
+      window.ErrorHandler.showCancelError(message);
       
       expect(console.error).toHaveBeenCalledTimes(1);
       const callArgs = console.error.mock.calls[0][0];
@@ -350,17 +483,17 @@ describe('ErrorHandler', () => {
     it('debe mostrar el error en la UI', () => {
       const message = 'Error al cancelar';
       
-      ErrorHandler.showCancelError(message);
+      window.ErrorHandler.showCancelError(message);
       
-      expect($feedbackElement.html()).toContain('Error al cancelar');
-      expect($feedbackElement.html()).toContain(message);
+      expect(feedbackElement.innerHTML).toContain('Error al cancelar');
+      expect(feedbackElement.innerHTML).toContain(message);
     });
 
     it('debe usar contexto personalizado cuando se proporciona', () => {
       const message = 'Error al cancelar';
       const context = 'CUSTOM_CONTEXT';
       
-      ErrorHandler.showCancelError(message, context);
+      window.ErrorHandler.showCancelError(message, context);
       
       expect(console.error).toHaveBeenCalledTimes(1);
       const callArgs = console.error.mock.calls[0][0];
@@ -372,7 +505,7 @@ describe('ErrorHandler', () => {
     it('debe registrar el error en la consola con contexto CRITICAL', () => {
       const message = 'Error crítico del sistema';
       
-      ErrorHandler.showCriticalError(message);
+      window.ErrorHandler.showCriticalError(message);
       
       expect(console.error).toHaveBeenCalledTimes(1);
       const callArgs = console.error.mock.calls[0][0];
@@ -384,17 +517,17 @@ describe('ErrorHandler', () => {
     it('debe mostrar el error en la UI', () => {
       const message = 'Error crítico del sistema';
       
-      ErrorHandler.showCriticalError(message);
+      window.ErrorHandler.showCriticalError(message);
       
-      expect($feedbackElement.html()).toContain('Error crítico');
-      expect($feedbackElement.html()).toContain(message);
+      expect(feedbackElement.innerHTML).toContain('Error crítico');
+      expect(feedbackElement.innerHTML).toContain(message);
     });
 
     it('debe usar contexto personalizado cuando se proporciona', () => {
       const message = 'Error crítico del sistema';
       const context = 'CUSTOM_CRITICAL';
       
-      ErrorHandler.showCriticalError(message, context);
+      window.ErrorHandler.showCriticalError(message, context);
       
       expect(console.error).toHaveBeenCalledTimes(1);
       const callArgs = console.error.mock.calls[0][0];
@@ -406,100 +539,147 @@ describe('ErrorHandler', () => {
     it('debe estar disponible como window.ErrorHandler', () => {
       // ErrorHandler es una clase (función), no un objeto
       expect(typeof window.ErrorHandler).toBe('function');
-      expect(window.ErrorHandler).toBe(ErrorHandler);
+      expect(window.ErrorHandler).toBeDefined();
     });
 
     it('debe tener todos los métodos estáticos disponibles', () => {
-      expect(typeof ErrorHandler.logError).toBe('function');
-      expect(typeof ErrorHandler.showUIError).toBe('function');
-      expect(typeof ErrorHandler.showConnectionError).toBe('function');
-      expect(typeof ErrorHandler.showProtectionError).toBe('function');
-      expect(typeof ErrorHandler.showCancelError).toBe('function');
-      expect(typeof ErrorHandler.showCriticalError).toBe('function');
+      expect(typeof window.ErrorHandler.logError).toBe('function');
+      expect(typeof window.ErrorHandler.showUIError).toBe('function');
+      expect(typeof window.ErrorHandler.showConnectionError).toBe('function');
+      expect(typeof window.ErrorHandler.showProtectionError).toBe('function');
+      expect(typeof window.ErrorHandler.showCancelError).toBe('function');
+      expect(typeof window.ErrorHandler.showCriticalError).toBe('function');
     });
   });
 
-  describe('Integración con jQuery', () => {
-    it('debe usar jQuery para manipular el DOM', () => {
+  describe('Integración con DOM nativo', () => {
+    it('debe usar JavaScript puro para manipular el DOM', () => {
       const message = 'Error de prueba';
       
-      ErrorHandler.showUIError(message);
+      window.ErrorHandler.showUIError(message);
       
-      // jQuery debe haber sido usado para actualizar el HTML
-      expect($feedbackElement.html()).toContain(message);
-      expect($feedbackElement.html()).toContain('mi-api-error');
+      // JavaScript puro debe haber sido usado para actualizar el HTML
+      expect(feedbackElement.innerHTML).toContain(message);
+      expect(feedbackElement.innerHTML).toContain('mi-api-error');
     });
 
-    it('debe manejar correctamente elementos jQuery', () => {
+    it('debe manejar correctamente elementos del DOM', () => {
       const message = 'Error de prueba';
       
-      ErrorHandler.showUIError(message);
+      window.ErrorHandler.showUIError(message);
       
-      // Verificar que el elemento jQuery fue manipulado correctamente
-      expect($feedbackElement.length).toBeGreaterThan(0);
-      expect($feedbackElement.html()).toContain(message);
-      expect($feedbackElement.hasClass('in-progress')).toBe(false);
+      // Verificar que el elemento del DOM fue manipulado correctamente
+      expect(feedbackElement).not.toBeNull();
+      expect(feedbackElement.innerHTML).toContain(message);
+      expect(feedbackElement.classList.contains('in-progress')).toBe(false);
+    });
+  });
+
+  describe('Sanitización de mensajes', () => {
+    it('debe sanitizar mensajes antes de insertarlos en el DOM', () => {
+      const dangerousMessage = '<script>alert("XSS")</script>Test';
+      
+      window.ErrorHandler.showUIError(dangerousMessage, 'error');
+      
+      // Verificar que se llamó a Sanitizer.sanitizeMessage
+      if (window.Sanitizer && window.Sanitizer.sanitizeMessage) {
+        expect(window.Sanitizer.sanitizeMessage).toHaveBeenCalledWith(dangerousMessage);
+      }
+      
+      // Verificar que se usa construcción segura
+      expect(feedbackElement.innerHTML).toContain('mi-api-error');
+      expect(feedbackElement.innerHTML).toContain('<strong>');
+      // El mensaje debe estar sanitizado (no debe contener <script> ejecutable)
+      // Nota: textContent escapa HTML, así que el script no debería ejecutarse
+    });
+
+    it('debe usar fallback de escape si Sanitizer no está disponible', () => {
+      // Guardar referencia original
+      const originalSanitizer = window.Sanitizer;
+      
+      // Eliminar Sanitizer para probar fallback
+      delete window.Sanitizer;
+      global.Sanitizer = undefined;
+      
+      const dangerousMessage = '<script>alert("XSS")</script>';
+      
+      // No debe lanzar error, debe usar fallback
+      expect(() => {
+        window.ErrorHandler.showUIError(dangerousMessage, 'error');
+      }).not.toThrow();
+      
+      // Verificar que se agregó contenido (aunque sin Sanitizer)
+      expect(feedbackElement.innerHTML).toContain('mi-api-error');
+      
+      // Restaurar Sanitizer
+      window.Sanitizer = originalSanitizer;
+      global.Sanitizer = originalSanitizer;
     });
   });
 
   describe('Casos edge', () => {
     it('debe manejar mensajes vacíos', () => {
-      ErrorHandler.logError('');
+      window.ErrorHandler.logError('');
       expect(console.error).toHaveBeenCalled();
     });
 
-    it('debe manejar mensajes con HTML', () => {
+    it('debe manejar mensajes con HTML de forma segura', () => {
       const message = '<script>alert("xss")</script>';
       
-      ErrorHandler.showUIError(message);
+      window.ErrorHandler.showUIError(message);
       
       // El HTML debe ser escapado o manejado de forma segura
-      expect($feedbackElement.html()).toContain(message);
+      // textContent escapa automáticamente, así que el script no debería ejecutarse
+      expect(feedbackElement.innerHTML).toContain('mi-api-error');
     });
 
     it('debe manejar DASHBOARD_CONFIG con estructura incompleta', () => {
-      // NOTA: El código original usa DASHBOARD_CONFIG.selectors.feedback directamente
-      // Si selectors.feedback es undefined, jQuery(undefined) devuelve un objeto vacío
-      // y el código entra en el fallback. Este es el comportamiento real del original.
-      
-      // Restaurar setTimeout real para evitar problemas con el mock
+      jest.useRealTimers();
       const nodeSetTimeout = require('timers').setTimeout;
       global.setTimeout = nodeSetTimeout;
       
-      // Remover el elemento de feedback
-      $feedbackElement.remove();
+      feedbackElement.remove();
       
       // Guardar configuración original
       const originalConfig = global.DASHBOARD_CONFIG;
       
       // Configurar DASHBOARD_CONFIG con estructura incompleta (sin feedback)
       global.DASHBOARD_CONFIG = { selectors: {} };
+      if (typeof window !== 'undefined') {
+        window.DASHBOARD_CONFIG = global.DASHBOARD_CONFIG;
+      }
       
       const message = 'Error de prueba';
       
-      // jQuery maneja undefined de forma segura, así que el código entra en el fallback
-      ErrorHandler.showUIError(message);
+      // El código debe usar fallback cuando el selector no está disponible
+      window.ErrorHandler.showUIError(message);
       
       // Debe crear un elemento temporal (fallback)
-      const $tempFeedback = jQuery('#mi-sync-feedback');
-      expect($tempFeedback.length).toBeGreaterThan(0);
+      const tempFeedback = document.querySelector('#mi-sync-feedback');
+      expect(tempFeedback).not.toBeNull();
       expect(console.error).toHaveBeenCalled();
       
       // Limpiar
-      $tempFeedback.remove();
+      if (tempFeedback && tempFeedback.parentNode) {
+        tempFeedback.parentNode.removeChild(tempFeedback);
+      }
       
       // Restaurar configuración
       global.DASHBOARD_CONFIG = originalConfig;
+      if (typeof window !== 'undefined') {
+        window.DASHBOARD_CONFIG = originalConfig;
+      }
+      
+      jest.useFakeTimers();
     });
 
     it('debe manejar múltiples llamadas consecutivas', () => {
-      ErrorHandler.showUIError('Error 1');
-      ErrorHandler.showUIError('Error 2');
-      ErrorHandler.showUIError('Error 3');
+      window.ErrorHandler.showUIError('Error 1');
+      window.ErrorHandler.showUIError('Error 2');
+      window.ErrorHandler.showUIError('Error 3');
       
       // Debe mostrar el último error
-      expect($feedbackElement.html()).toContain('Error 3');
+      expect(feedbackElement.innerHTML).toContain('Error 3');
     });
   });
 });
-

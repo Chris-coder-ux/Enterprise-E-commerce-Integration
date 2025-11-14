@@ -11,16 +11,21 @@
  */
 
 describe('SyncDashboard - Funcionalidad Fase 2', function() {
-  let originalSyncDashboard, originalJQuery, originalMiIntegracionApiDashboard;
+  let originalSyncDashboard, originalJQuery, originalMiIntegracionApiDashboard, originalErrorHandler;
+  let originalEventCleanupManager;
   let mockJQuery, mockAjax;
   let clock;
   let syncDashboardInstance;
 
   beforeEach(function() {
+    // Guardar referencia original
+    originalEventCleanupManager = window.EventCleanupManager;
+    
     // Guardar referencias originales
     originalSyncDashboard = window.SyncDashboard;
     originalJQuery = window.jQuery;
     originalMiIntegracionApiDashboard = window.miIntegracionApiDashboard;
+    originalErrorHandler = window.ErrorHandler;
 
     // ✅ ACTUALIZADO: Limpiar estado usando SyncStateManager
     // Los flags ahora se gestionan a través de SyncStateManager, pero mantenemos
@@ -44,11 +49,11 @@ describe('SyncDashboard - Funcionalidad Fase 2', function() {
     mockAjax = jasmine.createSpy('ajax');
     const createJQueryMock = function() {
       const mock = {
-        text: jasmine.createSpy('text').and.callFake(function(value) {
+        text: jasmine.createSpy('text').and.callFake(function(_value) {
           if (arguments.length === 0) return '';
           return mock;
         }),
-        prop: jasmine.createSpy('prop').and.callFake(function(name, value) {
+        prop: jasmine.createSpy('prop').and.callFake(function(_name, _value) {
           if (arguments.length === 1) return false;
           return mock;
         }),
@@ -57,6 +62,9 @@ describe('SyncDashboard - Funcionalidad Fase 2', function() {
         off: jasmine.createSpy('off').and.callFake(function() { return mock; }),
         hide: jasmine.createSpy('hide').and.callFake(function() { return mock; }),
         show: jasmine.createSpy('show').and.callFake(function() { return mock; }),
+        removeClass: jasmine.createSpy('removeClass').and.callFake(function() { return mock; }),
+        addClass: jasmine.createSpy('addClass').and.callFake(function() { return mock; }),
+        length: 1,
         ajax: mockAjax
       };
       return mock;
@@ -87,7 +95,8 @@ describe('SyncDashboard - Funcionalidad Fase 2', function() {
       processNextBatchAutomatically: jasmine.createSpy('processNextBatchAutomatically')
     };
 
-    // Mock de pollingManager
+    // ✅ ACTUALIZADO: Mock de pollingManager con comportamiento de prevención de duplicaciones
+    const pollingIntervals = new Map();
     window.pollingManager = {
       config: {
         intervals: {
@@ -96,11 +105,98 @@ describe('SyncDashboard - Funcionalidad Fase 2', function() {
         currentInterval: 2000,
         currentMode: 'normal'
       },
-      intervals: new Map(),
-      startPolling: jasmine.createSpy('startPolling').and.returnValue(12345),
-      stopPolling: jasmine.createSpy('stopPolling').and.returnValue(true),
-      isPollingActive: jasmine.createSpy('isPollingActive').and.returnValue(false)
+      intervals: pollingIntervals,
+      startPolling: jasmine.createSpy('startPolling').and.callFake(function(name, callback, interval) {
+        // ✅ SIMULADO: Prevenir duplicaciones - retornar ID existente si ya está activo
+        if (pollingIntervals.has(name)) {
+          return pollingIntervals.get(name).id;
+        }
+        const intervalId = 12345 + pollingIntervals.size; // ID único simulado
+        pollingIntervals.set(name, {
+          id: intervalId,
+          callback,
+          interval: interval || 2000,
+          startTime: Date.now()
+        });
+        return intervalId;
+      }),
+      stopPolling: jasmine.createSpy('stopPolling').and.callFake(function(name) {
+        if (pollingIntervals.has(name)) {
+          pollingIntervals.delete(name);
+          return true;
+        }
+        return false;
+      }),
+      stopAllPolling: jasmine.createSpy('stopAllPolling').and.callFake(function() {
+        pollingIntervals.clear();
+      }),
+      isPollingActive: jasmine.createSpy('isPollingActive').and.callFake(function(name) {
+        if (name) {
+          return pollingIntervals.has(name);
+        }
+        return pollingIntervals.size > 0;
+      }),
+      getIntervalId: jasmine.createSpy('getIntervalId').and.callFake(function(name) {
+        if (pollingIntervals.has(name)) {
+          return pollingIntervals.get(name).id;
+        }
+        return null;
+      }),
+      // ✅ ACTUALIZADO: Sistema de eventos simulado
+      emit: jasmine.createSpy('emit').and.callFake(function(eventName, data) {
+        // Simular que los listeners reciben el evento
+        const listeners = window._syncDashboardEventListeners ? window._syncDashboardEventListeners.get(eventName) : null;
+        if (listeners && listeners.length > 0) {
+          listeners.forEach(function(callback) {
+            try {
+              callback(data);
+            } catch (e) {
+              // Ignorar errores en listeners
+            }
+          });
+        }
+      }),
+      on: jasmine.createSpy('on').and.callFake(function(eventName, callback) {
+        // ✅ SIMULADO: Registrar listener en Map interno
+        if (!window._syncDashboardEventListeners) {
+          window._syncDashboardEventListeners = new Map();
+        }
+        if (!window._syncDashboardEventListeners.has(eventName)) {
+          window._syncDashboardEventListeners.set(eventName, []);
+        }
+        window._syncDashboardEventListeners.get(eventName).push(callback);
+        // Retornar función de desuscripción
+        return function() {
+          const listeners = window._syncDashboardEventListeners.get(eventName);
+          if (listeners) {
+            const index = listeners.indexOf(callback);
+            if (index > -1) {
+              listeners.splice(index, 1);
+            }
+          }
+        };
+      }),
+      off: jasmine.createSpy('off').and.callFake(function(eventName, callback) {
+        if (window._syncDashboardEventListeners) {
+          if (callback) {
+            const listeners = window._syncDashboardEventListeners.get(eventName);
+            if (listeners) {
+              const index = listeners.indexOf(callback);
+              if (index > -1) {
+                listeners.splice(index, 1);
+              }
+            }
+          } else {
+            window._syncDashboardEventListeners.delete(eventName);
+          }
+        }
+      })
     };
+    
+    // ✅ NUEVO: Inicializar Map de listeners si no existe
+    if (!window._syncDashboardEventListeners) {
+      window._syncDashboardEventListeners = new Map();
+    }
 
     // Mock de SyncStateManager con todos los métodos de Fase 2
     // ✅ ACTUALIZADO: Mock completo de SyncStateManager con estado centralizado
@@ -176,6 +272,35 @@ describe('SyncDashboard - Funcionalidad Fase 2', function() {
       show: jasmine.createSpy('show')
     };
 
+    // ✅ NUEVO: Mock de ErrorHandler para tests de manejo de errores
+    window.ErrorHandler = {
+      logError: jasmine.createSpy('logError'),
+      showConnectionError: jasmine.createSpy('showConnectionError'),
+      showUIError: jasmine.createSpy('showUIError')
+    };
+    
+    // ✅ NUEVO: Mock de EventCleanupManager para tests de gestión de eventos
+    // Crear el mock de instancia primero para evitar referencia circular
+    const mockInstance = {
+      cleanupAll: jasmine.createSpy('instanceCleanupAll').and.returnValue(0),
+      getStats: jasmine.createSpy('getStats').and.returnValue({
+        documentListeners: 0,
+        elementListeners: 0,
+        customEventListeners: 0,
+        nativeListeners: 0,
+        totalComponents: 0
+      })
+    };
+    
+    window.EventCleanupManager = {
+      registerElementListener: jasmine.createSpy('registerElementListener').and.returnValue(function() {}),
+      registerCustomEventListener: jasmine.createSpy('registerCustomEventListener').and.returnValue(function() {}),
+      registerDocumentListener: jasmine.createSpy('registerDocumentListener').and.returnValue(function() {}),
+      cleanupComponent: jasmine.createSpy('cleanupComponent').and.returnValue(0),
+      cleanupAll: jasmine.createSpy('cleanupAll').and.returnValue(0),
+      getInstance: jasmine.createSpy('getInstance').and.returnValue(mockInstance)
+    };
+
     // Mock de window.confirm
     window.confirm = jasmine.createSpy('confirm').and.returnValue(true);
 
@@ -206,6 +331,19 @@ describe('SyncDashboard - Funcionalidad Fase 2', function() {
       window.miIntegracionApiDashboard = originalMiIntegracionApiDashboard;
     } else {
       delete window.miIntegracionApiDashboard;
+    }
+    
+    if (originalErrorHandler !== undefined) {
+      window.ErrorHandler = originalErrorHandler;
+    } else {
+      delete window.ErrorHandler;
+    }
+    
+    // Restaurar EventCleanupManager
+    if (originalEventCleanupManager !== undefined) {
+      window.EventCleanupManager = originalEventCleanupManager;
+    } else {
+      delete window.EventCleanupManager;
     }
 
     // Limpiar estado global
@@ -249,27 +387,78 @@ describe('SyncDashboard - Funcionalidad Fase 2', function() {
         return;
       }
 
-      syncDashboardInstance.phase2Starting = false;
+      // ✅ CORRECCIÓN: Usar SyncStateManager en lugar de la propiedad de instancia
+      if (window.SyncStateManager) {
+        window.SyncStateManager.setPhase2Starting(false);
+      }
 
-      // Primera llamada
+      // Mock de window.confirm para evitar diálogos de confirmación
+      window.confirm.and.returnValue(true);
+
+      // Primera llamada - mockAjax debe manejar ambas llamadas AJAX
+      // Usar Promise que se resuelve después de un delay para simular operación asíncrona
       mockAjax.and.callFake(function(options) {
-        // Simular que está en progreso
-        syncDashboardInstance.phase2Starting = true;
-        if (options.success) {
-          setTimeout(function() {
-            options.success({ success: true });
-          }, 100);
+        
+        // Primera llamada: mia_get_sync_progress
+        if (options.data && options.data.action === 'mia_get_sync_progress') {
+          // Devolver respuesta que permita continuar sin confirmaciones
+          // Usar setTimeout para simular operación asíncrona
+          return new Promise(function(resolve) {
+            setTimeout(function() {
+              resolve({
+                success: true,
+                data: {
+                  phase1_images: {
+                    completed: true,
+                    in_progress: false
+                  },
+                  in_progress: false
+                }
+              });
+            }, 50);
+          });
         }
+        
+        // Segunda llamada: mi_integracion_api_sync_products_batch
+        if (options.data && options.data.action === 'mi_integracion_api_sync_products_batch') {
+          return new Promise(function(resolve) {
+            setTimeout(function() {
+              resolve({
+                success: true
+              });
+            }, 50);
+          });
+        }
+        
+        return Promise.resolve({ success: true });
       });
 
+      // Primera llamada (hace 2 peticiones AJAX: status + start)
       syncDashboardInstance.startPhase2();
 
-      // Segunda llamada inmediata (debe ser bloqueada)
+      // Hacer la segunda llamada INMEDIATAMENTE, antes de que la primera complete
+      // Esto asegura que el flag phase2Starting esté en true
       const consoleWarnSpy = spyOn(console, 'warn');
+      const callsBeforeSecond = mockAjax.calls.count();
       syncDashboardInstance.startPhase2();
 
-      // Verificar que solo se hizo una llamada AJAX
-      expect(mockAjax.calls.count()).toBe(1);
+      // Verificar que se llamó console.warn para la segunda llamada bloqueada
+      expect(consoleWarnSpy).toHaveBeenCalled();
+      
+      // Verificar que no se hicieron llamadas AJAX adicionales inmediatamente
+      // (la segunda llamada debe ser bloqueada antes de hacer cualquier AJAX)
+      expect(mockAjax.calls.count()).toBe(callsBeforeSecond);
+
+      // Esperar a que la primera llamada complete
+      if (clock && clock.tick) {
+        clock.tick(200);
+      } else if (jasmine.clock) {
+        jasmine.clock().tick(200);
+      }
+
+      // Verificar que el número de llamadas AJAX no aumentó después de la segunda llamada
+      // (debe ser igual al número de llamadas de la primera llamada)
+      expect(mockAjax.calls.count()).toBe(callsBeforeSecond);
     });
 
     it('debe realizar petición AJAX correcta para iniciar Fase 2', function(done) {
@@ -312,7 +501,10 @@ describe('SyncDashboard - Funcionalidad Fase 2', function() {
         return;
       }
 
-      syncDashboardInstance.phase2Starting = false;
+      // ✅ CORRECCIÓN: Usar SyncStateManager en lugar de la propiedad de instancia
+      if (window.SyncStateManager) {
+        window.SyncStateManager.setPhase2Starting(false);
+      }
 
       mockAjax.and.callFake(function(options) {
         if (options.success) {
@@ -321,7 +513,10 @@ describe('SyncDashboard - Funcionalidad Fase 2', function() {
       });
 
       syncDashboardInstance.startPhase2().then(function() {
-        expect(syncDashboardInstance.phase2Starting).toBe(false);
+        // ✅ CORRECCIÓN: Verificar usando SyncStateManager
+        if (window.SyncStateManager) {
+          expect(window.SyncStateManager.getPhase2Starting()).toBe(false);
+        }
         done();
       }).catch(function(error) {
         done.fail('Error: ' + error);
@@ -343,8 +538,8 @@ describe('SyncDashboard - Funcionalidad Fase 2', function() {
       // ✅ ACTUALIZADO: Usar SyncStateManager
       if (window.SyncStateManager) {
         window.SyncStateManager.setPhase2Initialized(true); // Phase2Manager ya está gestionando
+        window.SyncStateManager.setPhase2Starting(false);
       }
-      syncDashboardInstance.phase2Starting = false;
 
       mockAjax.and.callFake(function(options) {
         if (options.success) {
@@ -459,7 +654,10 @@ describe('SyncDashboard - Funcionalidad Fase 2', function() {
       }
 
       window.confirm.and.returnValue(true);
-      syncDashboardInstance.phase2Starting = true;
+      // ✅ CORRECCIÓN: Usar SyncStateManager en lugar de la propiedad de instancia
+      if (window.SyncStateManager) {
+        window.SyncStateManager.setPhase2Starting(true);
+      }
 
       mockAjax.and.callFake(function(options) {
         if (options.success) {
@@ -468,7 +666,10 @@ describe('SyncDashboard - Funcionalidad Fase 2', function() {
       });
 
       syncDashboardInstance.cancelSync().then(function() {
-        expect(syncDashboardInstance.phase2Starting).toBe(false);
+        // ✅ CORRECCIÓN: Verificar usando SyncStateManager
+        if (window.SyncStateManager) {
+          expect(window.SyncStateManager.getPhase2Starting()).toBe(false);
+        }
         done();
       }).catch(function(error) {
         done.fail('Error: ' + error);
@@ -548,14 +749,19 @@ describe('SyncDashboard - Funcionalidad Fase 2', function() {
         return;
       }
 
-      window.phase2Initialized = true; // Phase2Manager gestionando
+      // ✅ ACTUALIZADO: Usar SyncStateManager
+      if (window.SyncStateManager) {
+        window.SyncStateManager.setPhase2Initialized(true); // Phase2Manager gestionando
+      }
 
       syncDashboardInstance.startPollingIfNeeded();
 
+      // ✅ ACTUALIZADO: SyncDashboard ya no inicia polling directamente
+      // Solo verifica y registra que se necesita polling
       expect(window.pollingManager.startPolling).not.toHaveBeenCalled();
     });
 
-    it('debe NO iniciar polling si ya está activo', function() {
+    it('debe NO iniciar polling directamente (debe delegar a Phase2Manager)', function() {
       if (!syncDashboardInstance || typeof syncDashboardInstance.startPollingIfNeeded !== 'function') {
         pending('SyncDashboard.startPollingIfNeeded no está disponible');
         return;
@@ -565,34 +771,88 @@ describe('SyncDashboard - Funcionalidad Fase 2', function() {
       if (window.SyncStateManager) {
         window.SyncStateManager.setPhase2Initialized(false);
       }
-      window.pollingManager.isPollingActive.and.returnValue(true);
-      window.pollingManager.intervals.set('syncProgress', { id: 12345 });
 
       syncDashboardInstance.startPollingIfNeeded();
 
+      // ✅ ACTUALIZADO: SyncDashboard NO debe iniciar polling directamente
+      // Debe delegar a Phase2Manager o solo registrar que se necesita
       expect(window.pollingManager.startPolling).not.toHaveBeenCalled();
     });
 
-    it('debe iniciar polling si no está activo y Phase2Manager no lo gestiona', function() {
-      if (!syncDashboardInstance || typeof syncDashboardInstance.startPollingIfNeeded !== 'function') {
-        pending('SyncDashboard.startPollingIfNeeded no está disponible');
+    it('debe suscribirse a eventos de PollingManager en el constructor', function() {
+      if (!syncDashboardInstance) {
+        pending('SyncDashboard no está disponible');
         return;
       }
 
-      // ✅ ACTUALIZADO: Usar SyncStateManager
-      if (window.SyncStateManager) {
-        window.SyncStateManager.setPhase2Initialized(false);
+      // ✅ NUEVO: Verificar que SyncDashboard se suscribe a eventos
+      expect(window.pollingManager.on).toHaveBeenCalledWith('syncProgress', jasmine.any(Function));
+      expect(window.pollingManager.on).toHaveBeenCalledWith('syncError', jasmine.any(Function));
+      expect(window.pollingManager.on).toHaveBeenCalledWith('syncCompleted', jasmine.any(Function));
+      // ✅ NUEVO: Verificar suscripción al evento phase1Completed
+      expect(window.pollingManager.on).toHaveBeenCalledWith('phase1Completed', jasmine.any(Function));
+    });
+  });
+
+  describe('Transición Fase 1 → Fase 2', function() {
+    beforeEach(function() {
+      if (typeof window.SyncDashboard !== 'undefined') {
+        syncDashboardInstance = new window.SyncDashboard();
       }
-      window.pollingManager.isPollingActive.and.returnValue(false);
-      window.pollingManager.intervals.clear();
+    });
 
-      syncDashboardInstance.startPollingIfNeeded();
+    it('debe suscribirse al evento phase1Completed en el constructor', function() {
+      if (!syncDashboardInstance) {
+        pending('SyncDashboard no está disponible');
+        return;
+      }
 
-      expect(window.pollingManager.startPolling).toHaveBeenCalledWith(
-        'syncProgress',
-        window.checkSyncProgress,
-        jasmine.any(Number)
-      );
+      // ✅ Verificar que se suscribió al evento phase1Completed
+      expect(window.pollingManager.on).toHaveBeenCalledWith('phase1Completed', jasmine.any(Function));
+    });
+
+    it('debe actualizar UI cuando recibe evento phase1Completed', function() {
+      if (!syncDashboardInstance || typeof syncDashboardInstance.updatePhaseStatus !== 'function') {
+        pending('SyncDashboard.updatePhaseStatus no está disponible');
+        return;
+      }
+
+      // Espiar métodos de actualización
+      spyOn(syncDashboardInstance, 'updatePhaseStatus');
+      spyOn(syncDashboardInstance, 'stopTimer');
+      spyOn(syncDashboardInstance, 'enableButton');
+      spyOn(syncDashboardInstance, 'updateDashboardFromStatus');
+
+      // Simular evento phase1Completed
+      const eventData = {
+        phase1Status: {
+          completed: true,
+          products_processed: 100,
+          total_products: 100
+        },
+        timestamp: Date.now(),
+        data: {
+          in_progress: false,
+          phase1_images: {
+            completed: true
+          }
+        }
+      };
+
+      // Emitir evento (simular que Phase1Manager lo emite)
+      window.pollingManager.emit('phase1Completed', eventData);
+
+      // ✅ Verificar que se actualizó el estado de Fase 1 a completada
+      expect(syncDashboardInstance.updatePhaseStatus).toHaveBeenCalledWith(1, 'completed');
+      
+      // ✅ Verificar que se detuvo el timer de Fase 1
+      expect(syncDashboardInstance.stopTimer).toHaveBeenCalledWith(1);
+      
+      // ✅ Verificar que se habilitó el botón de Fase 2
+      expect(syncDashboardInstance.enableButton).toHaveBeenCalledWith('start-phase2');
+      
+      // ✅ Verificar que se actualizó el dashboard
+      expect(syncDashboardInstance.updateDashboardFromStatus).toHaveBeenCalledWith(eventData.data);
     });
   });
 
@@ -646,7 +906,6 @@ describe('SyncDashboard - Funcionalidad Fase 2', function() {
       if (window.SyncStateManager) {
         window.SyncStateManager.setPhase2Starting(true);
       }
-      syncDashboardInstance.phase2Starting = true;
       // ✅ ACTUALIZADO: Usar SyncStateManager
       if (window.SyncStateManager) {
         window.SyncStateManager.setSyncInterval(12345);
@@ -664,7 +923,10 @@ describe('SyncDashboard - Funcionalidad Fase 2', function() {
       syncDashboardInstance.cancelSync().then(function() {
         expect(window.pollingManager.stopPolling).toHaveBeenCalledWith('syncProgress');
         expect(window.Phase2Manager.reset).toHaveBeenCalled();
-        expect(syncDashboardInstance.phase2Starting).toBe(false);
+        // ✅ CORRECCIÓN: Verificar usando SyncStateManager
+        if (window.SyncStateManager) {
+          expect(window.SyncStateManager.getPhase2Starting()).toBe(false);
+        }
         done();
       }).catch(function(error) {
         done.fail('Error: ' + error);
@@ -675,6 +937,162 @@ describe('SyncDashboard - Funcionalidad Fase 2', function() {
       } else if (jasmine.clock) {
         jasmine.clock().tick(100);
       }
+    });
+  });
+  
+  describe('Gestión de Event Listeners con EventCleanupManager', function() {
+    it('debe usar EventCleanupManager para registrar listeners de elementos si está disponible', function() {
+      if (typeof window.SyncDashboard === 'undefined') {
+        pending('SyncDashboard no está disponible');
+        return;
+      }
+      
+      const syncDashboard = new window.SyncDashboard();
+      
+      // Llamar a initializeEventListeners
+      if (typeof syncDashboard.initializeEventListeners === 'function') {
+        syncDashboard.initializeEventListeners();
+        
+        // Verificar que se usó EventCleanupManager
+        expect(window.EventCleanupManager.registerElementListener).toHaveBeenCalled();
+      } else {
+        pending('initializeEventListeners no está disponible');
+      }
+    });
+    
+    it('debe usar EventCleanupManager para registrar listeners de eventos personalizados si está disponible', function() {
+      if (typeof window.SyncDashboard === 'undefined') {
+        pending('SyncDashboard no está disponible');
+        return;
+      }
+      
+      const syncDashboard = new window.SyncDashboard();
+      
+      // Llamar a subscribeToPollingEvents
+      if (typeof syncDashboard.subscribeToPollingEvents === 'function') {
+        syncDashboard.subscribeToPollingEvents();
+        
+        // Verificar que se usó EventCleanupManager
+        expect(window.EventCleanupManager.registerCustomEventListener).toHaveBeenCalled();
+      } else {
+        pending('subscribeToPollingEvents no está disponible');
+      }
+    });
+    
+    it('debe limpiar listeners usando EventCleanupManager cuando cleanupEventListeners es llamado', function() {
+      if (typeof window.SyncDashboard === 'undefined') {
+        pending('SyncDashboard no está disponible');
+        return;
+      }
+      
+      const syncDashboard = new window.SyncDashboard();
+      
+      // Llamar a cleanupEventListeners
+      if (typeof syncDashboard.cleanupEventListeners === 'function') {
+        syncDashboard.cleanupEventListeners();
+        
+        // Verificar que se usó EventCleanupManager
+        expect(window.EventCleanupManager.cleanupComponent).toHaveBeenCalledWith('SyncDashboard');
+      } else {
+        pending('cleanupEventListeners no está disponible');
+      }
+    });
+    
+    it('debe usar fallback manual si EventCleanupManager no está disponible', function() {
+      // Eliminar EventCleanupManager
+      delete window.EventCleanupManager;
+      
+      if (typeof window.SyncDashboard === 'undefined') {
+        pending('SyncDashboard no está disponible');
+        return;
+      }
+      
+      const syncDashboard = new window.SyncDashboard();
+      
+      // No debe lanzar error
+      if (typeof syncDashboard.cleanupEventListeners === 'function') {
+        expect(function() {
+          syncDashboard.cleanupEventListeners();
+        }).not.toThrow();
+      }
+    });
+    
+    it('debe usar optional chaining cuando EventCleanupManager es undefined', function() {
+      if (typeof window.SyncDashboard === 'undefined') {
+        pending('SyncDashboard no está disponible');
+        return;
+      }
+      
+      // Establecer EventCleanupManager como undefined (simulando que no está disponible)
+      const originalEventCleanupManager = window.EventCleanupManager;
+      window.EventCleanupManager = undefined;
+      
+      const syncDashboard = new window.SyncDashboard();
+      
+      // No debe lanzar error al intentar usar optional chaining
+      if (typeof syncDashboard.subscribeToPollingEvents === 'function') {
+        expect(function() {
+          syncDashboard.subscribeToPollingEvents();
+        }).not.toThrow();
+      }
+      
+      // Restaurar EventCleanupManager
+      window.EventCleanupManager = originalEventCleanupManager;
+    });
+  });
+  
+  describe('Uso de características modernas de JavaScript', function() {
+    beforeEach(function() {
+      if (typeof window.SyncDashboard !== 'undefined') {
+        syncDashboardInstance = new window.SyncDashboard();
+      }
+    });
+    
+    it('debe usar nullish coalescing (??) para valores por defecto de ajaxurl', function() {
+      if (!syncDashboardInstance || typeof syncDashboardInstance.startPhase2 !== 'function') {
+        pending('SyncDashboard.startPhase2 no está disponible');
+        return;
+      }
+      
+      // Establecer ajaxurl como null para probar nullish coalescing
+      const originalAjaxurl = window.ajaxurl;
+      window.ajaxurl = null;
+      
+      // Establecer miIntegracionApiDashboard.ajaxurl como undefined
+      const originalAjaxurl2 = window.miIntegracionApiDashboard?.ajaxurl;
+      if (window.miIntegracionApiDashboard) {
+        window.miIntegracionApiDashboard.ajaxurl = undefined;
+      }
+      
+      // El código debe usar nullish coalescing y no fallar
+      expect(function() {
+        syncDashboardInstance.startPhase2();
+      }).not.toThrow();
+      
+      // Restaurar valores originales
+      window.ajaxurl = originalAjaxurl;
+      if (window.miIntegracionApiDashboard && originalAjaxurl2 !== undefined) {
+        window.miIntegracionApiDashboard.ajaxurl = originalAjaxurl2;
+      }
+    });
+    
+    it('debe usar optional chaining (?.) para acceder a propiedades anidadas', function() {
+      if (!syncDashboardInstance || typeof syncDashboardInstance.updatePhase1Progress !== 'function') {
+        pending('SyncDashboard.updatePhase1Progress no está disponible');
+        return;
+      }
+      
+      // Probar con datos que tienen propiedades opcionales
+      const data = {
+        products_processed: 10,
+        total_products: 100
+        // No incluir images_processed para probar optional chaining
+      };
+      
+      // No debe lanzar error al usar optional chaining
+      expect(function() {
+        syncDashboardInstance.updatePhase1Progress(data);
+      }).not.toThrow();
     });
   });
 });

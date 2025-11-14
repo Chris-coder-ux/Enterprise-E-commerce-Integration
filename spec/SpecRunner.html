@@ -12,16 +12,239 @@
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
+      background-color: #f5f5f5;
     }
     .jasmine_html-reporter {
       margin-top: 20px;
+    }
+    
+    /* Estilos para indicador de progreso */
+    #loading-container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    
+    #loading-progress {
+      width: 100%;
+      background-color: #f0f0f0;
+      border-radius: 4px;
+      margin: 15px 0;
+      height: 20px;
+      overflow: hidden;
+    }
+    
+    #progress-bar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #4CAF50, #45a049);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+      box-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);
+    }
+    
+    #progress-text {
+      margin: 10px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      color: #666;
+    }
+    
+    .status-message {
+      padding: 10px;
+      border-radius: 4px;
+      margin: 10px 0;
+      font-weight: bold;
+    }
+    
+    .status-success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    
+    .status-error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    
+    .status-warning {
+      background-color: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeaa7;
+    }
+    
+    /* ✅ NUEVO: Panel de debug visual */
+    #debug-panel {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 20px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      max-height: 400px;
+      overflow-y: auto;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    
+    #debug-panel h3 {
+      margin: 0 0 10px 0;
+      color: #66d9ef;
+      font-size: 14px;
+      border-bottom: 1px solid #444;
+      padding-bottom: 5px;
+    }
+    
+    #debug-panel .debug-entry {
+      padding: 5px 0;
+      border-bottom: 1px solid #444;
+    }
+    
+    #debug-panel .debug-entry:last-child {
+      border-bottom: none;
+    }
+    
+    #debug-panel .debug-label {
+      color: #a6e22e;
+      font-weight: bold;
+      display: inline-block;
+      min-width: 150px;
+    }
+    
+    #debug-panel .debug-value {
+      color: #f8f8f2;
+    }
+    
+    #debug-panel .debug-error {
+      color: #f92672;
+    }
+    
+    #debug-panel .debug-success {
+      color: #a6e22e;
+    }
+    
+    #debug-panel .debug-warning {
+      color: #fd971f;
+    }
+    
+    #debug-log {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 10px;
+      max-height: 200px;
+      overflow-y: auto;
+      font-size: 11px;
+      line-height: 1.4;
+    }
+    
+    #debug-log .log-entry {
+      padding: 2px 0;
+      border-bottom: 1px solid #333;
+    }
+    
+    #debug-log .log-entry:last-child {
+      border-bottom: none;
+    }
+    
+    #debug-log .log-time {
+      color: #858585;
+      margin-right: 8px;
+    }
+    
+    #debug-log .log-level-info {
+      color: #4ec9b0;
+    }
+    
+    #debug-log .log-level-warn {
+      color: #dcdcaa;
+    }
+    
+    #debug-log .log-level-error {
+      color: #f48771;
+    }
+    
+    .toggle-debug {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 10px 0;
+    }
+    
+    .toggle-debug:hover {
+      background: #0056b3;
     }
   </style>
 </head>
 <body>
   <h1>Jasmine Test Runner - Mi Integración API</h1>
-  <p>Cargando tests...</p>
+  
+  <div id="loading-container">
+    <div id="loading-progress">
+      <div id="progress-bar"></div>
+    </div>
+    <div id="progress-text">Inicializando test runner...</div>
+  </div>
 
+  <div id="status-messages"></div>
+
+  <!-- ✅ NUEVO: Panel de debug visual -->
+  <button class="toggle-debug" onclick="toggleDebugPanel()">Mostrar/Ocultar Panel de Debug</button>
+  <div id="debug-panel" style="display: none;">
+    <h3>🔍 Panel de Debug - Estado de Jasmine</h3>
+    <div id="debug-info">
+      <div class="debug-entry">
+        <span class="debug-label">Estado Jasmine:</span>
+        <span class="debug-value" id="debug-jasmine-status">Verificando...</span>
+      </div>
+      <div class="debug-entry">
+        <span class="debug-label">Environment:</span>
+        <span class="debug-value" id="debug-env-status">Verificando...</span>
+      </div>
+      <div class="debug-entry">
+        <span class="debug-label">HtmlReporter:</span>
+        <span class="debug-value" id="debug-reporter-status">Verificando...</span>
+      </div>
+      <div class="debug-entry">
+        <span class="debug-label">Tests Registrados:</span>
+        <span class="debug-value" id="debug-tests-count">0</span>
+      </div>
+      <div class="debug-entry">
+        <span class="debug-label">Tests Ejecutándose:</span>
+        <span class="debug-value" id="debug-tests-running">No</span>
+      </div>
+      <div class="debug-entry">
+        <span class="debug-label">Contenedor DOM:</span>
+        <span class="debug-value" id="debug-container-status">Verificando...</span>
+      </div>
+      <div class="debug-entry">
+        <span class="debug-label">document.body:</span>
+        <span class="debug-value" id="debug-body-status">Verificando...</span>
+      </div>
+    </div>
+    <div id="debug-log"></div>
+  </div>
+
+  <!-- ✅ CORREGIDO: Contenedor para los resultados de Jasmine -->
+  <!-- HtmlReporter necesita este contenedor para mostrar los resultados -->
+  <!-- ✅ CORREGIDO: Usar el ID estándar que Jasmine espera -->
+  <div id="jasmine_content"></div>
+
+  <!-- ✅ NUEVO: Contenedores para diagnóstico -->
+  <div id="integrity-check"></div>
+  <div id="diagnostic-report"></div>
+
+  <!-- jQuery - Cargar antes de los scripts que lo necesitan -->
+  <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+  
   <!-- Jasmine JavaScript - IMPORTANTE: Cargar en orden correcto -->
   <!-- Rutas relativas desde spec/ hacia node_modules/ (un nivel arriba) -->
   <!-- 1. jasmine.js - Core de Jasmine -->
@@ -29,108 +252,1398 @@
   <!-- 2. jasmine-html.js - Reporter HTML -->
   <script src="../node_modules/jasmine-core/lib/jasmine-core/jasmine-html.js"></script>
   <!-- 3. boot0.js - Inicializa Jasmine y expone la API global -->
-  <script src="../node_modules/jasmine-core/lib/jasmine-core/boot0.js"></script>
-  
+  <!-- ✅ CORREGIDO: Cargar boot0.js después de que el DOM esté listo -->
   <script>
-    // Configurar Jasmine ANTES de cargar boot1.js
-    // boot0.js ya ha inicializado jasmine, así que podemos configurarlo
-    if (typeof jasmine !== 'undefined') {
-      jasmine.getEnv().configure({
-        random: false,
-        seed: null,
-        stopOnFailure: false
-      });
-      console.log('✅ Jasmine configurado');
-    } else {
-      console.error('❌ Jasmine no está disponible después de boot0.js');
+    // Sistema de logging mejorado
+    const Logger = {
+      debug: function(...args) {
+        if (window.DEBUG || window.location.search.includes('debug=true')) {
+          console.debug('🔍 [DEBUG]', ...args);
+          addDebugLog('DEBUG', args.join(' '));
+        }
+      },
+      info: function(...args) {
+        console.log('ℹ [INFO]', ...args);
+        addDebugLog('INFO', args.join(' '));
+      },
+      warn: function(...args) {
+        console.warn('⚠ [WARN]', ...args);
+        addDebugLog('WARN', args.join(' '));
+      },
+      error: function(...args) {
+        console.error('❌ [ERROR]', ...args);
+        addDebugLog('ERROR', args.join(' '));
+      }
+    };
+
+    // ✅ NUEVO: Sistema de diagnóstico mejorado
+    const DiagnosticSystem = {
+      errors: [],
+      warnings: [],
+      debugInfo: {},
+
+      // Clasificar errores por tipo
+      classifyError: function(error, context = {}) {
+        const errorMessage = (error.message || String(error) || '').toLowerCase();
+        const errorName = error.name || '';
+        const errorString = String(error).toLowerCase();
+        
+        const classified = {
+          type: 'unknown',
+          message: error.message || String(error),
+          stack: error.stack,
+          context: context,
+          timestamp: new Date().toISOString(),
+          file: context.file || 'unknown',
+          errorName: errorName,
+          originalError: error
+        };
+
+        // ✅ MEJORADO: Detectar tipo de error primero por nombre, luego por mensaje
+        // 1. Verificar por nombre de error (más confiable)
+        if (errorName === 'TypeError') {
+          classified.type = 'type_error';
+        } else if (errorName === 'ReferenceError') {
+          classified.type = 'reference_error';
+        } else if (errorName === 'SyntaxError') {
+          classified.type = 'syntax_error';
+        } else if (errorName === 'NetworkError' || errorName === 'NetworkErrorEvent') {
+          classified.type = 'network_error';
+        } else if (errorName === 'TimeoutError' || errorName === 'Timeout') {
+          classified.type = 'timeout_error';
+        } else if (errorName === 'DOMException') {
+          classified.type = 'dom_error';
+        } else if (errorName === 'SecurityError') {
+          classified.type = 'security_error';
+        } else if (errorName === 'RangeError') {
+          classified.type = 'range_error';
+        } else if (errorName === 'URIError') {
+          classified.type = 'uri_error';
+        } else if (errorName === 'EvalError') {
+          classified.type = 'eval_error';
+        }
+        // 2. Si no se detectó por nombre, verificar por mensaje o contexto
+        else if (classified.type === 'unknown') {
+          // Verificar en el mensaje
+          if (errorMessage.indexOf('timeout') !== -1 || errorMessage.indexOf('timed out') !== -1) {
+            classified.type = 'timeout_error';
+          } else if (errorMessage.indexOf('loading') !== -1 || errorMessage.indexOf('failed to load') !== -1 || errorMessage.indexOf('404') !== -1) {
+            classified.type = 'loading_error';
+          } else if (errorMessage.indexOf('syntax') !== -1 || errorMessage.indexOf('unexpected token') !== -1 || errorMessage.indexOf('unexpected end') !== -1) {
+            classified.type = 'syntax_error';
+          } else if (errorMessage.indexOf('network') !== -1 || errorMessage.indexOf('fetch') !== -1 || errorMessage.indexOf('cors') !== -1) {
+            classified.type = 'network_error';
+          } else if (errorMessage.indexOf('is not defined') !== -1 || errorMessage.indexOf('is not a function') !== -1 || errorMessage.indexOf('cannot read') !== -1) {
+            classified.type = 'reference_error';
+          } else if (errorMessage.indexOf('cannot read property') !== -1 || errorMessage.indexOf('of undefined') !== -1 || errorMessage.indexOf('of null') !== -1) {
+            classified.type = 'type_error';
+          } else if (errorMessage.indexOf('permission') !== -1 || errorMessage.indexOf('security') !== -1 || errorMessage.indexOf('blocked') !== -1) {
+            classified.type = 'security_error';
+          } else if (errorMessage.indexOf('dom') !== -1 || errorMessage.indexOf('element') !== -1) {
+            classified.type = 'dom_error';
+          }
+          // 3. Verificar en el contexto
+          else if (context.type) {
+            classified.type = context.type;
+          }
+        }
+
+        this.errors.push(classified);
+        return classified;
+      },
+
+      // Generar reporte de diagnóstico
+      generateReport: function() {
+        const report = {
+          summary: {
+            totalErrors: this.errors.length,
+            errorTypes: {},
+            failedFiles: []
+          },
+          details: this.errors,
+          environment: this.debugInfo,
+          suggestions: []
+        };
+
+        // Contar tipos de error
+        this.errors.forEach(function(error) {
+          report.summary.errorTypes[error.type] = (report.summary.errorTypes[error.type] || 0) + 1;
+          if (error.context.file && report.summary.failedFiles.indexOf(error.context.file) === -1) {
+            report.summary.failedFiles.push(error.context.file);
+          }
+        });
+
+        // Generar sugerencias basadas en los errores
+        this.generateSuggestions(report);
+
+        return report;
+      },
+
+      // Generar sugerencias específicas
+      generateSuggestions: function(report) {
+        const suggestions = [];
+
+        if (report.summary.errorTypes.loading_error) {
+          suggestions.push({
+            type: 'loading_error',
+            title: 'Problemas de Carga de Archivos',
+            actions: [
+              'Verificar las rutas de los archivos en el servidor',
+              'Confirmar que los archivos existen en las ubicaciones especificadas',
+              'Revisar la consola del navegador para errores 404',
+              'Verificar permisos de acceso a los archivos'
+            ]
+          });
+        }
+
+        if (report.summary.errorTypes.syntax_error) {
+          suggestions.push({
+            type: 'syntax_error',
+            title: 'Errores de Sintaxis en JavaScript',
+            actions: [
+              'Abrir la consola del desarrollador (F12) para ver errores específicos',
+              'Verificar que no haya comas faltantes o llaves sin cerrar',
+              'Revisar la sintaxis de funciones arrow =>',
+              'Validar el código con ESLint o JSHint'
+            ]
+          });
+        }
+
+        if (report.summary.errorTypes.reference_error) {
+          suggestions.push({
+            type: 'reference_error',
+            title: 'Variables o Funciones No Definidas',
+            actions: [
+              'Verificar que todas las variables estén declaradas antes de usarse',
+              'Confirmar que los archivos se carguen en el orden correcto',
+              'Revisar que los nombres de funciones y clases estén correctamente escritos',
+              'Verificar el ámbito (scope) de las variables'
+            ]
+          });
+        }
+
+        if (report.summary.errorTypes.type_error) {
+          suggestions.push({
+            type: 'type_error',
+            title: 'Problemas de Tipo de Datos',
+            actions: [
+              'Verificar que los objetos no sean null o undefined antes de acceder a sus propiedades',
+              'Confirmar que las funciones sean llamadas correctamente',
+              'Revisar conversiones de tipo implícitas',
+              'Usar console.log para depurar valores problemáticos'
+            ]
+          });
+        }
+
+        if (report.summary.errorTypes.unknown) {
+          suggestions.push({
+            type: 'unknown',
+            title: 'Errores No Clasificados',
+            actions: [
+              'Revisar la consola del navegador (F12) para ver el error completo',
+              'Verificar el mensaje de error y el stack trace en los detalles del reporte',
+              'Comprobar si el error está relacionado con alguna librería externa',
+              'Revisar los logs del servidor si el error parece ser del lado del servidor'
+            ]
+          });
+        }
+
+        report.suggestions = suggestions;
+      },
+
+      // Mostrar reporte en el DOM
+      displayReport: function() {
+        const report = this.generateReport();
+        const container = document.getElementById('diagnostic-report');
+        
+        if (!container) return;
+
+        let html = '<div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 15px; margin: 20px 0;">' +
+          '<h3 style="color: #856404; margin-top: 0;">🔍 Reporte de Diagnóstico</h3>' +
+          '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">' +
+          '<div style="background: white; padding: 10px; border-radius: 4px;">' +
+          '<strong>Total Errores:</strong> ' + report.summary.totalErrors +
+          '</div>' +
+          '<div style="background: white; padding: 10px; border-radius: 4px;">' +
+          '<strong>Archivos Fallidos:</strong> ' + report.summary.failedFiles.length +
+          '</div>' +
+          '</div>';
+
+        // Mostrar tipos de error
+        if (Object.keys(report.summary.errorTypes).length > 0) {
+          html += '<h4 style="color: #856404;">Tipos de Error Detectados:</h4>';
+          html += '<div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">';
+          for (const errorType in report.summary.errorTypes) {
+            if (report.summary.errorTypes.hasOwnProperty(errorType)) {
+              const count = report.summary.errorTypes[errorType];
+              const severity = count > 2 ? 'high' : count > 0 ? 'medium' : 'low';
+              const color = severity === 'high' ? '#dc3545' : severity === 'medium' ? '#ffc107' : '#28a745';
+              html += '<div style="background: ' + color + '; color: white; padding: 5px 10px; border-radius: 15px; font-size: 12px;">' +
+                errorType + ': ' + count +
+                '</div>';
+            }
+          }
+          html += '</div>';
+        }
+
+        // Mostrar archivos fallidos
+        if (report.summary.failedFiles.length > 0) {
+          html += '<h4 style="color: #856404;">Archivos con Problemas:</h4>';
+          html += '<ul style="background: white; padding: 15px; border-radius: 4px; margin: 0;">';
+          report.summary.failedFiles.forEach(function(file) {
+            html += '<li style="font-family: monospace; margin-bottom: 5px;">' + file + '</li>';
+          });
+          html += '</ul>';
+        }
+
+        // Mostrar detalles de errores unknown
+        const unknownErrors = report.details.filter(function(error) {
+          return error.type === 'unknown';
+        });
+        if (unknownErrors.length > 0) {
+          html += '<h4 style="color: #856404;">Detalles de Errores No Clasificados:</h4>';
+          unknownErrors.forEach(function(error) {
+            html += '<div style="background: white; padding: 15px; border-radius: 4px; margin-bottom: 10px; border-left: 4px solid #ffc107;">' +
+              '<div style="font-family: monospace; font-size: 12px; margin-bottom: 5px;">' +
+              '<strong>Archivo:</strong> ' + (error.file || 'unknown') + '<br>' +
+              (error.errorName ? '<strong>Nombre del Error:</strong> ' + error.errorName + '<br>' : '') +
+              '<strong>Mensaje:</strong> ' + (error.message || 'Sin mensaje') + '<br>' +
+              (error.context.line ? '<strong>Línea:</strong> ' + error.context.line + '<br>' : '') +
+              (error.context.column ? '<strong>Columna:</strong> ' + error.context.column + '<br>' : '') +
+              '</div>';
+            if (error.stack) {
+              html += '<details style="margin-top: 10px;">' +
+                '<summary style="cursor: pointer; color: #856404; font-weight: bold;">Ver Stack Trace</summary>' +
+                '<pre style="background: #f8f9fa; padding: 10px; border-radius: 4px; overflow-x: auto; font-size: 11px; margin-top: 5px;">' +
+                error.stack.replace(/</g, '&lt;').replace(/>/g, '&gt;') +
+                '</pre>' +
+                '</details>';
+            }
+            html += '</div>';
+          });
+        }
+
+        // Mostrar sugerencias
+        if (report.suggestions.length > 0) {
+          html += '<h4 style="color: #856404;">Sugerencias para Solucionar:</h4>';
+          report.suggestions.forEach(function(suggestion) {
+            html += '<div style="background: white; padding: 15px; border-radius: 4px; margin-bottom: 10px;">' +
+              '<h5 style="margin-top: 0; color: #856404;">' + suggestion.title + '</h5>' +
+              '<ul style="margin: 0;">';
+            suggestion.actions.forEach(function(action) {
+              html += '<li style="margin-bottom: 5px;">' + action + '</li>';
+            });
+            html += '</ul></div>';
+          });
+        }
+
+        html += '</div>';
+        container.innerHTML = html;
+      },
+
+      // Limpiar diagnóstico
+      clear: function() {
+        this.errors = [];
+        this.warnings = [];
+        this.debugInfo = {};
+      }
+    };
+
+    // ✅ NUEVO: Sistema de debug visual
+    function toggleDebugPanel() {
+      const panel = document.getElementById('debug-panel');
+      if (panel) {
+        panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        if (panel.style.display === 'block') {
+          updateDebugPanel();
+        }
+      }
     }
 
-    // Función para cargar scripts de forma secuencial
-    function loadScript(src, callback) {
+    function addDebugLog(level, message) {
+      const logContainer = document.getElementById('debug-log');
+      if (!logContainer) return;
+      
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      
+      const time = new Date().toLocaleTimeString();
+      const timeSpan = document.createElement('span');
+      timeSpan.className = 'log-time';
+      timeSpan.textContent = time;
+      
+      const levelSpan = document.createElement('span');
+      levelSpan.className = 'log-level-' + level.toLowerCase();
+      levelSpan.textContent = '[' + level + '] ';
+      
+      const messageSpan = document.createElement('span');
+      messageSpan.textContent = message;
+      
+      entry.appendChild(timeSpan);
+      entry.appendChild(levelSpan);
+      entry.appendChild(messageSpan);
+      
+      logContainer.appendChild(entry);
+      logContainer.scrollTop = logContainer.scrollHeight;
+      
+      // Limitar a 100 entradas
+      while (logContainer.children.length > 100) {
+        logContainer.removeChild(logContainer.firstChild);
+      }
+    }
+
+    function updateDebugPanel() {
+      // Estado de Jasmine
+      const jasmineStatus = document.getElementById('debug-jasmine-status');
+      if (jasmineStatus) {
+        if (typeof jasmine !== 'undefined') {
+          jasmineStatus.textContent = '✅ Disponible';
+          jasmineStatus.className = 'debug-value debug-success';
+        } else {
+          jasmineStatus.textContent = '❌ No disponible';
+          jasmineStatus.className = 'debug-value debug-error';
+        }
+      }
+      
+      // Estado del Environment
+      const envStatus = document.getElementById('debug-env-status');
+      if (envStatus) {
+        if (typeof jasmine !== 'undefined' && jasmine.getEnv) {
+          try {
+            const env = jasmine.getEnv();
+            if (env) {
+              envStatus.textContent = '✅ Inicializado';
+              envStatus.className = 'debug-value debug-success';
+            } else {
+              envStatus.textContent = '⚠ No inicializado';
+              envStatus.className = 'debug-value debug-warning';
+            }
+          } catch (e) {
+            envStatus.textContent = '❌ Error: ' + e.message;
+            envStatus.className = 'debug-value debug-error';
+          }
+        } else {
+          envStatus.textContent = '❌ No disponible';
+          envStatus.className = 'debug-value debug-error';
+        }
+      }
+      
+      // Estado del HtmlReporter
+      const reporterStatus = document.getElementById('debug-reporter-status');
+      if (reporterStatus) {
+        if (typeof jasmine !== 'undefined' && jasmine.getEnv) {
+          try {
+            const env = jasmine.getEnv();
+            let hasReporter = false;
+            if (env && env.reporters) {
+              if (Array.isArray(env.reporters)) {
+                hasReporter = env.reporters.some(function(r) {
+                  return r && (r.constructor.name === 'HtmlReporter' || typeof r.getContainer === 'function');
+                });
+              } else if (typeof env.reporters.forEach === 'function') {
+                env.reporters.forEach(function(r) {
+                  if (r && (r.constructor.name === 'HtmlReporter' || typeof r.getContainer === 'function')) {
+                    hasReporter = true;
+                  }
+                });
+              }
+            }
+            
+            if (hasReporter) {
+              reporterStatus.textContent = '✅ Configurado';
+              reporterStatus.className = 'debug-value debug-success';
+            } else if (typeof jasmine !== 'undefined' && jasmine.HtmlReporter) {
+              reporterStatus.textContent = '⚠ Disponible pero no agregado';
+              reporterStatus.className = 'debug-value debug-warning';
+            } else {
+              reporterStatus.textContent = '❌ No disponible';
+              reporterStatus.className = 'debug-value debug-error';
+            }
+          } catch (e) {
+            reporterStatus.textContent = '❌ Error: ' + e.message;
+            reporterStatus.className = 'debug-value debug-error';
+          }
+        } else {
+          reporterStatus.textContent = '❌ No disponible';
+          reporterStatus.className = 'debug-value debug-error';
+        }
+      }
+      
+      // Contador de tests
+      const testsCount = document.getElementById('debug-tests-count');
+      if (testsCount) {
+        if (typeof jasmine !== 'undefined' && jasmine.getEnv) {
+          try {
+            const env = jasmine.getEnv();
+            if (env && env.topLevelSuites) {
+              let count = 0;
+              if (Array.isArray(env.topLevelSuites)) {
+                count = env.topLevelSuites.length;
+              } else if (typeof env.topLevelSuites.forEach === 'function') {
+                env.topLevelSuites.forEach(function() { count++; });
+              }
+              testsCount.textContent = count + ' suite(s)';
+            } else {
+              testsCount.textContent = 'No disponible';
+            }
+          } catch (e) {
+            testsCount.textContent = 'Error: ' + e.message;
+          }
+        } else {
+          testsCount.textContent = '0';
+        }
+      }
+      
+      // Estado del contenedor DOM
+      const containerStatus = document.getElementById('debug-container-status');
+      if (containerStatus) {
+        const container = document.getElementById('jasmine_content');
+        if (container) {
+          containerStatus.textContent = '✅ Encontrado (ID: jasmine_content)';
+          containerStatus.className = 'debug-value debug-success';
+        } else {
+          containerStatus.textContent = '❌ No encontrado';
+          containerStatus.className = 'debug-value debug-error';
+        }
+      }
+      
+      // Estado de document.body
+      const bodyStatus = document.getElementById('debug-body-status');
+      if (bodyStatus) {
+        if (document.body) {
+          bodyStatus.textContent = '✅ Disponible';
+          bodyStatus.className = 'debug-value debug-success';
+        } else {
+          bodyStatus.textContent = '❌ No disponible';
+          bodyStatus.className = 'debug-value debug-error';
+        }
+      }
+    }
+
+    // Actualizar panel de debug periódicamente
+    setInterval(function() {
+      const panel = document.getElementById('debug-panel');
+      if (panel && panel.style.display !== 'none') {
+        updateDebugPanel();
+      }
+    }, 1000);
+
+    // ✅ CORREGIDO: Esperar a que el DOM esté listo antes de cargar boot0.js
+    // Esto asegura que document.body esté disponible cuando HtmlReporter se inicialice
+    function initializeJasmine() {
+      // ✅ CORREGIDO: Asegurar que document.body y el contenedor estén disponibles
+      // antes de cargar boot0.js, ya que boot0.js puede inicializar HtmlReporter inmediatamente
+      if (!document.body) {
+        Logger.error('❌ document.body no está disponible');
+        // Reintentar después de un breve delay
+        setTimeout(initializeJasmine, 50);
+        return;
+      }
+      
+      // Crear contenedor para HtmlReporter antes de cargar boot0.js
+      // HtmlReporter normalmente usa document.body, pero podemos proporcionar un contenedor específico
+      let reporterContainer = document.getElementById('jasmine_content');
+      if (!reporterContainer) {
+        reporterContainer = document.createElement('div');
+        reporterContainer.id = 'jasmine_content';
+        reporterContainer.className = 'jasmine_html-reporter';
+        document.body.appendChild(reporterContainer);
+        Logger.info('✅ Contenedor para HtmlReporter creado antes de boot0.js');
+      }
+      
+      // Cargar boot0.js dinámicamente después de que el DOM esté listo
+      const boot0Script = document.createElement('script');
+      boot0Script.src = '../node_modules/jasmine-core/lib/jasmine-core/boot0.js';
+      boot0Script.onload = function() {
+        Logger.info('✅ boot0.js cargado');
+        updateDebugPanel(); // Actualizar panel de debug
+        // Pequeño delay para asegurar que boot0.js haya terminado de ejecutarse
+        setTimeout(function() {
+          configureJasmine();
+        }, 10);
+      };
+      boot0Script.onerror = function() {
+        Logger.error('❌ Error al cargar boot0.js');
+        // Intentar configurar de todas formas
+        configureJasmine();
+      };
+      document.head.appendChild(boot0Script);
+    }
+
+    function configureJasmine() {
+      // Detectar entorno CI
+      const isCI = window.location.search.includes('ci=true') || 
+                   (typeof process !== 'undefined' && process.env && process.env.CI);
+
+      // Configurar Jasmine
+      if (typeof jasmine !== 'undefined') {
+        const jasmineConfig = {
+          random: !isCI, // No randomizar en CI para resultados consistentes
+          seed: null,
+          stopOnFailure: isCI, // Detener en primer fallo en CI
+          failFast: false,
+          hideDisabled: false,
+          verboseDeprecations: !isCI, // Verboso en desarrollo
+          oneFailurePerSpec: false
+        };
+        
+        jasmine.getEnv().configure(jasmineConfig);
+        
+        // ✅ CORREGIDO: Asegurar que el contenedor para HtmlReporter esté disponible
+        // boot0.js inicializa el HtmlReporter automáticamente, pero necesita un contenedor en el DOM
+        // HtmlReporter normalmente busca document.body o un contenedor específico
+        if (!document.body) {
+          Logger.error('❌ document.body no está disponible');
+        } else {
+          // Asegurar que el contenedor esté disponible
+          let reporterContainer = document.getElementById('jasmine_content');
+          if (!reporterContainer) {
+            reporterContainer = document.createElement('div');
+            reporterContainer.id = 'jasmine_content';
+            reporterContainer.className = 'jasmine_html-reporter';
+            document.body.appendChild(reporterContainer);
+            Logger.info('✅ Contenedor para HtmlReporter creado');
+          }
+          
+          // ✅ CORREGIDO: Verificar si HtmlReporter ya fue inicializado por boot0.js
+          // boot0.js normalmente inicializa el HtmlReporter automáticamente
+          // Si hay un problema, podemos intentar crear el reporter manualmente
+          const env = jasmine.getEnv();
+          if (env) {
+            // Verificar si ya hay un HtmlReporter agregado
+            // Los reporters pueden estar en diferentes estructuras dependiendo de la versión de Jasmine
+            let hasHtmlReporter = false;
+            let existingReporter = null;
+            
+            // Intentar diferentes formas de acceder a los reporters
+            if (env.reporters) {
+              if (Array.isArray(env.reporters)) {
+                existingReporter = env.reporters.find(function(reporter) {
+                  return reporter && (reporter.constructor.name === 'HtmlReporter' || 
+                         (typeof reporter.getContainer === 'function'));
+                });
+                hasHtmlReporter = !!existingReporter;
+              } else if (typeof env.reporters.forEach === 'function') {
+                env.reporters.forEach(function(reporter) {
+                  if (reporter && (reporter.constructor.name === 'HtmlReporter' || 
+                      (typeof reporter.getContainer === 'function'))) {
+                    hasHtmlReporter = true;
+                    existingReporter = reporter;
+                  }
+                });
+              }
+            }
+            
+            // ✅ MEJORADO: Si no hay HtmlReporter, intentar agregarlo manualmente
+            if (!hasHtmlReporter) {
+              Logger.debug('HtmlReporter no detectado automáticamente, agregándolo manualmente...');
+              
+              // Intentar múltiples formas de crear el HtmlReporter
+              let htmlReporter = null;
+              
+              // Método 1: Usar jasmine.HtmlReporter si está disponible
+              if (typeof jasmine !== 'undefined' && jasmine.HtmlReporter) {
+                try {
+                  // Intentar crear con el contenedor específico
+                  htmlReporter = new jasmine.HtmlReporter({
+                    getContainer: function() {
+                      const container = reporterContainer || document.getElementById('jasmine_content') || document.body;
+                      Logger.debug('HtmlReporter.getContainer() retornando:', container);
+                      return container;
+                    },
+                    createElement: function(tag) {
+                      return document.createElement(tag);
+                    },
+                    createTextNode: function(text) {
+                      return document.createTextNode(text);
+                    },
+                    onRaiseExceptionsClick: function() {},
+                    onThrowExpectationsClick: function() {},
+                    onRandomClick: function() {},
+                    addToExistingQueryString: function(key, value) {
+                      return '?';
+                    },
+                    setMenuVisibility: function(visible) {},
+                    setSpecVisibility: function(visible) {},
+                    setSuiteVisibility: function(visible) {}
+                  });
+                  
+                  // ✅ CRÍTICO: Sobrescribir getContainer para asegurar que siempre retorne el contenedor correcto
+                  // El HtmlReporter puede tener su propia implementación de getContainer que no funciona
+                  if (htmlReporter && typeof htmlReporter.getContainer === 'function') {
+                    const originalGetContainer = htmlReporter.getContainer;
+                    htmlReporter.getContainer = function() {
+                      const container = reporterContainer || document.getElementById('jasmine_content') || document.body;
+                      if (!container) {
+                        Logger.error('❌ No se pudo encontrar contenedor para HtmlReporter');
+                        // Intentar crear el contenedor si no existe
+                        if (document.body) {
+                          const newContainer = document.createElement('div');
+                          newContainer.id = 'jasmine_content';
+                          newContainer.className = 'jasmine_html-reporter';
+                          document.body.appendChild(newContainer);
+                          Logger.info('✅ Contenedor creado dinámicamente');
+                          return newContainer;
+                        }
+                        return document.body; // Fallback final
+                      }
+                      Logger.debug('HtmlReporter.getContainer() retornando:', container.id || container.tagName);
+                      return container;
+                    };
+                    Logger.info('✅ Método getContainer sobrescrito para garantizar contenedor válido');
+                  }
+                  
+                  env.addReporter(htmlReporter);
+                  Logger.info('✅ HtmlReporter agregado manualmente (método 1)');
+                  updateDebugPanel(); // Actualizar panel de debug inmediatamente
+                } catch (e) {
+                  Logger.warn('⚠ Error creando HtmlReporter (método 1):', e.message);
+                  Logger.debug('Stack trace:', e.stack);
+                }
+              }
+              
+              // Método 2: Si el método 1 falló, intentar usar jasmineRequire
+              if (!htmlReporter && typeof jasmineRequire !== 'undefined' && jasmineRequire.HtmlReporter) {
+                try {
+                  htmlReporter = new jasmineRequire.HtmlReporter({
+                    getContainer: function() {
+                      return reporterContainer || document.getElementById('jasmine_content') || document.body;
+                    },
+                    createElement: function(tag) {
+                      return document.createElement(tag);
+                    },
+                    createTextNode: function(text) {
+                      return document.createTextNode(text);
+                    },
+                    onRaiseExceptionsClick: function() {},
+                    onThrowExpectationsClick: function() {},
+                    onRandomClick: function() {},
+                    addToExistingQueryString: function(key, value) {
+                      return '?';
+                    },
+                    setMenuVisibility: function(visible) {},
+                    setSpecVisibility: function(visible) {},
+                    setSuiteVisibility: function(visible) {}
+                  });
+                  
+                  // ✅ CRÍTICO: Sobrescribir getContainer para asegurar que siempre retorne el contenedor correcto
+                  if (htmlReporter && typeof htmlReporter.getContainer === 'function') {
+                    htmlReporter.getContainer = function() {
+                      const container = reporterContainer || document.getElementById('jasmine_content') || document.body;
+                      if (!container) {
+                        if (document.body) {
+                          const newContainer = document.createElement('div');
+                          newContainer.id = 'jasmine_content';
+                          newContainer.className = 'jasmine_html-reporter';
+                          document.body.appendChild(newContainer);
+                          return newContainer;
+                        }
+                        return document.body;
+                      }
+                      return container;
+                    };
+                  }
+                  
+                  env.addReporter(htmlReporter);
+                  Logger.info('✅ HtmlReporter agregado manualmente (método 2)');
+                  updateDebugPanel(); // Actualizar panel de debug inmediatamente
+                } catch (e) {
+                  Logger.warn('⚠ Error creando HtmlReporter (método 2):', e.message);
+                  Logger.debug('Stack trace:', e.stack);
+                }
+              }
+              
+              // Método 3: Intentar usar window.jasmineRequire si está disponible
+              if (!htmlReporter && typeof window !== 'undefined' && window.jasmineRequire && window.jasmineRequire.HtmlReporter) {
+                try {
+                  htmlReporter = new window.jasmineRequire.HtmlReporter({
+                    getContainer: function() {
+                      return reporterContainer || document.getElementById('jasmine_content') || document.body;
+                    },
+                    createElement: function(tag) {
+                      return document.createElement(tag);
+                    },
+                    createTextNode: function(text) {
+                      return document.createTextNode(text);
+                    },
+                    onRaiseExceptionsClick: function() {},
+                    onThrowExpectationsClick: function() {},
+                    onRandomClick: function() {},
+                    addToExistingQueryString: function(key, value) {
+                      return '?';
+                    },
+                    setMenuVisibility: function(visible) {},
+                    setSpecVisibility: function(visible) {},
+                    setSuiteVisibility: function(visible) {}
+                  });
+                  
+                  // ✅ CRÍTICO: Sobrescribir getContainer para asegurar que siempre retorne el contenedor correcto
+                  if (htmlReporter && typeof htmlReporter.getContainer === 'function') {
+                    htmlReporter.getContainer = function() {
+                      const container = reporterContainer || document.getElementById('jasmine_content') || document.body;
+                      if (!container) {
+                        if (document.body) {
+                          const newContainer = document.createElement('div');
+                          newContainer.id = 'jasmine_content';
+                          newContainer.className = 'jasmine_html-reporter';
+                          document.body.appendChild(newContainer);
+                          return newContainer;
+                        }
+                        return document.body;
+                      }
+                      return container;
+                    };
+                  }
+                  
+                  env.addReporter(htmlReporter);
+                  Logger.info('✅ HtmlReporter agregado manualmente (método 3)');
+                  updateDebugPanel(); // Actualizar panel de debug inmediatamente
+                } catch (e) {
+                  Logger.warn('⚠ Error creando HtmlReporter (método 3):', e.message);
+                  Logger.debug('Stack trace:', e.stack);
+                }
+              }
+              
+              if (!htmlReporter) {
+                Logger.error('❌ No se pudo crear HtmlReporter con ningún método disponible');
+                Logger.info('ℹ Variables disponibles:', {
+                  jasmine: typeof jasmine !== 'undefined',
+                  jasmineHtmlReporter: typeof jasmine !== 'undefined' && typeof jasmine.HtmlReporter !== 'undefined',
+                  jasmineRequire: typeof jasmineRequire !== 'undefined',
+                  windowJasmineRequire: typeof window !== 'undefined' && typeof window.jasmineRequire !== 'undefined'
+                });
+              }
+            } else {
+              Logger.info('ℹ HtmlReporter ya está configurado por boot0.js');
+              
+              // ✅ CRÍTICO: Verificar y corregir el reporter existente si es necesario
+              if (existingReporter && typeof existingReporter.getContainer === 'function') {
+                try {
+                  const container = existingReporter.getContainer();
+                  if (!container) {
+                    Logger.warn('⚠ HtmlReporter.getContainer() retorna null, sobrescribiendo método...');
+                    // ✅ CRÍTICO: Sobrescribir getContainer para garantizar que siempre retorne un contenedor válido
+                    existingReporter.getContainer = function() {
+                      const validContainer = reporterContainer || document.getElementById('jasmine_content') || document.body;
+                      if (!validContainer) {
+                        if (document.body) {
+                          const newContainer = document.createElement('div');
+                          newContainer.id = 'jasmine_content';
+                          newContainer.className = 'jasmine_html-reporter';
+                          document.body.appendChild(newContainer);
+                          Logger.info('✅ Contenedor creado dinámicamente para reporter existente');
+                          return newContainer;
+                        }
+                        return document.body; // Fallback final
+                      }
+                      Logger.debug('HtmlReporter.getContainer() (sobrescrito) retornando:', validContainer.id || validContainer.tagName);
+                      return validContainer;
+                    };
+                    Logger.info('✅ Método getContainer sobrescrito para reporter existente');
+                  } else {
+                    Logger.info('✅ HtmlReporter tiene acceso al contenedor:', container.id || container.tagName);
+                    // Aún así, sobrescribir para garantizar que siempre funcione
+                    const originalGetContainer = existingReporter.getContainer;
+                    existingReporter.getContainer = function() {
+                      const validContainer = reporterContainer || document.getElementById('jasmine_content') || document.body;
+                      if (!validContainer) {
+                        if (document.body) {
+                          const newContainer = document.createElement('div');
+                          newContainer.id = 'jasmine_content';
+                          newContainer.className = 'jasmine_html-reporter';
+                          document.body.appendChild(newContainer);
+                          return newContainer;
+                        }
+                        return document.body;
+                      }
+                      return validContainer;
+                    };
+                    Logger.info('✅ Método getContainer sobrescrito preventivamente');
+                  }
+                } catch (e) {
+                  Logger.warn('⚠ Error verificando contenedor del HtmlReporter:', e.message);
+                  // Intentar sobrescribir de todas formas
+                  try {
+                    existingReporter.getContainer = function() {
+                      return reporterContainer || document.getElementById('jasmine_content') || document.body;
+                    };
+                    Logger.info('✅ Método getContainer sobrescrito como fallback');
+                  } catch (overrideError) {
+                    Logger.error('❌ No se pudo sobrescribir getContainer:', overrideError.message);
+                  }
+                }
+              }
+            }
+          }
+        }
+        
+        Logger.info('ℹ HtmlReporter configurado');
+        updateDebugPanel(); // Actualizar panel de debug
+        
+        Logger.info('✅ Jasmine configurado para', isCI ? 'CI' : 'desarrollo');
+        
+        // ✅ MEJORADO: Verificar integridad después de configurar Jasmine
+        displayIntegrityCheck();
+        
+        // ✅ MEJORADO: Capturar errores globales no manejados
+        window.addEventListener('unhandledrejection', function(event) {
+          const error = new Error('Promise rechazada no manejada: ' + (event.reason ? event.reason.toString() : 'Unknown'));
+          DiagnosticSystem.classifyError(error, {
+            type: 'promise_rejection',
+            reason: event.reason
+          });
+          Logger.error('❌ Promise rechazada:', event.reason);
+        });
+        
+        window.addEventListener('error', function(event) {
+          const error = new Error('Error global: ' + event.message);
+          DiagnosticSystem.classifyError(error, {
+            type: 'global_error',
+            filename: event.filename,
+            line: event.lineno,
+            column: event.colno
+          });
+        });
+        
+        // ✅ CORREGIDO: Cargar scripts después de que Jasmine esté configurado
+        startLoadingScripts();
+      } else {
+        Logger.error('❌ Jasmine no está disponible después de boot0.js');
+        // Intentar cargar scripts de todas formas
+        startLoadingScripts();
+      }
+    }
+
+    function startLoadingScripts() {
+      // Cargar helpers primero - Ruta relativa desde spec/
+      loadScript('helpers/jasmine-jquery.js', function(helperError) {
+        if (helperError) {
+          Logger.warn('⚠ Error cargando helpers, continuando...', helperError);
+        } else {
+          Logger.info('✅ Helpers cargados');
+        }
+        StatusMessages.add('Helpers cargados', 'success');
+
+        // Cargar el código fuente que queremos testear
+        const sourceFiles = [
+          // Cargar SyncStateManager.js primero (dependencia de otros módulos)
+          '../assets/js/dashboard/managers/SyncStateManager.js',
+          // ✅ NUEVO: Cargar Sanitizer.js primero (dependencia de otros módulos)
+          '../assets/js/dashboard/utils/Sanitizer.js',
+          // ✅ NUEVO: Cargar UIOptimizer.js (dependencia de componentes que actualizan UI)
+          '../assets/js/dashboard/utils/UIOptimizer.js',
+          // ✅ NUEVO: Cargar EventCleanupManager.js (dependencia de componentes que registran listeners)
+          '../assets/js/dashboard/managers/EventCleanupManager.js',
+          // Cargar ConsoleManager.js para poder testearlo
+          '../assets/js/dashboard/components/ConsoleManager.js',
+          // Cargar ErrorHandler.js para poder testearlo
+          '../assets/js/dashboard/core/ErrorHandler.js',
+          // Cargar PollingManager.js para poder testearlo
+          '../assets/js/dashboard/managers/PollingManager.js',
+          // ✅ NUEVO: Cargar Phase1Manager.js para análisis de Fase 1
+          '../assets/js/dashboard/sync/Phase1Manager.js',
+          // ✅ NUEVO: Cargar Phase2Manager.js para análisis de Fase 2
+          '../assets/js/dashboard/sync/Phase2Manager.js',
+          // ✅ NUEVO: Cargar SyncDashboard.js para análisis de Fase 2
+          '../assets/js/dashboard/components/SyncDashboard.js',
+          // ✅ NUEVO: Cargar SyncProgress.js (dependencia de Phase2Manager)
+          '../assets/js/dashboard/sync/SyncProgress.js',
+          // ✅ NUEVO: Cargar dashboard-config.js (configuración de stallThreshold)
+          '../assets/js/dashboard/config/dashboard-config.js',
+          // ✅ NUEVO: Cargar ProgressBar.js (usa UIOptimizer)
+          '../assets/js/dashboard/components/ProgressBar.js'
+        ];
+
+        // Cargar archivos fuente secuencialmente (por dependencias)
+        loadScriptsSequential(sourceFiles, function(sourceError, sourceResults) {
+          if (sourceError) {
+            Logger.error('❌ Error en carga de archivos fuente:', sourceError);
+          }
+          
+          // Cargar specs - Rutas relativas desde spec/
+          const specFiles = [
+            // ✅ NUEVO: Tests de utilidades primero
+            'dashboard/utils/SanitizerSpec.js',
+            'dashboard/utils/UIOptimizerSpec.js', // ✅ NUEVO: Tests de UIOptimizer
+            'dashboard/managers/EventCleanupManagerSpec.js', // ✅ NUEVO: Tests de EventCleanupManager
+            'dashboard/components/ConsoleManagerSpec.js',
+            'dashboard/core/ErrorHandlerSpec.js',
+            'dashboard/managers/PollingManagerSpec.js',
+            // ✅ NUEVO: Tests de Fase 1 y Fase 2
+            'dashboard/sync/Phase1ManagerSpec.js',
+            'dashboard/sync/Phase2ManagerSpec.js',
+            'dashboard/sync/SyncProgressSpec.js', // ✅ NUEVO: Tests de SyncProgress con detección de stalls
+            'dashboard/components/SyncDashboardPhase2Spec.js'
+          ];
+
+          // Cargar specs en paralelo
+          loadScriptsParallel(specFiles, function(specError, specResults) {
+            if (specError) {
+              Logger.warn('⚠ Algunos specs fallaron en carga, pero continuando...', specError);
+            }
+            
+            // Todos los specs cargados, verificar que Jasmine esté listo antes de ejecutar
+            Logger.info('✅ Todos los scripts cargados, verificando Jasmine...');
+            
+            // ✅ CORREGIDO: Verificar que Jasmine esté completamente inicializado
+            function verifyAndExecuteTests() {
+              if (typeof jasmine === 'undefined' || !jasmine.getEnv) {
+                Logger.error('❌ Jasmine no está disponible');
+                StatusMessages.add('Error: Jasmine no está disponible', 'error');
+                return;
+              }
+              
+              const env = jasmine.getEnv();
+              if (!env) {
+                Logger.error('❌ Jasmine environment no está disponible');
+                StatusMessages.add('Error: Jasmine environment no está disponible', 'error');
+                return;
+              }
+              
+              Logger.info('✅ Jasmine verificado, cargando boot1.js...');
+              StatusMessages.add('Iniciando ejecución de tests...', 'info');
+              
+              // Cargar boot1.js que ejecutará los tests automáticamente
+              loadScript('../node_modules/jasmine-core/lib/jasmine-core/boot1.js', function(bootError) {
+                if (bootError) {
+                  Logger.error('❌ Error al cargar boot1.js:', bootError);
+                  StatusMessages.add('Error al iniciar tests', 'error');
+                } else {
+                  Logger.info('✅ boot1.js cargado');
+                  
+                  // ✅ CORREGIDO: boot1.js normalmente espera DOMContentLoaded para ejecutar
+                  // Como lo cargamos dinámicamente después de que el DOM está listo,
+                  // boot1.js no ejecutará los tests automáticamente.
+                  // Necesitamos ejecutarlos manualmente después de asegurar que todos
+                  // los scripts de tests se hayan ejecutado completamente
+                  
+                  // Usar requestAnimationFrame para asegurar que el navegador haya procesado
+                  // todos los scripts antes de ejecutar los tests
+                  function executeTestsWhenReady(attempt) {
+                    attempt = attempt || 0;
+                    if (typeof jasmine === 'undefined' || !jasmine.getEnv) {
+                      if (attempt < 5) {
+                        // Reintentar si Jasmine aún no está disponible
+                        setTimeout(function() {
+                          executeTestsWhenReady(attempt + 1);
+                        }, 100);
+                        return;
+                      }
+                      Logger.error('❌ Jasmine no disponible después de boot1.js');
+                      StatusMessages.add('Error: Jasmine no disponible', 'error');
+                      return;
+                    }
+                    
+                    const env = jasmine.getEnv();
+                    if (!env) {
+                      if (attempt < 5) {
+                        setTimeout(function() {
+                          executeTestsWhenReady(attempt + 1);
+                        }, 100);
+                        return;
+                      }
+                      Logger.error('❌ Jasmine environment no disponible');
+                      StatusMessages.add('Error: Jasmine environment no disponible', 'error');
+                      return;
+                    }
+                    
+                    // Verificar si hay tests registrados
+                    const suites = env.topSuite();
+                    if (suites && suites.children && suites.children.length > 0) {
+                      Logger.info(`✅ ${suites.children.length} suite(s) de tests detectado(s) - ejecutando...`);
+                      
+                      // Usar requestAnimationFrame para asegurar que el stack esté vacío
+                      // antes de ejecutar los tests
+                      if (typeof requestAnimationFrame !== 'undefined') {
+                        requestAnimationFrame(function() {
+                          setTimeout(function() {
+                            try {
+                              env.execute();
+                              StatusMessages.add('Tests en ejecución...', 'success');
+                              Logger.info('✅ Tests ejecutados correctamente');
+                              updateDebugPanel(); // Actualizar panel de debug
+                              
+                              // Actualizar estado de tests ejecutándose
+                              const runningStatus = document.getElementById('debug-tests-running');
+                              if (runningStatus) {
+                                runningStatus.textContent = '✅ Sí';
+                                runningStatus.className = 'debug-value debug-success';
+                              }
+                            } catch (executeError) {
+                              Logger.error('❌ Error al ejecutar tests:', executeError);
+                              StatusMessages.add('Error al ejecutar tests - Ver consola', 'error');
+                              updateDebugPanel(); // Actualizar panel de debug
+                            }
+                          }, 50);
+                        });
+                      } else {
+                        // Fallback si requestAnimationFrame no está disponible
+                        setTimeout(function() {
+                          try {
+                            env.execute();
+                            StatusMessages.add('Tests en ejecución...', 'success');
+                            Logger.info('✅ Tests ejecutados correctamente');
+                            updateDebugPanel(); // Actualizar panel de debug
+                            
+                            // Actualizar estado de tests ejecutándose
+                            const runningStatus = document.getElementById('debug-tests-running');
+                            if (runningStatus) {
+                              runningStatus.textContent = '✅ Sí';
+                              runningStatus.className = 'debug-value debug-success';
+                            }
+                          } catch (executeError) {
+                            Logger.error('❌ Error al ejecutar tests:', executeError);
+                            StatusMessages.add('Error al ejecutar tests - Ver consola', 'error');
+                            updateDebugPanel(); // Actualizar panel de debug
+                          }
+                        }, 100);
+                      }
+                    } else {
+                      if (attempt < 3) {
+                        // Reintentar si aún no hay tests registrados
+                        setTimeout(function() {
+                          executeTestsWhenReady(attempt + 1);
+                        }, 200);
+                        return;
+                      }
+                      Logger.warn('⚠ No se detectaron tests registrados');
+                      StatusMessages.add('Advertencia: No se detectaron tests', 'warning');
+                    }
+                  }
+                  
+                  // Iniciar ejecución después de un delay inicial
+                  setTimeout(function() {
+                    executeTestsWhenReady(0);
+                  }, 300); // Delay inicial más largo para asegurar que todos los scripts se ejecuten
+                }
+              });
+            }
+            
+            // Pequeño delay para asegurar que todos los scripts se hayan ejecutado completamente
+            setTimeout(function() {
+              verifyAndExecuteTests();
+              // ✅ NUEVO: Mostrar reporte diagnóstico después de cargar todos los scripts
+              setTimeout(function() {
+                DiagnosticSystem.displayReport();
+              }, 1000);
+            }, 50);
+          });
+        });
+      });
+    }
+
+    // Inicializar cuando el DOM esté listo
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeJasmine);
+    } else {
+      // DOM ya está listo
+      initializeJasmine();
+    }
+
+    // Sistema de mensajes de estado
+    const StatusMessages = {
+      add: function(message, type = 'info') {
+        const container = document.getElementById('status-messages');
+        if (container) {
+          const messageDiv = document.createElement('div');
+          messageDiv.className = `status-message status-${type}`;
+          messageDiv.textContent = message;
+          container.appendChild(messageDiv);
+          
+          // Auto-scroll al final
+          messageDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+      },
+      
+      clear: function() {
+        const container = document.getElementById('status-messages');
+        if (container) {
+          container.innerHTML = '';
+        }
+      }
+    };
+
+    // Actualizar indicador de progreso
+    function updateProgress(loaded, total, currentFile) {
+      const percentage = total > 0 ? Math.round((loaded / total) * 100) : 0;
+      const progressBar = document.getElementById('progress-bar');
+      const progressText = document.getElementById('progress-text');
+      
+      if (progressBar) {
+        progressBar.style.width = percentage + '%';
+      }
+      if (progressText) {
+        const phase = currentFile ? `Cargando: ${currentFile}` : 'Preparando...';
+        progressText.textContent = `${phase} (${loaded}/${total}) - ${percentage}%`;
+      }
+    }
+
+    // ✅ MEJORADO: Función loadScript con mejor diagnóstico
+    function loadScript(src, callback, timeout = 15000) {
+      Logger.debug('Intentando cargar:', src);
+      
       const script = document.createElement('script');
       script.src = src;
       script.async = false;
+      
+      const startTime = Date.now();
+      const timeoutId = setTimeout(function() {
+        const error = new Error('Timeout al cargar script: ' + src + ' (' + timeout + 'ms)');
+        const classifiedError = DiagnosticSystem.classifyError(error, {
+          file: src,
+          loadTime: Date.now() - startTime,
+          type: 'timeout_error'
+        });
+        
+        Logger.error('⏰', error.message);
+        StatusMessages.add('Timeout al cargar: ' + src, 'warning');
+        if (callback) callback(error, src);
+      }, timeout);
+      
       script.onload = function() {
-        console.log('✅ Cargado:', src);
-        if (callback) callback();
+        clearTimeout(timeoutId);
+        const loadTime = Date.now() - startTime;
+        Logger.info('✅ Cargado:', src, '(' + loadTime + 'ms)');
+        StatusMessages.add('Cargado: ' + src + ' (' + loadTime + 'ms)', 'success');
+        
+        // Verificar si el script ejecutó correctamente
+        setTimeout(function() {
+          // Aquí podríamos agregar verificaciones específicas
+          // sobre si el script registró lo que se esperaba
+        }, 10);
+        
+        if (callback) callback(null, src);
       };
-      script.onerror = function() {
-        console.error('❌ Error al cargar:', src);
-        if (callback) callback(); // Continuar aunque falle
+      
+      script.onerror = function(event) {
+        clearTimeout(timeoutId);
+        const error = new Error('Error de red al cargar script: ' + src);
+        const classifiedError = DiagnosticSystem.classifyError(error, {
+          file: src,
+          event: event,
+          type: 'network_error'
+        });
+        
+        Logger.error('❌ Error de red al cargar:', src, error);
+        StatusMessages.add('Error de red al cargar: ' + src, 'error');
+        if (callback) callback(error, src);
       };
+      
+      // Capturar errores de sintaxis/en tiempo de ejecución del script
+      var errorHandler = function(e) {
+        if (e.filename && e.filename.indexOf(src) !== -1) {
+          const error = new Error('Error en script ' + src + ': ' + e.message);
+          const classifiedError = DiagnosticSystem.classifyError(error, {
+            file: src,
+            originalError: e,
+            type: 'execution_error',
+            line: e.lineno,
+            column: e.colno
+          });
+          
+          Logger.error('❌ Error de ejecución en:', src, e.message);
+          StatusMessages.add('Error de ejecución en: ' + src, 'error');
+        }
+      };
+      
+      window.addEventListener('error', errorHandler);
+      
+      // Remover el listener después de un tiempo para evitar memory leaks
+      setTimeout(function() {
+        window.removeEventListener('error', errorHandler);
+      }, timeout + 1000);
+      
       document.head.appendChild(script);
     }
 
-    // Cargar helpers primero - Ruta relativa desde spec/
-    loadScript('helpers/jasmine-jquery.js', function() {
-      console.log('✅ Helpers cargados');
-
-      // Cargar el código fuente que queremos testear
-      const sourceFiles = [
-        // Cargar ConsoleManager.js para poder testearlo
-        '../assets/js/dashboard/components/ConsoleManager.js',
-        // Cargar ErrorHandler.js para poder testearlo
-        '../assets/js/dashboard/core/ErrorHandler.js',
-        // Cargar PollingManager.js para poder testearlo
-        '../assets/js/dashboard/managers/PollingManager.js',
-        // ✅ NUEVO: Cargar Phase2Manager.js para análisis de Fase 2
-        '../assets/js/dashboard/sync/Phase2Manager.js',
-        // ✅ NUEVO: Cargar SyncDashboard.js para análisis de Fase 2
-        '../assets/js/dashboard/components/SyncDashboard.js',
-        // ✅ NUEVO: Cargar SyncProgress.js (dependencia de Phase2Manager)
-        '../assets/js/dashboard/sync/SyncProgress.js'
-      ];
-
-      // Cargar archivos fuente
-      let sourceIndex = 0;
-      function loadNextSource() {
-        if (sourceIndex >= sourceFiles.length) {
-          // Todos los archivos fuente cargados, cargar specs
-          loadSpecs();
-          return;
-        }
-        loadScript(sourceFiles[sourceIndex], function() {
-          sourceIndex++;
-          loadNextSource();
+    // ✅ NUEVO: Verificador de integridad de Jasmine
+    function verifyJasmineIntegrity() {
+      const checks = [];
+      
+      // Check 1: Jasmine global disponible
+      if (typeof jasmine === 'undefined') {
+        checks.push({
+          level: 'critical',
+          message: 'Jasmine no está disponible globalmente',
+          solution: 'Verificar que boot0.js se cargó correctamente'
+        });
+      } else {
+        checks.push({
+          level: 'success', 
+          message: 'Jasmine global disponible'
         });
       }
-
-      // Cargar specs - Rutas relativas desde spec/
-      function loadSpecs() {
-        const specFiles = [
-          'dashboard/components/ConsoleManagerSpec.js',
-          'dashboard/core/ErrorHandlerSpec.js',
-          'dashboard/managers/PollingManagerSpec.js',
-          // ✅ NUEVO: Tests de Fase 2
-          'dashboard/sync/Phase2ManagerSpec.js',
-          'dashboard/components/SyncDashboardPhase2Spec.js'
-        ];
-
-        let specIndex = 0;
-        function loadNextSpec() {
-          if (specIndex >= specFiles.length) {
-            // Todos los specs cargados, cargar boot1.js que ejecutará los tests
-            console.log('✅ Todos los scripts cargados, cargando boot1.js...');
-            loadScript('../node_modules/jasmine-core/lib/jasmine-core/boot1.js', function() {
-              console.log('✅ boot1.js cargado - Los tests se ejecutarán automáticamente');
-            });
-            return;
-          }
-          loadScript(specFiles[specIndex], function() {
-            specIndex++;
-            loadNextSpec();
+      
+      // Check 2: Jasmine environment
+      if (typeof jasmine !== 'undefined' && !jasmine.getEnv) {
+        checks.push({
+          level: 'critical',
+          message: 'jasmine.getEnv no disponible',
+          solution: 'Verificar la versión de Jasmine y el orden de carga'
+        });
+      } else if (typeof jasmine !== 'undefined') {
+        try {
+          const env = jasmine.getEnv();
+          checks.push({
+            level: 'success',
+            message: 'Jasmine Environment disponible'
+          });
+        } catch (e) {
+          checks.push({
+            level: 'critical',
+            message: 'Error al acceder a jasmine.getEnv: ' + e.message,
+            solution: 'Revisar la configuración de Jasmine'
           });
         }
-        loadNextSpec();
       }
-
-      // Iniciar carga
-      if (sourceFiles.length > 0) {
-        loadNextSource();
+      
+      // Check 3: HtmlReporter
+      if (typeof jasmine !== 'undefined' && typeof jasmine.HtmlReporter === 'undefined') {
+        checks.push({
+          level: 'warning',
+          message: 'jasmine.HtmlReporter no disponible',
+          solution: 'Verificar que jasmine-html.js se cargó correctamente'
+        });
       } else {
-        loadSpecs();
+        checks.push({
+          level: 'success',
+          message: 'HtmlReporter disponible'
+        });
       }
-    });
+      
+      // Check 4: Contenedor DOM
+      const container = document.getElementById('jasmine_content');
+      if (!container) {
+        checks.push({
+          level: 'critical',
+          message: 'Contenedor jasmine_content no encontrado en DOM',
+          solution: 'Asegurar que el HTML tenga un elemento con id="jasmine_content"'
+        });
+      } else {
+        checks.push({
+          level: 'success',
+          message: 'Contenedor jasmine_content disponible'
+        });
+      }
+      
+      return checks;
+    }
+
+    // ✅ NUEVO: Mostrar verificación de integridad
+    function displayIntegrityCheck() {
+      const checks = verifyJasmineIntegrity();
+      const container = document.getElementById('integrity-check');
+      
+      if (!container) return;
+      
+      let html = '<div style="background: #e9ecef; border-radius: 8px; padding: 15px; margin: 20px 0;">' +
+        '<h3 style="margin-top: 0;">🔧 Verificación de Integridad</h3>';
+      
+      checks.forEach(function(check) {
+        const icon = check.level === 'success' ? '✅' : check.level === 'warning' ? '⚠️' : '❌';
+        const color = check.level === 'success' ? '#28a745' : check.level === 'warning' ? '#ffc107' : '#dc3545';
+        
+        html += '<div style="display: flex; align-items: flex-start; margin-bottom: 10px; padding: 10px; background: white; border-radius: 4px;">' +
+          '<span style="font-size: 18px; margin-right: 10px;">' + icon + '</span>' +
+          '<div style="flex: 1;">' +
+          '<div style="color: ' + color + '; font-weight: bold;">' + check.message + '</div>' +
+          (check.solution ? '<div style="font-size: 12px; color: #6c757d; margin-top: 5px;">' + check.solution + '</div>' : '') +
+          '</div>' +
+          '</div>';
+      });
+      
+      html += '</div>';
+      container.innerHTML = html;
+    }
+
+    // Cargar múltiples scripts en paralelo con límite
+    function loadScriptsParallel(scripts, callback, maxConcurrent = 3) {
+      let completed = 0;
+      let failed = 0;
+      const total = scripts.length;
+      const results = [];
+      
+      updateProgress(0, total, 'Iniciando carga...');
+      
+      function loadBatch(startIndex) {
+        const endIndex = Math.min(startIndex + maxConcurrent, scripts.length);
+        
+        for (let i = startIndex; i < endIndex; i++) {
+          const currentIndex = i;
+          loadScript(scripts[i], function(error, src) {
+            completed++;
+            updateProgress(completed, total, src);
+            
+            if (error) {
+              failed++;
+              results.push({ error, src });
+            } else {
+              results.push({ src, success: true });
+            }
+            
+            if (completed === scripts.length) {
+              const finalMessage = failed > 0 
+                ? `⚠ Carga completada con ${failed} errores`
+                : '✅ Todos los scripts cargados correctamente';
+              
+              Logger.info(finalMessage);
+              StatusMessages.add(finalMessage, failed > 0 ? 'warning' : 'success');
+              
+              if (callback) {
+                callback(failed > 0 ? new Error(`${failed} scripts failed`) : null, results);
+              }
+            }
+          });
+        }
+        
+        // Cargar siguiente batch si hay más scripts
+        if (endIndex < scripts.length) {
+          setTimeout(() => loadBatch(endIndex), 100);
+        }
+      }
+      
+      if (scripts.length > 0) {
+        loadBatch(0);
+      } else {
+        if (callback) callback(null, []);
+      }
+    }
+
+    // Cargar scripts secuencialmente (para dependencias)
+    function loadScriptsSequential(scripts, callback) {
+      let index = 0;
+      const total = scripts.length;
+      const results = [];
+      
+      updateProgress(0, total, 'Iniciando carga secuencial...');
+      
+      function loadNext() {
+        if (index >= scripts.length) {
+          if (callback) callback(null, results);
+          return;
+        }
+        
+        updateProgress(index, total, scripts[index]);
+        
+        loadScript(scripts[index], function(error, src) {
+          if (error) {
+            results.push({ error, src });
+          } else {
+            results.push({ src, success: true });
+          }
+          
+          index++;
+          loadNext();
+        });
+      }
+      
+      if (scripts.length > 0) {
+        loadNext();
+      } else {
+        if (callback) callback(null, []);
+      }
+    }
+
   </script>
 </body>
 </html>

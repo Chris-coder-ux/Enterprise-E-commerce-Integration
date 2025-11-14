@@ -43,8 +43,13 @@
         return baseMock; // Setter: retorna el objeto para encadenamiento
       });
       baseMock.append = jasmine.createSpy('append').and.returnValue(baseMock);
+      baseMock.appendTo = jasmine.createSpy('appendTo').and.returnValue(baseMock);
+      baseMock.prepend = jasmine.createSpy('prepend').and.returnValue(baseMock);
+      baseMock.prependTo = jasmine.createSpy('prependTo').and.returnValue(baseMock);
+      baseMock.after = jasmine.createSpy('after').and.returnValue(baseMock);
       baseMock.empty = jasmine.createSpy('empty').and.returnValue(baseMock);
       baseMock.on = jasmine.createSpy('on').and.returnValue(baseMock);
+      baseMock.off = jasmine.createSpy('off').and.returnValue(baseMock);
       baseMock.scrollTop = jasmine.createSpy('scrollTop').and.returnValue(baseMock);
       baseMock.is = jasmine.createSpy('is').and.returnValue(false);
       baseMock.show = jasmine.createSpy('show').and.returnValue(baseMock);
@@ -96,6 +101,7 @@
       append: jasmine.createSpy('fn.append').and.returnValue(baseMockForFn),
       empty: jasmine.createSpy('fn.empty').and.returnValue(baseMockForFn),
       on: jasmine.createSpy('fn.on').and.returnValue(baseMockForFn),
+      off: jasmine.createSpy('fn.off').and.returnValue(baseMockForFn),
       scrollTop: jasmine.createSpy('fn.scrollTop').and.returnValue(baseMockForFn),
       is: jasmine.createSpy('fn.is').and.returnValue(false),
       show: jasmine.createSpy('fn.show').and.returnValue(baseMockForFn),

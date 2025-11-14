@@ -7,7 +7,16 @@
     "helpers/**/*.js"
   ],
   "stopSpecOnExpectationFailure": false,
+  "stopOnSpecFailure": false,
   "random": false,
-  "seed": null
+  "seed": null,
+  "failFast": false,
+  "hideDisabled": false,
+  "verboseDeprecations": true,
+  "oneFailurePerSpec": false,
+  "env": {
+    "stopOnSpecFailure": false,
+    "stopSpecOnExpectationFailure": false,
+    "random": false
+  }
 }
-

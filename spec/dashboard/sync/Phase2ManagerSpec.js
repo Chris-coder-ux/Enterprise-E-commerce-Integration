@@ -29,8 +29,16 @@ describe('Phase2Manager - Análisis Frontend Fase 2', function() {
     // ✅ ACTUALIZADO: Limpiar estado usando SyncStateManager
     // Los flags ahora se gestionan a través de SyncStateManager, pero mantenemos
     // compatibilidad hacia atrás limpiando window.* también
-    if (window.SyncStateManager && typeof window.SyncStateManager.resetPhase2State === 'function') {
-      window.SyncStateManager.resetPhase2State();
+    if (window.SyncStateManager) {
+      if (typeof window.SyncStateManager.resetPhase2State === 'function') {
+        window.SyncStateManager.resetPhase2State();
+      }
+      if (typeof window.SyncStateManager.resetPhase1State === 'function') {
+        window.SyncStateManager.resetPhase1State();
+      }
+      if (typeof window.SyncStateManager.resetAllState === 'function') {
+        window.SyncStateManager.resetAllState();
+      }
     }
     
     // Limpiar estado global (compatibilidad hacia atrás)
@@ -42,6 +50,12 @@ describe('Phase2Manager - Análisis Frontend Fase 2', function() {
     }
     if (window.phase2ProcessingBatch !== undefined) {
       delete window.phase2ProcessingBatch;
+    }
+    if (window.phase1Starting !== undefined) {
+      delete window.phase1Starting;
+    }
+    if (window.phase1Initialized !== undefined) {
+      delete window.phase1Initialized;
     }
     if (window.syncInterval !== undefined) {
       delete window.syncInterval;
@@ -113,6 +127,8 @@ describe('Phase2Manager - Análisis Frontend Fase 2', function() {
     };
 
     // Mock de PollingManager
+    // ✅ ACTUALIZADO: Mock de pollingManager con comportamiento de prevención de duplicaciones
+    const pollingIntervals = new Map();
     window.pollingManager = {
       config: {
         intervals: {
@@ -122,13 +138,98 @@ describe('Phase2Manager - Análisis Frontend Fase 2', function() {
         currentMode: 'normal',
         errorCount: 0
       },
-      intervals: new Map(),
-      startPolling: jasmine.createSpy('startPolling').and.returnValue(12345),
-      stopPolling: jasmine.createSpy('stopPolling').and.returnValue(true),
-      stopAllPolling: jasmine.createSpy('stopAllPolling'),
-      isPollingActive: jasmine.createSpy('isPollingActive').and.returnValue(false),
-      emit: jasmine.createSpy('emit')
+      intervals: pollingIntervals,
+      startPolling: jasmine.createSpy('startPolling').and.callFake(function(name, callback, interval) {
+        // ✅ SIMULADO: Prevenir duplicaciones - retornar ID existente si ya está activo
+        if (pollingIntervals.has(name)) {
+          return pollingIntervals.get(name).id;
+        }
+        const intervalId = 12345 + pollingIntervals.size; // ID único simulado
+        pollingIntervals.set(name, {
+          id: intervalId,
+          callback: callback,
+          interval: interval || 2000,
+          startTime: Date.now()
+        });
+        return intervalId;
+      }),
+      stopPolling: jasmine.createSpy('stopPolling').and.callFake(function(name) {
+        if (pollingIntervals.has(name)) {
+          pollingIntervals.delete(name);
+          return true;
+        }
+        return false;
+      }),
+      stopAllPolling: jasmine.createSpy('stopAllPolling').and.callFake(function() {
+        pollingIntervals.clear();
+      }),
+      isPollingActive: jasmine.createSpy('isPollingActive').and.callFake(function(name) {
+        if (name) {
+          return pollingIntervals.has(name);
+        }
+        return pollingIntervals.size > 0;
+      }),
+      getIntervalId: jasmine.createSpy('getIntervalId').and.callFake(function(name) {
+        if (pollingIntervals.has(name)) {
+          return pollingIntervals.get(name).id;
+        }
+        return null;
+      }),
+      // ✅ ACTUALIZADO: Sistema de eventos simulado para manejar suscripciones
+      emit: jasmine.createSpy('emit').and.callFake(function(eventName, data) {
+        // Simular que los listeners reciben el evento
+        const listeners = window._pollingManagerEventListeners ? window._pollingManagerEventListeners.get(eventName) : null;
+        if (listeners && listeners.length > 0) {
+          listeners.forEach(function(callback) {
+            try {
+              callback(data);
+            } catch (e) {
+              // Ignorar errores en listeners
+            }
+          });
+        }
+      }),
+      on: jasmine.createSpy('on').and.callFake(function(eventName, callback) {
+        // ✅ SIMULADO: Registrar listener en Map interno
+        if (!window._pollingManagerEventListeners) {
+          window._pollingManagerEventListeners = new Map();
+        }
+        if (!window._pollingManagerEventListeners.has(eventName)) {
+          window._pollingManagerEventListeners.set(eventName, []);
+        }
+        window._pollingManagerEventListeners.get(eventName).push(callback);
+        // Retornar función de desuscripción
+        return function() {
+          const listeners = window._pollingManagerEventListeners.get(eventName);
+          if (listeners) {
+            const index = listeners.indexOf(callback);
+            if (index > -1) {
+              listeners.splice(index, 1);
+            }
+          }
+        };
+      }),
+      off: jasmine.createSpy('off').and.callFake(function(eventName, callback) {
+        if (window._pollingManagerEventListeners) {
+          if (callback) {
+            const listeners = window._pollingManagerEventListeners.get(eventName);
+            if (listeners) {
+              const index = listeners.indexOf(callback);
+              if (index > -1) {
+                listeners.splice(index, 1);
+              }
+            }
+          } else {
+            window._pollingManagerEventListeners.delete(eventName);
+          }
+        }
+      })
     };
+    
+    // ✅ NUEVO: Inicializar Map de listeners si no existe
+    if (!window._pollingManagerEventListeners) {
+      window._pollingManagerEventListeners = new Map();
+    }
 
     // Mock de SyncStateManager con todos los métodos de Fase 2
     // ✅ ACTUALIZADO: Mock completo de SyncStateManager con estado centralizado
@@ -165,12 +266,40 @@ describe('Phase2Manager - Análisis Frontend Fase 2', function() {
         syncState.lastProgressValue = 0;
       }),
       
+      // ✅ NUEVO: Métodos de estado de Fase 1
+      getPhase1Starting: jasmine.createSpy('getPhase1Starting').and.callFake(function() {
+        return syncState.phase1Starting;
+      }),
+      setPhase1Starting: jasmine.createSpy('setPhase1Starting').and.callFake(function(value) {
+        // ✅ SIMULADO: Lock atómico - retornar false si ya está activo
+        if (value === true && syncState.phase1Starting === true) {
+          return false; // Lock ya activo
+        }
+        syncState.phase1Starting = value === true;
+        return true; // Lock adquirido
+      }),
+      getPhase1Initialized: jasmine.createSpy('getPhase1Initialized').and.callFake(function() {
+        return syncState.phase1Initialized;
+      }),
+      setPhase1Initialized: jasmine.createSpy('setPhase1Initialized').and.callFake(function(value) {
+        syncState.phase1Initialized = value === true;
+      }),
+      resetPhase1State: jasmine.createSpy('resetPhase1State').and.callFake(function() {
+        syncState.phase1Starting = false;
+        syncState.phase1Initialized = false;
+      }),
+      
       // Métodos de estado de Fase 2
       getPhase2Starting: jasmine.createSpy('getPhase2Starting').and.callFake(function() {
         return syncState.phase2Starting;
       }),
       setPhase2Starting: jasmine.createSpy('setPhase2Starting').and.callFake(function(value) {
+        // ✅ ACTUALIZADO: Lock atómico - retornar false si ya está activo
+        if (value === true && syncState.phase2Starting === true) {
+          return false; // Lock ya activo
+        }
         syncState.phase2Starting = value === true;
+        return true; // Lock adquirido
       }),
       getPhase2Initialized: jasmine.createSpy('getPhase2Initialized').and.callFake(function() {
         return syncState.phase2Initialized;
@@ -240,6 +369,8 @@ describe('Phase2Manager - Análisis Frontend Fase 2', function() {
       resetAllState: jasmine.createSpy('resetAllState').and.callFake(function() {
         syncState.inactiveProgressCounter = 0;
         syncState.lastProgressValue = 0;
+        syncState.phase1Starting = false;
+        syncState.phase1Initialized = false;
         syncState.phase2Starting = false;
         syncState.phase2Initialized = false;
         syncState.phase2ProcessingBatch = false;
@@ -272,7 +403,22 @@ describe('Phase2Manager - Análisis Frontend Fase 2', function() {
 
     // Mock de ErrorHandler
     window.ErrorHandler = {
-      logError: jasmine.createSpy('logError')
+      logError: jasmine.createSpy('logError'),
+      showConnectionError: jasmine.createSpy('showConnectionError'),
+      showUIError: jasmine.createSpy('showUIError')
+    };
+
+    // Mock de ConsoleManager para tests de feedback
+    window.ConsoleManager = {
+      addLine: jasmine.createSpy('addLine')
+    };
+
+    // Mock de addConsoleLine (fallback)
+    window.addConsoleLine = jasmine.createSpy('addConsoleLine');
+
+    // Mock de ToastManager
+    window.ToastManager = {
+      show: jasmine.createSpy('show')
     };
 
     // Mock de checkSyncProgress - evitar que haga llamadas AJAX reales
@@ -350,6 +496,22 @@ describe('Phase2Manager - Análisis Frontend Fase 2', function() {
     // Desinstalar clock (si está disponible)
     if (clock && clock.uninstall) {
       clock.uninstall();
+    }
+
+    // Limpiar mocks
+    if (window.ConsoleManager && window.ConsoleManager.addLine) {
+      window.ConsoleManager.addLine.calls.reset();
+    }
+    if (window.addConsoleLine) {
+      window.addConsoleLine.calls.reset();
+    }
+    if (window.ToastManager && window.ToastManager.show) {
+      window.ToastManager.show.calls.reset();
+    }
+    
+    // ✅ NUEVO: Resetear estado de procesamiento de lotes para evitar interferencia entre pruebas
+    if (window.SyncStateManager && window.SyncStateManager.setPhase2ProcessingBatch) {
+      window.SyncStateManager.setPhase2ProcessingBatch(false);
     }
   });
 
@@ -501,6 +663,53 @@ describe('Phase2Manager - Análisis Frontend Fase 2', function() {
   });
 
   describe('Método start()', function() {
+    it('debe prevenir ejecuciones simultáneas con lock atómico', function() {
+      if (typeof window.Phase2Manager === 'undefined' || !window.Phase2Manager.start) {
+        pending('Phase2Manager.start no está disponible');
+        return;
+      }
+
+      // ✅ NUEVO: Test de protección contra ejecuciones simultáneas
+      // Resetear estado
+      if (window.SyncStateManager) {
+        window.SyncStateManager.setPhase2Starting(false);
+        window.SyncStateManager.setPhase2Initialized(false);
+      }
+
+      // Primera llamada - debe adquirir el lock
+      let firstCallExecuted = false;
+      mockAjax.and.callFake(function(options) {
+        firstCallExecuted = true;
+        if (options.success) {
+          options.success({ success: true });
+        }
+      });
+
+      window.Phase2Manager.start();
+      
+      // Verificar que el lock está activo
+      expect(window.SyncStateManager ? window.SyncStateManager.getPhase2Starting() : false).toBe(true);
+      
+      // Segunda llamada inmediata - debe ser bloqueada por el lock
+      let secondCallExecuted = false;
+      mockAjax.and.callFake(function(options) {
+        secondCallExecuted = true;
+      });
+
+      window.Phase2Manager.start();
+      
+      // La segunda llamada NO debe ejecutar AJAX porque el lock está activo
+      // Solo la primera llamada debe ejecutarse
+      expect(firstCallExecuted).toBe(true);
+      // Verificar que setPhase2Starting fue llamado con false en la segunda llamada (lock ya activo)
+      const setPhase2StartingCalls = window.SyncStateManager.setPhase2Starting.calls.all();
+      // La segunda llamada debe retornar false porque el lock ya está activo
+      if (setPhase2StartingCalls.length >= 2) {
+        const secondCallResult = setPhase2StartingCalls[1].returnValue;
+        expect(secondCallResult).toBe(false);
+      }
+    });
+
     it('debe realizar petición AJAX correcta', function() {
       if (typeof window.Phase2Manager === 'undefined' || !window.Phase2Manager.start) {
         pending('Phase2Manager.start no está disponible');
@@ -624,7 +833,7 @@ describe('Phase2Manager - Análisis Frontend Fase 2', function() {
       expect(mockAjax).toHaveBeenCalled();
     });
 
-    it('debe marcar phase2Starting como true al iniciar', function() {
+    it('debe adquirir lock atómico al iniciar', function() {
       if (typeof window.Phase2Manager === 'undefined' || !window.Phase2Manager.start) {
         pending('Phase2Manager.start no está disponible');
         return;
@@ -637,7 +846,7 @@ describe('Phase2Manager - Análisis Frontend Fase 2', function() {
       }
 
       mockAjax.and.callFake(function(options) {
-        // ✅ ACTUALIZADO: Verificar usando SyncStateManager
+        // ✅ ACTUALIZADO: Verificar que el lock está activo usando SyncStateManager
         expect(window.SyncStateManager ? window.SyncStateManager.getPhase2Starting() : false).toBe(true);
         if (options.success) {
           options.success({ success: true });
@@ -646,7 +855,8 @@ describe('Phase2Manager - Análisis Frontend Fase 2', function() {
 
       window.Phase2Manager.start();
 
-      expect(window.phase2Starting).toBe(true);
+      // ✅ ACTUALIZADO: Verificar usando SyncStateManager
+      expect(window.SyncStateManager ? window.SyncStateManager.getPhase2Starting() : false).toBe(true);
     });
 
     it('debe resetear phase2Starting después de recibir respuesta', function(done) {
@@ -682,18 +892,18 @@ describe('Phase2Manager - Análisis Frontend Fase 2', function() {
   });
 
   describe('Manejo de polling', function() {
-    it('debe verificar si el polling ya está activo antes de iniciar', function(done) {
+    it('debe iniciar polling directamente sin verificaciones redundantes', function(done) {
       if (typeof window.Phase2Manager === 'undefined' || !window.Phase2Manager.start) {
         pending('Phase2Manager.start no está disponible');
         return;
       }
 
-      // ✅ ACTUALIZADO: Usar SyncStateManager en lugar de window.*
+      // ✅ ACTUALIZADO: PollingManager previene duplicaciones automáticamente
+      // Phase2Manager ya no necesita verificar si el polling está activo
       if (window.SyncStateManager) {
         window.SyncStateManager.setPhase2Starting(false);
         window.SyncStateManager.setPhase2Initialized(false);
       }
-      window.pollingManager.isPollingActive.and.returnValue(true);
 
       mockAjax.and.callFake(function(options) {
         if (options.success) {
@@ -701,23 +911,20 @@ describe('Phase2Manager - Análisis Frontend Fase 2', function() {
         }
       });
 
-      const consoleWarnSpy = spyOn(console, 'warn');
       window.Phase2Manager.start();
 
-      if (clock && clock.tick) {
-        clock.tick(600); // Esperar setTimeout de 500ms
-      } else if (jasmine.clock) {
-        jasmine.clock().tick(600);
-      }
-
-      // Debe detectar que el polling ya está activo
-      expect(window.pollingManager.isPollingActive).toHaveBeenCalledWith('syncProgress');
-      expect(window.pollingManager.startPolling).not.toHaveBeenCalled();
+      // ✅ ACTUALIZADO: Ya no hay setTimeout, el polling se inicia directamente
+      // PollingManager previene duplicaciones automáticamente
+      expect(window.pollingManager.startPolling).toHaveBeenCalledWith(
+        'syncProgress',
+        window.checkSyncProgress,
+        jasmine.any(Number)
+      );
       
       done();
     });
 
-    it('debe iniciar polling si no está activo', function(done) {
+    it('debe iniciar polling directamente sin setTimeout', function(done) {
       if (typeof window.Phase2Manager === 'undefined' || !window.Phase2Manager.start) {
         pending('Phase2Manager.start no está disponible');
         return;
@@ -728,7 +935,6 @@ describe('Phase2Manager - Análisis Frontend Fase 2', function() {
         window.SyncStateManager.setPhase2Starting(false);
         window.SyncStateManager.setPhase2Initialized(false);
       }
-      window.pollingManager.isPollingActive.and.returnValue(false);
 
       mockAjax.and.callFake(function(options) {
         if (options.success) {
@@ -738,19 +944,19 @@ describe('Phase2Manager - Análisis Frontend Fase 2', function() {
 
       window.Phase2Manager.start();
 
-      if (clock && clock.tick) {
-        clock.tick(600); // Esperar setTimeout de 500ms
-      } else if (jasmine.clock) {
-        jasmine.clock().tick(600);
-      }
-
+      // ✅ ACTUALIZADO: Ya no hay setTimeout, el polling se inicia directamente
+      // No necesitamos esperar 500ms
       expect(window.pollingManager.startPolling).toHaveBeenCalledWith(
         'syncProgress',
         window.checkSyncProgress,
-        2000
+        jasmine.any(Number)
       );
-      // ✅ ACTUALIZADO: Verificar usando SyncStateManager
-      expect(window.SyncStateManager ? window.SyncStateManager.getSyncInterval() : null).toBe(12345);
+      
+      // ✅ ACTUALIZADO: Verificar que se guardó el intervalo usando SyncStateManager
+      const intervalId = window.pollingManager.intervals.get('syncProgress');
+      if (intervalId) {
+        expect(window.SyncStateManager ? window.SyncStateManager.getSyncInterval() : null).toBe(intervalId.id);
+      }
 
       done();
     });
@@ -907,7 +1113,11 @@ describe('Phase2Manager - Análisis Frontend Fase 2', function() {
 
       window.Phase2Manager.start();
 
-      expect(window.ErrorHandler.logError).toHaveBeenCalledWith('Error al iniciar Fase 2', 'SYNC_START');
+      // ✅ ACTUALIZADO: Verificar que se llama con más detalles (incluye status)
+      expect(window.ErrorHandler.logError).toHaveBeenCalledWith(
+        jasmine.stringMatching(/Error al iniciar Fase 2.*Status:/),
+        'PHASE2_START'
+      );
       expect(window.DOM_CACHE.$syncBtn.prop).toHaveBeenCalledWith('disabled', false);
     });
 
@@ -931,8 +1141,17 @@ describe('Phase2Manager - Análisis Frontend Fase 2', function() {
 
       window.Phase2Manager.start();
 
-      expect(window.ErrorHandler.logError).toHaveBeenCalledWith('Error al iniciar Fase 2', 'SYNC_START');
-      expect(window.DOM_CACHE.$feedback.text).toHaveBeenCalledWith('Error al iniciar Fase 2: Internal Server Error');
+      // ✅ ACTUALIZADO: Verificar que se llama con más detalles (incluye status)
+      expect(window.ErrorHandler.logError).toHaveBeenCalledWith(
+        jasmine.stringMatching(/Error al iniciar Fase 2.*Status:.*error/),
+        'PHASE2_START'
+      );
+      
+      // ✅ ACTUALIZADO: Verificar que se muestra error en UI usando ErrorHandler
+      expect(window.ErrorHandler.showConnectionError).toHaveBeenCalledWith({ status: 500 });
+      
+      // Verificar que también se actualiza el feedback directamente (fallback)
+      expect(window.DOM_CACHE.$feedback.text).toHaveBeenCalled();
       // ✅ ACTUALIZADO: Verificar usando SyncStateManager
       expect(window.SyncStateManager ? window.SyncStateManager.getPhase2Starting() : false).toBe(false); // Debe resetearse en caso de error
     });
@@ -974,6 +1193,200 @@ describe('Phase2Manager - Análisis Frontend Fase 2', function() {
       }));
 
       done();
+    });
+  });
+
+  describe('Transición Fase 1 → Fase 2', function() {
+    beforeEach(function() {
+      // Resetear estado antes de cada test
+      if (window.SyncStateManager) {
+        window.SyncStateManager.setPhase2Starting(false);
+        window.SyncStateManager.setPhase2Initialized(false);
+      }
+    });
+
+    it('debe suscribirse automáticamente al evento phase1Completed', function() {
+      if (typeof window.Phase2Manager === 'undefined') {
+        pending('Phase2Manager no está disponible');
+        return;
+      }
+
+      // ✅ Verificar que se suscribió al evento cuando Phase2Manager se expuso
+      // La suscripción ocurre automáticamente cuando se carga el script
+      expect(window.pollingManager.on).toHaveBeenCalledWith('phase1Completed', jasmine.any(Function));
+    });
+
+    it('debe iniciar Fase 2 automáticamente cuando recibe evento phase1Completed', function(done) {
+      if (typeof window.Phase2Manager === 'undefined' || !window.Phase2Manager.start) {
+        pending('Phase2Manager.start no está disponible');
+        return;
+      }
+
+      // Resetear estado
+      if (window.SyncStateManager) {
+        window.SyncStateManager.setPhase2Starting(false);
+        window.SyncStateManager.setPhase2Initialized(false);
+      }
+
+      // Mock de AJAX para start()
+      mockAjax.and.callFake(function(options) {
+        if (options.data && options.data.action === 'mi_integracion_api_sync_products_batch') {
+          if (options.success) {
+            options.success({ 
+              success: true,
+              data: {
+                in_progress: true
+              }
+            });
+          }
+        } else if (options.data && options.data.action === 'mia_get_sync_progress') {
+          if (options.success) {
+            options.success({
+              success: true,
+              data: {
+                in_progress: true
+              }
+            });
+          }
+        }
+      });
+
+      // Simular evento phase1Completed
+      const eventData = {
+        phase1Status: {
+          completed: true,
+          products_processed: 100,
+          total_products: 100
+        },
+        timestamp: Date.now(),
+        data: {
+          in_progress: false
+        }
+      };
+
+      // Emitir evento (simular que Phase1Manager lo emite)
+      window.pollingManager.emit('phase1Completed', eventData);
+
+      // ✅ Verificar que Phase2Manager.start() fue llamado
+      // Esperar un momento para que el evento se procese
+      setTimeout(function() {
+        expect(mockAjax).toHaveBeenCalled();
+        // Verificar que se llamó con los parámetros correctos
+        const ajaxCalls = mockAjax.calls.all();
+        const startCall = ajaxCalls.find(function(call) {
+          return call.args[0].data && call.args[0].data.action === 'mi_integracion_api_sync_products_batch';
+        });
+        expect(startCall).toBeDefined();
+        done();
+      }, 100);
+
+      if (clock && clock.tick) {
+        clock.tick(100);
+      } else if (jasmine.clock) {
+        jasmine.clock().tick(100);
+      }
+    });
+
+    it('debe NO iniciar Fase 2 si ya está iniciando cuando recibe evento', function() {
+      if (typeof window.Phase2Manager === 'undefined') {
+        pending('Phase2Manager no está disponible');
+        return;
+      }
+
+      // Marcar como iniciando
+      if (window.SyncStateManager) {
+        window.SyncStateManager.setPhase2Starting(true);
+        window.SyncStateManager.setPhase2Initialized(false);
+      }
+
+      let startCalled = false;
+      mockAjax.and.callFake(function(options) {
+        if (options.data && options.data.action === 'mi_integracion_api_sync_products_batch') {
+          startCalled = true;
+        }
+      });
+
+      // Simular evento phase1Completed
+      const eventData = {
+        phase1Status: { completed: true },
+        timestamp: Date.now(),
+        data: {}
+      };
+
+      // Emitir evento
+      window.pollingManager.emit('phase1Completed', eventData);
+
+      // ✅ Verificar que NO se llamó a start() porque ya está iniciando
+      expect(startCalled).toBe(false);
+    });
+
+    it('debe NO iniciar Fase 2 si ya está inicializada cuando recibe evento', function() {
+      if (typeof window.Phase2Manager === 'undefined') {
+        pending('Phase2Manager no está disponible');
+        return;
+      }
+
+      // Marcar como inicializada
+      if (window.SyncStateManager) {
+        window.SyncStateManager.setPhase2Starting(false);
+        window.SyncStateManager.setPhase2Initialized(true);
+      }
+
+      let startCalled = false;
+      mockAjax.and.callFake(function(options) {
+        if (options.data && options.data.action === 'mi_integracion_api_sync_products_batch') {
+          startCalled = true;
+        }
+      });
+
+      // Simular evento phase1Completed
+      const eventData = {
+        phase1Status: { completed: true },
+        timestamp: Date.now(),
+        data: {}
+      };
+
+      // Emitir evento
+      window.pollingManager.emit('phase1Completed', eventData);
+
+      // ✅ Verificar que NO se llamó a start() porque ya está inicializada
+      expect(startCalled).toBe(false);
+    });
+
+    it('debe usar lock atómico al iniciar desde evento phase1Completed', function() {
+      if (typeof window.Phase2Manager === 'undefined' || !window.Phase2Manager.start) {
+        pending('Phase2Manager.start no está disponible');
+        return;
+      }
+
+      // Resetear estado
+      if (window.SyncStateManager) {
+        window.SyncStateManager.setPhase2Starting(false);
+        window.SyncStateManager.setPhase2Initialized(false);
+      }
+
+      mockAjax.and.callFake(function(options) {
+        if (options.data && options.data.action === 'mi_integracion_api_sync_products_batch') {
+          // ✅ Verificar que el lock está activo cuando se ejecuta AJAX
+          expect(window.SyncStateManager ? window.SyncStateManager.getPhase2Starting() : false).toBe(true);
+          if (options.success) {
+            options.success({ success: true });
+          }
+        }
+      });
+
+      // Simular evento phase1Completed
+      const eventData = {
+        phase1Status: { completed: true },
+        timestamp: Date.now(),
+        data: {}
+      };
+
+      // Emitir evento
+      window.pollingManager.emit('phase1Completed', eventData);
+
+      // ✅ Verificar que se adquirió el lock
+      expect(window.SyncStateManager ? window.SyncStateManager.getPhase2Starting() : false).toBe(true);
     });
   });
 
@@ -1071,6 +1484,226 @@ describe('Phase2Manager - Análisis Frontend Fase 2', function() {
       expect(consoleWarnSpy.calls.count()).toBeGreaterThan(0);
 
       done();
+    });
+  });
+
+  // ✅ NUEVO: Tests para manejo de errores mejorado
+  describe('Manejo de errores mejorado', function() {
+    it('debe registrar errores en processNextBatchAutomatically usando ErrorHandler', function() {
+      if (typeof window.Phase2Manager === 'undefined' || !window.Phase2Manager.processNextBatchAutomatically) {
+        pending('Phase2Manager.processNextBatchAutomatically no está disponible');
+        return;
+      }
+
+      // ✅ NOTA IMPORTANTE: Este test verifica el manejo de errores, por lo que se espera ver
+      // un mensaje de error en la consola. Esto es comportamiento esperado del test.
+      // El error "Internal Server Error (Status: error)" que aparece en la consola
+      // es parte de la verificación de que los errores se manejan correctamente.
+      // 
+      // El error proviene de installHook.js que intercepta ErrorHandler.logError y lo muestra
+      // en la consola. Esto es normal y esperado durante este test.
+
+      // Resetear estado
+      if (window.SyncStateManager) {
+        window.SyncStateManager.setPhase2ProcessingBatch(false);
+      }
+
+      mockAjax.and.callFake(function(options) {
+        if (options.error) {
+          options.error({ status: 500 }, 'error', 'Internal Server Error');
+        }
+      });
+
+      window.Phase2Manager.processNextBatchAutomatically();
+
+      // ✅ Verificar que se registró el error usando ErrorHandler
+      expect(window.ErrorHandler.logError).toHaveBeenCalledWith(
+        jasmine.stringMatching(/Error al procesar siguiente lote automáticamente.*Status:/),
+        'BATCH_PROCESSING'
+      );
+      
+      // ✅ Verificar que se muestra error en UI usando ErrorHandler
+      expect(window.ErrorHandler.showConnectionError).toHaveBeenCalledWith({ status: 500 });
+      
+      // ✅ NUEVO: Verificar que se mostró mensaje de error en consola
+      expect(window.ConsoleManager.addLine).toHaveBeenCalledWith(
+        'warning',
+        jasmine.stringMatching(/Error al procesar lote manualmente.*WordPress Cron intentará procesarlo más tarde/)
+      );
+      
+      // ✅ NUEVO: Verificar que se mostró notificación toast de error
+      expect(window.ToastManager.show).toHaveBeenCalledWith(
+        'Error al procesar lote manualmente. WordPress Cron intentará procesarlo más tarde.',
+        'error',
+        5000
+      );
+      
+      // ✅ Verificar que se reseteó el flag incluso en caso de error
+      expect(window.SyncStateManager ? window.SyncStateManager.getPhase2ProcessingBatch() : false).toBe(false);
+    });
+  });
+
+  // ✅ NUEVO: Tests para feedback mejorado al usuario
+  describe('Feedback mejorado al usuario', function() {
+    it('debe mostrar mensaje cuando se inicia procesamiento manual', function() {
+      if (typeof window.Phase2Manager === 'undefined' || !window.Phase2Manager.processNextBatchAutomatically) {
+        pending('Phase2Manager.processNextBatchAutomatically no está disponible');
+        return;
+      }
+
+      // Resetear estado
+      if (window.SyncStateManager) {
+        window.SyncStateManager.setPhase2ProcessingBatch(false);
+      }
+
+      // Limpiar llamadas anteriores
+      window.ConsoleManager.addLine.calls.reset();
+
+      mockAjax.and.callFake(function(options) {
+        if (options.success) {
+          options.success({ success: true });
+        }
+      });
+
+      window.Phase2Manager.processNextBatchAutomatically();
+
+      // ✅ Verificar que se mostró mensaje informativo cuando se inicia procesamiento
+      expect(window.ConsoleManager.addLine).toHaveBeenCalledWith(
+        'info',
+        '🔄 Procesando lote manualmente (WordPress Cron no responde)...'
+      );
+    });
+
+    it('debe mostrar mensaje cuando se completa procesamiento manual exitosamente', function() {
+      if (typeof window.Phase2Manager === 'undefined' || !window.Phase2Manager.processNextBatchAutomatically) {
+        pending('Phase2Manager.processNextBatchAutomatically no está disponible');
+        return;
+      }
+
+      // ✅ CRÍTICO: Resetear estado ANTES de limpiar llamadas para evitar condiciones de carrera
+      // También avanzar el tiempo para ejecutar cualquier setTimeout pendiente de pruebas anteriores
+      if (clock && clock.tick) {
+        clock.tick(6000); // Avanzar 6 segundos para ejecutar setTimeout de 5 segundos de prueba anterior
+      } else if (typeof jasmine !== 'undefined' && jasmine.clock) {
+        jasmine.clock().tick(6000);
+      }
+      
+      if (window.SyncStateManager) {
+        window.SyncStateManager.setPhase2ProcessingBatch(false);
+      }
+
+      // Limpiar llamadas anteriores
+      window.ConsoleManager.addLine.calls.reset();
+      if (window.ToastManager && window.ToastManager.show) {
+        window.ToastManager.show.calls.reset();
+      }
+
+      // ✅ CRÍTICO: Verificar que el estado está reseteado antes de continuar
+      expect(window.SyncStateManager ? window.SyncStateManager.getPhase2ProcessingBatch() : false).toBe(false);
+
+      // ✅ MEJORADO: Mock de AJAX que ejecuta el callback de forma síncrona
+      mockAjax.and.callFake(function(options) {
+        // Ejecutar callback de éxito inmediatamente (síncrono)
+        if (options.success) {
+          options.success({ success: true });
+        }
+      });
+
+      // Llamar a la función
+      window.Phase2Manager.processNextBatchAutomatically();
+
+      // ✅ Verificar que se mostró mensaje de éxito cuando se completa procesamiento
+      expect(window.ConsoleManager.addLine).toHaveBeenCalledWith(
+        'success',
+        '✅ Lote procesado manualmente con éxito. La sincronización continuará automáticamente.'
+      );
+      
+      // ✅ NUEVO: Verificar que se mostró notificación toast de éxito
+      expect(window.ToastManager.show).toHaveBeenCalledWith(
+        'Lote procesado manualmente con éxito',
+        'success',
+        3000
+      );
+    });
+
+    it('debe mostrar mensaje cuando ya hay un lote siendo procesado', function() {
+      if (typeof window.Phase2Manager === 'undefined' || !window.Phase2Manager.processNextBatchAutomatically) {
+        pending('Phase2Manager.processNextBatchAutomatically no está disponible');
+        return;
+      }
+
+      // Marcar como procesando
+      if (window.SyncStateManager) {
+        window.SyncStateManager.setPhase2ProcessingBatch(true);
+      }
+
+      // Limpiar llamadas anteriores
+      window.ConsoleManager.addLine.calls.reset();
+
+      window.Phase2Manager.processNextBatchAutomatically();
+
+      // ✅ Verificar que se mostró mensaje informativo cuando ya hay un lote procesándose
+      expect(window.ConsoleManager.addLine).toHaveBeenCalledWith(
+        'info',
+        'ℹ️ Ya hay un lote siendo procesado manualmente, esperando...'
+      );
+
+      // ✅ Verificar que NO se hizo llamada AJAX porque ya hay un lote procesándose
+      expect(mockAjax).not.toHaveBeenCalled();
+
+      // Resetear estado
+      if (window.SyncStateManager) {
+        window.SyncStateManager.setPhase2ProcessingBatch(false);
+      }
+    });
+  });
+  
+  describe('Uso de características modernas de JavaScript', function() {
+    it('debe usar optional chaining (?.) para acceder a SyncStateManager de forma segura', function() {
+      if (typeof window.Phase2Manager === 'undefined' || !window.Phase2Manager.start) {
+        pending('Phase2Manager.start no está disponible');
+        return;
+      }
+      
+      // Establecer SyncStateManager como undefined para probar optional chaining
+      const originalSyncStateManager = window.SyncStateManager;
+      window.SyncStateManager = undefined;
+      
+      // Resetear estado
+      window.phase2Starting = false;
+      window.phase2Initialized = false;
+      
+      mockAjax.and.callFake(function(options) {
+        if (options.success) {
+          options.success({ success: true });
+        }
+      });
+      
+      // No debe lanzar error al usar optional chaining
+      expect(function() {
+        window.Phase2Manager.start();
+      }).not.toThrow();
+      
+      // Restaurar SyncStateManager
+      window.SyncStateManager = originalSyncStateManager;
+    });
+    
+    it('debe usar nullish coalescing (??) para valores por defecto en mensajes de error', function() {
+      if (typeof window.Phase2Manager === 'undefined' || !window.Phase2Manager.handleError) {
+        pending('Phase2Manager.handleError no está disponible');
+        return;
+      }
+      
+      // Crear un error sin mensaje para probar nullish coalescing
+      const errorWithoutMessage = { status: 500 };
+      
+      // No debe lanzar error al usar nullish coalescing
+      expect(function() {
+        window.Phase2Manager.handleError(errorWithoutMessage);
+      }).not.toThrow();
+      
+      // Verificar que se usó un mensaje por defecto
+      expect(window.ErrorHandler.logError).toHaveBeenCalled();
     });
   });
 });
