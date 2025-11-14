@@ -23,7 +23,7 @@ const DEFAULT_RENEWAL_INTERVAL = 30 * 60 * 1000; // 30 minutos
 /**
  * ID del intervalo de renovación automática
  * 
- * @type {number|null}
+ * @type {number|NodeJS.Timeout|null}
  */
 let renewalIntervalId = null;
 
@@ -45,7 +45,6 @@ function attemptRenewal(showNotification) {
   console.log('Intentando renovar nonce automáticamente...');
 
   // Verificar que ajaxurl esté disponible
-  // eslint-disable-next-line prefer-optional-chain
   if (typeof miIntegracionApiDashboard === 'undefined' ||
       !miIntegracionApiDashboard ||
       !miIntegracionApiDashboard.ajaxurl) {
@@ -64,7 +63,6 @@ function attemptRenewal(showNotification) {
       // eslint-disable-next-line no-console
       console.log('Respuesta de renovación de nonce:', response);
 
-      // eslint-disable-next-line prefer-optional-chain
       if (response.success && response.data && response.data.nonce) {
         // eslint-disable-next-line no-console
         console.log('Nonce renovado exitosamente:', response.data.nonce);
@@ -195,6 +193,7 @@ const NonceManager = {
  */
 if (typeof window !== 'undefined') {
   try {
+    // @ts-ignore - Asignación dinámica a window para compatibilidad
     window.NonceManager = NonceManager;
   } catch (error) {
     try {

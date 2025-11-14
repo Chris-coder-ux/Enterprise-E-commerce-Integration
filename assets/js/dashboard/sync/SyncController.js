@@ -85,9 +85,9 @@ function setupSyncUI() {
   }
   if (DOM_CACHE && DOM_CACHE.$progressBar) {
     DOM_CACHE.$progressBar.css({
-      'width': '2%',
+      width: '2%',
       'background-color': '#0073aa',
-      'transition': 'width 0.3s ease'
+      transition: 'width 0.3s ease'
     });
   }
   if (DOM_CACHE && DOM_CACHE.$progressInfo && DASHBOARD_CONFIG && DASHBOARD_CONFIG.messages && DASHBOARD_CONFIG.messages.progress) {
@@ -134,7 +134,6 @@ function proceedWithSync(originalText) {
       return;
     }
 
-    // eslint-disable-next-line prefer-optional-chain
     if (typeof DOM_CACHE === 'undefined' || !DOM_CACHE) {
       if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.logError === 'function') {
         ErrorHandler.logError('DOM_CACHE no está disponible', 'SYNC_START');

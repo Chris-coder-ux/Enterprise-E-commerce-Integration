@@ -299,6 +299,13 @@ const SystemEventManager = {
         this.log('Sistema inicializado: ' + systemName);
         return true;
       } catch (error) {
+        // ✅ MEJORADO: Registrar error usando ErrorHandler además del log interno
+        if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.logError === 'function') {
+          ErrorHandler.logError(
+            `Error al inicializar sistema '${systemName}': ${error.message || error}`,
+            'SYSTEM_INIT'
+          );
+        }
         this.log('Error al inicializar sistema ' + systemName + ':', 'error', error);
         return false;
       }
@@ -387,19 +394,28 @@ const SystemEventManager = {
  * Mantenemos la misma lógica para compatibilidad exacta.
  */
 if (typeof window !== 'undefined') {
+  // ✅ SEGURIDAD: Método 1: Asignación directa dentro de try...catch
   try {
-    // Asignar a window.SystemEventManager
     window.SystemEventManager = SystemEventManager;
+    if (window.SystemEventManager === SystemEventManager) {
+      // ✅ Éxito, no hacer nada más
+    }
   } catch (error) {
-    // Si falla, usar defineProperty como alternativa
-    // Nota: Capturamos el error para proporcionar un fallback seguro
-    // eslint-disable-next-line no-unused-vars
-    Object.defineProperty(window, 'SystemEventManager', {
-      value: SystemEventManager,
-      writable: true,
-      enumerable: true,
-      configurable: true
-    });
+    // ✅ SEGURIDAD: Método 2: Object.defineProperty como fallback seguro
+    try {
+      Object.defineProperty(window, 'SystemEventManager', {
+        value: SystemEventManager,
+        writable: true,
+        enumerable: true,
+        configurable: true
+      });
+    } catch (defineError) {
+      // ✅ SEGURIDAD: Si ambos métodos fallan, registrar advertencia pero no usar eval
+      if (typeof console !== 'undefined' && console.warn) {
+        // eslint-disable-next-line no-console
+        console.warn('[SystemEventManager] ⚠️ No se pudo exponer SystemEventManager usando métodos seguros:', defineError);
+      }
+    }
   }
 }
 

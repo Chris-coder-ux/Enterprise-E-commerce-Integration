@@ -27,13 +27,26 @@ let inactiveProgressCounter = 0;
 let lastProgressValue = 0;
 
 /**
+ * Variables de estado de Fase 1
+ * 
+ * Centraliza el estado de la Fase 1 de sincronización para evitar
+ * el uso disperso de flags globales en window y prevenir ejecuciones simultáneas.
+ * 
+ * @type {Object}
+ * @property {boolean} phase1Starting - Indica si Fase 1 está iniciando (lock para prevenir ejecuciones simultáneas)
+ * @property {boolean} phase1Initialized - Indica si Fase 1 está inicializada y en progreso
+ */
+let phase1Starting = false;
+let phase1Initialized = false;
+
+/**
  * Variables de estado de Fase 2
  * 
  * Centraliza el estado de la Fase 2 de sincronización para evitar
  * el uso disperso de flags globales en window.
  * 
  * @type {Object}
- * @property {boolean} phase2Starting - Indica si Fase 2 está iniciando
+ * @property {boolean} phase2Starting - Indica si Fase 2 está iniciando (lock para prevenir ejecuciones simultáneas)
  * @property {boolean} phase2Initialized - Indica si Fase 2 está inicializada
  * @property {boolean} phase2ProcessingBatch - Indica si se está procesando un batch
  * @property {number|null} syncInterval - ID del intervalo de sincronización
@@ -109,7 +122,13 @@ function cleanupOnPageLoad() {
   // Resetear configuración de polling
   // eslint-disable-next-line no-undef
   if (typeof pollingManager !== 'undefined' && pollingManager && pollingManager.config) {
-    pollingManager.config.currentInterval = pollingManager.config.intervals.normal;
+    // ✅ CORRECCIÓN: Usar intervalo activo como fallback si 'normal' no existe
+    const intervals = pollingManager.config.intervals || {};
+    // Acceder a propiedades que pueden no estar en el tipo usando notación de corchetes
+    const normalInterval = intervals['normal'];
+    const activeInterval = intervals.active;
+    const defaultInterval = normalInterval || activeInterval || 30000;
+    pollingManager.config.currentInterval = defaultInterval;
     pollingManager.config.currentMode = 'normal';
     pollingManager.config.errorCount = 0;
   }
@@ -174,6 +193,53 @@ function resetCounters() {
 }
 
 /**
+ * Obtener el estado de inicio de Fase 1
+ * 
+ * ✅ NUEVO: Lock para prevenir ejecuciones simultáneas de Phase1Manager.start()
+ * 
+ * @returns {boolean} true si Fase 1 está iniciando, false en caso contrario
+ */
+function getPhase1Starting() {
+  return phase1Starting;
+}
+
+/**
+ * Establecer el estado de inicio de Fase 1
+ * 
+ * ✅ NUEVO: Lock atómico para prevenir ejecuciones simultáneas
+ * 
+ * @param {boolean} value - Nuevo valor del estado
+ * @returns {boolean} true si se estableció el lock, false si ya estaba activo
+ */
+function setPhase1Starting(value) {
+  if (value === true && phase1Starting === true) {
+    // Ya está iniciando, no permitir otra ejecución simultánea
+    return false;
+  }
+  phase1Starting = value === true;
+  return true;
+}
+
+/**
+ * Obtener el estado de inicialización de Fase 1
+ * 
+ * @returns {boolean} true si Fase 1 está inicializada, false en caso contrario
+ */
+function getPhase1Initialized() {
+  return phase1Initialized;
+}
+
+/**
+ * Establecer el estado de inicialización de Fase 1
+ * 
+ * @param {boolean} value - Nuevo valor del estado
+ * @returns {void}
+ */
+function setPhase1Initialized(value) {
+  phase1Initialized = value === true;
+}
+
+/**
  * Obtener el estado de inicio de Fase 2
  * 
  * @returns {boolean} true si Fase 2 está iniciando, false en caso contrario
@@ -185,11 +251,18 @@ function getPhase2Starting() {
 /**
  * Establecer el estado de inicio de Fase 2
  * 
+ * ✅ MEJORADO: Lock atómico para prevenir ejecuciones simultáneas
+ * 
  * @param {boolean} value - Nuevo valor del estado
- * @returns {void}
+ * @returns {boolean} true si se estableció el lock, false si ya estaba activo
  */
 function setPhase2Starting(value) {
+  if (value === true && phase2Starting === true) {
+    // Ya está iniciando, no permitir otra ejecución simultánea
+    return false;
+  }
   phase2Starting = value === true;
+  return true;
 }
 
 /**
@@ -305,6 +378,18 @@ function clearPhase2PollingInterval() {
 }
 
 /**
+ * Resetear el estado de Fase 1
+ * 
+ * ✅ NUEVO: Limpia todos los flags relacionados con Fase 1.
+ * 
+ * @returns {void}
+ */
+function resetPhase1State() {
+  phase1Starting = false;
+  phase1Initialized = false;
+}
+
+/**
  * Resetear todo el estado de Fase 2
  * 
  * Resetea todos los flags y limpia los intervalos de Fase 2.
@@ -322,12 +407,13 @@ function resetPhase2State() {
 /**
  * Resetear todo el estado de sincronización
  * 
- * Resetea todos los contadores, flags y limpia los intervalos.
+ * Resetea todos los contadores, flags y limpia los intervalos de ambas fases.
  * 
  * @returns {void}
  */
 function resetAllState() {
   resetCounters();
+  resetPhase1State();
   resetPhase2State();
 }
 
@@ -347,6 +433,13 @@ const SyncStateManager = {
   getLastProgressValue,
   setLastProgressValue,
   resetCounters,
+  
+  // ✅ NUEVO: Métodos de estado de Fase 1
+  getPhase1Starting,
+  setPhase1Starting,
+  getPhase1Initialized,
+  setPhase1Initialized,
+  resetPhase1State,
   
   // Métodos de estado de Fase 2
   getPhase2Starting,
@@ -395,19 +488,32 @@ if (typeof window !== 'undefined') {
  * con el código existente que usa inactiveProgressCounter, lastProgressValue
  * y flags de Fase 2 directamente en window.
  * 
- * NOTA: Estas variables se usan directamente en otras partes del código
- * (líneas 1269, 1289, 1292, 1347 de dashboard.js), por lo que deben estar
- * disponibles globalmente. Los getters/setters aseguran que los cambios
- * se reflejen en el estado centralizado de SyncStateManager.
+ * ⚠️ DEPRECADO: El acceso directo a estas variables en window está deprecado.
+ * Usa SyncStateManager.getPhase2Initialized() en lugar de window.phase2Initialized.
+ * 
+ * Los getters/setters aseguran que los cambios se reflejen en el estado centralizado
+ * de SyncStateManager, pero se recomienda migrar al uso de la API de SyncStateManager.
+ * 
+ * @deprecated Usa SyncStateManager API en su lugar
  */
 if (typeof window !== 'undefined') {
   try {
-    // Contadores de progreso (compatibilidad hacia atrás)
+    // Contadores de progreso (compatibilidad hacia atrás con advertencias)
     Object.defineProperty(window, 'inactiveProgressCounter', {
       get() {
+        // eslint-disable-next-line no-console
+        if (typeof console !== 'undefined' && console.warn && typeof window !== 'undefined' && !window.__SYNC_STATE_SUPPRESS_WARNINGS) {
+          // eslint-disable-next-line no-console
+          console.warn('⚠️ [DEPRECADO] window.inactiveProgressCounter está deprecado. Usa SyncStateManager.getInactiveProgressCounter() en su lugar.');
+        }
         return inactiveProgressCounter;
       },
       set(value) {
+        // eslint-disable-next-line no-console
+        if (typeof console !== 'undefined' && console.warn && typeof window !== 'undefined' && !window.__SYNC_STATE_SUPPRESS_WARNINGS) {
+          // eslint-disable-next-line no-console
+          console.warn('⚠️ [DEPRECADO] window.inactiveProgressCounter está deprecado. Usa SyncStateManager.setInactiveProgressCounter() en su lugar.');
+        }
         inactiveProgressCounter = value;
       },
       enumerable: true,
@@ -416,21 +522,84 @@ if (typeof window !== 'undefined') {
 
     Object.defineProperty(window, 'lastProgressValue', {
       get() {
+        // eslint-disable-next-line no-console
+        if (typeof console !== 'undefined' && console.warn && typeof window !== 'undefined' && !window.__SYNC_STATE_SUPPRESS_WARNINGS) {
+          // eslint-disable-next-line no-console
+          console.warn('⚠️ [DEPRECADO] window.lastProgressValue está deprecado. Usa SyncStateManager.getLastProgressValue() en su lugar.');
+        }
         return lastProgressValue;
       },
       set(value) {
+        // eslint-disable-next-line no-console
+        if (typeof console !== 'undefined' && console.warn && typeof window !== 'undefined' && !window.__SYNC_STATE_SUPPRESS_WARNINGS) {
+          // eslint-disable-next-line no-console
+          console.warn('⚠️ [DEPRECADO] window.lastProgressValue está deprecado. Usa SyncStateManager.setLastProgressValue() en su lugar.');
+        }
         lastProgressValue = value;
       },
       enumerable: true,
       configurable: true
     });
 
-    // Flags de Fase 2 (compatibilidad hacia atrás)
+    // ⚠️ DEPRECADO: Flags de Fase 1 (compatibilidad hacia atrás con advertencias)
+    Object.defineProperty(window, 'phase1Starting', {
+      get() {
+        // eslint-disable-next-line no-console
+        if (typeof console !== 'undefined' && console.warn && typeof window !== 'undefined' && !window.__SYNC_STATE_SUPPRESS_WARNINGS) {
+          // eslint-disable-next-line no-console
+          console.warn('⚠️ [DEPRECADO] window.phase1Starting está deprecado. Usa SyncStateManager.getPhase1Starting() en su lugar.');
+        }
+        return phase1Starting;
+      },
+      set(value) {
+        // eslint-disable-next-line no-console
+        if (typeof console !== 'undefined' && console.warn && typeof window !== 'undefined' && !window.__SYNC_STATE_SUPPRESS_WARNINGS) {
+          // eslint-disable-next-line no-console
+          console.warn('⚠️ [DEPRECADO] window.phase1Starting está deprecado. Usa SyncStateManager.setPhase1Starting() en su lugar.');
+        }
+        phase1Starting = value === true;
+      },
+      enumerable: true,
+      configurable: true
+    });
+
+    Object.defineProperty(window, 'phase1Initialized', {
+      get() {
+        // eslint-disable-next-line no-console
+        if (typeof console !== 'undefined' && console.warn && typeof window !== 'undefined' && !window.__SYNC_STATE_SUPPRESS_WARNINGS) {
+          // eslint-disable-next-line no-console
+          console.warn('⚠️ [DEPRECADO] window.phase1Initialized está deprecado. Usa SyncStateManager.getPhase1Initialized() en su lugar.');
+        }
+        return phase1Initialized;
+      },
+      set(value) {
+        // eslint-disable-next-line no-console
+        if (typeof console !== 'undefined' && console.warn && typeof window !== 'undefined' && !window.__SYNC_STATE_SUPPRESS_WARNINGS) {
+          // eslint-disable-next-line no-console
+          console.warn('⚠️ [DEPRECADO] window.phase1Initialized está deprecado. Usa SyncStateManager.setPhase1Initialized() en su lugar.');
+        }
+        phase1Initialized = value === true;
+      },
+      enumerable: true,
+      configurable: true
+    });
+
+    // ⚠️ DEPRECADO: Flags de Fase 2 (compatibilidad hacia atrás con advertencias)
     Object.defineProperty(window, 'phase2Starting', {
       get() {
+        // eslint-disable-next-line no-console
+        if (typeof console !== 'undefined' && console.warn && typeof window !== 'undefined' && !window.__SYNC_STATE_SUPPRESS_WARNINGS) {
+          // eslint-disable-next-line no-console
+          console.warn('⚠️ [DEPRECADO] window.phase2Starting está deprecado. Usa SyncStateManager.getPhase2Starting() en su lugar.');
+        }
         return phase2Starting;
       },
       set(value) {
+        // eslint-disable-next-line no-console
+        if (typeof console !== 'undefined' && console.warn && typeof window !== 'undefined' && !window.__SYNC_STATE_SUPPRESS_WARNINGS) {
+          // eslint-disable-next-line no-console
+          console.warn('⚠️ [DEPRECADO] window.phase2Starting está deprecado. Usa SyncStateManager.setPhase2Starting() en su lugar.');
+        }
         phase2Starting = value === true;
       },
       enumerable: true,
@@ -439,9 +608,19 @@ if (typeof window !== 'undefined') {
 
     Object.defineProperty(window, 'phase2Initialized', {
       get() {
+        // eslint-disable-next-line no-console
+        if (typeof console !== 'undefined' && console.warn && typeof window !== 'undefined' && !window.__SYNC_STATE_SUPPRESS_WARNINGS) {
+          // eslint-disable-next-line no-console
+          console.warn('⚠️ [DEPRECADO] window.phase2Initialized está deprecado. Usa SyncStateManager.getPhase2Initialized() en su lugar.');
+        }
         return phase2Initialized;
       },
       set(value) {
+        // eslint-disable-next-line no-console
+        if (typeof console !== 'undefined' && console.warn && typeof window !== 'undefined' && !window.__SYNC_STATE_SUPPRESS_WARNINGS) {
+          // eslint-disable-next-line no-console
+          console.warn('⚠️ [DEPRECADO] window.phase2Initialized está deprecado. Usa SyncStateManager.setPhase2Initialized() en su lugar.');
+        }
         phase2Initialized = value === true;
       },
       enumerable: true,
@@ -450,9 +629,19 @@ if (typeof window !== 'undefined') {
 
     Object.defineProperty(window, 'phase2ProcessingBatch', {
       get() {
+        // eslint-disable-next-line no-console
+        if (typeof console !== 'undefined' && console.warn && typeof window !== 'undefined' && !window.__SYNC_STATE_SUPPRESS_WARNINGS) {
+          // eslint-disable-next-line no-console
+          console.warn('⚠️ [DEPRECADO] window.phase2ProcessingBatch está deprecado. Usa SyncStateManager.getPhase2ProcessingBatch() en su lugar.');
+        }
         return phase2ProcessingBatch;
       },
       set(value) {
+        // eslint-disable-next-line no-console
+        if (typeof console !== 'undefined' && console.warn && typeof window !== 'undefined' && !window.__SYNC_STATE_SUPPRESS_WARNINGS) {
+          // eslint-disable-next-line no-console
+          console.warn('⚠️ [DEPRECADO] window.phase2ProcessingBatch está deprecado. Usa SyncStateManager.setPhase2ProcessingBatch() en su lugar.');
+        }
         phase2ProcessingBatch = value === true;
       },
       enumerable: true,
@@ -461,9 +650,19 @@ if (typeof window !== 'undefined') {
 
     Object.defineProperty(window, 'syncInterval', {
       get() {
+        // eslint-disable-next-line no-console
+        if (typeof console !== 'undefined' && console.warn && typeof window !== 'undefined' && !window.__SYNC_STATE_SUPPRESS_WARNINGS) {
+          // eslint-disable-next-line no-console
+          console.warn('⚠️ [DEPRECADO] window.syncInterval está deprecado. Usa SyncStateManager.getSyncInterval() en su lugar.');
+        }
         return syncInterval;
       },
       set(value) {
+        // eslint-disable-next-line no-console
+        if (typeof console !== 'undefined' && console.warn && typeof window !== 'undefined' && !window.__SYNC_STATE_SUPPRESS_WARNINGS) {
+          // eslint-disable-next-line no-console
+          console.warn('⚠️ [DEPRECADO] window.syncInterval está deprecado. Usa SyncStateManager.setSyncInterval() en su lugar.');
+        }
         syncInterval = value;
       },
       enumerable: true,
@@ -472,14 +671,36 @@ if (typeof window !== 'undefined') {
 
     Object.defineProperty(window, 'phase2PollingInterval', {
       get() {
+        // eslint-disable-next-line no-console
+        if (typeof console !== 'undefined' && console.warn && typeof window !== 'undefined' && !window.__SYNC_STATE_SUPPRESS_WARNINGS) {
+          // eslint-disable-next-line no-console
+          console.warn('⚠️ [DEPRECADO] window.phase2PollingInterval está deprecado. Usa SyncStateManager.getPhase2PollingInterval() en su lugar.');
+        }
         return phase2PollingInterval;
       },
       set(value) {
+        // eslint-disable-next-line no-console
+        if (typeof console !== 'undefined' && console.warn && typeof window !== 'undefined' && !window.__SYNC_STATE_SUPPRESS_WARNINGS) {
+          // eslint-disable-next-line no-console
+          console.warn('⚠️ [DEPRECADO] window.phase2PollingInterval está deprecado. Usa SyncStateManager.setPhase2PollingInterval() en su lugar.');
+        }
         phase2PollingInterval = value;
       },
       enumerable: true,
       configurable: true
     });
+
+    // ✅ NUEVO: Exponer stopProgressPolling globalmente para compatibilidad con código existente
+    // SyncProgress.js y otros archivos lo usan como función global
+    try {
+      window.stopProgressPolling = stopProgressPolling;
+    } catch (stopPollingError) {
+      // eslint-disable-next-line no-console
+      if (typeof console !== 'undefined' && console.warn) {
+        // eslint-disable-next-line no-console
+        console.warn('No se pudo exponer stopProgressPolling a window:', stopPollingError);
+      }
+    }
   } catch (error) {
     // eslint-disable-next-line no-console
     if (typeof console !== 'undefined' && console.warn) {

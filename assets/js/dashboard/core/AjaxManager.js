@@ -11,6 +11,7 @@
  * @description Wrapper centralizado para todas las peticiones AJAX del dashboard
  * @since 1.0.0
  * @author Christian
+ * @requires module:types
  * 
  * @example
  * // Uso básico
@@ -27,6 +28,7 @@
  * );
  */
 
+// @ts-check
 /* global jQuery, miIntegracionApiDashboard */
 
 /**
@@ -86,7 +88,7 @@ class AjaxManager {
    * @param {Function} [success=null] - Callback de éxito (response)
    * @param {Function} [error=null] - Callback de error (xhr, status, error)
    * @param {Object} [options={}] - Opciones adicionales de jQuery.ajax (timeout, beforeSend, etc.)
-   * @returns {jQuery.Deferred} Objeto jQuery Deferred/Promise
+   * @returns {any} Objeto jQuery jqXHR que implementa la interfaz Promise (jQuery.ajax devuelve jqXHR)
    * @example
    * // Petición simple
    * AjaxManager.call('mia_get_sync_progress', {}, 
@@ -117,7 +119,6 @@ class AjaxManager {
     // Usamos verificación moderna y segura (compatible con ES2017+)
     // Extraemos config para mejor legibilidad y evitar múltiples accesos
     const config = miIntegracionApiDashboard;
-    // eslint-disable-next-line prefer-optional-chain
     if (!config || !config.ajaxurl || !config.nonce) {
       console.error('miIntegracionApiDashboard, ajaxurl o nonce no están disponibles');
       console.error('miIntegracionApiDashboard:', typeof miIntegracionApiDashboard);
@@ -125,6 +126,7 @@ class AjaxManager {
         error(null, 'error', 'Configuración AJAX incompleta - Variables no disponibles');
       }
       // Retornar una promesa jQuery rechazada para mantener el tipo de retorno
+      // @type {any}
       return jQuery.Deferred().reject(null, 'error', 'Configuración AJAX incompleta - Variables no disponibles').promise();
     }
     

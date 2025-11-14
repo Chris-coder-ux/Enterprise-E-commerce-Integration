@@ -15,9 +15,13 @@
 
 /**
  * Intervalo de polling para verificar el progreso de Fase 1
+ * 
+ * ✅ DEPRECADO: Ya no se usa directamente. PollingManager gestiona el intervalo.
+ * Se mantiene para compatibilidad hacia atrás.
  *
  * @type {number|null}
  * @private
+ * @deprecated Usar PollingManager para gestionar polling
  */
 let phase1PollingInterval = null;
 
@@ -68,13 +72,22 @@ function checkPhase1Complete() {
   }
 
   jQuery.ajax({
-    url: miIntegracionApiDashboard.ajaxurl || ajaxurl,
+    url: 
+      (typeof miIntegracionApiDashboard !== 'undefined' && miIntegracionApiDashboard.ajaxurl) 
+        ? miIntegracionApiDashboard.ajaxurl 
+        : (typeof window !== 'undefined' && window.miIntegracionApiDashboard && window.miIntegracionApiDashboard.ajaxurl)
+          ? window.miIntegracionApiDashboard.ajaxurl
+          : '',
     type: 'POST',
     data: {
       action: 'mia_get_sync_progress',
-      nonce: miIntegracionApiDashboard.nonce
+      nonce: (typeof miIntegracionApiDashboard !== 'undefined' && miIntegracionApiDashboard.nonce) 
+        ? miIntegracionApiDashboard.nonce 
+        : (typeof window !== 'undefined' && window.miIntegracionApiDashboard && window.miIntegracionApiDashboard.nonce)
+          ? window.miIntegracionApiDashboard.nonce
+          : ''
     },
-    success: function(progressResponse) {
+    success(progressResponse) {
       if (progressResponse.success && progressResponse.data) {
         const phase1Status = progressResponse.data.phase1_images || {};
 
@@ -84,7 +97,7 @@ function checkPhase1Complete() {
         if (typeof window !== 'undefined' && window.pollingManager && typeof window.pollingManager.emit === 'function') {
           window.pollingManager.emit('syncProgress', {
             syncData: progressResponse.data,
-            phase1Status: phase1Status,
+            phase1Status,
             timestamp: Date.now()
           });
         } else {
@@ -106,37 +119,76 @@ function checkPhase1Complete() {
         if (isPhase1Completed(phase1Status)) {
           phase1Complete = true;
 
+          // ✅ PROTECCIÓN: Marcar Fase 1 como completada usando SyncStateManager
+          if (typeof SyncStateManager !== 'undefined' && SyncStateManager && typeof SyncStateManager.setPhase1Initialized === 'function') {
+            SyncStateManager.setPhase1Initialized(false); // Ya no está en progreso
+          }
+
           // Detener polling de Fase 1
           stopPolling();
 
-          // Iniciar Fase 2 (sincronización de productos)
+          // ✅ NUEVO: Emitir evento de finalización de Fase 1 a través de PollingManager
+          // Esto permite que Phase2Manager y otros componentes se suscriban y actúen
+          if (typeof window !== 'undefined' && window.pollingManager && typeof window.pollingManager.emit === 'function') {
+            window.pollingManager.emit('phase1Completed', {
+              phase1Status,
+              timestamp: Date.now(),
+              data: progressResponse.data
+            });
+            // eslint-disable-next-line no-console
+            if (typeof console !== 'undefined' && console.log) {
+              // eslint-disable-next-line no-console
+              console.log('✅ [Phase1Manager] Evento phase1Completed emitido');
+            }
+          }
+
+          // ✅ COMPATIBILIDAD: Mantener llamada directa a startPhase2 para código legacy
+          // Phase2Manager también escuchará el evento phase1Completed, pero mantenemos
+          // esta llamada para compatibilidad con código existente
           if (typeof startPhase2 === 'function') {
             startPhase2();
           } else if (typeof console !== 'undefined' && console.error) {
+            // eslint-disable-next-line no-console
             console.error('startPhase2 no está disponible');
           }
         }
       }
     },
-    error: function() {
-      // Error silenciado - el polling continuará
+    error(xhr, status, error) {
+      // ✅ MEJORADO: Registrar error usando ErrorHandler en lugar de silenciarlo
+      if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.logError === 'function') {
+        ErrorHandler.logError(
+          `Error al verificar progreso de Fase 1: ${error || 'Error de conexión'} (Status: ${status || 'unknown'})`,
+          'PHASE1_POLLING'
+        );
+      }
+      // El polling continuará, pero ahora tenemos registro del error
     }
   });
 }
 
 /**
  * Inicializa el polling para monitorear Fase 1
+ * 
+ * ✅ MIGRADO: Ahora usa PollingManager en lugar de setInterval directo.
+ * PollingManager es el único responsable de gestionar intervalos.
  *
  * @returns {void}
  * @private
  */
 function startPolling() {
-  // Detener cualquier polling existente
-  stopPolling();
+  // ✅ MIGRADO: Usar PollingManager en lugar de setInterval directo
+  if (typeof pollingManager === 'undefined' || !pollingManager || typeof pollingManager.startPolling !== 'function') {
+    // eslint-disable-next-line no-console
+    if (typeof console !== 'undefined' && console.error) {
+      // eslint-disable-next-line no-console
+      console.error('PollingManager no está disponible para Phase1Manager');
+    }
+    return;
+  }
 
   // Configurar polling
-  if (typeof pollingManager !== 'undefined' && pollingManager && pollingManager.config) {
-    // eslint-disable-next-line prefer-optional-chain
+  if (pollingManager.config) {
     if (pollingManager.config.intervals && pollingManager.config.intervals.active) {
       pollingManager.config.currentInterval = pollingManager.config.intervals.active;
     }
@@ -149,10 +201,12 @@ function startPolling() {
     SyncStateManager.setInactiveProgressCounter(0);
   }
 
-  // ✅ MEJORADO: Reducir intervalo de polling para feedback más cercano a tiempo real
-  // Cambiado de 5 segundos a 2 segundos para mejor experiencia de usuario
-  // Nota: Esto aumenta la carga del servidor, pero mejora significativamente la percepción de tiempo real
-  phase1PollingInterval = setInterval(checkPhase1Complete, 2000);
+  // ✅ MIGRADO: Usar PollingManager para iniciar polling con nombre único 'phase1'
+  // PollingManager previene duplicaciones automáticamente
+  const intervalId = pollingManager.startPolling('phase1', checkPhase1Complete, 2000);
+  
+  // Mantener compatibilidad hacia atrás guardando el ID
+  phase1PollingInterval = intervalId;
 
   // También verificar inmediatamente después de 1 segundo para feedback instantáneo
   setTimeout(checkPhase1Complete, 1000);
@@ -160,15 +214,21 @@ function startPolling() {
 
 /**
  * Detiene el polling de Fase 1
+ * 
+ * ✅ MIGRADO: Ahora usa PollingManager para detener el polling.
+ * PollingManager es el único responsable de gestionar intervalos.
  *
  * @returns {void}
  * @private
  */
 function stopPolling() {
-  if (phase1PollingInterval) {
-    clearInterval(phase1PollingInterval);
-    phase1PollingInterval = null;
+  // ✅ MIGRADO: Usar PollingManager para detener polling
+  if (typeof pollingManager !== 'undefined' && pollingManager && typeof pollingManager.stopPolling === 'function') {
+    pollingManager.stopPolling('phase1');
   }
+  
+  // Mantener compatibilidad hacia atrás limpiando la variable
+  phase1PollingInterval = null;
 }
 
 /**
@@ -179,6 +239,17 @@ function stopPolling() {
  * @private
  */
 function handleSuccess(response) {
+  // ✅ PROTECCIÓN: Liberar lock de inicio después de recibir respuesta exitosa
+  // ✅ MEJORADO: Usar SyncStateManager API en lugar de acceso directo a window
+  if (typeof SyncStateManager !== 'undefined' && SyncStateManager && typeof SyncStateManager.setPhase1Starting === 'function') {
+    SyncStateManager.setPhase1Starting(false);
+  }
+  // Nota: Si SyncStateManager no está disponible, el lock no se puede liberar, pero esto es un caso de error
+
+  // ✅ PROTECCIÓN: Marcar como inicializada usando SyncStateManager
+  if (typeof SyncStateManager !== 'undefined' && SyncStateManager && typeof SyncStateManager.setPhase1Initialized === 'function') {
+    SyncStateManager.setPhase1Initialized(true);
+  }
 
   // Verificar si el proceso ya está en progreso o se acaba de iniciar
   if (response.data && response.data.in_progress) {
@@ -210,7 +281,7 @@ function handleSuccess(response) {
         in_progress: false,
         is_completed: false
       },
-      phase1Status: phase1Status,
+      phase1Status,
       timestamp: Date.now()
     });
   }
@@ -228,6 +299,13 @@ function handleSuccess(response) {
  * @private
  */
 function handleErrorResponse(response, originalText) {
+  // ✅ PROTECCIÓN: Liberar lock de inicio después de error
+  // ✅ MEJORADO: Usar SyncStateManager API en lugar de acceso directo a window
+  if (typeof SyncStateManager !== 'undefined' && SyncStateManager && typeof SyncStateManager.setPhase1Starting === 'function') {
+    SyncStateManager.setPhase1Starting(false);
+  }
+  // Nota: Si SyncStateManager no está disponible, el lock no se puede liberar, pero esto es un caso de error
+
   const errorMsg = (response.data && response.data.message) || 'Error desconocido';
 
   if (DOM_CACHE && DOM_CACHE.$feedback) {
@@ -258,6 +336,12 @@ function handleErrorResponse(response, originalText) {
  * @private
  */
 function handleAjaxError(xhr, status, error, originalText) {
+  // ✅ PROTECCIÓN: Liberar lock de inicio después de error AJAX
+  // ✅ MEJORADO: Usar SyncStateManager API en lugar de acceso directo a window
+  if (typeof SyncStateManager !== 'undefined' && SyncStateManager && typeof SyncStateManager.setPhase1Starting === 'function') {
+    SyncStateManager.setPhase1Starting(false);
+  }
+  // Nota: Si SyncStateManager no está disponible, el lock no se puede liberar, pero esto es un caso de error
 
   if (DOM_CACHE && DOM_CACHE.$feedback) {
     DOM_CACHE.$feedback.text('Error al iniciar Fase 1: ' + (error || 'Error de comunicación'));
@@ -276,10 +360,9 @@ function handleAjaxError(xhr, status, error, originalText) {
   }
 
   // Verificar si es un error de nonce y recargar página (patrón existente)
-  // eslint-disable-next-line prefer-optional-chain
   if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.error_type === 'invalid_nonce') {
     // Usar el patrón existente de recarga de página
-    setTimeout(function() {
+    setTimeout(() => {
       if (typeof window !== 'undefined' && window.location) {
         window.location.reload();
       }
@@ -317,24 +400,82 @@ function handleAjaxError(xhr, status, error, originalText) {
  * Phase1Manager.start(50, 'Sincronizar productos en lote');
  */
 function start(batchSize, originalText) {
+  // ✅ PROTECCIÓN CRÍTICA: Lock atómico para prevenir ejecuciones simultáneas
+  // Usar SyncStateManager para obtener lock de forma atómica
+  // Verificar tanto variable global como window.SyncStateManager para compatibilidad con tests
+  const stateManager = (typeof SyncStateManager !== 'undefined' && SyncStateManager) 
+    ? SyncStateManager 
+    : (typeof window !== 'undefined' && window.SyncStateManager) 
+      ? window.SyncStateManager 
+      : null;
+  
+  if (stateManager && typeof stateManager.setPhase1Starting === 'function') {
+    const lockAcquired = stateManager.setPhase1Starting(true);
+    if (!lockAcquired) {
+      // Ya hay una ejecución en progreso, ignorar esta llamada
+      // eslint-disable-next-line no-console
+      if (typeof console !== 'undefined' && console.warn) {
+        // eslint-disable-next-line no-console
+        console.warn('⚠️ Fase 1 ya se está iniciando, ignorando llamada duplicada');
+      }
+      return;
+    }
+  } else {
+    // ✅ MEJORADO: Usar SyncStateManager API en lugar de acceso directo a window
+    // Fallback: Si SyncStateManager no está disponible, no permitir ejecución simultánea
+    // (no podemos establecer el lock sin SyncStateManager, así que simplemente retornamos)
+    // eslint-disable-next-line no-console
+    if (typeof console !== 'undefined' && console.warn) {
+      // eslint-disable-next-line no-console
+      console.warn('⚠️ SyncStateManager no está disponible, no se puede prevenir ejecución simultánea');
+    }
+    return;
+  }
+  
+  // ✅ PROTECCIÓN: Verificar si ya está inicializada y en progreso
+  if (stateManager && typeof stateManager.getPhase1Initialized === 'function') {
+    if (stateManager.getPhase1Initialized()) {
+      // Liberar lock antes de retornar
+      if (typeof stateManager.setPhase1Starting === 'function') {
+        stateManager.setPhase1Starting(false);
+      }
+      // eslint-disable-next-line no-console
+      if (typeof console !== 'undefined' && console.warn) {
+        // eslint-disable-next-line no-console
+        console.warn('⚠️ Fase 1 ya está inicializada y en progreso, ignorando llamada duplicada');
+      }
+      return;
+    }
+  }
+
   // Verificar dependencias críticas
   if (typeof jQuery === 'undefined') {
+    // Liberar lock antes de retornar
+    if (stateManager && typeof stateManager.setPhase1Starting === 'function') {
+      stateManager.setPhase1Starting(false);
+    }
     if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.logError === 'function') {
       ErrorHandler.logError('jQuery no está disponible para Phase1Manager', 'PHASE1_START');
     }
     return;
   }
 
-  // eslint-disable-next-line prefer-optional-chain
   if (typeof miIntegracionApiDashboard === 'undefined' || !miIntegracionApiDashboard || !miIntegracionApiDashboard.ajaxurl) {
+    // Liberar lock antes de retornar
+    if (stateManager && typeof stateManager.setPhase1Starting === 'function') {
+      stateManager.setPhase1Starting(false);
+    }
     if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.logError === 'function') {
       ErrorHandler.logError('miIntegracionApiDashboard o ajaxurl no están disponibles', 'PHASE1_START');
     }
     return;
   }
 
-  // eslint-disable-next-line prefer-optional-chain
   if (typeof DOM_CACHE === 'undefined' || !DOM_CACHE) {
+    // Liberar lock antes de retornar
+    if (stateManager && typeof stateManager.setPhase1Starting === 'function') {
+      stateManager.setPhase1Starting(false);
+    }
     if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.logError === 'function') {
       ErrorHandler.logError('DOM_CACHE no está disponible', 'PHASE1_START');
     }
@@ -358,14 +499,14 @@ function start(batchSize, originalText) {
   jQuery.ajax({
     url: miIntegracionApiDashboard.ajaxurl,
     type: 'POST',
-    timeout: timeout,
+    timeout,
     data: {
       action: 'mia_sync_images',
       nonce: miIntegracionApiDashboard.nonce || (typeof window !== 'undefined' && window.miIntegracionApiDashboard && window.miIntegracionApiDashboard.nonce),
       resume: false,
       batch_size: batchSize
     },
-    success: function(response) {
+    success(response) {
       // ✅ FASE 1: Manejar respuesta de sincronización de imágenes
       if (response.success) {
         handleSuccess(response);
@@ -373,7 +514,7 @@ function start(batchSize, originalText) {
         handleErrorResponse(response, originalText);
       }
     },
-    error: function(xhr, status, error) {
+    error(xhr, status, error) {
       const handled = handleAjaxError(xhr, status, error, originalText);
       // Si se manejó como timeout, no hacer nada más (el polling ya está iniciado)
       if (!handled) {
@@ -391,6 +532,23 @@ function start(batchSize, originalText) {
 function stop() {
   stopPolling();
   phase1Complete = false;
+  
+  // ✅ PROTECCIÓN: Resetear flags de estado al detener
+  if (typeof SyncStateManager !== 'undefined' && SyncStateManager) {
+    if (typeof SyncStateManager.resetPhase1State === 'function') {
+      SyncStateManager.resetPhase1State();
+    } else {
+      // Fallback: resetear flags individualmente
+      if (typeof SyncStateManager.setPhase1Starting === 'function') {
+        SyncStateManager.setPhase1Starting(false);
+      }
+      if (typeof SyncStateManager.setPhase1Initialized === 'function') {
+        SyncStateManager.setPhase1Initialized(false);
+      }
+    }
+  }
+  // ✅ MEJORADO: Usar SyncStateManager API en lugar de acceso directo a window
+  // Nota: Si SyncStateManager no está disponible, el lock no se puede liberar, pero esto es un caso de error
 }
 
 /**
@@ -408,6 +566,11 @@ function isComplete() {
  * @returns {number|null} ID del intervalo de polling o null si no está activo
  */
 function getPollingInterval() {
+  // ✅ MIGRADO: Obtener ID del intervalo desde PollingManager si está disponible
+  if (typeof pollingManager !== 'undefined' && pollingManager && typeof pollingManager.getIntervalId === 'function') {
+    return pollingManager.getIntervalId('phase1');
+  }
+  // Fallback a variable local para compatibilidad hacia atrás
   return phase1PollingInterval;
 }
 
@@ -432,10 +595,10 @@ if (typeof window !== 'undefined') {
     window.Phase1Manager = Phase1Manager;
     // Exponer también variables globales para compatibilidad
     Object.defineProperty(window, 'phase1Complete', {
-      get: function() {
+      get() {
         return phase1Complete;
       },
-      set: function(value) {
+      set(value) {
         phase1Complete = value;
       },
       enumerable: true,
@@ -443,10 +606,10 @@ if (typeof window !== 'undefined') {
     });
 
     Object.defineProperty(window, 'phase1PollingInterval', {
-      get: function() {
+      get() {
         return phase1PollingInterval;
       },
-      set: function(value) {
+      set(value) {
         phase1PollingInterval = value;
       },
       enumerable: true,
