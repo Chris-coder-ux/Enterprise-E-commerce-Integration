@@ -169,6 +169,9 @@ class AjaxSync {
 		add_action('wp_ajax_mi_integracion_api_save_batch_size', [self::class, 'save_batch_size']);
 		add_action('wp_ajax_mia_update_throttle_delay', [self::class, 'update_throttle_delay']);
 		add_action('wp_ajax_mia_update_auto_retry', [self::class, 'update_auto_retry']);
+		// ✅ NUEVO: Optimización de índices de base de datos
+		add_action('wp_ajax_mia_optimize_image_duplicates_indexes', [self::class, 'optimize_image_duplicates_indexes']);
+		add_action('wp_ajax_mia_benchmark_duplicates_search', [self::class, 'benchmark_duplicates_search']);
 		// ✅ NUEVO: Migración Hot→Cold Cache
 		add_action('wp_ajax_mia_perform_hot_cold_migration', [self::class, 'perform_hot_cold_migration_callback']);
 		
@@ -1777,6 +1780,123 @@ class AjaxSync {
 				: __('Reintento automático desactivado', 'mi-integracion-api'));
 		} else {
 			self::sendError(__('Error al actualizar la configuración de reintento automático', 'mi-integracion-api'), 'update_failed', 500);
+		}
+	}
+
+	/**
+	 * Optimiza los índices de base de datos para búsqueda de duplicados de imágenes.
+	 *
+	 * Crea índices compuestos en wp_postmeta para acelerar la búsqueda de duplicados
+	 * a medida que crece la base de datos. Esto mejora significativamente el rendimiento
+	 * de la Fase 1 cuando se procesan grandes volúmenes de imágenes.
+	 *
+	 * @return void
+	 * @since 2.0.0
+	 */
+	public static function optimize_image_duplicates_indexes(): void
+	{
+		if (!self::validateAjaxSecurity('nonce', 'mi_integracion_api_nonce_dashboard')) {
+			return; // validateAjaxSecurity already sends the error response
+		}
+
+		if (!current_user_can('manage_options')) {
+			self::sendError(__('Permisos insuficientes', 'mi-integracion-api'), 'insufficient_permissions', 403);
+			return;
+		}
+
+		try {
+			$optimizer = new \MiIntegracionApi\Helpers\OptimizeImageDuplicatesSearch();
+			$result = $optimizer->createOptimizedIndexes();
+
+			if ($result['success']) {
+				$message = sprintf(
+					__('Optimización completada: %d índices creados, %d ya existían', 'mi-integracion-api'),
+					count($result['indexes_created']),
+					count($result['indexes_existing'])
+				);
+
+				self::sendSuccess([
+					'indexes_created' => $result['indexes_created'],
+					'indexes_existing' => $result['indexes_existing'],
+					'total_indexes' => count($result['indexes_created']) + count($result['indexes_existing'])
+				], $message);
+			} else {
+				$error_message = !empty($result['errors'])
+					? implode(', ', $result['errors'])
+					: __('Error desconocido al optimizar índices', 'mi-integracion-api');
+
+				self::sendError(
+					$error_message,
+					'optimization_failed',
+					500,
+					['errors' => $result['errors']]
+				);
+			}
+		} catch (\Exception $e) {
+			self::sendError(
+				sprintf(__('Excepción durante optimización: %s', 'mi-integracion-api'), $e->getMessage()),
+				'exception_during_optimization',
+				500
+			);
+		}
+	}
+
+	/**
+	 * Ejecuta un benchmark de rendimiento de búsqueda de duplicados.
+	 *
+	 * Mide el tiempo promedio de búsqueda de duplicados para evaluar el rendimiento
+	 * antes y después de crear los índices optimizados.
+	 *
+	 * @return void
+	 * @since 2.0.0
+	 */
+	public static function benchmark_duplicates_search(): void
+	{
+		if (!self::validateAjaxSecurity('nonce', 'mi_integracion_api_nonce_dashboard')) {
+			return; // validateAjaxSecurity already sends the error response
+		}
+
+		if (!current_user_can('manage_options')) {
+			self::sendError(__('Permisos insuficientes', 'mi-integracion-api'), 'insufficient_permissions', 403);
+			return;
+		}
+
+		try {
+			$optimizer = new \MiIntegracionApi\Helpers\OptimizeImageDuplicatesSearch();
+			$benchmark = $optimizer->benchmarkSearchPerformance();
+
+			if (isset($benchmark['error'])) {
+				self::sendError(
+					$benchmark['error'],
+					'benchmark_error',
+					500
+				);
+				return;
+			}
+
+			if (isset($benchmark['message'])) {
+				self::sendSuccess([
+					'message' => $benchmark['message'],
+					'total_hashes' => $benchmark['total_hashes']
+				], $benchmark['message']);
+				return;
+			}
+
+			$message = sprintf(
+				__('Benchmark completado: Tiempo promedio %s ms (min: %s ms, max: %s ms) para %d hashes', 'mi-integracion-api'),
+				$benchmark['average_time_ms'],
+				$benchmark['min_time_ms'] ?? 'N/A',
+				$benchmark['max_time_ms'] ?? 'N/A',
+				$benchmark['total_hashes']
+			);
+
+			self::sendSuccess($benchmark, $message);
+		} catch (\Exception $e) {
+			self::sendError(
+				sprintf(__('Excepción durante benchmark: %s', 'mi-integracion-api'), $e->getMessage()),
+				'exception_during_benchmark',
+				500
+			);
 		}
 	}
 	

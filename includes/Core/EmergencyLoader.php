@@ -272,6 +272,7 @@ class EmergencyLoader {
         'MiIntegracionApi\\Helpers\\TransientCompatibility' => 'includes/Helpers/TransientCompatibility.php',
         'MiIntegracionApi\\Helpers\\LogoHelper' => 'includes/Helpers/LogoHelper.php',
         'MiIntegracionApi\\Helpers\\FaviconHelper' => 'includes/Helpers/FaviconHelper.php',
+        'MiIntegracionApi\\Helpers\\OptimizeImageDuplicatesSearch' => 'includes/Helpers/OptimizeImageDuplicatesSearch.php',
         'MiIntegracionApi\\ErrorHandler' => 'includes/ErrorHandler.php',
 
         // ===== CONFIG - Configuración externa =====

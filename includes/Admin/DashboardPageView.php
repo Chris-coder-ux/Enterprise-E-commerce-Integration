@@ -698,6 +698,15 @@ class DashboardPageView {
 			true
 		);
 		
+		// ✅ NUEVO: Registrar EventCleanupManager.js (debe cargarse antes de componentes que registran listeners)
+		wp_register_script(
+			'mi-integracion-api-event-cleanup-manager',
+			MiIntegracionApi_PLUGIN_URL . 'assets/js/dashboard/managers/EventCleanupManager.js',
+			array('jquery'),
+			constant('MiIntegracionApi_VERSION'),
+			true
+		);
+		
 		// Registrar SyncStateManager.js (depende de polling-manager)
 		wp_register_script(
 			'mi-integracion-api-sync-state-manager',
@@ -725,25 +734,25 @@ class DashboardPageView {
 			true
 		);
 		
-		// Registrar ProgressBar.js (depende de jquery y dom-utils)
+		// Registrar ProgressBar.js (depende de jquery, dom-utils y ui-optimizer)
 		wp_register_script(
 			'mi-integracion-api-progress-bar',
 			MiIntegracionApi_PLUGIN_URL . 'assets/js/dashboard/components/ProgressBar.js',
-			array('jquery', 'mi-integracion-api-dom-utils'),
+			array('jquery', 'mi-integracion-api-dom-utils', 'mi-integracion-api-ui-optimizer'),
 			constant('MiIntegracionApi_VERSION'),
 			true
 		);
 		
-		// Registrar ConsoleManager.js (depende de jquery)
+		// Registrar ConsoleManager.js (depende de jquery y event-cleanup-manager)
 		wp_register_script(
 			'mi-integracion-api-console-manager',
 			MiIntegracionApi_PLUGIN_URL . 'assets/js/dashboard/components/ConsoleManager.js',
-			array('jquery'),
+			array('jquery', 'mi-integracion-api-event-cleanup-manager'),
 			constant('MiIntegracionApi_VERSION'),
 			true
 		);
 		
-		// Registrar SyncProgress.js (depende de múltiples módulos)
+		// Registrar SyncProgress.js (depende de múltiples módulos, incluyendo ui-optimizer y event-cleanup-manager)
 		wp_register_script(
 			'mi-integracion-api-sync-progress',
 			MiIntegracionApi_PLUGIN_URL . 'assets/js/dashboard/sync/SyncProgress.js',
@@ -751,6 +760,8 @@ class DashboardPageView {
 				'jquery',
 				'mi-integracion-api-constants',
 				'mi-integracion-api-dashboard-config',
+				'mi-integracion-api-ui-optimizer',
+				'mi-integracion-api-event-cleanup-manager',
 				'mi-integracion-api-dom-utils',
 				'mi-integracion-api-polling-manager',
 				'mi-integracion-api-sync-state-manager',
@@ -815,7 +826,7 @@ class DashboardPageView {
 			true
 		);
 		
-		// Registrar SyncDashboard.js (depende de múltiples módulos)
+		// Registrar SyncDashboard.js (depende de múltiples módulos, incluyendo ui-optimizer y event-cleanup-manager)
 		wp_register_script(
 			'mi-integracion-api-sync-dashboard',
 			MiIntegracionApi_PLUGIN_URL . 'assets/js/dashboard/components/SyncDashboard.js',
@@ -825,13 +836,15 @@ class DashboardPageView {
 				'mi-integracion-api-dashboard-config',
 				'mi-integracion-api-ajax-manager',
 				'mi-integracion-api-polling-manager',
-				'mi-integracion-api-console-manager'
+				'mi-integracion-api-console-manager',
+				'mi-integracion-api-ui-optimizer',
+				'mi-integracion-api-event-cleanup-manager'
 			),
 			constant('MiIntegracionApi_VERSION'),
 			true
 		);
 		
-		// Registrar UnifiedDashboard.js (depende de múltiples módulos)
+		// Registrar UnifiedDashboard.js (depende de múltiples módulos, incluyendo event-cleanup-manager)
 		wp_register_script(
 			'mi-integracion-api-unified-dashboard',
 			MiIntegracionApi_PLUGIN_URL . 'assets/js/dashboard/components/UnifiedDashboard.js',
@@ -840,7 +853,8 @@ class DashboardPageView {
 				'mi-integracion-api-constants',
 				'mi-integracion-api-ajax-manager',
 				'mi-integracion-api-error-handler',
-				'mi-integracion-api-polling-manager'
+				'mi-integracion-api-polling-manager',
+				'mi-integracion-api-event-cleanup-manager'
 			),
 			constant('MiIntegracionApi_VERSION'),
 			true
@@ -855,14 +869,15 @@ class DashboardPageView {
 			true
 		);
 		
-		// Registrar CardManager.js (depende de SELECTORS y ToastManager)
+		// Registrar CardManager.js (depende de SELECTORS, ToastManager y ui-optimizer)
 		wp_register_script(
 			'mi-integracion-api-card-manager',
 			MiIntegracionApi_PLUGIN_URL . 'assets/js/dashboard/ui/CardManager.js',
 			array(
 				'jquery',
 				'mi-integracion-api-constants',
-				'mi-integracion-api-toast-manager'
+				'mi-integracion-api-toast-manager',
+				'mi-integracion-api-ui-optimizer'
 			),
 			constant('MiIntegracionApi_VERSION'),
 			true
@@ -879,6 +894,15 @@ class DashboardPageView {
 				'mi-integracion-api-responsive-layout',
 				'mi-integracion-api-event-manager'
 			),
+			constant('MiIntegracionApi_VERSION'),
+			true
+		);
+		
+		// ✅ NUEVO: Registrar UIOptimizer.js (debe cargarse antes de otros componentes que actualizan UI)
+		wp_register_script(
+			'mi-integracion-api-ui-optimizer',
+			MiIntegracionApi_PLUGIN_URL . 'assets/js/dashboard/utils/UIOptimizer.js',
+			array('jquery'),
 			constant('MiIntegracionApi_VERSION'),
 			true
 		);
@@ -934,6 +958,8 @@ class DashboardPageView {
 		wp_enqueue_script('mi-integracion-api-constants');
 		wp_enqueue_script('mi-integracion-api-messages');
 		wp_enqueue_script('mi-integracion-api-dashboard-config');
+		wp_enqueue_script('mi-integracion-api-ui-optimizer'); // ✅ NUEVO: Cargar antes de otros componentes
+		wp_enqueue_script('mi-integracion-api-event-cleanup-manager'); // ✅ NUEVO: Cargar antes de componentes que registran listeners
 		wp_enqueue_script('mi-integracion-api-dom-utils');
 		wp_enqueue_script('mi-integracion-api-polling-manager');
 		wp_enqueue_script('mi-integracion-api-sync-state-manager');
