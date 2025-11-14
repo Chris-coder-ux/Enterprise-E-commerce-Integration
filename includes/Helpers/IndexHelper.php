@@ -171,8 +171,9 @@ class IndexHelper
             }
         }
 
-        // Log de resultado final
-        if (isset($config['logger']) && $config['logger'] !== null) {
+        // ✅ OPTIMIZADO: Solo loggear en modo DEBUG para evitar logs excesivos
+        // Este log se ejecuta por cada tipo de entidad en cada batch (categorias, fabricantes, etc.)
+        if (isset($config['logger']) && $config['logger'] !== null && defined('WP_DEBUG') && WP_DEBUG) {
             $config['logger']->info("Indexación completada para {$entityType}", [
                 'total_input' => count($dataArray),
                 'processed' => $processedCount,

@@ -1961,6 +1961,11 @@ class Sync_Manager {
 		}
 
 		$operationId = $this->sync_status['current_sync']['operation_id'];
+		
+		// ✅ NUEVO: Limpiar caché de attachments al finalizar sincronización
+		if (class_exists('\MiIntegracionApi\Helpers\MapProduct')) {
+			\MiIntegracionApi\Helpers\MapProduct::clearAttachmentsCache();
+		}
 		$entity = $this->sync_status['current_sync']['entity'];
 		$direction = $this->sync_status['current_sync']['direction'];
 
@@ -2661,13 +2666,15 @@ class Sync_Manager {
 	 */
 	private function clearBatchSpecificData(CacheManager $cache_manager): void
 	{
-		// ✅ OPTIMIZACIÓN CRÍTICA: Ejecutar limpieza solo cada N lotes para reducir overhead
-		// Limpiar cada 5 lotes reduce consultas SQL de ~4,728 a ~946 (80% menos)
+		// ✅ OPTIMIZACIÓN CRÍTICA: Limpieza adaptativa basada en memoria y tiempo
+		// Reduce acumulación de caché y mejora rendimiento progresivo
 		$sync_status = \MiIntegracionApi\Helpers\SyncStatusHelper::getSyncStatus();
 		$current_batch = (int)($sync_status['current_sync']['current_batch'] ?? 0);
-		$cleanup_interval = apply_filters('mia_batch_cleanup_interval', 5); // Limpiar cada 5 lotes por defecto
 		
-		if ($current_batch % $cleanup_interval !== 0 && $current_batch > 0) {
+		// ✅ NUEVO: Limpieza adaptativa
+		$should_cleanup = $this->shouldCleanupCache($current_batch);
+		
+		if (!$should_cleanup) {
 			// No es momento de limpiar, solo hacer garbage collection ligero
 			gc_collect_cycles();
 			return;
@@ -2744,6 +2751,50 @@ class Sync_Manager {
 			'global_data_preserved' => true,
 			'memory_freed_mb' => $cleanupMetrics['memory_freed_mb']
 		]);
+		
+		// ✅ NUEVO: Guardar timestamp de última limpieza para limpieza adaptativa
+		update_option('mia_last_cache_cleanup_time', time());
+	}
+	
+	/**
+	 * ✅ NUEVO: Determina si se debe limpiar caché basado en múltiples factores
+	 * 
+	 * @param int $current_batch Número de lote actual
+	 * @return bool True si se debe limpiar, false si no
+	 */
+	private function shouldCleanupCache(int $current_batch): bool
+	{
+		// Factor 1: Limpieza cada N lotes (mínimo)
+		$cleanup_interval = apply_filters('mia_batch_cleanup_interval', 3); // Reducido de 5 a 3
+		if ($current_batch % $cleanup_interval === 0 && $current_batch > 0) {
+			return true;
+		}
+		
+		// Factor 2: Limpieza si memoria > 70%
+		$memory_peak = memory_get_peak_usage(true);
+		$memory_current = memory_get_usage(true);
+		if ($memory_peak > 0) {
+			$memory_usage_percent = ($memory_current / $memory_peak) * 100;
+			if ($memory_usage_percent > 70) {
+				$this->logger->debug('Limpieza de caché activada por alto uso de memoria', [
+					'memory_usage_percent' => round($memory_usage_percent, 2),
+					'current_batch' => $current_batch
+				]);
+				return true;
+			}
+		}
+		
+		// Factor 3: Limpieza si han pasado > 30 segundos desde última limpieza
+		$last_cleanup = get_option('mia_last_cache_cleanup_time', 0);
+		if ($last_cleanup > 0 && (time() - $last_cleanup) > 30) {
+			$this->logger->debug('Limpieza de caché activada por tiempo transcurrido', [
+				'seconds_since_last_cleanup' => time() - $last_cleanup,
+				'current_batch' => $current_batch
+			]);
+			return true;
+		}
+		
+		return false;
 	}
 
 	/**
@@ -13277,10 +13328,10 @@ class Sync_Manager {
 	 */
 	private function getBatchDelay(): int
 	{
-		// ✅ OPTIMIZACIÓN: Reducir delay por defecto de 5 a 3 segundos
-		// Esto reduce tiempo total de delays de ~65 minutos a ~39 minutos (40% menos)
-		// El delay sigue siendo suficiente para evitar sobrecarga del servidor
-		$default_delay = 3; // 3 segundos por defecto (reducido de 5)
+		// ✅ OPTIMIZACIÓN: Delay optimizado para lotes de 50 productos
+		// Para 8000 productos (160 lotes): 1 segundo = ~2.7 minutos de delays totales
+		// El AdaptiveThrottler aumentará automáticamente el delay si hay errores
+		$default_delay = 1; // 1 segundo (1000ms) por defecto - optimizado para lotes grandes
 		
 		// Permitir configuración vía filtro
 		$delay = apply_filters('mia_batch_delay_seconds', $default_delay);

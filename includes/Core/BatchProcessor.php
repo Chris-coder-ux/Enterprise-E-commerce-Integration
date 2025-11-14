@@ -3244,11 +3244,14 @@ class BatchProcessor
                     ));
                     if ($wc_id) {
                         $existing_product_id = (int)$wc_id;
-                        $this->getLogger()->info("Producto encontrado por ID de Verial en tabla de mapeo", [
-                            'verial_id' => $verial_id,
-                            'wc_id' => $existing_product_id,
-                            'sku' => $normalized_sku
-                        ]);
+                        // ✅ OPTIMIZADO: Solo loggear en modo DEBUG para evitar logs excesivos
+                        if (defined('WP_DEBUG') && WP_DEBUG && defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
+                            $this->getLogger()->info("Producto encontrado por ID de Verial en tabla de mapeo", [
+                                'verial_id' => $verial_id,
+                                'wc_id' => $existing_product_id,
+                                'sku' => $normalized_sku
+                            ]);
+                        }
                     }
                 }
                 
@@ -3269,11 +3272,14 @@ class BatchProcessor
                     $products = get_posts($args);
                     if (!empty($products)) {
                         $existing_product_id = (int)$products[0];
-                        $this->getLogger()->info("Producto encontrado por ID de Verial en metadatos", [
-                            'verial_id' => $verial_id,
-                            'wc_id' => $existing_product_id,
-                            'sku' => $normalized_sku
-                        ]);
+                        // ✅ OPTIMIZADO: Solo loggear en modo DEBUG para evitar logs excesivos
+                        if (defined('WP_DEBUG') && WP_DEBUG && defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
+                            $this->getLogger()->info("Producto encontrado por ID de Verial en metadatos", [
+                                'verial_id' => $verial_id,
+                                'wc_id' => $existing_product_id,
+                                'sku' => $normalized_sku
+                            ]);
+                        }
                     }
                 }
             }
@@ -3299,11 +3305,15 @@ class BatchProcessor
                         $action = 'created';
                         $final_product_id = $new_product->get_id();
                         
-                        $this->getLogger()->warning("Producto existente no encontrado, creando nuevo", [
-                            'sku' => $sku,
-                            'expected_id' => $existing_product_id,
-                            'new_id' => $final_product_id
-                        ]);
+                        // ✅ OPTIMIZADO: Solo loggear en modo DEBUG para evitar logs excesivos
+                        // Este warning se ejecuta frecuentemente y no es crítico
+                        if (defined('WP_DEBUG') && WP_DEBUG) {
+                            $this->getLogger()->warning("Producto existente no encontrado, creando nuevo", [
+                                'sku' => $sku,
+                                'expected_id' => $existing_product_id,
+                                'new_id' => $final_product_id
+                            ]);
+                        }
                     } else {
                         return $this->buildErrorResponse('Error creando producto (existente no encontrado)', 0);
                     }
@@ -4907,10 +4917,13 @@ class BatchProcessor
             if ($attachment_id) {
                 $thumbnail_result = mi_integracion_api_set_post_thumbnail_safe($product_id, $attachment_id);
                 if ($thumbnail_result) {
-                    $this->getLogger()->debug('Imagen principal establecida', [
-                        'product_id' => $product_id,
-                        'attachment_id' => $attachment_id
-                    ]);
+                    // ✅ OPTIMIZADO: Solo loggear en modo DEBUG para evitar logs excesivos
+                    if (defined('WP_DEBUG') && WP_DEBUG && defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
+                        $this->getLogger()->debug('Imagen principal establecida', [
+                            'product_id' => $product_id,
+                            'attachment_id' => $attachment_id
+                        ]);
+                    }
                 }
             }
             
@@ -5146,17 +5159,21 @@ class BatchProcessor
             $save_result = $product->save();
             
             if ($save_result) {
-                $this->getLogger()->info("✅ Metadatos de Verial guardados exitosamente", [
-                    'product_id' => $product_id,
-                    'verial_id' => $verial_product['Id'] ?? 'N/A',
-                    'is_book' => $metadata_info['is_book'],
-                    'book_fields_saved' => $metadata_info['book_fields_saved'] ?? 0,
-                    'additional_fields_saved' => $metadata_info['additional_fields_saved'] ?? 0,
-                    'visibility_changed' => $metadata_info['visibility_changed'],
-                    'visibility_reason' => $metadata_info['visibility_reason'],
-                    'tax_available' => $metadata_info['tax_available'],
-                    'units_applied' => $metadata_info['units_applied']
-                ]);
+                // ✅ OPTIMIZADO: Solo loggear en modo DEBUG para evitar logs excesivos
+                // Este log se ejecuta por cada producto y genera demasiados logs
+                if (defined('WP_DEBUG') && WP_DEBUG && defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
+                    $this->getLogger()->info("✅ Metadatos de Verial guardados exitosamente", [
+                        'product_id' => $product_id,
+                        'verial_id' => $verial_product['Id'] ?? 'N/A',
+                        'is_book' => $metadata_info['is_book'],
+                        'book_fields_saved' => $metadata_info['book_fields_saved'] ?? 0,
+                        'additional_fields_saved' => $metadata_info['additional_fields_saved'] ?? 0,
+                        'visibility_changed' => $metadata_info['visibility_changed'],
+                        'visibility_reason' => $metadata_info['visibility_reason'],
+                        'tax_available' => $metadata_info['tax_available'],
+                        'units_applied' => $metadata_info['units_applied']
+                    ]);
+                }
             } else {
                 $this->getLogger()->error("❌ Error guardando metadatos de Verial", [
                     'product_id' => $product_id,
@@ -7362,8 +7379,9 @@ class BatchProcessor
 			}
 		}
 
-		// Usar logger estático si está disponible
-		if (class_exists('\MiIntegracionApi\Helpers\Logger')) {
+		// ✅ OPTIMIZADO: Solo loggear en modo DEBUG para evitar logs excesivos
+		// Este log se ejecuta por cada producto sin stock y genera demasiados logs
+		if (defined('WP_DEBUG') && WP_DEBUG && class_exists('\MiIntegracionApi\Helpers\Logger')) {
 			$logger = LoggerBasic::getInstance();
 			$logger->info("ℹ️ Stock no encontrado en batch para producto", [
 				'verial_id' => $verial_id,

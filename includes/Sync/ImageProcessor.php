@@ -200,7 +200,10 @@ class ImageProcessor implements ImageProcessorInterface
      *
      * @var int
      */
-    private const MAX_INSTANCE_CACHE_SIZE = 1000;
+    /**
+     * ✅ OPTIMIZADO: Aumentado de 1000 a 5000 para mejorar rendimiento.
+     */
+    private const MAX_INSTANCE_CACHE_SIZE = 5000;
 
     /**
      * Constructor.
@@ -864,9 +867,12 @@ class ImageProcessor implements ImageProcessorInterface
     /**
      * Tamaño máximo del cache de hashes recientes.
      *
+     * ✅ OPTIMIZADO: Aumentado de 1000 a 5000 para mejorar rendimiento
+     * en sincronizaciones grandes donde se procesan muchas imágenes.
+     *
      * @var int
      */
-    private const MAX_CACHE_SIZE = 1000;
+    private const MAX_CACHE_SIZE = 5000;
 
     /**
      * Busca un attachment existente por hash MD5.

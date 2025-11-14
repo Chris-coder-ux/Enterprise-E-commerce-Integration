@@ -347,24 +347,30 @@ class MapProduct {
 					} else {
 						// ✅ MEJORADO: Precio por defecto si no se encuentra
 						$product_data['price'] = 1.00;
-						$product_data['regular_price'] = 1.00;
-						$product_data['sale_price'] = '';
-						
+					$product_data['regular_price'] = 1.00;
+					$product_data['sale_price'] = '';
+					
+					// ✅ OPTIMIZADO: Solo loggear en modo DEBUG para evitar logs excesivos
+					if (defined('WP_DEBUG') && WP_DEBUG) {
 						self::$logger->warning('Precio no encontrado, usando valor por defecto', [
 							'sku' => $product_data['sku'],
 							'id_articulo' => $id_articulo
 						]);
 					}
+					}
 				} else {
-					// ✅ MEJORADO: Precio por defecto si no hay condiciones
-					$product_data['price'] = 1.00;
-					$product_data['regular_price'] = 1.00;
-					$product_data['sale_price'] = '';
-					
+				// ✅ MEJORADO: Precio por defecto si no hay condiciones
+				$product_data['price'] = 1.00;
+				$product_data['regular_price'] = 1.00;
+				$product_data['sale_price'] = '';
+				
+				// ✅ OPTIMIZADO: Solo loggear en modo DEBUG para evitar logs excesivos
+				if (defined('WP_DEBUG') && WP_DEBUG) {
 					self::$logger->warning('No se encontraron condiciones de tarifa, usando precio por defecto', [
 						'sku' => $product_data['sku'],
 						'id_articulo' => $id_articulo
 					]);
+				}
 				}
 				
 			} catch (\Exception $e) {
@@ -384,9 +390,12 @@ class MapProduct {
 			$product_data['regular_price'] = 1.00;
 			$product_data['sale_price'] = '';
 			
-			self::$logger->warning('Producto sin ID Verial, usando precio por defecto', [
-				'sku' => $product_data['sku']
-			]);
+			// ✅ OPTIMIZADO: Solo loggear en modo DEBUG para evitar logs excesivos
+			if (defined('WP_DEBUG') && WP_DEBUG) {
+				self::$logger->warning('Producto sin ID Verial, usando precio por defecto', [
+					'sku' => $product_data['sku']
+				]);
+			}
 		}
 
 		return $product_data;
@@ -450,11 +459,14 @@ class MapProduct {
 			
 			// ✅ OPTIMIZADO: Log eliminado - información consolidada en log final
 		} else {
-			self::$logger->warning('No se encontraron categorías para el producto', [
-				'sku' => $product_data['sku'] ?? 'N/A',
-				'verial_id' => $verial_product['Id'] ?? 'N/A',
-				'verial_category_id' => $verial_product['ID_Categoria'] ?? 'N/A'
-			]);
+			// ✅ OPTIMIZADO: Solo loggear en modo DEBUG para evitar logs excesivos
+			if (defined('WP_DEBUG') && WP_DEBUG) {
+				self::$logger->warning('No se encontraron categorías para el producto', [
+					'sku' => $product_data['sku'] ?? 'N/A',
+					'verial_id' => $verial_product['Id'] ?? 'N/A',
+					'verial_category_id' => $verial_product['ID_Categoria'] ?? 'N/A'
+				]);
+			}
 		}
 		
 		return $product_data;
@@ -761,11 +773,15 @@ class MapProduct {
 		$product_data['images'] = $images;
 		$product_data['gallery'] = $gallery;
 
-		self::$logger->debug('Imágenes encontradas en media library', [
-			'sku' => $sku,
-			'verial_id' => $verial_product_id,
-			'total_images' => count($images) + count($gallery)
-		]);
+		// ✅ OPTIMIZADO: Log eliminado - se ejecuta por cada producto y genera demasiados logs
+		// Solo loggear en modo DEBUG si realmente es necesario para debugging
+		if (defined('WP_DEBUG') && WP_DEBUG && defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
+			self::$logger->debug('Imágenes encontradas en media library', [
+				'sku' => $sku,
+				'verial_id' => $verial_product_id,
+				'total_images' => count($images) + count($gallery)
+			]);
+		}
 
 		return $product_data;
 	}
@@ -799,11 +815,15 @@ class MapProduct {
 			$original_sku = $verial_product['ReferenciaBarras'] ?? $verial_product['Id'] ?? 'UNKNOWN';
 			$product_data['sku'] = 'VERIAL_' . md5($original_sku . time());
 			
-			self::$logger->warning('SKU inválido, generando SKU alternativo', [
-				'sku_original' => $original_sku,
-				'sku_nuevo' => $product_data['sku'],
-				'verial_id' => $verial_product['Id'] ?? 'N/A'
-			]);
+			// ✅ OPTIMIZADO: Solo loggear errores críticos de SKU (no warnings por cada SKU inválido)
+			// Los SKUs inválidos se corrigen automáticamente, no necesitan log por cada uno
+			if (defined('WP_DEBUG') && WP_DEBUG) {
+				self::$logger->warning('SKU inválido, generando SKU alternativo', [
+					'sku_original' => $original_sku,
+					'sku_nuevo' => $product_data['sku'],
+					'verial_id' => $verial_product['Id'] ?? 'N/A'
+				]);
+			}
 		}
 
 		// ✅ CORREGIDO: Validación de precio más flexible
@@ -820,20 +840,26 @@ class MapProduct {
 		// ✅ CORREGIDO: Asegurar que el nombre no esté vacío
 		if (empty($product_data['name'])) {
 			$product_data['name'] = 'Producto ' . $product_data['sku'];
-			self::$logger->warning('Nombre vacío, generando nombre desde SKU', [
-				'sku' => $product_data['sku'],
-				'nombre_generado' => $product_data['name']
-			]);
+			// ✅ OPTIMIZADO: Solo loggear en modo DEBUG para evitar logs excesivos
+			if (defined('WP_DEBUG') && WP_DEBUG) {
+				self::$logger->warning('Nombre vacío, generando nombre desde SKU', [
+					'sku' => $product_data['sku'],
+					'nombre_generado' => $product_data['name']
+				]);
+			}
 		}
 
 		// ✅ CORREGIDO: Asegurar estado válido
 		if (!in_array($product_data['status'] ?? '', ['publish', 'draft', 'pending', 'private'])) {
 			$product_data['status'] = 'publish';
-			self::$logger->warning('Estado inválido, estableciendo a "publish"', [
-				'sku' => $product_data['sku'],
-				'estado_original' => $product_data['status'] ?? 'N/A',
-				'estado_nuevo' => 'publish'
-			]);
+			// ✅ OPTIMIZADO: Solo loggear en modo DEBUG para evitar logs excesivos
+			if (defined('WP_DEBUG') && WP_DEBUG) {
+				self::$logger->warning('Estado inválido, estableciendo a "publish"', [
+					'sku' => $product_data['sku'],
+					'estado_original' => $product_data['status'] ?? 'N/A',
+					'estado_nuevo' => 'publish'
+				]);
+			}
 		}
 
 		try {
@@ -1576,16 +1602,18 @@ class MapProduct {
 			}
 		}
 		
-		// ✅ OPTIMIZADO: Log reducido - JSON completo eliminado (~1,190 chars por log)
-		// Solo registrar campos clave para reducir tamaño del log
-		self::getLogger()->debug('Producto Verial normalizado', [
-			'source' => 'MapProduct',
-			'id' => $normalized['Id'] ?? 0,
-			'sku' => $normalized['ReferenciaBarras'] ?? '',
-			'nombre' => $normalized['Nombre'] ?? '',
-			'tipo' => $normalized['Tipo'] ?? 0,
-			'categoria_id' => $normalized['ID_Categoria'] ?? 0
-		]);
+		// ✅ OPTIMIZADO: Log eliminado - se ejecuta por cada producto y genera demasiados logs
+		// Solo loggear en modo DEBUG si realmente es necesario
+		if (defined('WP_DEBUG') && WP_DEBUG && defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
+			self::getLogger()->debug('Producto Verial normalizado', [
+				'source' => 'MapProduct',
+				'id' => $normalized['Id'] ?? 0,
+				'sku' => $normalized['ReferenciaBarras'] ?? '',
+				'nombre' => $normalized['Nombre'] ?? '',
+				'tipo' => $normalized['Tipo'] ?? 0,
+				'categoria_id' => $normalized['ID_Categoria'] ?? 0
+			]);
+		}
 		
 		return $normalized;
 	}
@@ -1666,7 +1694,11 @@ class MapProduct {
 			global $wpdb;
 			$table_name = $wpdb->prefix . 'verial_product_mapping';
 			
-			self::getLogger()->debug("Actualizando mapeo de producto: WC ID #$wc_id - Verial ID #$verial_id - SKU: $sku");
+			// ✅ OPTIMIZADO: Log eliminado - se ejecuta por cada producto y genera demasiados logs
+			// Solo loggear en modo DEBUG si realmente es necesario
+			if (defined('WP_DEBUG') && WP_DEBUG && defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
+				self::getLogger()->debug("Actualizando mapeo de producto: WC ID #$wc_id - Verial ID #$verial_id - SKU: $sku");
+			}
 			
 			// Verificar si la tabla existe, si no, crearla
 			if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") !== $table_name) {
@@ -1697,7 +1729,11 @@ class MapProduct {
 					['%d', '%d', '%s', '%s'],
 					['%d']
 				);
-				self::getLogger()->debug("Mapeo existente actualizado: ID #$existing");
+				// ✅ OPTIMIZADO: Log eliminado - se ejecuta por cada producto y genera demasiados logs
+				// Solo loggear en modo DEBUG si realmente es necesario
+				if (defined('WP_DEBUG') && WP_DEBUG && defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
+					self::getLogger()->debug("Mapeo existente actualizado: ID #$existing");
+				}
 			} else {
 				// Crear nuevo mapeo
 				$result = $wpdb->insert(
@@ -1938,8 +1974,27 @@ class MapProduct {
 	 * @return  array Array de attachment IDs ordenados.
 	 * @since   1.5.0
 	 */
+	/** @var array Caché en memoria de resultados de get_attachments_by_article_id() */
+	private static $attachments_cache = [];
+	
+	/** @var int Tamaño máximo del caché antes de limpiar */
+	private static $attachments_cache_max_size = 1000;
+	
+	/**
+	 * Obtiene los attachments de un artículo por su ID de Verial
+	 * 
+	 * ✅ OPTIMIZADO: Incluye caché en memoria para evitar consultas SQL redundantes
+	 *
+	 * @param int $article_id ID del artículo de Verial
+	 * @return array Array de attachment IDs ordenados
+	 */
 	public static function get_attachments_by_article_id(int $article_id): array
 	{
+		// ✅ NUEVO: Verificar caché primero
+		if (isset(self::$attachments_cache[$article_id])) {
+			return self::$attachments_cache[$article_id];
+		}
+		
 		// ✅ OPTIMIZACIÓN CRÍTICA: Usar SQL directo optimizado desde el inicio
 		// Esto evita múltiples consultas get_posts() y es más eficiente
 		global $wpdb;
@@ -1963,15 +2018,37 @@ class MapProduct {
 		$results = $wpdb->get_results($sql, ARRAY_A);
 		
 		if (empty($results)) {
-			return [];
+			$attachment_ids = [];
+		} else {
+			// Extraer solo los IDs (ya están ordenados por la consulta SQL)
+			$attachment_ids = array_map(function($row) {
+				return (int)$row['post_id'];
+			}, $results);
 		}
 		
-		// Extraer solo los IDs (ya están ordenados por la consulta SQL)
-		$attachment_ids = array_map(function($row) {
-			return (int)$row['post_id'];
-		}, $results);
+		// ✅ NUEVO: Guardar en caché
+		self::$attachments_cache[$article_id] = $attachment_ids;
+		
+		// ✅ NUEVO: Limpiar caché si crece demasiado (evitar memory leaks)
+		if (count(self::$attachments_cache) > self::$attachments_cache_max_size) {
+			// Eliminar las 200 entradas más antiguas (FIFO)
+			$keys_to_remove = array_slice(array_keys(self::$attachments_cache), 0, 200, true);
+			foreach ($keys_to_remove as $key) {
+				unset(self::$attachments_cache[$key]);
+			}
+		}
 		
 		return $attachment_ids;
+	}
+	
+	/**
+	 * ✅ NUEVO: Limpia el caché de attachments (útil al finalizar sincronización)
+	 * 
+	 * @return void
+	 */
+	public static function clearAttachmentsCache(): void
+	{
+		self::$attachments_cache = [];
 	}
 
 	/**
@@ -1988,9 +2065,12 @@ class MapProduct {
 	{
 		// Obtener imágenes del producto desde API
 		if (!class_exists('\\MiIntegracionApi\\ApiConnector')) {
-			self::$logger->warning('ApiConnector no disponible para fallback por hash', [
-				'article_id' => $article_id
-			]);
+			// ✅ OPTIMIZADO: Solo loggear en modo DEBUG para evitar logs excesivos
+			if (defined('WP_DEBUG') && WP_DEBUG) {
+				self::$logger->warning('ApiConnector no disponible para fallback por hash', [
+					'article_id' => $article_id
+				]);
+			}
 			return [];
 		}
 
