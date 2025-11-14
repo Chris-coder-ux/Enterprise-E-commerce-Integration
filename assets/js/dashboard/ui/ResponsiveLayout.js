@@ -37,18 +37,18 @@ const ResponsiveLayout = {
       if (window.innerWidth < 769) {
         // Remover estilos sticky y ajustar altura
         $sidebar.css({
-          'position': 'relative',
-          'top': 'auto',
-          'height': 'auto',
-          'max-height': 'none'
+          position: 'relative',
+          top: 'auto',
+          height: 'auto',
+          maxHeight: 'none'
         });
       } else {
         // Restaurar estilos sticky para desktop
         $sidebar.css({
-          'position': 'sticky',
-          'top': '20px',
-          'height': 'fit-content',
-          'max-height': 'none'
+          position: 'sticky',
+          top: '20px',
+          height: 'fit-content',
+          maxHeight: 'none'
         });
       }
 
@@ -152,17 +152,10 @@ if (typeof globalThis !== 'undefined') {
   globalThis.ResponsiveLayout = ResponsiveLayout;
 } else if (typeof global !== 'undefined') {
   global.ResponsiveLayout = ResponsiveLayout;
-} else if (typeof window !== 'undefined') {
-  // Para navegadores, usar una función que exponga la variable
-  (function() {
-    // Crear una variable global directa
-    // eslint-disable-next-line no-restricted-globals
-    const globalScope = (function() { return this; })();
-    if (globalScope) {
-      globalScope.ResponsiveLayout = ResponsiveLayout;
-    }
-  })();
 }
+
+// ✅ SEGURIDAD: No usar (function() { return this; })() - es problemático en modo estricto y no es necesario
+// Si window no está disponible, ya se intentó exponer en globalThis/global arriba
 
 /* global module */
 if (typeof module !== 'undefined' && module.exports) {

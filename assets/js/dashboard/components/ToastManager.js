@@ -20,18 +20,14 @@
 const DEFAULT_DURATION = 4000;
 
 /**
- * Duración de la animación de fade (en milisegundos)
+ * Obtiene la duración de la animación de fade (en milisegundos)
  * Se usa de DASHBOARD_CONFIG si está disponible, o 300ms por defecto
  * 
- * @type {number}
+ * @returns {number} Duración de la animación en milisegundos
  */
 function getFadeInDuration() {
-  // eslint-disable-next-line prefer-optional-chain
   if (typeof DASHBOARD_CONFIG !== 'undefined' &&
-      DASHBOARD_CONFIG &&
-      DASHBOARD_CONFIG.ui &&
-      DASHBOARD_CONFIG.ui.animation &&
-      DASHBOARD_CONFIG.ui.animation.fadeIn) {
+      DASHBOARD_CONFIG?.ui?.animation?.fadeIn) {
     return DASHBOARD_CONFIG.ui.animation.fadeIn;
   }
   return 300;
@@ -43,10 +39,10 @@ function getFadeInDuration() {
  * @type {Object<string, string>}
  */
 const TOAST_CLASSES = {
-  'success': 'toast-success',
-  'error': 'toast-error',
-  'warning': 'toast-warning',
-  'info': 'toast-info'
+  success: 'toast-success',
+  error: 'toast-error',
+  warning: 'toast-warning',
+  info: 'toast-info'
 };
 
 /**
@@ -55,10 +51,10 @@ const TOAST_CLASSES = {
  * @type {Object<string, string>}
  */
 const TOAST_ICONS = {
-  'success': '✅',
-  'error': '❌',
-  'warning': '⚠️',
-  'info': 'ℹ️'
+  success: '✅',
+  error: '❌',
+  warning: '⚠️',
+  info: 'ℹ️'
 };
 
 /**
@@ -67,10 +63,10 @@ const TOAST_ICONS = {
  * @type {Object<string, string>}
  */
 const TOAST_COLORS = {
-  'success': '#22c55e',
-  'error': '#ef4444',
-  'warning': '#f59e0b',
-  'info': '#3b82f6'
+  success: '#22c55e',
+  error: '#ef4444',
+  warning: '#f59e0b',
+  info: '#3b82f6'
 };
 
 /**

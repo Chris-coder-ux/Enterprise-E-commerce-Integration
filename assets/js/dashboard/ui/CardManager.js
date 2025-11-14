@@ -13,6 +13,17 @@
 /* global jQuery, SELECTORS, miIntegracionApiDashboard, ToastManager */
 
 /**
+ * @typedef {function(string, string=, number=): void} ShowToastFunction
+ * Función global para mostrar notificaciones toast
+ */
+
+/**
+ * @type {ShowToastFunction|undefined}
+ * @global
+ */
+let showToast;
+
+/**
  * Gestor de tarjetas de estadísticas
  *
  * @namespace CardManager
@@ -79,7 +90,7 @@ const CardManager = {
         action,
         nonce
       },
-      success: function(response) {
+      success(response) {
         clearTimeout(timeoutId);
         $card.removeClass('loading');
 
@@ -102,7 +113,7 @@ const CardManager = {
           }
         }
       },
-      error: function(xhr, status, error) {
+      error(xhr, status, error) {
         clearTimeout(timeoutId);
         $card.removeClass('loading');
 
@@ -274,11 +285,14 @@ const CardManager = {
 if (typeof window !== 'undefined') {
   try {
     // eslint-disable-next-line no-restricted-globals
+    // @ts-ignore - CardManager se expone globalmente para compatibilidad
     window.CardManager = CardManager;
     // Exponer también las funciones individuales para compatibilidad
     // eslint-disable-next-line no-restricted-globals
+    // @ts-ignore - updateCardData se expone globalmente para compatibilidad
     window.updateCardData = CardManager.updateCardData;
     // eslint-disable-next-line no-restricted-globals
+    // @ts-ignore - updateSpecificCard se expone globalmente para compatibilidad
     window.updateSpecificCard = CardManager.updateSpecificCard;
   } catch (error) {
     try {

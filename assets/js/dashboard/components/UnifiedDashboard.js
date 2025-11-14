@@ -10,7 +10,7 @@
  * @author Christian
  */
 
-/* global jQuery, AjaxManager, ErrorHandler, pollingManager, SELECTORS, syncInterval */
+/* global jQuery, AjaxManager, ErrorHandler, pollingManager, SELECTORS, EventCleanupManager, Sanitizer */
 
 /**
  * Dashboard unificado con diagnóstico automático
@@ -85,114 +85,222 @@ const UnifiedDashboard = {
    * @private
    */
   bindEvents() {
-    // Botón de diagnóstico completo
-    jQuery(document).on('click', '#run-system-diagnostic', (e) => {
-      e.preventDefault();
-      this.runSystemDiagnostic();
-    });
+    const componentId = 'UnifiedDashboard';
+    
+    if (typeof EventCleanupManager !== 'undefined' && EventCleanupManager && typeof EventCleanupManager.registerDocumentListener === 'function') {
+      EventCleanupManager.registerDocumentListener('click', '#run-system-diagnostic', (e) => {
+        e.preventDefault();
+        this.runSystemDiagnostic();
+      }, componentId);
 
-    // Botón de refrescar estado
-    jQuery(document).on('click', '#refresh-system-status', (e) => {
-      e.preventDefault();
-      this.refreshSystemStatus();
-    });
+      EventCleanupManager.registerDocumentListener('click', '#refresh-system-status', (e) => {
+        e.preventDefault();
+        this.refreshSystemStatus();
+      }, componentId);
 
-    // Botón de exportar reporte
-    jQuery(document).on('click', '#export-system-report', (e) => {
-      e.preventDefault();
-      this.exportSystemReport();
-    });
+      EventCleanupManager.registerDocumentListener('click', '#export-system-report', (e) => {
+        e.preventDefault();
+        this.exportSystemReport();
+      }, componentId);
 
-    // Botón de cargar métricas adicionales
-    jQuery(document).on('click', '#load-additional-metrics', (e) => {
-      e.preventDefault();
-      this.loadAdditionalMetrics();
-    });
+      EventCleanupManager.registerDocumentListener('click', '#load-additional-metrics', (e) => {
+        e.preventDefault();
+        this.loadAdditionalMetrics();
+      }, componentId);
 
-    // Botón de verificar estado de cron jobs
-    jQuery(document).on('click', '#check-cron-status', (e) => {
-      e.preventDefault();
-      this.checkCronStatus();
-    });
+      EventCleanupManager.registerDocumentListener('click', '#check-cron-status', (e) => {
+        e.preventDefault();
+        this.checkCronStatus();
+      }, componentId);
 
-    // Botón de toggle debug mode
-    jQuery(document).on('click', '#toggle-debug-mode', (e) => {
-      e.preventDefault();
-      this.toggleDebugMode();
-    });
+      EventCleanupManager.registerDocumentListener('click', '#toggle-debug-mode', (e) => {
+        e.preventDefault();
+        this.toggleDebugMode();
+      }, componentId);
 
-    // CORRECCIÓN DE OPTIMIZACIÓN: Botones para funcionalidades bajo demanda
-    jQuery(document).on('click', '#execute-system-diagnostic', (e) => {
-      e.preventDefault();
-      this.executeSystemDiagnostic();
-    });
+      EventCleanupManager.registerDocumentListener('click', '#execute-system-diagnostic', (e) => {
+        e.preventDefault();
+        this.executeSystemDiagnostic();
+      }, componentId);
 
-    jQuery(document).on('click', '#initialize-assets', (e) => {
-      e.preventDefault();
-      this.initializeAssets();
-    });
+      EventCleanupManager.registerDocumentListener('click', '#initialize-assets', (e) => {
+        e.preventDefault();
+        this.initializeAssets();
+      }, componentId);
 
-    jQuery(document).on('click', '#initialize-ajax', (e) => {
-      e.preventDefault();
-      this.initializeAjax();
-    });
+      EventCleanupManager.registerDocumentListener('click', '#initialize-ajax', (e) => {
+        e.preventDefault();
+        this.initializeAjax();
+      }, componentId);
 
-    jQuery(document).on('click', '#initialize-settings', (e) => {
-      e.preventDefault();
-      this.initializeSettings();
-    });
+      EventCleanupManager.registerDocumentListener('click', '#initialize-settings', (e) => {
+        e.preventDefault();
+        this.initializeSettings();
+      }, componentId);
 
-    jQuery(document).on('click', '#initialize-cleanup', (e) => {
-      e.preventDefault();
-      this.initializeCleanup();
-    });
+      EventCleanupManager.registerDocumentListener('click', '#initialize-cleanup', (e) => {
+        e.preventDefault();
+        this.initializeCleanup();
+      }, componentId);
 
-    jQuery(document).on('click', '#load-textdomain', (e) => {
-      e.preventDefault();
-      this.loadTextdomain();
-    });
+      EventCleanupManager.registerDocumentListener('click', '#load-textdomain', (e) => {
+        e.preventDefault();
+        this.loadTextdomain();
+      }, componentId);
 
-    // CORRECCIÓN DE OPTIMIZACIÓN: Botones para compatibilidad bajo demanda
-    jQuery(document).on('click', '#initialize-compatibility-reports', (e) => {
-      e.preventDefault();
-      this.initializeCompatibilityReports();
-    });
+      EventCleanupManager.registerDocumentListener('click', '#initialize-compatibility-reports', (e) => {
+        e.preventDefault();
+        this.initializeCompatibilityReports();
+      }, componentId);
 
-    jQuery(document).on('click', '#initialize-theme-compatibility', (e) => {
-      e.preventDefault();
-      this.initializeThemeCompatibility();
-    });
+      EventCleanupManager.registerDocumentListener('click', '#initialize-theme-compatibility', (e) => {
+        e.preventDefault();
+        this.initializeThemeCompatibility();
+      }, componentId);
 
-    jQuery(document).on('click', '#initialize-woocommerce-plugin-compatibility', (e) => {
-      e.preventDefault();
-      this.initializeWooCommercePluginCompatibility();
-    });
+      EventCleanupManager.registerDocumentListener('click', '#initialize-woocommerce-plugin-compatibility', (e) => {
+        e.preventDefault();
+        this.initializeWooCommercePluginCompatibility();
+      }, componentId);
 
-    jQuery(document).on('click', '#initialize-general-compatibility', (e) => {
-      e.preventDefault();
-      this.initializeGeneralCompatibility();
-    });
+      EventCleanupManager.registerDocumentListener('click', '#initialize-general-compatibility', (e) => {
+        e.preventDefault();
+        this.initializeGeneralCompatibility();
+      }, componentId);
 
-    jQuery(document).on('click', '#execute-complete-compatibility-check', (e) => {
-      e.preventDefault();
-      this.executeCompleteCompatibilityCheck();
-    });
+      EventCleanupManager.registerDocumentListener('click', '#execute-complete-compatibility-check', (e) => {
+        e.preventDefault();
+        this.executeCompleteCompatibilityCheck();
+      }, componentId);
 
-    // CORRECCIÓN DE OPTIMIZACIÓN: Botones para hooks adicionales bajo demanda
-    jQuery(document).on('click', '#initialize-sync-hooks', (e) => {
-      e.preventDefault();
-      this.initializeSyncHooks();
-    });
+      EventCleanupManager.registerDocumentListener('click', '#initialize-sync-hooks', (e) => {
+        e.preventDefault();
+        this.initializeSyncHooks();
+      }, componentId);
 
-    jQuery(document).on('click', '#initialize-ajax-lazy-loading', (e) => {
-      e.preventDefault();
-      this.initializeAjaxLazyLoading();
-    });
+      EventCleanupManager.registerDocumentListener('click', '#initialize-ajax-lazy-loading', (e) => {
+        e.preventDefault();
+        this.initializeAjaxLazyLoading();
+      }, componentId);
 
-    jQuery(document).on('click', '#execute-batch-size-debug', (e) => {
-      e.preventDefault();
-      this.executeBatchSizeDebug();
-    });
+      EventCleanupManager.registerDocumentListener('click', '#execute-batch-size-debug', (e) => {
+        e.preventDefault();
+        this.executeBatchSizeDebug();
+      }, componentId);
+    } else {
+      jQuery(document).on('click', '#run-system-diagnostic', (e) => {
+        e.preventDefault();
+        this.runSystemDiagnostic();
+      });
+      jQuery(document).on('click', '#refresh-system-status', (e) => {
+        e.preventDefault();
+        this.refreshSystemStatus();
+      });
+      jQuery(document).on('click', '#export-system-report', (e) => {
+        e.preventDefault();
+        this.exportSystemReport();
+      });
+      jQuery(document).on('click', '#load-additional-metrics', (e) => {
+        e.preventDefault();
+        this.loadAdditionalMetrics();
+      });
+      jQuery(document).on('click', '#check-cron-status', (e) => {
+        e.preventDefault();
+        this.checkCronStatus();
+      });
+      jQuery(document).on('click', '#toggle-debug-mode', (e) => {
+        e.preventDefault();
+        this.toggleDebugMode();
+      });
+      jQuery(document).on('click', '#execute-system-diagnostic', (e) => {
+        e.preventDefault();
+        this.executeSystemDiagnostic();
+      });
+      jQuery(document).on('click', '#initialize-assets', (e) => {
+        e.preventDefault();
+        this.initializeAssets();
+      });
+      jQuery(document).on('click', '#initialize-ajax', (e) => {
+        e.preventDefault();
+        this.initializeAjax();
+      });
+      jQuery(document).on('click', '#initialize-settings', (e) => {
+        e.preventDefault();
+        this.initializeSettings();
+      });
+      jQuery(document).on('click', '#initialize-cleanup', (e) => {
+        e.preventDefault();
+        this.initializeCleanup();
+      });
+      jQuery(document).on('click', '#load-textdomain', (e) => {
+        e.preventDefault();
+        this.loadTextdomain();
+      });
+      jQuery(document).on('click', '#initialize-compatibility-reports', (e) => {
+        e.preventDefault();
+        this.initializeCompatibilityReports();
+      });
+      jQuery(document).on('click', '#initialize-theme-compatibility', (e) => {
+        e.preventDefault();
+        this.initializeThemeCompatibility();
+      });
+      jQuery(document).on('click', '#initialize-woocommerce-plugin-compatibility', (e) => {
+        e.preventDefault();
+        this.initializeWooCommercePluginCompatibility();
+      });
+      jQuery(document).on('click', '#initialize-general-compatibility', (e) => {
+        e.preventDefault();
+        this.initializeGeneralCompatibility();
+      });
+      jQuery(document).on('click', '#execute-complete-compatibility-check', (e) => {
+        e.preventDefault();
+        this.executeCompleteCompatibilityCheck();
+      });
+      jQuery(document).on('click', '#initialize-sync-hooks', (e) => {
+        e.preventDefault();
+        this.initializeSyncHooks();
+      });
+      jQuery(document).on('click', '#initialize-ajax-lazy-loading', (e) => {
+        e.preventDefault();
+        this.initializeAjaxLazyLoading();
+      });
+      jQuery(document).on('click', '#execute-batch-size-debug', (e) => {
+        e.preventDefault();
+        this.executeBatchSizeDebug();
+      });
+    }
+  },
+
+  /**
+   * Desvincular eventos del dashboard
+   * @returns {void}
+   * @private
+   */
+  unbindEvents() {
+    if (typeof EventCleanupManager !== 'undefined' && EventCleanupManager && typeof EventCleanupManager.cleanupComponent === 'function') {
+      EventCleanupManager.cleanupComponent('UnifiedDashboard');
+    } else {
+      jQuery(document).off('click', '#run-system-diagnostic');
+      jQuery(document).off('click', '#refresh-system-status');
+      jQuery(document).off('click', '#export-system-report');
+      jQuery(document).off('click', '#load-additional-metrics');
+      jQuery(document).off('click', '#check-cron-status');
+      jQuery(document).off('click', '#toggle-debug-mode');
+      jQuery(document).off('click', '#execute-system-diagnostic');
+      jQuery(document).off('click', '#initialize-assets');
+      jQuery(document).off('click', '#initialize-ajax');
+      jQuery(document).off('click', '#initialize-settings');
+      jQuery(document).off('click', '#initialize-cleanup');
+      jQuery(document).off('click', '#load-textdomain');
+      jQuery(document).off('click', '#initialize-compatibility-reports');
+      jQuery(document).off('click', '#initialize-theme-compatibility');
+      jQuery(document).off('click', '#initialize-woocommerce-plugin-compatibility');
+      jQuery(document).off('click', '#initialize-general-compatibility');
+      jQuery(document).off('click', '#execute-complete-compatibility-check');
+      jQuery(document).off('click', '#initialize-sync-hooks');
+      jQuery(document).off('click', '#initialize-ajax-lazy-loading');
+      jQuery(document).off('click', '#execute-batch-size-debug');
+    }
   },
 
   // Ejecutar diagnóstico completo del sistema
@@ -506,6 +614,14 @@ const UnifiedDashboard = {
 
   // Actualizar tarjeta de memoria
   updateMemoryCard(memoryData) {
+    // ✅ SEGURIDAD: Verificar que SELECTORS esté disponible
+    if (typeof SELECTORS === 'undefined' || !SELECTORS || !SELECTORS.STAT_CARD_MEMORY) {
+      if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.logError === 'function') {
+        ErrorHandler.logError('SELECTORS no está disponible en updateMemoryCard', 'UNIFIED_DASHBOARD');
+      }
+      return;
+    }
+    
     const $card = jQuery(SELECTORS.STAT_CARD_MEMORY);
     if ($card.length && memoryData) {
       // Extraer propiedades usando destructuring con valores por defecto
@@ -531,6 +647,14 @@ const UnifiedDashboard = {
 
   // Actualizar tarjeta de reintentos
   updateRetryCard(retryData) {
+    // ✅ SEGURIDAD: Verificar que SELECTORS esté disponible
+    if (typeof SELECTORS === 'undefined' || !SELECTORS || !SELECTORS.STAT_CARD_RETRIES) {
+      if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.logError === 'function') {
+        ErrorHandler.logError('SELECTORS no está disponible en updateRetryCard', 'UNIFIED_DASHBOARD');
+      }
+      return;
+    }
+    
     const $card = jQuery(SELECTORS.STAT_CARD_RETRIES);
     if ($card.length && retryData) {
       // Extraer propiedades usando destructuring con valores por defecto
@@ -546,6 +670,14 @@ const UnifiedDashboard = {
 
   // Actualizar tarjeta de sincronización
   updateSyncCard(syncData) {
+    // ✅ SEGURIDAD: Verificar que SELECTORS esté disponible
+    if (typeof SELECTORS === 'undefined' || !SELECTORS || !SELECTORS.STAT_CARD_SYNC) {
+      if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.logError === 'function') {
+        ErrorHandler.logError('SELECTORS no está disponible en updateSyncCard', 'UNIFIED_DASHBOARD');
+      }
+      return;
+    }
+    
     const $card = jQuery(SELECTORS.STAT_CARD_SYNC);
     if ($card.length && syncData) {
       // Extraer propiedades usando destructuring con valores por defecto
@@ -1108,10 +1240,10 @@ const UnifiedDashboard = {
   // Obtener nombre legible del tipo de compatibilidad
   getCompatibilityTypeName(type) {
     const names = {
-      'reports': 'Reportes de Compatibilidad',
-      'themes': 'Compatibilidad con Temas',
-      'woocommerce_plugins': 'Compatibilidad con Plugins WooCommerce',
-      'general': 'Compatibilidad General'
+      reports: 'Reportes de Compatibilidad',
+      themes: 'Compatibilidad con Temas',
+      woocommerce_plugins: 'Compatibilidad con Plugins WooCommerce',
+      general: 'Compatibilidad General'
     };
     return names[type] || type;
   },
@@ -1284,9 +1416,9 @@ const UnifiedDashboard = {
   // Obtener nombre legible del tipo de hook
   getHookTypeName(type) {
     const names = {
-      'sync_hooks': 'Hooks de Sincronización',
-      'sync_diagnostic_ajax': 'Diagnóstico AJAX',
-      'ajax_lazy_loading': 'Carga Perezosa AJAX'
+      sync_hooks: 'Hooks de Sincronización',
+      sync_diagnostic_ajax: 'Diagnóstico AJAX',
+      ajax_lazy_loading: 'Carga Perezosa AJAX'
     };
     return names[type] || type;
   },
@@ -1308,15 +1440,28 @@ const UnifiedDashboard = {
           .html('<span class="dashicons dashicons-update"></span> Refrescar Métricas')
           .attr('id', 'refresh-additional-metrics');
 
-        // Cambiar manejador del evento
-        jQuery(document).off('click', '#load-additional-metrics');
-        jQuery(document).on('click', '#refresh-additional-metrics', (e) => {
-          e.preventDefault();
-          this.loadAdditionalMetrics();
-        });
+        if (typeof EventCleanupManager !== 'undefined' && EventCleanupManager && typeof EventCleanupManager.registerDocumentListener === 'function') {
+          EventCleanupManager.cleanupComponent('UnifiedDashboard-refresh-metrics');
+          EventCleanupManager.registerDocumentListener('click', '#refresh-additional-metrics', (e) => {
+            e.preventDefault();
+            this.loadAdditionalMetrics();
+          }, 'UnifiedDashboard-refresh-metrics');
+        } else {
+          jQuery(document).off('click', '#load-additional-metrics');
+          jQuery(document).on('click', '#refresh-additional-metrics', (e) => {
+            e.preventDefault();
+            this.loadAdditionalMetrics();
+          });
+        }
       })
       .catch((error) => {
-        this.showError('Error al cargar métricas: ' + error.message);
+        const errorMsg = error.message || 'Error desconocido';
+        
+        if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.logError === 'function') {
+          ErrorHandler.logError(`Error al cargar métricas adicionales: ${errorMsg}`, 'METRICS_LOAD');
+        }
+        
+        this.showError('Error al cargar métricas: ' + errorMsg);
         $btn.prop('disabled', false)
           .html('<span class="dashicons dashicons-update-alt"></span> Cargar Métricas Adicionales');
       });
@@ -1337,11 +1482,16 @@ const UnifiedDashboard = {
         $btn.prop('disabled', false).html('Verificar Estado de Cron Jobs');
       }, (xhr, status, error) => {
         $btn.prop('disabled', false).html('Verificar Estado de Cron Jobs');
+        
+        // ✅ MEJORADO: Registrar error usando ErrorHandler
+        if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.logError === 'function') {
+          ErrorHandler.logError(`Error verificando estado de cron jobs: ${error || 'Error de conexión'} (Status: ${status || 'unknown'})`, 'CRON_STATUS_CHECK');
+        }
+        
+        // ✅ MEJORADO: Mostrar error en UI usando ErrorHandler
         if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.showConnectionError === 'function') {
           ErrorHandler.showConnectionError(xhr);
         }
-        // eslint-disable-next-line no-console
-        console.error(`Error verificando estado de cron jobs [${status}]:`, error);
       });
     }
   },
@@ -1349,11 +1499,11 @@ const UnifiedDashboard = {
   // Obtener texto de estado de salud
   getHealthStatusText(status) {
     const statusMap = {
-      'healthy': 'Saludable',
-      'attention': 'Atención',
-      'warning': 'Advertencia',
-      'critical': 'Crítico',
-      'error': 'Error'
+      healthy: 'Saludable',
+      attention: 'Atención',
+      warning: 'Advertencia',
+      critical: 'Crítico',
+      error: 'Error'
     };
     return statusMap[status] || status;
   },
@@ -1361,10 +1511,10 @@ const UnifiedDashboard = {
   // Obtener nombre del componente
   getComponentName(component) {
     const componentMap = {
-      'memory': 'Memoria',
-      'retry': 'Reintentos',
-      'sync': 'Sincronización',
-      'api': 'API'
+      memory: 'Memoria',
+      retry: 'Reintentos',
+      sync: 'Sincronización',
+      api: 'API'
     };
     return componentMap[component] || component;
   },
@@ -1372,12 +1522,12 @@ const UnifiedDashboard = {
   // Obtener texto de estado del componente
   getComponentStatusText(status) {
     const statusMap = {
-      'healthy': 'Saludable',
-      'attention': 'Atención',
-      'warning': 'Advertencia',
-      'critical': 'Crítico',
-      'error': 'Error',
-      'unavailable': 'No disponible'
+      healthy: 'Saludable',
+      attention: 'Atención',
+      warning: 'Advertencia',
+      critical: 'Crítico',
+      error: 'Error',
+      unavailable: 'No disponible'
     };
     return statusMap[status] || status;
   },
@@ -1385,12 +1535,12 @@ const UnifiedDashboard = {
   // Obtener texto de estado de memoria
   getMemoryStatusText(status) {
     const statusMap = {
-      'healthy': 'Saludable',
-      'attention': 'Atención',
-      'warning': 'Advertencia',
-      'critical': 'Crítico',
-      'error': 'Error',
-      'unavailable': 'No disponible'
+      healthy: 'Saludable',
+      attention: 'Atención',
+      warning: 'Advertencia',
+      critical: 'Crítico',
+      error: 'Error',
+      unavailable: 'No disponible'
     };
     return statusMap[status] || status;
   },
@@ -1398,11 +1548,11 @@ const UnifiedDashboard = {
   // Obtener texto de estado de reintentos
   getRetryStatusText(status) {
     const statusMap = {
-      'excellent': 'Excelente',
-      'good': 'Bueno',
-      'fair': 'Regular',
-      'poor': 'Pobre',
-      'no_data': 'Sin datos'
+      excellent: 'Excelente',
+      good: 'Bueno',
+      fair: 'Regular',
+      poor: 'Pobre',
+      no_data: 'Sin datos'
     };
     return statusMap[status] || status;
   },
@@ -1410,13 +1560,13 @@ const UnifiedDashboard = {
   // Obtener texto de estado de sincronización
   getSyncStatusText(status) {
     const statusMap = {
-      'running': 'En progreso',
-      'syncing': 'Sincronizando',
-      'completed': 'Completada',
-      'failed': 'Falló',
-      'paused': 'Pausada',
-      'unknown': 'Desconocido',
-      'error': 'Error'
+      running: 'En progreso',
+      syncing: 'Sincronizando',
+      completed: 'Completada',
+      failed: 'Falló',
+      paused: 'Pausada',
+      unknown: 'Desconocido',
+      error: 'Error'
     };
     return statusMap[status] || status;
   },
@@ -1424,10 +1574,10 @@ const UnifiedDashboard = {
   // Obtener texto de prioridad
   getPriorityText(priority) {
     const priorityMap = {
-      'critical': 'Crítico',
-      'high': 'Alto',
-      'medium': 'Medio',
-      'low': 'Bajo'
+      critical: 'Crítico',
+      high: 'Alto',
+      medium: 'Medio',
+      low: 'Bajo'
     };
     return priorityMap[priority] || priority;
   },
@@ -1453,8 +1603,18 @@ const UnifiedDashboard = {
     }
 
     try {
+      // ✅ SEGURIDAD: Sanitizar mensaje antes de insertarlo en el DOM
+      const sanitizedMessage = (typeof Sanitizer !== 'undefined' && Sanitizer.sanitizeMessage) 
+        ? Sanitizer.sanitizeMessage(message) 
+        : String(message).replace(/[&<>"']/g, function(m) {
+          const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', '\'': '&#039;' };
+          return map[m];
+        });
+      
       const $message = jQuery('<div class="notice notice-' + type + ' is-dismissible"></div>');
-      $message.html('<p>' + message + '</p>');
+      // ✅ SEGURIDAD: Usar .text() en lugar de .html() para prevenir XSS
+      $message.html('<p></p>');
+      $message.find('p').text(sanitizedMessage);
 
       // Verificar que prependTo existe antes de usarlo
       if (typeof $message.prependTo === 'function') {
@@ -1481,8 +1641,10 @@ const UnifiedDashboard = {
         }
       }, 5000);
     } catch (error) {
+      // ✅ MEJORADO: Registrar error con más detalles usando ErrorHandler
+      const errorMsg = error.message || error || 'Error desconocido';
       if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.logError === 'function') {
-        ErrorHandler.logError('Error al mostrar mensaje', 'MESSAGE_DISPLAY');
+        ErrorHandler.logError(`Error al mostrar mensaje: ${errorMsg}`, 'UI_MESSAGE');
       }
       if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.showCriticalError === 'function') {
         ErrorHandler.showCriticalError(message, 'MESSAGE_DISPLAY');
@@ -1525,6 +1687,7 @@ const UnifiedDashboard = {
 if (typeof window !== 'undefined') {
   try {
     // eslint-disable-next-line no-restricted-globals
+    // @ts-ignore - UnifiedDashboard está declarado en types.d.ts como propiedad opcional de Window
     window.UnifiedDashboard = UnifiedDashboard;
   } catch (error) {
     try {
@@ -1536,34 +1699,57 @@ if (typeof window !== 'undefined') {
         configurable: true
       });
     } catch (defineError) {
-      // eslint-disable-next-line no-console
-      if (typeof console !== 'undefined' && console.warn) {
+      // ✅ MEJORADO: Registrar error usando ErrorHandler además de console.warn
+      if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.logError === 'function') {
+        ErrorHandler.logError(
+          `Error al exponer UnifiedDashboard (método 2 - Object.defineProperty): ${defineError.message || defineError}`,
+          'UNIFIED_DASHBOARD_EXPOSE'
+        );
+      } else {
         // eslint-disable-next-line no-console
-        console.warn('No se pudo asignar UnifiedDashboard a window:', defineError, error);
+        if (typeof console !== 'undefined' && console.warn) {
+          // eslint-disable-next-line no-console
+          console.warn('No se pudo asignar UnifiedDashboard a window:', defineError, error);
+        }
       }
     }
   }
 }
 
-// Exponer también directamente para uso sin window.
+// ✅ SEGURIDAD: Exponer también en globalThis/global usando solo métodos seguros (sin eval ni function() { return this; })
 // Esto permite usar UnifiedDashboard.init() directamente como en la documentación
 // eslint-disable-next-line no-restricted-globals
 if (typeof globalThis !== 'undefined') {
-  // eslint-disable-next-line no-restricted-globals
-  globalThis.UnifiedDashboard = UnifiedDashboard;
-} else if (typeof global !== 'undefined') {
-  global.UnifiedDashboard = UnifiedDashboard;
-} else if (typeof window !== 'undefined') {
-  // Para navegadores, usar una función que exponga la variable
-  (function() {
-    // Crear una variable global directa
+  // ✅ SEGURIDAD: Método seguro para globalThis
+  try {
     // eslint-disable-next-line no-restricted-globals
-    const globalScope = (function() { return this; })();
-    if (globalScope) {
-      globalScope.UnifiedDashboard = UnifiedDashboard;
+    globalThis.UnifiedDashboard = UnifiedDashboard;
+  } catch (error) {
+    // ✅ MEJORADO: Registrar error usando ErrorHandler (no crítico, ya se expuso en window)
+    if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.logError === 'function') {
+      ErrorHandler.logError(
+        `Error al exponer UnifiedDashboard en globalThis: ${error.message || error}`,
+        'UNIFIED_DASHBOARD_EXPOSE'
+      );
     }
-  })();
+    // No crítico, ya se expuso en window
+  }
+} else if (typeof global !== 'undefined') {
+  // ✅ SEGURIDAD: Método seguro para Node.js global
+  try {
+    global.UnifiedDashboard = UnifiedDashboard;
+  } catch (error) {
+    // ✅ MEJORADO: Registrar error usando ErrorHandler (no crítico, ya se expuso en window)
+    if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.logError === 'function') {
+      ErrorHandler.logError(
+        `Error al exponer UnifiedDashboard en global: ${error.message || error}`,
+        'UNIFIED_DASHBOARD_EXPOSE'
+      );
+    }
+    // No crítico, ya se expuso en window
+  }
 }
+// ✅ SEGURIDAD: No usar (function() { return this; })() - es problemático en modo estricto y no es necesario
 
 /* global module */
 if (typeof module !== 'undefined' && module.exports) {

@@ -10,7 +10,7 @@
  * @author Christian
  */
 
-/* global miIntegracionApiDashboard, ErrorHandler, AjaxManager, SystemEventManager, SELECTORS, DASHBOARD_CONFIG, ConsoleManager, SyncStateManager, NonceManager, SyncProgress */
+/* global miIntegracionApiDashboard, ErrorHandler, AjaxManager, SystemEventManager, SELECTORS, DASHBOARD_CONFIG, SyncStateManager, NonceManager, SyncProgress */
 
 // ========================================
 // VERIFICACIÓN DE DEPENDENCIAS
@@ -300,7 +300,7 @@
       ? document.querySelector('script[src*="ConsoleManager.js"]')
       : null;
     
-    if (scriptElement) {
+    if (scriptElement && scriptElement instanceof HTMLScriptElement) {
       // Verificar si el script tiene el atributo async o defer que podría estar causando problemas
       const isAsync = scriptElement.hasAttribute('async');
       const isDefer = scriptElement.hasAttribute('defer');
@@ -311,7 +311,7 @@
         isAsync,
         isDefer,
         scriptLoaded: scriptElement !== null,
-        scriptReadyState: scriptElement.readyState || 'N/A',
+        scriptReadyState: ('readyState' in scriptElement) ? scriptElement.readyState : 'N/A',
         hasOnLoad: scriptElement.onload !== null,
         hasOnError: scriptElement.onerror !== null
       });
@@ -324,7 +324,8 @@
     // Función auxiliar para intentar inicializar
     function tryInitialize() {
       // Verificar disponibilidad
-      const hasConsoleManager = typeof ConsoleManager !== 'undefined' && ConsoleManager && typeof ConsoleManager.initialize === 'function';
+      // eslint-disable-next-line no-undef
+      const hasConsoleManager = typeof window !== 'undefined' && typeof window.ConsoleManager !== 'undefined' && window.ConsoleManager && typeof window.ConsoleManager.initialize === 'function';
       const hasWindowConsoleManager = typeof window !== 'undefined' && window.ConsoleManager && typeof window.ConsoleManager.initialize === 'function';
       const hasPollingManager = typeof window !== 'undefined' && window.pollingManager;
 
@@ -333,14 +334,15 @@
         hasConsoleManager,
         hasWindowConsoleManager,
         hasPollingManager,
-        ConsoleManagerType: typeof ConsoleManager,
+        // eslint-disable-next-line no-undef
+        ConsoleManagerType: typeof window !== 'undefined' ? typeof window.ConsoleManager : 'undefined',
         windowConsoleManagerType: typeof window !== 'undefined' ? typeof window.ConsoleManager : 'window undefined',
         windowKeys: typeof window !== 'undefined' ? Object.keys(window).filter(key => key.toLowerCase().includes('console')) : []
       });
 
       if (hasConsoleManager || hasWindowConsoleManager) {
         // ConsoleManager está disponible, inicializar
-        const consoleManager = hasConsoleManager ? ConsoleManager : window.ConsoleManager;
+        const consoleManager = window.ConsoleManager;
         
         if (hasPollingManager) {
           consoleManager.initialize();
@@ -381,17 +383,20 @@
         if (typeof document !== 'undefined') {
           const scriptElement = document.querySelector('script[src*="ConsoleManager.js"]');
           scriptLoaded = scriptElement !== null;
-          scriptSrc = scriptElement ? scriptElement.src : null;
+          scriptSrc = (scriptElement && scriptElement instanceof HTMLScriptElement) ? scriptElement.src : null;
         }
         
         // Verificar si hay errores de JavaScript en la consola
         const allScripts = typeof document !== 'undefined' 
-          ? Array.from(document.querySelectorAll('script[src*="dashboard"]')).map(s => s.src)
+          ? Array.from(document.querySelectorAll('script[src*="dashboard"]'))
+            .filter(s => s instanceof HTMLScriptElement)
+            .map(s => s.src)
           : [];
         
         // eslint-disable-next-line no-console
         console.error('  ❌ ConsoleManager no está disponible después de', maxAttempts * 100, 'ms', {
-          ConsoleManager: typeof ConsoleManager,
+          // eslint-disable-next-line no-undef
+          ConsoleManager: typeof window !== 'undefined' ? typeof window.ConsoleManager : 'undefined',
           windowConsoleManager: typeof window !== 'undefined' ? typeof window.ConsoleManager : 'window undefined',
           scriptLoaded,
           scriptSrc,

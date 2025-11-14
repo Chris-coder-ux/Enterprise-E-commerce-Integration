@@ -9,9 +9,11 @@
  * @class SyncDashboard
  * @since 1.0.0
  * @author Christian
+ * @requires module:types
  */
 
-/* global jQuery, miIntegracionApiDashboard, DASHBOARD_CONFIG, AjaxManager, pollingManager, checkSyncProgress, addConsoleLine, ajaxurl, ToastManager, SyncStateManager */
+// @ts-check
+/* global jQuery, miIntegracionApiDashboard, DASHBOARD_CONFIG, AjaxManager, pollingManager, addConsoleLine, ajaxurl, ToastManager, SyncStateManager, EventCleanupManager, UIOptimizer, ErrorHandler */
 
 /**
  * Clase SyncDashboard para gestionar el dashboard de dos fases
@@ -25,16 +27,127 @@ class SyncDashboard {
    *
    * @constructor
    * @description Inicializa el dashboard y carga el estado actual
+   * @property {number|null} phase1Timer - ID del intervalo del timer de Fase 1
+   * @property {number|null} phase2Timer - ID del intervalo del timer de Fase 2
+   * @property {number|null} phase1StartTime - Timestamp de inicio de Fase 1
+   * @property {number|null} phase2StartTime - Timestamp de inicio de Fase 2
    */
   constructor() {
+    /** @type {ReturnType<typeof setInterval>|null} */
     this.phase1Timer = null;
+    /** @type {ReturnType<typeof setInterval>|null} */
     this.phase2Timer = null;
+    /** @type {number|null} */
     this.phase1StartTime = null;
+    /** @type {number|null} */
     this.phase2StartTime = null;
-    // ✅ MIGRADO: Flag phase2Starting ahora se gestiona en SyncStateManager
-    // this.phase2Starting ya no es necesario, se usa SyncStateManager.getPhase2Starting()
     this.initializeEventListeners();
+    this.subscribeToPollingEvents();
     this.loadCurrentStatus();
+  }
+
+  /**
+   * Suscribirse a eventos de PollingManager para actualizar UI automáticamente
+   * 
+   * ✅ UNIFICADO: SyncDashboard se suscribe a eventos en lugar de iniciar polling directamente.
+   * Esto mantiene la responsabilidad clara: PollingManager gestiona polling, SyncDashboard solo actualiza UI.
+   * 
+   * @returns {void}
+   * @private
+   */
+  subscribeToPollingEvents() {
+    if (!window?.pollingManager?.on) {
+      return;
+    }
+
+    const componentId = 'SyncDashboard';
+    
+    if (EventCleanupManager?.registerCustomEventListener) {
+      EventCleanupManager.registerCustomEventListener(
+        window.pollingManager,
+        'syncProgress',
+        (data) => {
+          if (data && data.syncData) {
+            this.updateDashboardFromStatus(data.syncData);
+          }
+        },
+        componentId
+      );
+
+      EventCleanupManager.registerCustomEventListener(
+        window.pollingManager,
+        'syncError',
+        (error) => {
+          if (addConsoleLine) {
+            addConsoleLine('error', error.message ?? 'Error en sincronización');
+          }
+          this.updatePhaseStatus(2, 'error');
+        },
+        componentId
+      );
+
+      EventCleanupManager.registerCustomEventListener(
+        window.pollingManager,
+        'syncCompleted',
+        (data) => {
+          if (data && data.phase === 2) {
+            this.updatePhaseStatus(2, 'completed');
+            this.stopTimer(2);
+            // ✅ MEJORADO: Actualizar dashboard completo con datos finales para asegurar actualización inmediata
+            if (data.syncData) {
+              this.updateDashboardFromStatus(data.syncData);
+            }
+            // ✅ NUEVO: Ocultar botón de cancelar cuando está completado
+            this.disableButton('mi-cancel-sync');
+            jQuery('#mi-cancel-sync').hide();
+          }
+        },
+        componentId
+      );
+
+      EventCleanupManager.registerCustomEventListener(
+        window.pollingManager,
+        'phase1Completed',
+        (eventData) => {
+          this.updatePhaseStatus(1, 'completed');
+          this.stopTimer(1);
+          this.enableButton('start-phase2');
+          if (eventData && eventData.data) {
+            this.updateDashboardFromStatus(eventData.data);
+          }
+        },
+        componentId
+      );
+    } else {
+      window.pollingManager.on('syncProgress', (data) => {
+        if (data && data.syncData) {
+          this.updateDashboardFromStatus(data.syncData);
+        }
+      });
+
+      window.pollingManager.on('syncError', (error) => {
+        if (typeof addConsoleLine === 'function') {
+          addConsoleLine('error', error.message || 'Error en sincronización');
+        }
+        this.updatePhaseStatus(2, 'error');
+      });
+
+      window.pollingManager.on('syncCompleted', (data) => {
+        if (data && data.phase === 2) {
+          this.updatePhaseStatus(2, 'completed');
+          this.stopTimer(2);
+        }
+      });
+
+      window.pollingManager.on('phase1Completed', (eventData) => {
+        this.updatePhaseStatus(1, 'completed');
+        this.stopTimer(1);
+        this.enableButton('start-phase2');
+        if (eventData && eventData.data) {
+          this.updateDashboardFromStatus(eventData.data);
+        }
+      });
+    }
   }
 
   /**
@@ -44,21 +157,86 @@ class SyncDashboard {
    * @private
    */
   initializeEventListeners() {
-    // Fase 1
-    jQuery('#start-phase1').on('click', () => this.startPhase1());
-    jQuery('#cancel-phase1').on('click', () => this.cancelPhase1());
+    const componentId = 'SyncDashboard';
+    
+    if (EventCleanupManager?.registerElementListener) {
+      EventCleanupManager.registerElementListener('#start-phase1', 'click', () => this.startPhase1(), componentId);
+      EventCleanupManager.registerElementListener('#cancel-phase1', 'click', () => this.cancelPhase1(), componentId);
+      EventCleanupManager.registerElementListener('#start-phase2', 'click', () => this.startPhase2(), componentId);
+      EventCleanupManager.registerElementListener('#pause-phase2', 'click', () => this.pausePhase2(), componentId);
+      EventCleanupManager.registerElementListener('#mi-cancel-sync', 'click', () => this.cancelSync(), componentId);
+      // ✅ CORRECCIÓN: Verificación de tipo para acceder a propiedades de elementos HTML
+      EventCleanupManager.registerElementListener('#batch-size', 'change', (e) => {
+        // @ts-ignore - e.target es HTMLInputElement o HTMLSelectElement en este contexto
+        const target = /** @type {HTMLInputElement | HTMLSelectElement} */ (e.target);
+        if (target && target.value !== undefined) {
+          this.updateConfig('batch_size', target.value);
+        }
+      }, componentId);
+      EventCleanupManager.registerElementListener('#throttle-delay', 'change', (e) => {
+        // @ts-ignore - e.target es HTMLInputElement o HTMLSelectElement en este contexto
+        const target = /** @type {HTMLInputElement | HTMLSelectElement} */ (e.target);
+        if (target && target.value !== undefined) {
+          this.updateConfig('throttle_delay', target.value);
+        }
+      }, componentId);
+      EventCleanupManager.registerElementListener('#auto-retry', 'change', (e) => {
+        // @ts-ignore - e.target es HTMLInputElement en este contexto
+        const target = /** @type {HTMLInputElement} */ (e.target);
+        if (target && target.checked !== undefined) {
+          this.updateConfig('auto_retry', target.checked);
+        }
+      }, componentId);
+    } else {
+      jQuery('#start-phase1').on('click', () => this.startPhase1());
+      jQuery('#cancel-phase1').on('click', () => this.cancelPhase1());
+      jQuery('#start-phase2').on('click', () => this.startPhase2());
+      jQuery('#pause-phase2').on('click', () => this.pausePhase2());
+      jQuery('#mi-cancel-sync').on('click', () => this.cancelSync());
+      // ✅ CORRECCIÓN: Verificación de tipo para acceder a propiedades de elementos HTML
+      jQuery('#batch-size').on('change', (e) => {
+        // @ts-ignore - e.target es HTMLInputElement o HTMLSelectElement en este contexto
+        const target = /** @type {HTMLInputElement | HTMLSelectElement} */ (e.target);
+        if (target && target.value !== undefined) {
+          this.updateConfig('batch_size', target.value);
+        }
+      });
+      jQuery('#throttle-delay').on('change', (e) => {
+        // @ts-ignore - e.target es HTMLInputElement o HTMLSelectElement en este contexto
+        const target = /** @type {HTMLInputElement | HTMLSelectElement} */ (e.target);
+        if (target && target.value !== undefined) {
+          this.updateConfig('throttle_delay', target.value);
+        }
+      });
+      jQuery('#auto-retry').on('change', (e) => {
+        // @ts-ignore - e.target es HTMLInputElement en este contexto
+        const target = /** @type {HTMLInputElement} */ (e.target);
+        if (target && target.checked !== undefined) {
+          this.updateConfig('auto_retry', target.checked);
+        }
+      });
+    }
+  }
 
-    // Fase 2
-    jQuery('#start-phase2').on('click', () => this.startPhase2());
-    jQuery('#pause-phase2').on('click', () => this.pausePhase2());
-
-    // ✅ NUEVO: Botón de cancelar sincronización
-    jQuery('#mi-cancel-sync').on('click', () => this.cancelSync());
-
-    // Configuración
-    jQuery('#batch-size').on('change', (e) => this.updateConfig('batch_size', e.target.value));
-    jQuery('#throttle-delay').on('change', (e) => this.updateConfig('throttle_delay', e.target.value));
-    jQuery('#auto-retry').on('change', (e) => this.updateConfig('auto_retry', e.target.checked));
+  /**
+   * Desvincular event listeners del dashboard
+   *
+   * @returns {void}
+   * @private
+   */
+  cleanupEventListeners() {
+    if (EventCleanupManager?.cleanupComponent) {
+      EventCleanupManager.cleanupComponent('SyncDashboard');
+    } else {
+      jQuery('#start-phase1').off('click');
+      jQuery('#cancel-phase1').off('click');
+      jQuery('#start-phase2').off('click');
+      jQuery('#pause-phase2').off('click');
+      jQuery('#mi-cancel-sync').off('click');
+      jQuery('#batch-size').off('change');
+      jQuery('#throttle-delay').off('change');
+      jQuery('#auto-retry').off('change');
+    }
   }
 
   /**
@@ -90,11 +268,9 @@ class SyncDashboard {
         throw new Error('ajaxurl no está disponible');
       }
 
-      // ✅ CORRECCIÓN: Obtener batch size del selector o usar valor por defecto
       const $batchSize = jQuery('#batch-size');
-      const batchSize = ($batchSize.length && $batchSize.val()) 
-        ? parseInt($batchSize.val(), 10) || 50
-        : 50;
+      const batchSizeValue = $batchSize.length ? $batchSize.val() : null;
+      const batchSize = batchSizeValue ? parseInt(String(batchSizeValue), 10) || 50 : 50;
 
       const response = await jQuery.ajax({
         url: ajaxUrl,
@@ -112,37 +288,28 @@ class SyncDashboard {
           addConsoleLine('success', 'Fase 1 iniciada correctamente');
         }
         
-        // ✅ NUEVO: Emitir evento inmediato cuando se inicia la sincronización
-        // Esto permite que ConsoleManager muestre el mensaje de inicio inmediatamente
-        if (typeof window !== 'undefined' && window.pollingManager && typeof window.pollingManager.emit === 'function') {
-          const phase1Status = response.data && response.data.phase1_images ? response.data.phase1_images : {
+        if (window?.pollingManager?.emit) {
+          const phase1Status = response.data?.phase1_images ?? {
             in_progress: true,
             completed: false,
             products_processed: 0,
-            total_products: response.data && response.data.total_products ? response.data.total_products : 0
+            total_products: response.data?.total_products ?? 0
           };
           
           window.pollingManager.emit('syncProgress', {
-            syncData: response.data || {
+            syncData: response.data ?? {
               in_progress: false,
               is_completed: false
             },
-            phase1Status: phase1Status,
+            phase1Status,
             timestamp: Date.now()
           });
         }
         
-        // ✅ NUEVO: Iniciar polling de Phase1Manager para monitorear completitud
-        // Esto asegura que checkPhase1Complete() se ejecute y actualice la consola
-        if (typeof window !== 'undefined' && window.Phase1Manager) {
-          // Verificar si el polling ya está activo
-          if (typeof window.Phase1Manager.getPollingInterval === 'function') {
-            const existingInterval = window.Phase1Manager.getPollingInterval();
-            if (!existingInterval && typeof window.Phase1Manager.startPolling === 'function') {
-              // Si no hay polling activo, iniciarlo manualmente
-              // Esto asegura que checkPhase1Complete() se ejecute y actualice la consola
-              window.Phase1Manager.startPolling();
-            }
+        if (window?.Phase1Manager) {
+          const existingInterval = window.Phase1Manager.getPollingInterval?.();
+          if (!existingInterval && window.Phase1Manager.startPolling) {
+            window.Phase1Manager.startPolling();
           }
         }
         
@@ -171,31 +338,22 @@ class SyncDashboard {
    * @async
    */
   async startPhase2() {
-    // ✅ PROTECCIÓN: Evitar múltiples llamadas simultáneas usando SyncStateManager
-    if (typeof SyncStateManager !== 'undefined' && SyncStateManager.getPhase2Starting()) {
+    if (SyncStateManager?.getPhase2Starting?.()) {
       // eslint-disable-next-line no-console
       console.warn('⚠️ Fase 2 ya se está iniciando, ignorando llamada duplicada');
       return;
     }
     
-    // Marcar como iniciando usando SyncStateManager
-    if (typeof SyncStateManager !== 'undefined' && SyncStateManager.setPhase2Starting) {
+    if (SyncStateManager?.setPhase2Starting) {
       SyncStateManager.setPhase2Starting(true);
     }
     
-    // ✅ MEJORADO: Validar condiciones antes de iniciar (pero no bloquear el botón)
-    // Obtener estado actual de sincronización
     let phase1Status = null;
     let currentStatus = null;
     
     try {
-      // Obtener estado actual para validar condiciones
       const statusResponse = await jQuery.ajax({
-        url: (typeof ajaxurl !== 'undefined' && ajaxurl) 
-          ? ajaxurl 
-          : (typeof miIntegracionApiDashboard !== 'undefined' && miIntegracionApiDashboard && miIntegracionApiDashboard.ajaxurl)
-            ? miIntegracionApiDashboard.ajaxurl
-            : null,
+        url: ajaxurl ?? miIntegracionApiDashboard?.ajaxurl ?? null,
         method: 'POST',
         data: {
           action: 'mia_get_sync_progress',
@@ -208,21 +366,15 @@ class SyncDashboard {
         currentStatus = statusResponse.data;
       }
     } catch (error) {
-      // Si falla obtener el estado, continuar de todos modos
-      // eslint-disable-next-line no-console
-      // Error silenciado - se continúa sin estado inicial
+      // Continuar sin estado inicial si falla la obtención
     }
     
-    // ✅ NUEVO: Validar condiciones y mostrar advertencias si es necesario
     const phase1Completed = phase1Status && phase1Status.completed === true;
     const phase1InProgress = phase1Status && phase1Status.in_progress === true;
     const inProgress = currentStatus && currentStatus.in_progress === true;
     
-    // Advertencia si Fase 1 no está completada
     if (!phase1Completed && !phase1InProgress) {
-      const message = typeof miIntegracionApiDashboard !== 'undefined' && miIntegracionApiDashboard && miIntegracionApiDashboard.warningPhase2WithoutPhase1
-        ? miIntegracionApiDashboard.warningPhase2WithoutPhase1
-        : '⚠️ Advertencia: La Fase 1 (sincronización de imágenes) no se ha completado. Se recomienda completar la Fase 1 primero para obtener mejores resultados. ¿Deseas continuar de todos modos?';
+      const message = miIntegracionApiDashboard?.warningPhase2WithoutPhase1 ?? '⚠️ Advertencia: La Fase 1 (sincronización de imágenes) no se ha completado. Se recomienda completar la Fase 1 primero para obtener mejores resultados. ¿Deseas continuar de todos modos?';
       
       if (typeof ToastManager !== 'undefined' && ToastManager && typeof ToastManager.show === 'function') {
         ToastManager.show('Se recomienda completar la Fase 1 primero', 'warning', 5000);
@@ -232,18 +384,15 @@ class SyncDashboard {
         addConsoleLine('warning', 'Advertencia: Iniciando Fase 2 sin completar Fase 1');
       }
       
-      // Preguntar confirmación al usuario
       const confirmed = confirm(message);
       if (!confirmed) {
-        // Resetear flag si se cancela usando SyncStateManager
-        if (typeof SyncStateManager !== 'undefined' && SyncStateManager.setPhase2Starting) {
+        if (SyncStateManager?.setPhase2Starting) {
           SyncStateManager.setPhase2Starting(false);
         }
-        return; // El usuario canceló
+        return;
       }
     }
     
-    // Advertencia si ya hay una sincronización en progreso
     if (inProgress) {
       const message = typeof miIntegracionApiDashboard !== 'undefined' && miIntegracionApiDashboard && miIntegracionApiDashboard.warningPhase2InProgress
         ? miIntegracionApiDashboard.warningPhase2InProgress
@@ -255,15 +404,13 @@ class SyncDashboard {
       
       const confirmed = confirm(message);
       if (!confirmed) {
-        // Resetear flag si se cancela usando SyncStateManager
-        if (typeof SyncStateManager !== 'undefined' && SyncStateManager.setPhase2Starting) {
+        if (SyncStateManager?.setPhase2Starting) {
           SyncStateManager.setPhase2Starting(false);
         }
-        return; // El usuario canceló
+        return;
       }
     }
     
-    // Si el usuario confirma, proceder con la Fase 2
     this.updatePhaseStatus(2, 'running');
     this.disableButton('start-phase2');
     this.phase2StartTime = Date.now();
@@ -289,11 +436,9 @@ class SyncDashboard {
         throw new Error('ajaxurl no está disponible');
       }
 
-      // ✅ CORRECCIÓN: Obtener batch size del selector o usar valor por defecto
       const $batchSize = jQuery('#batch-size');
-      const batchSize = ($batchSize.length && $batchSize.val()) 
-        ? parseInt($batchSize.val(), 10) || 50
-        : 50;
+      const batchSizeValue = $batchSize.length ? $batchSize.val() : null;
+      const batchSize = batchSizeValue ? parseInt(String(batchSizeValue), 10) || 50 : 50;
 
       const response = await jQuery.ajax({
         url: ajaxUrl,
@@ -309,9 +454,6 @@ class SyncDashboard {
         if (typeof addConsoleLine === 'function') {
           addConsoleLine('success', 'Fase 2 iniciada correctamente');
         }
-        // ✅ ELIMINADO: No iniciar polling aquí - Phase2Manager.handleSuccess() ya lo hace
-        // Esto evita múltiples inicializaciones y conflictos
-        // El polling se iniciará automáticamente desde Phase2Manager.handleSuccess()
       } else {
         const errorMsg = (response.data && response.data.message) || 'Error desconocido';
         if (typeof addConsoleLine === 'function') {
@@ -327,7 +469,6 @@ class SyncDashboard {
       this.updatePhaseStatus(2, 'error');
       this.enableButton('start-phase2');
     } finally {
-      // ✅ Resetear flag de inicio después de completar (exitoso o con error) usando SyncStateManager
       if (typeof SyncStateManager !== 'undefined' && SyncStateManager.setPhase2Starting) {
         SyncStateManager.setPhase2Starting(false);
       }
@@ -337,47 +478,46 @@ class SyncDashboard {
   /**
    * Actualiza las estadísticas de la Fase 1
    *
-   * @param {Object} data - Datos de progreso de la Fase 1
-   * @param {number} data.total_products - Total de productos
-   * @param {number} data.products_processed - Productos procesados
-   * @param {number} data.images_processed - Imágenes procesadas
-   * @param {number} data.duplicates_skipped - Duplicados omitidos
-   * @param {number} data.errors - Errores
+   * @param {Phase1Status} data - Datos de progreso de la Fase 1
    * @returns {void}
    */
   updatePhase1Progress(data) {
-    // ✅ MEJORADO: Asegurar que los valores sean números válidos
     const productsProcessed = Number(data.products_processed) || 0;
     const imagesProcessed = Number(data.images_processed) || 0;
     const duplicatesSkipped = Number(data.duplicates_skipped) || 0;
-    const errors = Number(data.errors || data.errores) || 0; // ✅ CORRECCIÓN: Manejar ambos nombres
+    const errors = Number(data.errors || data.errores) || 0;
 
-    // Actualizar estadísticas
-    jQuery('#phase1-products').text(productsProcessed);
-    jQuery('#phase1-images').text(imagesProcessed);
-    jQuery('#phase1-duplicates').text(duplicatesSkipped);
-    jQuery('#phase1-errors').text(errors);
+    if (typeof UIOptimizer !== 'undefined' && UIOptimizer && typeof UIOptimizer.updateTextIfChanged === 'function') {
+      UIOptimizer.updateTextIfChanged(jQuery('#phase1-products'), productsProcessed, 'phase1-products');
+      UIOptimizer.updateTextIfChanged(jQuery('#phase1-images'), imagesProcessed, 'phase1-images');
+      UIOptimizer.updateTextIfChanged(jQuery('#phase1-duplicates'), duplicatesSkipped, 'phase1-duplicates');
+      UIOptimizer.updateTextIfChanged(jQuery('#phase1-errors'), errors, 'phase1-errors');
+    } else {
+      jQuery('#phase1-products').text(productsProcessed);
+      jQuery('#phase1-images').text(imagesProcessed);
+      jQuery('#phase1-duplicates').text(duplicatesSkipped);
+      jQuery('#phase1-errors').text(errors);
+    }
 
-    // Actualizar velocidad
     if (this.phase1StartTime) {
       const elapsedSeconds = (Date.now() - this.phase1StartTime) / 1000;
       const speed = elapsedSeconds > 0
         ? (productsProcessed / elapsedSeconds).toFixed(2)
         : 0;
-      jQuery('#phase1-speed').text(speed + ' ' + ((DASHBOARD_CONFIG && DASHBOARD_CONFIG.messages && DASHBOARD_CONFIG.messages.progress && DASHBOARD_CONFIG.messages.progress.productsPerSec) || 'productos/seg'));
+      const speedText = speed + ' ' + ((DASHBOARD_CONFIG && DASHBOARD_CONFIG.messages && DASHBOARD_CONFIG.messages.progress && DASHBOARD_CONFIG.messages.progress.productsPerSec) || 'productos/seg');
+      
+      if (typeof UIOptimizer !== 'undefined' && UIOptimizer && typeof UIOptimizer.updateTextIfChanged === 'function') {
+        UIOptimizer.updateTextIfChanged(jQuery('#phase1-speed'), speedText, 'phase1-speed');
+      } else {
+        jQuery('#phase1-speed').text(speedText);
+      }
     }
   }
 
   /**
    * Actualiza las estadísticas de la Fase 2
    *
-   * @param {Object} data - Datos de progreso de la Fase 2
-   * @param {Object} data.estadisticas - Estadísticas de sincronización
-   * @param {number} data.estadisticas.procesados - Productos procesados
-   * @param {number} data.estadisticas.total - Total de productos
-   * @param {number} data.estadisticas.errores - Errores
-   * @param {number} data.estadisticas.creados - Productos creados (opcional)
-   * @param {number} data.estadisticas.actualizados - Productos actualizados (opcional)
+   * @param {SyncProgressData} data - Datos de progreso de la Fase 2
    * @returns {void}
    */
   updatePhase2Progress(data) {
@@ -385,15 +525,26 @@ class SyncDashboard {
     const stats = data.estadisticas || {};
     const processed = Number(stats.procesados) || 0;
 
-    // Actualizar estadísticas
-    jQuery('#phase2-products').text(processed);
-    jQuery('#phase2-errors').text(Number(stats.errores) || 0);
-    // ✅ CORRECCIÓN: Actualizar campos de creados y actualizados si están disponibles
-    if (stats.creados !== undefined) {
-      jQuery('#phase2-created').text(Number(stats.creados) || 0);
-    }
-    if (stats.actualizados !== undefined) {
-      jQuery('#phase2-updated').text(Number(stats.actualizados) || 0);
+    // ✅ OPTIMIZADO: Usar UIOptimizer para evitar actualizaciones innecesarias
+    if (typeof UIOptimizer !== 'undefined' && UIOptimizer && typeof UIOptimizer.updateTextIfChanged === 'function') {
+      UIOptimizer.updateTextIfChanged(jQuery('#phase2-products'), processed, 'phase2-products');
+      UIOptimizer.updateTextIfChanged(jQuery('#phase2-errors'), Number(stats.errores) || 0, 'phase2-errors');
+      // ✅ CORRECCIÓN: Actualizar campos de creados y actualizados si están disponibles
+      if (stats.creados !== undefined) {
+        UIOptimizer.updateTextIfChanged(jQuery('#phase2-created'), Number(stats.creados) || 0, 'phase2-created');
+      }
+      if (stats.actualizados !== undefined) {
+        UIOptimizer.updateTextIfChanged(jQuery('#phase2-updated'), Number(stats.actualizados) || 0, 'phase2-updated');
+      }
+    } else {
+      jQuery('#phase2-products').text(processed);
+      jQuery('#phase2-errors').text(Number(stats.errores) || 0);
+      if (stats.creados !== undefined) {
+        jQuery('#phase2-created').text(Number(stats.creados) || 0);
+      }
+      if (stats.actualizados !== undefined) {
+        jQuery('#phase2-updated').text(Number(stats.actualizados) || 0);
+      }
     }
 
     // Actualizar velocidad
@@ -403,14 +554,38 @@ class SyncDashboard {
       // ✅ CORRECCIÓN: Validar que el tiempo transcurrido sea razonable (mínimo 1 segundo)
       if (elapsedSeconds >= 1) {
         const speed = (processed / elapsedSeconds).toFixed(2);
-        jQuery('#phase2-speed').text(speed + ' ' + ((DASHBOARD_CONFIG && DASHBOARD_CONFIG.messages && DASHBOARD_CONFIG.messages.progress && DASHBOARD_CONFIG.messages.progress.productsPerSec) || 'productos/seg'));
+        const speedText = speed + ' ' + ((DASHBOARD_CONFIG && DASHBOARD_CONFIG.messages && DASHBOARD_CONFIG.messages.progress && DASHBOARD_CONFIG.messages.progress.productsPerSec) || 'productos/seg');
+        
+        // ✅ OPTIMIZADO: Usar UIOptimizer para evitar actualizaciones innecesarias
+        if (typeof UIOptimizer !== 'undefined' && UIOptimizer && typeof UIOptimizer.updateTextIfChanged === 'function') {
+          UIOptimizer.updateTextIfChanged(jQuery('#phase2-speed'), speedText, 'phase2-speed');
+        } else {
+          // Fallback: actualización directa
+          jQuery('#phase2-speed').text(speedText);
+        }
       } else {
         // Si el tiempo es muy corto, mostrar 0 para evitar valores imposibles
-        jQuery('#phase2-speed').text('0 ' + ((DASHBOARD_CONFIG && DASHBOARD_CONFIG.messages && DASHBOARD_CONFIG.messages.progress && DASHBOARD_CONFIG.messages.progress.productsPerSec) || 'productos/seg'));
+        const zeroSpeedText = '0 ' + ((DASHBOARD_CONFIG && DASHBOARD_CONFIG.messages && DASHBOARD_CONFIG.messages.progress && DASHBOARD_CONFIG.messages.progress.productsPerSec) || 'productos/seg');
+        
+        // ✅ OPTIMIZADO: Usar UIOptimizer para evitar actualizaciones innecesarias
+        if (typeof UIOptimizer !== 'undefined' && UIOptimizer && typeof UIOptimizer.updateTextIfChanged === 'function') {
+          UIOptimizer.updateTextIfChanged(jQuery('#phase2-speed'), zeroSpeedText, 'phase2-speed');
+        } else {
+          // Fallback: actualización directa
+          jQuery('#phase2-speed').text(zeroSpeedText);
+        }
       }
     } else {
       // Si no hay sincronización activa, mostrar 0
-      jQuery('#phase2-speed').text('0 ' + ((DASHBOARD_CONFIG && DASHBOARD_CONFIG.messages && DASHBOARD_CONFIG.messages.progress && DASHBOARD_CONFIG.messages.progress.productsPerSec) || 'productos/seg'));
+      const zeroSpeedText = '0 ' + ((DASHBOARD_CONFIG && DASHBOARD_CONFIG.messages && DASHBOARD_CONFIG.messages.progress && DASHBOARD_CONFIG.messages.progress.productsPerSec) || 'productos/seg');
+      
+      // ✅ OPTIMIZADO: Usar UIOptimizer para evitar actualizaciones innecesarias
+      if (typeof UIOptimizer !== 'undefined' && UIOptimizer && typeof UIOptimizer.updateTextIfChanged === 'function') {
+        UIOptimizer.updateTextIfChanged(jQuery('#phase2-speed'), zeroSpeedText, 'phase2-speed');
+      } else {
+        // Fallback: actualización directa
+        jQuery('#phase2-speed').text(zeroSpeedText);
+      }
     }
   }
 
@@ -421,17 +596,12 @@ class SyncDashboard {
    * @private
    */
   resetPhase1Progress() {
-    // Resetear estadísticas
     jQuery('#phase1-products').text('0');
     jQuery('#phase1-images').text('0');
     jQuery('#phase1-duplicates').text('0');
     jQuery('#phase1-errors').text('0');
-
-    // Resetear velocidad y timer
     jQuery('#phase1-speed').text('0 ' + ((DASHBOARD_CONFIG && DASHBOARD_CONFIG.messages && DASHBOARD_CONFIG.messages.progress && DASHBOARD_CONFIG.messages.progress.productsPerSec) || 'productos/seg'));
     jQuery('#phase1-timer').text('00:00:00');
-
-    // Resetear tiempo de inicio
     this.phase1StartTime = null;
   }
 
@@ -442,30 +612,30 @@ class SyncDashboard {
    * @private
    */
   resetPhase2Progress() {
-    // Resetear estadísticas
     jQuery('#phase2-products').text('0');
     jQuery('#phase2-errors').text('0');
-    // ✅ CORRECCIÓN: Resetear también campos de creados y actualizados
     jQuery('#phase2-created').text('0');
     jQuery('#phase2-updated').text('0');
-
-    // Resetear velocidad y timer
     jQuery('#phase2-speed').text('0 ' + ((DASHBOARD_CONFIG && DASHBOARD_CONFIG.messages && DASHBOARD_CONFIG.messages.progress && DASHBOARD_CONFIG.messages.progress.productsPerSec) || 'productos/seg'));
     jQuery('#phase2-timer').text('00:00:00');
-
-    // Resetear tiempo de inicio
     this.phase2StartTime = null;
   }
 
   /**
    * Actualiza el estado visual de una fase
    *
-   * @param {number} phase - Número de fase (1 o 2)
-   * @param {string} status - Estado de la fase (pending, running, completed, error, paused)
+   * @param {1|2} phase - Número de fase (1 o 2)
+   * @param {PhaseStatus} status - Estado de la fase
    * @returns {void}
    */
   updatePhaseStatus(phase, status) {
     const $statusElement = jQuery(`#phase${phase}-status`);
+    
+    // ✅ CORRECCIÓN: Verificar que el elemento existe antes de manipularlo
+    if (!$statusElement || !$statusElement.length) {
+      return;
+    }
+    
     $statusElement.removeClass('phase-status-pending phase-status-running phase-status-completed phase-status-error phase-status-paused');
     $statusElement.addClass(`phase-status-${status}`);
 
@@ -477,14 +647,14 @@ class SyncDashboard {
     };
 
     const statusText = {
-      'pending': '⏳ ' + getStatusMessage('pending', 'Pendiente'),
-      'running': '🔄 ' + getStatusMessage('running', 'En Progreso'),
-      'completed': '✅ ' + getStatusMessage('completed', 'Completado'),
-      'error': '❌ ' + getStatusMessage('error', 'Error'),
-      'paused': '⏸ ' + getStatusMessage('paused', 'Pausado')
+      pending: '⏳ ' + getStatusMessage('pending', 'Pendiente'),
+      running: '🔄 ' + getStatusMessage('running', 'En Progreso'),
+      completed: '✅ ' + getStatusMessage('completed', 'Completado'),
+      error: '❌ ' + getStatusMessage('error', 'Error'),
+      paused: '⏸ ' + getStatusMessage('paused', 'Pausado')
     };
 
-    $statusElement.text(statusText[status] || statusText['pending']);
+    $statusElement.text(statusText[status] || statusText.pending);
   }
 
   /**
@@ -551,7 +721,6 @@ class SyncDashboard {
       return;
     }
 
-    // Confirmar cancelación
     if (!confirm('¿Estás seguro de que deseas cancelar la sincronización de imágenes? El progreso actual se perderá.')) {
       return;
     }
@@ -618,11 +787,9 @@ class SyncDashboard {
     }
 
     try {
-      // Obtener batch size del selector
       const $batchSize = jQuery('#batch-size');
-      const batchSize = ($batchSize.length && $batchSize.val()) 
-        ? parseInt($batchSize.val(), 10) || 50
-        : 50;
+      const batchSizeValue = $batchSize.length ? $batchSize.val() : null;
+      const batchSize = batchSizeValue ? parseInt(String(batchSizeValue), 10) || 50 : 50;
 
       const response = await jQuery.ajax({
         url: ajaxUrl,
@@ -641,7 +808,6 @@ class SyncDashboard {
           ? parseInt($batchSize.val(), 10) || 50
           : 50;
 
-        // Llamar al endpoint de sincronización con resume=true
         jQuery.ajax({
           url: ajaxUrl,
           method: 'POST',
@@ -664,17 +830,8 @@ class SyncDashboard {
               if (typeof ToastManager !== 'undefined' && ToastManager && typeof ToastManager.show === 'function') {
                 ToastManager.show('Fase 1 reanudada correctamente', 'success', 2000);
               }
-              // Iniciar polling si no está activo
-              if (typeof pollingManager !== 'undefined' && pollingManager) {
-                pollingManager.config.currentInterval = pollingManager.config.intervals.active;
-                pollingManager.config.currentMode = 'active';
-                if (typeof pollingManager.startPolling === 'function' && typeof checkSyncProgress === 'function') {
-                  const intervalId = pollingManager.startPolling('syncProgress', checkSyncProgress, pollingManager.config.currentInterval);
-                  // Guardar syncInterval usando SyncStateManager (mantiene compatibilidad con window.syncInterval)
-                  if (typeof SyncStateManager !== 'undefined' && SyncStateManager.setSyncInterval) {
-                    SyncStateManager.setSyncInterval(intervalId);
-                  }
-                }
+              if (typeof window !== 'undefined' && window.Phase1Manager && typeof window.Phase1Manager.startPolling === 'function') {
+                window.Phase1Manager.startPolling();
               }
             } else {
               const errorMsg = (syncResponse.data && syncResponse.data.message) || 'Error desconocido';
@@ -688,6 +845,15 @@ class SyncDashboard {
           },
           error: (xhr, status, error) => {
             const errorMsg = error || 'Error de conexión';
+            
+            if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.logError === 'function') {
+              ErrorHandler.logError(`Error al reanudar Fase 1: ${errorMsg} (Status: ${status || 'unknown'})`, 'PHASE1_RESUME');
+            }
+            
+            if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.showConnectionError === 'function') {
+              ErrorHandler.showConnectionError(xhr);
+            }
+            
             if (typeof addConsoleLine === 'function') {
               addConsoleLine('error', 'Error al reanudar Fase 1: ' + errorMsg);
             }
@@ -706,11 +872,17 @@ class SyncDashboard {
         }
       }
     } catch (error) {
+      const errorMsg = error.message || 'Error de comunicación';
+      
+      if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.logError === 'function') {
+        ErrorHandler.logError(`Error al reanudar Fase 1 (excepción): ${errorMsg}`, 'PHASE1_RESUME');
+      }
+      
       if (typeof addConsoleLine === 'function') {
-        addConsoleLine('error', 'Error al reanudar Fase 1: ' + (error.message || 'Error de comunicación'));
+        addConsoleLine('error', 'Error al reanudar Fase 1: ' + errorMsg);
       }
       if (typeof ToastManager !== 'undefined' && ToastManager && typeof ToastManager.show === 'function') {
-        ToastManager.show('Error al reanudar Fase 1: ' + (error.message || 'Error de comunicación'), 'error', 3000);
+        ToastManager.show('Error al reanudar Fase 1: ' + errorMsg, 'error', 3000);
       }
     }
   }
@@ -735,13 +907,12 @@ class SyncDashboard {
    * @async
    */
   async cancelSync() {
-    // ✅ NUEVO: Confirmar cancelación
     const confirmMessage = typeof miIntegracionApiDashboard !== 'undefined' && miIntegracionApiDashboard && miIntegracionApiDashboard.confirmCancel
       ? miIntegracionApiDashboard.confirmCancel
       : '¿Seguro que deseas cancelar la sincronización?';
     
     if (!confirm(confirmMessage)) {
-      return; // El usuario canceló
+      return;
     }
 
     if (typeof addConsoleLine === 'function') {
@@ -753,7 +924,6 @@ class SyncDashboard {
     }
 
     try {
-      // ✅ NUEVO: Verificar que ajaxurl esté disponible
       const ajaxUrl = (typeof ajaxurl !== 'undefined' && ajaxurl) 
         ? ajaxurl 
         : (typeof miIntegracionApiDashboard !== 'undefined' && miIntegracionApiDashboard && miIntegracionApiDashboard.ajaxurl)
@@ -764,7 +934,6 @@ class SyncDashboard {
         throw new Error('No se pudo obtener la URL de AJAX');
       }
 
-      // ✅ NUEVO: Llamar al endpoint de cancelación
       const response = await jQuery.ajax({
         url: ajaxUrl,
         method: 'POST',
@@ -786,7 +955,7 @@ class SyncDashboard {
         }
         
         // ✅ NUEVO: Resetear flag de inicio de Fase 2 usando SyncStateManager
-        if (typeof SyncStateManager !== 'undefined' && SyncStateManager.setPhase2Starting) {
+        if (SyncStateManager?.setPhase2Starting) {
           SyncStateManager.setPhase2Starting(false);
         }
         
@@ -806,7 +975,6 @@ class SyncDashboard {
           ToastManager.show('Sincronización cancelada correctamente', 'success', 3000);
         }
 
-        // ✅ NUEVO: Recargar estado para asegurar sincronización
         await this.loadCurrentStatus();
       } else {
         const errorMsg = response.data && response.data.message 
@@ -867,7 +1035,6 @@ class SyncDashboard {
    * @returns {void}
    */
   updateConfig(key, value) {
-    // ✅ CORRECCIÓN: Verificar que ajaxurl esté disponible
     const ajaxUrl = (typeof ajaxurl !== 'undefined' && ajaxurl) 
       ? ajaxurl 
       : (typeof miIntegracionApiDashboard !== 'undefined' && miIntegracionApiDashboard && miIntegracionApiDashboard.ajaxurl)
@@ -882,7 +1049,6 @@ class SyncDashboard {
     }
 
     if (key === 'batch_size') {
-      // ✅ CORRECCIÓN: Usar AjaxManager si está disponible, sino usar jQuery.ajax directamente
       if (typeof AjaxManager !== 'undefined' && AjaxManager && typeof AjaxManager.call === 'function') {
         AjaxManager.call('mi_integracion_api_save_batch_size', {
           entity: 'productos',
@@ -906,7 +1072,6 @@ class SyncDashboard {
           }
         });
       } else {
-        // Fallback: usar jQuery.ajax directamente
         jQuery.ajax({
           url: ajaxUrl,
           method: 'POST',
@@ -916,7 +1081,7 @@ class SyncDashboard {
             entity: 'productos',
             batch_size: value
           },
-          success: function(response) {
+          success(response) {
             if (response.success) {
               if (typeof addConsoleLine === 'function') {
                 addConsoleLine('info', 'Configuración de batch size actualizada: ' + value);
@@ -934,8 +1099,17 @@ class SyncDashboard {
               }
             }
           },
-          error: function(xhr, status, error) {
+          error(xhr, status, error) {
             const errorMsg = error || 'Error de conexión';
+            
+            if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.logError === 'function') {
+              ErrorHandler.logError(`Error al actualizar batch size: ${errorMsg} (Status: ${status || 'unknown'})`, 'BATCH_SIZE_UPDATE');
+            }
+            
+            if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.showConnectionError === 'function') {
+              ErrorHandler.showConnectionError(xhr);
+            }
+            
             if (typeof addConsoleLine === 'function') {
               addConsoleLine('error', 'Error al actualizar batch size: ' + errorMsg);
             }
@@ -947,7 +1121,7 @@ class SyncDashboard {
       }
     } else if (key === 'throttle_delay') {
       // ✅ CORRECCIÓN: Validar valor antes de enviar
-      const delayMs = parseFloat(value);
+      const delayMs = parseFloat(String(value));
       if (isNaN(delayMs) || delayMs < 0 || delayMs > 5000) {
         if (typeof addConsoleLine === 'function') {
           addConsoleLine('error', 'El delay de throttling debe estar entre 0 y 5000 ms');
@@ -967,7 +1141,7 @@ class SyncDashboard {
           nonce: miIntegracionApiDashboard.nonce,
           delay: delaySeconds
         },
-        success: function(response) {
+        success(response) {
           if (response.success) {
             if (typeof addConsoleLine === 'function') {
               addConsoleLine('info', 'Delay de throttling actualizado: ' + value + 'ms');
@@ -985,8 +1159,17 @@ class SyncDashboard {
             }
           }
         },
-        error: function(xhr, status, error) {
+        error(xhr, status, error) {
           const errorMsg = error || 'Error de conexión';
+          
+          if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.logError === 'function') {
+            ErrorHandler.logError(`Error al actualizar throttle delay: ${errorMsg} (Status: ${status || 'unknown'})`, 'THROTTLE_DELAY_UPDATE');
+          }
+          
+          if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.showConnectionError === 'function') {
+            ErrorHandler.showConnectionError(xhr);
+          }
+          
           if (typeof addConsoleLine === 'function') {
             addConsoleLine('error', 'Error al actualizar throttle delay: ' + errorMsg);
           }
@@ -996,8 +1179,7 @@ class SyncDashboard {
         }
       });
     } else if (key === 'auto_retry') {
-      // ✅ CORRECCIÓN: Guardar configuración de reintento automático
-      const autoRetryValue = value === true || value === 'true' || value === 1 || value === '1';
+      const autoRetryValue = value === true || String(value) === 'true' || Number(value) === 1 || String(value) === '1';
       jQuery.ajax({
         url: ajaxUrl,
         method: 'POST',
@@ -1006,7 +1188,7 @@ class SyncDashboard {
           nonce: miIntegracionApiDashboard.nonce,
           auto_retry: autoRetryValue
         },
-        success: function(response) {
+        success(response) {
           if (response.success) {
             if (typeof addConsoleLine === 'function') {
               addConsoleLine('info', 'Configuración de reintento automático actualizada: ' + (autoRetryValue ? 'Activado' : 'Desactivado'));
@@ -1028,8 +1210,19 @@ class SyncDashboard {
             }
           }
         },
-        error: function(xhr, status, error) {
+        error(xhr, status, error) {
           const errorMsg = error || 'Error de conexión';
+          
+          // ✅ MEJORADO: Registrar error usando ErrorHandler
+          if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.logError === 'function') {
+            ErrorHandler.logError(`Error al actualizar auto retry: ${errorMsg} (Status: ${status || 'unknown'})`, 'AUTO_RETRY_UPDATE');
+          }
+          
+          // ✅ MEJORADO: Mostrar error en UI usando ErrorHandler
+          if (typeof ErrorHandler !== 'undefined' && ErrorHandler && typeof ErrorHandler.showConnectionError === 'function') {
+            ErrorHandler.showConnectionError(xhr);
+          }
+          
           if (typeof addConsoleLine === 'function') {
             addConsoleLine('error', 'Error al actualizar auto retry: ' + errorMsg);
           }
@@ -1061,10 +1254,6 @@ class SyncDashboard {
       if (response.success && response.data) {
         this.updateDashboardFromStatus(response.data);
         
-        // ✅ CORRECCIÓN: NO emitir eventos desde loadCurrentStatus si hay polling activo
-        // loadCurrentStatus se llama al cargar la página, pero no debería emitir eventos
-        // si Phase1Manager o SyncProgress ya están manejando el polling
-        // Solo emitir si es la carga inicial y no hay polling activo
         const phase1Status = response.data.phase1_images || {};
         const phase1ManagerActive = typeof window !== 'undefined' && 
                                      window.Phase1Manager && 
@@ -1075,11 +1264,10 @@ class SyncDashboard {
                                     window.pollingManager.config &&
                                     window.pollingManager.config.currentMode === 'active';
         
-        // Solo emitir si NO hay polling activo (carga inicial de la página)
         if (!phase1ManagerActive && !syncProgressActive && typeof window !== 'undefined' && window.pollingManager && typeof window.pollingManager.emit === 'function') {
           window.pollingManager.emit('syncProgress', {
             syncData: response.data,
-            phase1Status: phase1Status,
+            phase1Status,
             timestamp: Date.now()
           });
         } else {
@@ -1100,7 +1288,7 @@ class SyncDashboard {
   /**
    * Actualiza el dashboard desde los datos de estado
    *
-   * @param {Object} data - Datos de estado de sincronización
+   * @param {SyncProgressData|null} data - Datos de estado de sincronización
    * @returns {void}
    */
   updateDashboardFromStatus(data) {
@@ -1140,46 +1328,37 @@ class SyncDashboard {
       // ✅ CORRECCIÓN: Verificar explícitamente que completed sea true
       this.updatePhaseStatus(1, 'completed');
       this.stopTimer(1);
-      // ✅ MEJORADO: No bloquear el botón, solo asegurar que esté habilitado
       this.enableButton('start-phase2');
       this.updatePhase1Progress(phase1Status);
     } else {
-      // Si no está en progreso ni completada, resetear a estado pendiente
       this.updatePhaseStatus(1, 'pending');
       this.stopTimer(1);
       this.resetPhase1Progress();
     }
-
-    // Actualizar estado de Fase 2
     const stats = data.estadisticas || {};
     const phase2Total = Number(stats.total) || 0;
     const phase2Processed = Number(stats.procesados) || 0;
-    // ✅ CORRECCIÓN: Verificar explícitamente que in_progress sea true
     const phase2IsInProgress = data.in_progress === true && !phase1Status.in_progress;
     const phase2IsCompleted = data.is_completed === true && phase2Total > 0 && phase2Processed >= phase2Total;
     
     if (phase2IsInProgress) {
-      // ✅ CORRECCIÓN: Solo actualizar si realmente está en progreso
       this.updatePhaseStatus(2, 'running');
       this.updatePhase2Progress(data);
       if (!this.phase2Timer) {
         this.phase2StartTime = Date.now();
         this.startTimer(2);
       }
-      // ✅ NUEVO: Mostrar botón de cancelar cuando hay sincronización en progreso
       this.enableButton('mi-cancel-sync');
       jQuery('#mi-cancel-sync').show();
-      // ✅ CORRECCIÓN: Iniciar polling automáticamente si hay sincronización en progreso
-      // ✅ MEJORADO: NO iniciar polling si ya está activo o si Phase2Manager ya lo gestiona
-      // ✅ CRÍTICO: Verificar también si el polling ya está activo para evitar múltiples inicializaciones
+      
       const pollingAlreadyActive = typeof pollingManager !== 'undefined' && pollingManager && 
                                     typeof pollingManager.isPollingActive === 'function' && 
                                     pollingManager.isPollingActive('syncProgress');
       
-      // ✅ MIGRADO: Usar SyncStateManager para verificar si Fase 2 está inicializada
+      // ✅ MEJORADO: Usar SyncStateManager API en lugar de acceso directo a window
       const phase2Initialized = typeof SyncStateManager !== 'undefined' && SyncStateManager.getPhase2Initialized 
         ? SyncStateManager.getPhase2Initialized() 
-        : (typeof window !== 'undefined' && window.phase2Initialized);
+        : false;
       
       if (!phase2Initialized && !pollingAlreadyActive) {
         this.startPollingIfNeeded();
@@ -1222,42 +1401,25 @@ class SyncDashboard {
    * @private
    */
   startPollingIfNeeded() {
-    // ✅ PROTECCIÓN CRÍTICA: Verificar si Phase2Manager ya está gestionando el polling usando SyncStateManager
+    // ✅ UNIFICADO: SyncDashboard NO debe iniciar polling directamente
+    // Debe delegar a Phase1Manager o Phase2Manager según corresponda
+    
+    // ✅ MEJORADO: Usar SyncStateManager API en lugar de acceso directo a window
+    // Verificar si Phase2Manager ya está gestionando el polling
     const phase2Initialized = typeof SyncStateManager !== 'undefined' && SyncStateManager.getPhase2Initialized 
       ? SyncStateManager.getPhase2Initialized() 
-      : (typeof window !== 'undefined' && window.phase2Initialized);
+      : false;
     
     if (phase2Initialized) {
-      // Phase2Manager ya está gestionando el polling, no iniciar otro
+      // Phase2Manager ya está gestionando el polling, no hacer nada
       return;
     }
     
-    // ✅ CORRECCIÓN: Verificar si el polling ya está activo
-    if (typeof pollingManager !== 'undefined' && pollingManager) {
-      // Verificar si ya hay un polling activo para 'syncProgress'
-      const existingPolling = pollingManager.intervals && pollingManager.intervals.get && pollingManager.intervals.get('syncProgress');
-      
-      // ✅ PROTECCIÓN ADICIONAL: Verificar también con isPollingActive
-      const isActive = typeof pollingManager.isPollingActive === 'function' && pollingManager.isPollingActive('syncProgress');
-      
-      if (!existingPolling && !isActive && typeof checkSyncProgress === 'function') {
-        // Configurar intervalo de 5 segundos (5000ms) para modo activo
-        pollingManager.config.currentInterval = pollingManager.config.intervals.active || 5000;
-        pollingManager.config.currentMode = 'active';
-        
-        // Iniciar polling
-        const intervalId = pollingManager.startPolling('syncProgress', checkSyncProgress, pollingManager.config.currentInterval);
-        
-        // Exponer syncInterval en window si existe (compatibilidad con código original)
-        if (typeof window !== 'undefined') {
-          try {
-            window.syncInterval = intervalId;
-          } catch (error) {
-            // Ignorar si no se puede asignar
-          }
-        }
-        
+    if (typeof window !== 'undefined' && window.Phase2Manager && typeof window.Phase2Manager.start === 'function') {
+      // eslint-disable-next-line no-console
+      if (typeof console !== 'undefined' && console.debug) {
         // eslint-disable-next-line no-console
+        console.debug('SyncDashboard: Polling necesario pero Phase2Manager no está inicializado');
       }
     }
   }
@@ -1270,37 +1432,8 @@ class SyncDashboard {
    */
   handlePhase1Response(data) {
     if (data && data.in_progress) {
-      // ✅ NUEVO: Iniciar polling de Phase1Manager para monitorear completitud y actualizar consola
-      // Phase1Manager.checkPhase1Complete() actualiza la consola y detecta cuando Fase 1 está completa
-      if (typeof window !== 'undefined' && window.Phase1Manager) {
-        // Verificar si el polling ya está activo
-        if (typeof window.Phase1Manager.getPollingInterval === 'function') {
-          const existingInterval = window.Phase1Manager.getPollingInterval();
-          if (!existingInterval && typeof window.Phase1Manager.startPolling === 'function') {
-            // Si no hay polling activo, iniciarlo manualmente
-            // Esto asegura que checkPhase1Complete() se ejecute cada 5 segundos
-            // y actualice la consola con el progreso de Fase 1
-            window.Phase1Manager.startPolling();
-          }
-        }
-      }
-
-      // ✅ CORRECCIÓN: Iniciar polling de SyncProgress para actualizar dashboard y consola
-      if (typeof pollingManager !== 'undefined' && pollingManager) {
-        pollingManager.config.currentInterval = pollingManager.config.intervals.active;
-        pollingManager.config.currentMode = 'active';
-        // ✅ CORRECCIÓN: Iniciar el polling real para monitorear el progreso
-        if (typeof pollingManager.startPolling === 'function' && typeof checkSyncProgress === 'function') {
-          const intervalId = pollingManager.startPolling('syncProgress', checkSyncProgress, pollingManager.config.currentInterval);
-          // Exponer syncInterval en window si existe (compatibilidad con código original)
-          if (typeof window !== 'undefined') {
-            try {
-              window.syncInterval = intervalId;
-            } catch (error) {
-              // Ignorar si no se puede asignar
-            }
-          }
-        }
+      if (typeof window !== 'undefined' && window.Phase1Manager && typeof window.Phase1Manager.startPolling === 'function') {
+        window.Phase1Manager.startPolling();
       }
     }
   }
@@ -1314,6 +1447,7 @@ class SyncDashboard {
 if (typeof window !== 'undefined') {
   try {
     // eslint-disable-next-line no-restricted-globals
+    // @ts-ignore - SyncDashboard se expone globalmente para compatibilidad
     window.SyncDashboard = SyncDashboard;
   } catch (error) {
     try {

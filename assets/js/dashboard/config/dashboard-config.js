@@ -52,9 +52,7 @@ const DASHBOARD_CONFIG = {
       // Verificar si miIntegracionApiDashboard existe y tiene timeoutConfig
       // Nota: Usamos verificaciones tradicionales en lugar de optional chaining
       // para compatibilidad con ESLint 3.0.1
-      // eslint-disable-next-line prefer-optional-chain
       if (typeof miIntegracionApiDashboard !== 'undefined' &&
-          // eslint-disable-next-line prefer-optional-chain
           miIntegracionApiDashboard &&
           miIntegracionApiDashboard.timeoutConfig &&
           miIntegracionApiDashboard.timeoutConfig.ui) {
@@ -90,9 +88,7 @@ const DASHBOARD_CONFIG = {
       // Verificar si miIntegracionApiDashboard existe y tiene limitsConfig
       // Nota: Usamos verificaciones tradicionales en lugar de optional chaining
       // para compatibilidad con ESLint 3.0.1
-      // eslint-disable-next-line prefer-optional-chain
       if (typeof miIntegracionApiDashboard !== 'undefined' &&
-          // eslint-disable-next-line prefer-optional-chain
           miIntegracionApiDashboard &&
           miIntegracionApiDashboard.limitsConfig &&
           miIntegracionApiDashboard.limitsConfig.ui) {
@@ -107,6 +103,41 @@ const DASHBOARD_CONFIG = {
     return {
       historyLimit: 10,
       progressMilestones: [25, 50, 75, 100]
+    };
+  })(),
+
+  /**
+   * Configuración del umbral de detección de stalls (bloqueos)
+   * 
+   * Obtiene la configuración desde miIntegracionApiDashboard.stallThresholdConfig
+   * o usa valores por defecto si no está disponible.
+   * 
+   * @type {Object}
+   * @property {number} min - Umbral mínimo en ms (10000 = 10 segundos)
+   * @property {number} max - Umbral máximo en ms (60000 = 60 segundos)
+   * @property {number} default - Umbral por defecto en ms (15000 = 15 segundos)
+   * @property {number} multiplier - Multiplicador para el promedio dinámico (2.0)
+   * @property {number} minSamples - Mínimo de muestras necesarias para usar promedio dinámico (2)
+   */
+  stallThreshold: (() => {
+    try {
+      if (typeof miIntegracionApiDashboard !== 'undefined' &&
+          miIntegracionApiDashboard &&
+          miIntegracionApiDashboard.stallThresholdConfig) {
+        return miIntegracionApiDashboard.stallThresholdConfig;
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.warn('Error accediendo a miIntegracionApiDashboard.stallThresholdConfig:', error);
+    }
+
+    // Fallback por defecto si no hay configuración disponible
+    return {
+      min: 10000,      // 10 segundos mínimo
+      max: 60000,     // 60 segundos máximo
+      default: 15000, // 15 segundos por defecto
+      multiplier: 2.0, // Multiplicar promedio por 2x
+      minSamples: 2    // Mínimo 2 muestras para usar promedio dinámico
     };
   })(),
 

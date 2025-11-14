@@ -1,3 +1,5 @@
+/// <reference path="../types.d.ts" />
+
 /**
  * Gestor de Barras de Progreso
  * 
@@ -10,7 +12,7 @@
  * @author Christian
  */
 
-/* global jQuery, DOM_CACHE */
+/* global jQuery, DOM_CACHE, UIOptimizer */
 
 /**
  * Selector CSS por defecto para la barra de progreso
@@ -40,7 +42,6 @@ function initialize() {
   }
 
   // Verificar que DOM_CACHE esté disponible
-  // eslint-disable-next-line prefer-optional-chain
   if (typeof DOM_CACHE === 'undefined' || !DOM_CACHE || !DOM_CACHE.$progressBar) {
     // Intentar obtener la barra de progreso directamente
     const $progressBar = jQuery(DEFAULT_SELECTOR);
@@ -75,7 +76,6 @@ function setWidth(width) {
   let $progressBar = null;
 
   // Intentar obtener desde DOM_CACHE primero
-  // eslint-disable-next-line prefer-optional-chain
   if (typeof DOM_CACHE !== 'undefined' && DOM_CACHE && DOM_CACHE.$progressBar) {
     $progressBar = DOM_CACHE.$progressBar;
   } else {
@@ -94,7 +94,13 @@ function setWidth(width) {
     widthValue = width + '%';
   }
 
-  // Actualizar el ancho
+  // ✅ OPTIMIZADO: Usar UIOptimizer para evitar actualizaciones innecesarias
+  if (typeof UIOptimizer !== 'undefined' && UIOptimizer && typeof UIOptimizer.updateCssIfChanged === 'function') {
+    const updated = UIOptimizer.updateCssIfChanged($progressBar, 'width', widthValue, 'progress-bar-width');
+    return updated;
+  }
+  
+  // Fallback: actualización directa
   $progressBar.css('width', widthValue);
 
   return true;
@@ -136,7 +142,6 @@ function setColor(color) {
   let $progressBar = null;
 
   // Intentar obtener desde DOM_CACHE primero
-  // eslint-disable-next-line prefer-optional-chain
   if (typeof DOM_CACHE !== 'undefined' && DOM_CACHE && DOM_CACHE.$progressBar) {
     $progressBar = DOM_CACHE.$progressBar;
   } else {
@@ -149,7 +154,13 @@ function setColor(color) {
     return false;
   }
 
-  // Actualizar el color
+  // ✅ OPTIMIZADO: Usar UIOptimizer para evitar actualizaciones innecesarias
+  if (typeof UIOptimizer !== 'undefined' && UIOptimizer && typeof UIOptimizer.updateCssIfChanged === 'function') {
+    const updated = UIOptimizer.updateCssIfChanged($progressBar, 'background-color', color, 'progress-bar-color');
+    return updated;
+  }
+  
+  // Fallback: actualización directa
   $progressBar.css('background-color', color);
 
   return true;
@@ -173,7 +184,6 @@ function reset(initialColor) {
     // Aplicar transición suave
     let $progressBar = null;
 
-    // eslint-disable-next-line prefer-optional-chain
     if (typeof DOM_CACHE !== 'undefined' && DOM_CACHE && DOM_CACHE.$progressBar) {
       $progressBar = DOM_CACHE.$progressBar;
     } else {
@@ -204,7 +214,6 @@ function getWidth() {
   // Obtener la barra de progreso
   let $progressBar = null;
 
-  // eslint-disable-next-line prefer-optional-chain
   if (typeof DOM_CACHE !== 'undefined' && DOM_CACHE && DOM_CACHE.$progressBar) {
     $progressBar = DOM_CACHE.$progressBar;
   } else {
@@ -233,7 +242,6 @@ function isAvailable() {
     return false;
   }
 
-  // eslint-disable-next-line prefer-optional-chain
   if (typeof DOM_CACHE !== 'undefined' && DOM_CACHE && DOM_CACHE.$progressBar) {
     return DOM_CACHE.$progressBar.length > 0;
   }
