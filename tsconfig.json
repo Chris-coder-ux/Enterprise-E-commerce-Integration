@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "lib": ["ES2022", "DOM"],
+    "checkJs": true,
+    "allowJs": true,
+    "noEmit": true,
+    "strict": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "typeRoots": ["./node_modules/@types"]
+  },
+  "include": [
+    "assets/js/dashboard/**/*.js",
+    "assets/js/dashboard/types.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "spec",
+    "**/*.spec.js",
+    "**/*.test.js"
+  ]
+}
+

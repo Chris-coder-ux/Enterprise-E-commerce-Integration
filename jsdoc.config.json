@@ -1,0 +1,31 @@
+{
+  "source": {
+    "include": ["./assets/js/dashboard"],
+    "includePattern": ".+\\.js$",
+    "exclude": [
+      "./assets/js/dashboard/**/*.spec.js",
+      "./assets/js/dashboard/**/*.test.js",
+      "./node_modules",
+      "./spec"
+    ]
+  },
+  "opts": {
+    "destination": "./docs/jsdoc",
+    "recurse": true,
+    "template": "node_modules/docdash"
+  },
+  "plugins": [
+    "plugins/markdown"
+  ],
+  "templates": {
+    "cleverLinks": true,
+    "monospaceLinks": true
+  },
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc", "closure"]
+  },
+  "sourceType": "module",
+  "recurseDepth": 10
+}
+

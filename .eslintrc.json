@@ -1,0 +1,5 @@
+{
+  "root": true,
+  "extends": "./assets/js/.eslintrc.json"
+}
+

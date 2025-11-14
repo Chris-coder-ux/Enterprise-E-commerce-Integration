@@ -7,7 +7,7 @@
   },
   "extends": "eslint:recommended",
   "parserOptions": {
-    "ecmaVersion": 2020,
+    "ecmaVersion": 2022,
     "sourceType": "script"
   },
   "rules": {
@@ -38,13 +38,34 @@
     "window": "readonly",
     "globalThis": "readonly",
     "global": "readonly",
-    "showToast": "readonly"
+    "showToast": "readonly",
+    "DOM_CACHE": "readonly",
+    "UIOptimizer": "readonly"
   },
   "overrides": [
     {
       "files": ["**/utils/ApiClient.js"],
       "parserOptions": {
         "sourceType": "module"
+      }
+    },
+    {
+      "files": ["spec/**/*.js"],
+      "env": {
+        "jasmine": true
+      },
+      "globals": {
+        "describe": "readonly",
+        "it": "readonly",
+        "expect": "readonly",
+        "beforeEach": "readonly",
+        "afterEach": "readonly",
+        "beforeAll": "readonly",
+        "afterAll": "readonly",
+        "pending": "readonly",
+        "jasmine": "readonly",
+        "spyOn": "readonly",
+        "fail": "readonly"
       }
     }
   ]
