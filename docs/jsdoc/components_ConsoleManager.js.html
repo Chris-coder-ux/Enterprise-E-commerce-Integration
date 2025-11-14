@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>components/ConsoleManager.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AjaxManager.html">AjaxManager</a><ul class='methods'><li data-type='method'><a href="AjaxManager.html#.call">call</a></li></ul></li><li><a href="ErrorHandler.html">ErrorHandler</a><ul class='methods'><li data-type='method'><a href="ErrorHandler.html#.logError">logError</a></li><li data-type='method'><a href="ErrorHandler.html#.showCancelError">showCancelError</a></li><li data-type='method'><a href="ErrorHandler.html#.showConnectionError">showConnectionError</a></li><li data-type='method'><a href="ErrorHandler.html#.showCriticalError">showCriticalError</a></li><li data-type='method'><a href="ErrorHandler.html#.showProtectionError">showProtectionError</a></li><li data-type='method'><a href="ErrorHandler.html#.showUIError">showUIError</a></li></ul></li><li><a href="EventCleanupManager.html">EventCleanupManager</a><ul class='methods'><li data-type='method'><a href="EventCleanupManager.html#cleanupAll">cleanupAll</a></li><li data-type='method'><a href="EventCleanupManager.html#getStats">getStats</a></li><li data-type='method'><a href="EventCleanupManager.html#.cleanupComponent">cleanupComponent</a></li><li data-type='method'><a href="EventCleanupManager.html#.getInstance">getInstance</a></li><li data-type='method'><a href="EventCleanupManager.html#.registerCustomEventListener">registerCustomEventListener</a></li><li data-type='method'><a href="EventCleanupManager.html#.registerDocumentListener">registerDocumentListener</a></li><li data-type='method'><a href="EventCleanupManager.html#.registerElementListener">registerElementListener</a></li><li data-type='method'><a href="EventCleanupManager.html#.registerNativeListener">registerNativeListener</a></li></ul></li><li></li><li></li><li><a href="PollingManager.html">PollingManager</a><ul class='methods'><li data-type='method'><a href="PollingManager.html#adjustPolling">adjustPolling</a></li><li data-type='method'><a href="PollingManager.html#emit">emit</a></li><li data-type='method'><a href="PollingManager.html#getIntervalId">getIntervalId</a></li><li data-type='method'><a href="PollingManager.html#isPollingActive">isPollingActive</a></li><li data-type='method'><a href="PollingManager.html#off">off</a></li><li data-type='method'><a href="PollingManager.html#on">on</a></li><li data-type='method'><a href="PollingManager.html#recordError">recordError</a></li><li data-type='method'><a href="PollingManager.html#recordResponseTime">recordResponseTime</a></li><li data-type='method'><a href="PollingManager.html#reset">reset</a></li><li data-type='method'><a href="PollingManager.html#startPolling">startPolling</a></li><li data-type='method'><a href="PollingManager.html#stopAllPolling">stopAllPolling</a></li><li data-type='method'><a href="PollingManager.html#stopPolling">stopPolling</a></li></ul></li><li></li><li></li><li><a href="SyncDashboard.html">SyncDashboard</a><ul class='methods'><li data-type='method'><a href="SyncDashboard.html#cancelPhase1">cancelPhase1</a></li><li data-type='method'><a href="SyncDashboard.html#cancelSync">cancelSync</a></li><li data-type='method'><a href="SyncDashboard.html#disableButton">disableButton</a></li><li data-type='method'><a href="SyncDashboard.html#enableButton">enableButton</a></li><li data-type='method'><a href="SyncDashboard.html#handlePhase1Response">handlePhase1Response</a></li><li data-type='method'><a href="SyncDashboard.html#loadCurrentStatus">loadCurrentStatus</a></li><li data-type='method'><a href="SyncDashboard.html#pausePhase2">pausePhase2</a></li><li data-type='method'><a href="SyncDashboard.html#resumePhase1">resumePhase1</a></li><li data-type='method'><a href="SyncDashboard.html#startPhase1">startPhase1</a></li><li data-type='method'><a href="SyncDashboard.html#startPhase2">startPhase2</a></li><li data-type='method'><a href="SyncDashboard.html#startTimer">startTimer</a></li><li data-type='method'><a href="SyncDashboard.html#stopTimer">stopTimer</a></li><li data-type='method'><a href="SyncDashboard.html#updateConfig">updateConfig</a></li><li data-type='method'><a href="SyncDashboard.html#updateDashboardFromStatus">updateDashboardFromStatus</a></li><li data-type='method'><a href="SyncDashboard.html#updatePhase1Progress">updatePhase1Progress</a></li><li data-type='method'><a href="SyncDashboard.html#updatePhase2Progress">updatePhase2Progress</a></li><li data-type='method'><a href="SyncDashboard.html#updatePhaseStatus">updatePhaseStatus</a></li></ul></li><li></li><li></li><li><a href="UIOptimizer.html">UIOptimizer</a><ul class='methods'><li data-type='method'><a href="UIOptimizer.html#cancelPendingUpdates">cancelPendingUpdates</a></li><li data-type='method'><a href="UIOptimizer.html#clearCache">clearCache</a></li><li data-type='method'><a href="UIOptimizer.html#scheduleUpdate">scheduleUpdate</a></li><li data-type='method'><a href="UIOptimizer.html#.getInstance">getInstance</a></li><li data-type='method'><a href="UIOptimizer.html#.updateCssIfChanged">updateCssIfChanged</a></li><li data-type='method'><a href="UIOptimizer.html#.updateDataIfChanged">updateDataIfChanged</a></li><li data-type='method'><a href="UIOptimizer.html#.updateHtmlIfChanged">updateHtmlIfChanged</a></li><li data-type='method'><a href="UIOptimizer.html#.updateTextIfChanged">updateTextIfChanged</a></li><li data-type='method'><a href="UIOptimizer.html#.updateValueIfChanged">updateValueIfChanged</a></li></ul></li><li></li><li></li></ul><h3>Modules</h3><ul><li><a href="module-ui_SidebarController.html">ui/SidebarController</a></li><li><a href="module-utils_FormatUtils.html">utils/FormatUtils</a></li></ul><h3>Namespaces</h3><ul><li></li><li><a href="CardManager.html">CardManager</a></li><li></li><li><a href="ConsoleManager.html">ConsoleManager</a></li><li><a href="DASHBOARD_CONFIG.html">DASHBOARD_CONFIG</a></li><li></li><li><a href="global.html#DomUtils">DomUtils</a></li><li></li><li><a href="MESSAGES.html">MESSAGES</a></li><li><a href="global.html#NonceManager">NonceManager</a></li><li><a href="global.html#Phase1Manager">Phase1Manager</a></li><li><a href="global.html#Phase2Manager">Phase2Manager</a></li><li><a href="global.html#ProgressBar">ProgressBar</a></li><li><a href="ResponsiveLayout.html">ResponsiveLayout</a></li><li></li><li><a href="SELECTORS.html">SELECTORS</a></li><li></li><li><a href="global.html#Sanitizer">Sanitizer</a><ul class='methods'><li data-type='method'><a href="global.html#Sanitizer#.escapeHtml">escapeHtml</a></li><li data-type='method'><a href="global.html#Sanitizer#.sanitizeHtml">sanitizeHtml</a></li><li data-type='method'><a href="global.html#Sanitizer#.sanitizeMessage">sanitizeMessage</a></li></ul></li><li><a href="global.html#SyncController">SyncController</a></li><li><a href="global.html#SyncProgress">SyncProgress</a></li><li><a href="global.html#SyncStateManager">SyncStateManager</a></li><li><a href="global.html#SystemEventManager">SystemEventManager</a><ul class='methods'><li data-type='method'><a href="global.html#SystemEventManager#.checkAllSystemsReady">checkAllSystemsReady</a></li><li data-type='method'><a href="global.html#SystemEventManager#.checkDependencies">checkDependencies</a></li><li data-type='method'><a href="global.html#SystemEventManager#.emitErrorHandlerReady">emitErrorHandlerReady</a></li><li data-type='method'><a href="global.html#SystemEventManager#.emitSystemBaseReady">emitSystemBaseReady</a></li><li data-type='method'><a href="global.html#SystemEventManager#.emitUnifiedDashboardReady">emitUnifiedDashboardReady</a></li><li data-type='method'><a href="global.html#SystemEventManager#.getInitializationState">getInitializationState</a></li><li data-type='method'><a href="global.html#SystemEventManager#.init">init</a></li><li data-type='method'><a href="global.html#SystemEventManager#.initializeSystem">initializeSystem</a></li><li data-type='method'><a href="global.html#SystemEventManager#.log">log</a></li><li data-type='method'><a href="global.html#SystemEventManager#.registerSystem">registerSystem</a></li></ul></li><li><a href="global.html#ToastManager">ToastManager</a></li><li><a href="UnifiedDashboard.html">UnifiedDashboard</a><ul class='methods'><li data-type='method'><a href="UnifiedDashboard.html#.init">init</a></li><li data-type='method'><a href="UnifiedDashboard.html#.toggleDebugMode">toggleDebugMode</a></li></ul></li><li></li><li><a href="UnifiedDashboardController.html">UnifiedDashboardController</a></li><li></li></ul><h3>Global</h3><ul><li><a href="global.html#DEFAULT_DURATION">DEFAULT_DURATION</a></li><li><a href="global.html#DEFAULT_RENEWAL_INTERVAL">DEFAULT_RENEWAL_INTERVAL</a></li><li><a href="global.html#DEFAULT_SELECTOR">DEFAULT_SELECTOR</a></li><li><a href="global.html#DOM_CACHE">DOM_CACHE</a></li><li><a href="global.html#TOAST_CLASSES">TOAST_CLASSES</a></li><li><a href="global.html#TOAST_COLORS">TOAST_COLORS</a></li><li><a href="global.html#TOAST_ICONS">TOAST_ICONS</a></li><li><a href="global.html#adjustLayout">adjustLayout</a></li><li><a href="global.html#attemptRenewal">attemptRenewal</a></li><li><a href="global.html#check">check</a></li><li><a href="global.html#cleanupOnPageLoad">cleanupOnPageLoad</a></li><li><a href="global.html#cleanupSyncProgressListeners">cleanupSyncProgressListeners</a></li><li><a href="global.html#clearPhase2PollingInterval">clearPhase2PollingInterval</a></li><li><a href="global.html#clearSyncInterval">clearSyncInterval</a></li><li><a href="global.html#error">error</a></li><li><a href="global.html#getCache">getCache</a></li><li><a href="global.html#getFadeInDuration">getFadeInDuration</a></li><li><a href="global.html#getInactiveProgressCounter">getInactiveProgressCounter</a></li><li><a href="global.html#getLastProgressValue">getLastProgressValue</a></li><li><a href="global.html#getPhase1Initialized">getPhase1Initialized</a></li><li><a href="global.html#getPhase1Starting">getPhase1Starting</a></li><li><a href="global.html#getPhase2Initialized">getPhase2Initialized</a></li><li><a href="global.html#getPhase2PollingInterval">getPhase2PollingInterval</a></li><li><a href="global.html#getPhase2ProcessingBatch">getPhase2ProcessingBatch</a></li><li><a href="global.html#getPhase2Starting">getPhase2Starting</a></li><li><a href="global.html#getPollingInterval">getPollingInterval</a></li><li><a href="global.html#getState">getState</a></li><li><a href="global.html#getSyncInterval">getSyncInterval</a></li><li><a href="global.html#getTrackingState">getTrackingState</a></li><li><a href="global.html#getWidth">getWidth</a></li><li><a href="global.html#hideSidebar">hideSidebar</a></li><li><a href="global.html#inactiveProgressCounter">inactiveProgressCounter</a></li><li><a href="global.html#incrementInactiveProgressCounter">incrementInactiveProgressCounter</a></li><li><a href="global.html#info">info</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initCache">initCache</a></li><li><a href="global.html#initResponsiveMenu">initResponsiveMenu</a></li><li><a href="global.html#initialize">initialize</a></li><li><a href="global.html#initializeSyncDashboard">initializeSyncDashboard</a></li><li><a href="global.html#isAutoRenewalActive">isAutoRenewalActive</a></li><li><a href="global.html#isAvailable">isAvailable</a></li><li><a href="global.html#isCacheInitialized">isCacheInitialized</a></li><li><a href="global.html#isComplete">isComplete</a></li><li><a href="global.html#isPollingActive">isPollingActive</a></li><li><a href="global.html#phase1Starting">phase1Starting</a></li><li><a href="global.html#phase2Starting">phase2Starting</a></li><li><a href="global.html#pollingManager">pollingManager</a></li><li><a href="global.html#proceedWithSync">proceedWithSync</a></li><li><a href="global.html#processNextBatchAutomatically">processNextBatchAutomatically</a></li><li><a href="global.html#refreshCache">refreshCache</a></li><li><a href="global.html#reinit">reinit</a></li><li><a href="global.html#renewalIntervalId">renewalIntervalId</a></li><li><a href="global.html#reset">reset</a></li><li><a href="global.html#resetAllState">resetAllState</a></li><li><a href="global.html#resetCounters">resetCounters</a></li><li><a href="global.html#resetPhase1State">resetPhase1State</a></li><li><a href="global.html#resetPhase2State">resetPhase2State</a></li><li><a href="global.html#setColor">setColor</a></li><li><a href="global.html#setInactiveProgressCounter">setInactiveProgressCounter</a></li><li><a href="global.html#setLastProgressValue">setLastProgressValue</a></li><li><a href="global.html#setPercentage">setPercentage</a></li><li><a href="global.html#setPhase1Initialized">setPhase1Initialized</a></li><li><a href="global.html#setPhase1Starting">setPhase1Starting</a></li><li><a href="global.html#setPhase2Initialized">setPhase2Initialized</a></li><li><a href="global.html#setPhase2PollingInterval">setPhase2PollingInterval</a></li><li><a href="global.html#setPhase2ProcessingBatch">setPhase2ProcessingBatch</a></li><li><a href="global.html#setPhase2Starting">setPhase2Starting</a></li><li><a href="global.html#setSyncInterval">setSyncInterval</a></li><li><a href="global.html#setWidth">setWidth</a></li><li><a href="global.html#setupAutoRenewal">setupAutoRenewal</a></li><li><a href="global.html#show">show</a></li><li><a href="global.html#showSidebar">showSidebar</a></li><li><a href="global.html#start">start</a></li><li><a href="global.html#stop">stop</a></li><li><a href="global.html#stopAutoRenewal">stopAutoRenewal</a></li><li><a href="global.html#stopProgressPolling">stopProgressPolling</a></li><li><a href="global.html#success">success</a></li><li><a href="global.html#toggleSidebar">toggleSidebar</a></li><li><a href="global.html#trackingState">trackingState</a></li><li><a href="global.html#updateCardData">updateCardData</a></li><li><a href="global.html#updateSpecificCard">updateSpecificCard</a></li><li><a href="global.html#warning">warning</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">components/ConsoleManager.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const { EventCleanupManager } = require('../managers/EventCleanupManager');
+const ErrorHandler = require('../core/ErrorHandler');
+
+/**
+ * Gestor de Consola de Sincronización
+ * 
+ * Gestiona el terminal de consola que muestra el progreso y los logs
+ * del proceso de sincronización en tiempo real.
+ * 
+ * @module components/ConsoleManager
+ * @namespace ConsoleManager
+ * @since 1.0.0
+ * @author Christian
+ * @requires module:types
+ */
+
+// @ts-check
+/* global jQuery, Sanitizer */
+
+// ✅ CRÍTICO: Envolver todo el código en un IIFE para evitar redeclaraciones
+// si el script se carga múltiples veces
+(function() {
+  'use strict';
+  
+  // ✅ Verificar si ya se ejecutó este script para evitar redeclaraciones
+  if (window?.__ConsoleManagerLoaded) {
+    return;
+  }
+  
+  // Marcar que el script se está cargando
+  if (window) {
+    window.__ConsoleManagerLoaded = true;
+  }
+  
+  /**
+   * Selectores CSS para los elementos de la consola
+   * 
+   * @type {Object&lt;string, string>}
+   */
+  const SELECTORS = {
+    console: '#mia-sync-console',
+    consoleContent: '#mia-console-content',
+    consoleBody: '.mia-console-body',
+    phase1Indicator: '#mia-phase1-indicator',
+    phase2Indicator: '#mia-phase2-indicator',
+    clearButton: '#mia-console-clear',
+    toggleButton: '#mia-console-toggle'
+  };
+  
+  /**
+   * Mapeo de tipos de mensaje a etiquetas
+   * 
+   * @type {Object&lt;string, string>}
+   */
+  const LABEL_MAP = {
+    info: '[INFO]',
+    success: '[SUCCESS]',
+    warning: '[WARNING]',
+    error: '[ERROR]',
+    phase1: '[FASE 1]',
+    phase2: '[FASE 2]'
+  };
+  
+  /**
+   * Límite máximo de líneas en la consola para evitar problemas de rendimiento
+   * 
+   * @type {number}
+   */
+  const MAX_LINES = 100;
+  
+  /**
+   * Estado de tracking para detectar cambios y evitar duplicados
+   * 
+   * @type {Object}
+   */
+  const trackingState = {
+    lastProductId: 0,
+    lastProductsProcessed: 0,
+    lastImagesProcessed: 0,
+    lastSummaryProducts: 0,
+    wasPaused: false,
+    wasCancelled: false,
+    wasInProgress: false, // ✅ NUEVO: Trackear si estaba en progreso para detectar cambios de estado
+    lastCheckpointSavedId: 0, // ✅ NUEVO: Trackear último checkpoint guardado para evitar duplicados
+    initialCacheClearedShown: false, // ✅ NUEVO: Trackear si ya se mostró mensaje de limpieza inicial
+    checkpointLoadedShown: false, // ✅ NUEVO: Trackear si ya se mostró mensaje de checkpoint cargado
+    technicalInfoShown: false // ✅ NUEVO: Trackear si ya se mostraron mensajes técnicos informativos
+  };
+  
+  /**
+   * Inicializar la consola
+   * 
+   * Configura los event listeners para los controles de la consola
+   * (limpiar, minimizar/maximizar).
+   * 
+   * @returns {void}
+   * 
+   * @example
+   * ConsoleManager.initialize();
+   */
+  function initialize() {
+    if (!jQuery) {
+      // eslint-disable-next-line no-console
+      console.error('ConsoleManager requiere jQuery');
+      return;
+    }
+
+    // ✅ DEBUG: Verificar que los elementos existen
+    const $console = jQuery(SELECTORS.console);
+    const $consoleContent = jQuery(SELECTORS.consoleContent);
+    const $consoleBody = jQuery(SELECTORS.consoleBody);
+    const $clearButton = jQuery(SELECTORS.clearButton);
+    const $toggleButton = jQuery(SELECTORS.toggleButton);
+    const $phase1Indicator = jQuery(SELECTORS.phase1Indicator);
+    const $phase2Indicator = jQuery(SELECTORS.phase2Indicator);
+    
+    
+    // ✅ VERIFICACIÓN: Si no se encuentran los elementos, mostrar error detallado
+    if ($console.length === 0) {
+      // eslint-disable-next-line no-console
+      console.error('[ConsoleManager] ❌ CRÍTICO: No se encontró el elemento de la consola', {
+        selector: SELECTORS.console,
+        suggestion: 'Verifica que el HTML contiene &lt;div id="mia-sync-console">'
+      });
+      return;
+    }
+    
+    if ($consoleContent.length === 0) {
+      // eslint-disable-next-line no-console
+      console.error('[ConsoleManager] ❌ CRÍTICO: No se encontró el contenedor de contenido de la consola', {
+        selector: SELECTORS.consoleContent,
+        suggestion: 'Verifica que el HTML contiene &lt;div id="mia-console-content">'
+      });
+      return;
+    }
+    
+    // ✅ NUEVO: Añadir mensaje inicial si la consola está vacía
+    const existingLines = $consoleContent.find('.mia-console-line');
+    if (existingLines.length === 0) {
+      addLine('info', 'Consola de sincronización iniciada. Esperando actividad...');
+    }
+  
+    const componentId = 'ConsoleManager';
+    
+    if ($clearButton.length > 0) {
+      const clearHandler = function() {
+        clear();
+        addLine('info', 'Consola limpiada');
+      };
+      
+      if (EventCleanupManager?.registerElementListener) {
+        EventCleanupManager.registerElementListener($clearButton, 'click', clearHandler, componentId);
+      } else {
+        $clearButton.on('click', clearHandler);
+      }
+    }
+  
+    if ($toggleButton.length > 0) {
+      const toggleHandler = function() {
+        toggle();
+      };
+      
+      if (EventCleanupManager?.registerElementListener) {
+        EventCleanupManager.registerElementListener($toggleButton, 'click', toggleHandler, componentId);
+      } else {
+        $toggleButton.on('click', toggleHandler);
+      }
+    }
+  
+    const hasSubscribed = initialize.hasSubscribedToEvents === true;
+    if (hasSubscribed) {
+      return;
+    }
+  
+    if (window?.pollingManager?.on) {
+      if (EventCleanupManager?.registerCustomEventListener) {
+        EventCleanupManager.registerCustomEventListener(
+          window.pollingManager,
+          'syncProgress',
+          function(data) {
+            if (data &amp;&amp; data.syncData) {
+              updateSyncConsole(data.syncData, data.phase1Status);
+            }
+          },
+          componentId
+        );
+  
+        EventCleanupManager.registerCustomEventListener(
+          window.pollingManager,
+          'syncError',
+          function(error) {
+            addLine('error', error.message || 'Error en sincronización');
+          },
+          componentId
+        );
+      } else {
+        window.pollingManager.on('syncProgress', function(data) {
+          if (data &amp;&amp; data.syncData) {
+            updateSyncConsole(data.syncData, data.phase1Status);
+          }
+        });
+  
+        window.pollingManager.on('syncError', function(error) {
+          addLine('error', error.message || 'Error en sincronización');
+        });
+      }
+  
+      initialize.hasSubscribedToEvents = true;
+    }
+  }
+  
+  /**
+   * Limpia todos los event listeners de ConsoleManager
+   * 
+   * @returns {void}
+   */
+  function cleanupEventListeners() {
+    if (EventCleanupManager?.cleanupComponent) {
+      EventCleanupManager.cleanupComponent('ConsoleManager');
+    } else {
+      const $clearButton = jQuery(SELECTORS.clearButton);
+      const $toggleButton = jQuery(SELECTORS.toggleButton);
+      
+      if ($clearButton.length > 0) {
+        $clearButton.off('click');
+      }
+      if ($toggleButton.length > 0) {
+        $toggleButton.off('click');
+      }
+      
+      if (window?.pollingManager?.off) {
+        window.pollingManager.off('syncProgress');
+        window.pollingManager.off('syncError');
+      }
+    }
+  }
+  
+  /**
+   * Agregar una línea al terminal de consola
+   * 
+   * @param {ConsoleMessageType} type - Tipo de mensaje
+   * @param {string} message - Mensaje a mostrar
+   * @returns {void}
+   * 
+   * @example
+   * ConsoleManager.addLine('info', 'Procesando productos...');
+   * ConsoleManager.addLine('success', 'Sincronización completada');
+   */
+  function addLine(type, message) {
+    if (!jQuery) {
+      // eslint-disable-next-line no-console
+      console.error('ConsoleManager requiere jQuery');
+      return;
+    }
+  
+    const $consoleContent = jQuery(SELECTORS.consoleContent);
+    
+    if ($consoleContent.length === 0) {
+      // eslint-disable-next-line no-console
+      console.warn('ConsoleManager: No se encontró el contenedor de la consola');
+      return;
+    }
+  
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('es-ES', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
+  
+    const label = LABEL_MAP[type] || LABEL_MAP.info;
+  
+    // ✅ SEGURIDAD: Sanitizar mensaje antes de insertarlo en el DOM
+    const sanitizedMessage = Sanitizer?.sanitizeMessage?.(message) ?? String(message).replace(/[&amp;&lt;>"']/g, function(m) {
+      const map = { '&amp;': '&amp;amp;', '&lt;': '&amp;lt;', '>': '&amp;gt;', '"': '&amp;quot;', '\'': '&amp;#039;' };
+      return map[m];
+    });
+    
+    // ✅ SEGURIDAD: Construir HTML de forma segura usando .text() para el mensaje
+    const $line = jQuery('&lt;div>')
+      .addClass('mia-console-line')
+      .addClass(`mia-console-${type}`);
+    
+    // Crear elementos de forma segura
+    jQuery('&lt;span>').addClass('mia-console-time').text(timeStr).appendTo($line);
+    jQuery('&lt;span>').addClass('mia-console-label').text(label).appendTo($line);
+    jQuery('&lt;span>').addClass('mia-console-message').text(sanitizedMessage).appendTo($line);
+  
+    $consoleContent.append($line);
+  
+    // Limitar a MAX_LINES líneas para evitar problemas de rendimiento
+    const lines = $consoleContent.find('.mia-console-line');
+    if (lines.length > MAX_LINES) {
+      lines.first().remove();
+    }
+  
+    // Auto-scroll al final
+    scrollToBottom();
+  }
+  
+  /**
+   * Actualizar la consola con datos de sincronización
+   * 
+   * @param {SyncProgressData} syncData - Datos de sincronización
+   * @param {Phase1Status} [phase1Status] - Estado de la Fase 1 (imágenes)
+   * @returns {void}
+   * 
+   * @example
+   * ConsoleManager.updateSyncConsole({
+   *   in_progress: true,
+   *   estadisticas: { procesados: 50, total: 100 }
+   * }, {
+   *   in_progress: false,
+   *   completed: true
+   * });
+   */
+  function updateSyncConsole(syncData, phase1Status) {
+    if (!jQuery) {
+      // eslint-disable-next-line no-console
+      console.error('ConsoleManager requiere jQuery');
+      return;
+    }
+  
+    const $console = jQuery(SELECTORS.console);
+    const $consoleContent = jQuery(SELECTORS.consoleContent);
+  
+    if ($console.length === 0 || $consoleContent.length === 0) {
+      // eslint-disable-next-line no-console
+      console.warn('[ConsoleManager] ⚠️  No se encontraron elementos de la consola', {
+        consoleSelector: SELECTORS.console,
+        consoleContentSelector: SELECTORS.consoleContent,
+        consoleFound: $console.length > 0,
+        consoleContentFound: $consoleContent.length > 0
+      });
+      return;
+    }
+  
+    // ✅ ACTUALIZADO: La consola está siempre visible, no necesita mostrar/ocultar
+    // Asegurar que esté visible (por si acaso)
+    if ($console.is(':hidden')) {
+      $console.show();
+    }
+  
+    // ✅ NUEVO: Limpiar mensaje inicial si hay actividad
+    const phase1InProgress = phase1Status &amp;&amp; phase1Status.in_progress === true;
+    const phase2InProgress = syncData &amp;&amp; syncData.in_progress === true &amp;&amp; !phase1InProgress;
+    const hasActivity = phase1InProgress || phase2InProgress;
+    
+    if (hasActivity) {
+      // Buscar y eliminar el mensaje inicial "Esperando actividad..."
+      const $initialMessage = $consoleContent.find('.mia-console-line').first();
+      if ($initialMessage.length > 0) {
+        const messageText = $initialMessage.find('.mia-console-message').text();
+        if (messageText.includes('Esperando actividad') || messageText.includes('Consola de sincronización iniciada')) {
+          $initialMessage.remove();
+        }
+      }
+    }
+  
+    // ✅ REMOVIDO: Debug innecesario que se ejecuta constantemente (cada 2 segundos durante polling)
+  
+    // Actualizar indicadores de fase
+    updatePhaseIndicators(syncData, phase1Status);
+  
+    // Agregar líneas de log según el estado
+    addProgressLines(syncData, phase1Status);
+  
+    // Auto-scroll al final
+    scrollToBottom();
+  }
+  
+  /**
+   * Actualizar los indicadores de fase
+   * 
+   * @param {SyncProgressData} syncData - Datos de sincronización
+   * @param {Phase1Status} [phase1Status] - Estado de la Fase 1
+   * @returns {void}
+   * @private
+   */
+  function updatePhaseIndicators(syncData, phase1Status) {
+    const phase1InProgress = phase1Status &amp;&amp; phase1Status.in_progress;
+    const phase1Completed = phase1Status &amp;&amp; phase1Status.completed;
+    const phase2InProgress = syncData.in_progress &amp;&amp; !phase1InProgress;
+    const phase2Completed = syncData.is_completed;
+  
+    // Actualizar Fase 1
+    const $phase1Indicator = jQuery(SELECTORS.phase1Indicator);
+    if ($phase1Indicator.length > 0) {
+      if (phase1Completed) {
+        $phase1Indicator.attr('data-status', 'completed');
+        $phase1Indicator.find('.mia-phase-status').text('Completada').attr('data-status', 'completed');
+      } else if (phase1InProgress) {
+        $phase1Indicator.attr('data-status', 'active');
+        $phase1Indicator.find('.mia-phase-status').text('En Progreso').attr('data-status', 'active');
+      } else {
+        $phase1Indicator.attr('data-status', 'pending');
+        $phase1Indicator.find('.mia-phase-status').text('Pendiente').attr('data-status', 'pending');
+      }
+    }
+  
+    // Actualizar Fase 2
+    const $phase2Indicator = jQuery(SELECTORS.phase2Indicator);
+    if ($phase2Indicator.length > 0) {
+      if (phase2Completed) {
+        $phase2Indicator.attr('data-status', 'completed');
+        $phase2Indicator.find('.mia-phase-status').text('Completada').attr('data-status', 'completed');
+      } else if (phase2InProgress) {
+        $phase2Indicator.attr('data-status', 'active');
+        $phase2Indicator.find('.mia-phase-status').text('En Progreso').attr('data-status', 'active');
+      } else {
+        $phase2Indicator.attr('data-status', 'pending');
+        $phase2Indicator.find('.mia-phase-status').text('Pendiente').attr('data-status', 'pending');
+      }
+    }
+  }
+  
+  /**
+   * Agregar líneas de progreso según el estado
+   * 
+   * @param {SyncProgressData} syncData - Datos de sincronización
+   * @param {Phase1Status} [phase1Status] - Estado de la Fase 1
+   * @returns {void}
+   * @private
+   */
+  function addProgressLines(syncData, phase1Status) {
+    const $consoleContent = jQuery(SELECTORS.consoleContent);
+    
+    // ✅ DEBUG: Log para diagnosticar
+    
+    // ✅ PROTECCIÓN: Validar que phase1Status existe antes de usarlo
+    if (!phase1Status || typeof phase1Status !== 'object') {
+      phase1Status = {};
+    }
+    
+    const phase1InProgress = phase1Status.in_progress === true;
+    const phase1Completed = phase1Status.completed === true;
+    const phase1Paused = phase1Status.paused === true;
+    const phase1Cancelled = phase1Status.cancelled === true;
+    const phase2InProgress = syncData &amp;&amp; syncData.in_progress === true &amp;&amp; !phase1InProgress;
+    const phase2Completed = syncData &amp;&amp; syncData.is_completed === true;
+    
+    // ✅ NUEVO: Detectar si hay progreso real (valores > 0) incluso si está pausada o cancelada
+    const hasRealProgress = (phase1Status.products_processed > 0) || (phase1Status.total_products > 0);
+    const shouldShowProgress = phase1InProgress || (hasRealProgress &amp;&amp; (phase1Paused || phase1Cancelled));
+    
+  
+    // ✅ NUEVO: Mostrar métricas de limpieza de caché para Fase 1
+    if (phase1InProgress &amp;&amp; phase1Status &amp;&amp; phase1Status.last_cleanup_metrics) {
+      const cleanup = phase1Status.last_cleanup_metrics;
+      const lastCleanupTime = cleanup.timestamp || 0;
+      const now = Math.floor(Date.now() / 1000);
+      
+      // Solo mostrar si la limpieza fue reciente (últimos 30 segundos) para evitar spam
+      if (now - lastCleanupTime &lt;= 30) {
+        const cleanupMsg = formatCleanupMetrics(cleanup, 'Fase 1');
+        const lastLine = $consoleContent.find('.mia-console-line').last();
+        const lastMessage = lastLine.find('.mia-console-message').text();
+        
+        // Solo agregar si no es la misma métrica
+        if (!lastMessage.includes('Limpieza de caché') || !lastMessage.includes(cleanup.cleanup_level || cleanup.type)) {
+          addLine('info', cleanupMsg);
+        }
+      }
+    }
+  
+    // ✅ NUEVO: Mostrar métricas de limpieza de caché para Fase 2
+    if (phase2InProgress &amp;&amp; syncData.last_cleanup_metrics) {
+      const cleanup = syncData.last_cleanup_metrics;
+      const lastCleanupTime = cleanup.timestamp || 0;
+      const now = Math.floor(Date.now() / 1000);
+      
+      // Solo mostrar si la limpieza fue reciente (últimos 30 segundos) para evitar spam
+      if (now - lastCleanupTime &lt;= 30) {
+        const cleanupMsg = formatCleanupMetrics(cleanup, 'Fase 2');
+        const lastLine = $consoleContent.find('.mia-console-line').last();
+        const lastMessage = lastLine.find('.mia-console-message').text();
+        
+        // Solo agregar si no es la misma métrica
+        if (!lastMessage.includes('Limpieza de caché') || !lastMessage.includes(cleanup.type || 'batch')) {
+          addLine('info', cleanupMsg);
+        }
+      }
+    }
+  
+    // ✅ NUEVO: Mostrar mensaje cuando Fase 1 inicia (solo una vez)
+    if (phase1InProgress &amp;&amp; phase1Status &amp;&amp; trackingState.lastProductsProcessed === 0 &amp;&amp; phase1Status.products_processed === 0) {
+      const totalProducts = phase1Status.total_products || 0;
+      addLine('phase1', `Iniciando Fase 1: Sincronización de imágenes${totalProducts > 0 ? ` para ${totalProducts} productos` : ''}...`);
+      trackingState.lastProductsProcessed = -1; // Marcar que ya mostramos el mensaje inicial
+    }
+    
+    // ✅ NUEVO: Mostrar mensaje de limpieza inicial de caché (solo una vez)
+    if (phase1InProgress &amp;&amp; phase1Status &amp;&amp; phase1Status.initial_cache_cleared &amp;&amp; !trackingState.initialCacheClearedShown) {
+      const clearedCount = phase1Status.initial_cache_cleared_count || 0;
+      const cacheMsg = clearedCount > 0 
+        ? `Caché inicial limpiada: ${clearedCount} entradas eliminadas`
+        : 'Caché inicial limpiada';
+      addLine('info', cacheMsg);
+      trackingState.initialCacheClearedShown = true;
+    }
+    
+    // ✅ NUEVO: Mostrar mensaje de checkpoint cargado (solo una vez)
+    if (phase1InProgress &amp;&amp; phase1Status &amp;&amp; phase1Status.checkpoint_loaded &amp;&amp; phase1Status.checkpoint_loaded_from_id &amp;&amp; !trackingState.checkpointLoadedShown) {
+      const checkpointId = phase1Status.checkpoint_loaded_from_id;
+      const checkpointProducts = phase1Status.checkpoint_loaded_products_processed || 0;
+      addLine('info', `Reanudando desde checkpoint: Producto #${checkpointId} (${checkpointProducts} productos ya procesados)`);
+      trackingState.checkpointLoadedShown = true;
+    }
+    
+    // ✅ NUEVO: Mostrar mensajes informativos técnicos (solo una vez al inicio)
+    if (phase1InProgress &amp;&amp; phase1Status &amp;&amp; phase1Status.products_processed === 0 &amp;&amp; !trackingState.technicalInfoShown) {
+      // Mensaje de thumbnails desactivados
+      if (phase1Status.thumbnails_disabled) {
+        addLine('info', 'Generación de thumbnails desactivada temporalmente (se generarán automáticamente después de la sincronización)');
+      }
+      
+      // Mensaje de límite de memoria aumentado
+      if (phase1Status.memory_limit_increased &amp;&amp; phase1Status.memory_limit_original &amp;&amp; phase1Status.memory_limit_new) {
+        addLine('info', `Límite de memoria aumentado temporalmente: ${phase1Status.memory_limit_original} → ${phase1Status.memory_limit_new}`);
+      }
+      
+      trackingState.technicalInfoShown = true;
+    }
+    
+    // ✅ NUEVO: Mostrar mensaje cuando se guarda un checkpoint (cada vez que cambia)
+    if (phase1InProgress &amp;&amp; phase1Status &amp;&amp; phase1Status.last_checkpoint_saved_id &amp;&amp; phase1Status.last_checkpoint_saved_id !== trackingState.lastCheckpointSavedId) {
+      const checkpointId = phase1Status.last_checkpoint_saved_id;
+      addLine('info', `Checkpoint guardado: Producto #${checkpointId}`);
+      trackingState.lastCheckpointSavedId = checkpointId;
+    }
+  
+    // ✅ NUEVO: Mostrar estado cuando está pausada o cancelada pero hay progreso real
+    // ✅ CORRECCIÓN: Solo mostrar si hay un cambio de estado (de activa a pausada/cancelada)
+    // No mostrar si simplemente se carga el estado inicial pausado
+    if (!phase1InProgress &amp;&amp; hasRealProgress &amp;&amp; phase1Status &amp;&amp; (phase1Paused || phase1Cancelled)) {
+      const phase1Percent = phase1Status.total_products > 0
+        ? ((phase1Status.products_processed / phase1Status.total_products) * 100).toFixed(1)
+        : 0;
+      
+      const currentProductsProcessed = phase1Status.products_processed || 0;
+      const imagesProcessed = phase1Status.images_processed || 0;
+      const duplicatesSkipped = phase1Status.duplicates_skipped || 0;
+      const errors = phase1Status.errors || 0;
+      
+      // ✅ CORRECCIÓN: Solo mostrar si hay un cambio de estado real (de activa a pausada/cancelada)
+      // No mostrar si simplemente se carga el estado inicial pausado
+      const wasInProgress = trackingState.wasInProgress === true;
+      const stateChanged = (phase1Paused &amp;&amp; !trackingState.wasPaused) || (phase1Cancelled &amp;&amp; !trackingState.wasCancelled);
+      const progressChanged = currentProductsProcessed !== trackingState.lastProductsProcessed ||
+                              imagesProcessed !== trackingState.lastImagesProcessed;
+      
+      // Solo mostrar si:
+      // 1. Estaba en progreso y ahora está pausada/cancelada (cambio de estado)
+      // 2. O si hay un cambio significativo en el progreso mientras está pausada/cancelada
+      const shouldShow = (wasInProgress &amp;&amp; stateChanged) || (progressChanged &amp;&amp; wasInProgress);
+      
+      if (shouldShow) {
+        let statusMsg = phase1Paused ? 'Fase 1 pausada' : 'Fase 1 cancelada';
+        statusMsg += `: ${currentProductsProcessed}/${phase1Status.total_products || 0} productos procesados`;
+        statusMsg += `, ${imagesProcessed} imágenes sincronizadas`;
+        if (duplicatesSkipped > 0) {
+          statusMsg += `, ${duplicatesSkipped} duplicados omitidos`;
+        }
+        if (errors > 0) {
+          statusMsg += `, ${errors} errores`;
+        }
+        statusMsg += ` (${phase1Percent}%)`;
+        
+        addLine(phase1Paused ? 'warning' : 'error', statusMsg);
+        
+        // Actualizar tracking
+        trackingState.lastProductsProcessed = currentProductsProcessed;
+        trackingState.lastImagesProcessed = imagesProcessed;
+        trackingState.wasPaused = phase1Paused;
+        trackingState.wasCancelled = phase1Cancelled;
+        trackingState.wasInProgress = false; // Ya no está en progreso
+      } else {
+        // ✅ NUEVO: Actualizar tracking sin mostrar mensaje si es estado inicial
+        // Esto evita mostrar mensajes de sincronizaciones anteriores al cargar la página
+        trackingState.wasPaused = phase1Paused;
+        trackingState.wasCancelled = phase1Cancelled;
+        trackingState.lastProductsProcessed = currentProductsProcessed;
+        trackingState.lastImagesProcessed = imagesProcessed;
+      }
+    } else if (phase1InProgress) {
+      // ✅ NUEVO: Marcar que está en progreso y resetear flags de pausa/cancelación
+      trackingState.wasInProgress = true;
+      trackingState.wasPaused = false;
+      trackingState.wasCancelled = false;
+    } else {
+      // ✅ NUEVO: Si no está en progreso y no está pausada/cancelada, resetear flag
+      trackingState.wasInProgress = false;
+    }
+    
+    // Fase 1 en progreso
+    if (phase1InProgress &amp;&amp; phase1Status) {
+      const phase1Percent = phase1Status.total_products > 0
+        ? ((phase1Status.products_processed / phase1Status.total_products) * 100).toFixed(1)
+        : 0;
+  
+      // ✅ MEJORADO: Mostrar mensaje detallado de cada producto procesado
+      // Verificar si hay un nuevo producto procesado
+      const currentProductId = phase1Status.last_processed_id || 0;
+      const currentProductsProcessed = phase1Status.products_processed || 0;
+      const currentImagesProcessed = phase1Status.images_processed || 0;
+      const productChanged = currentProductId > 0 &amp;&amp; currentProductId !== trackingState.lastProductId;
+      const productsProcessedChanged = currentProductsProcessed !== trackingState.lastProductsProcessed;
+      const imagesProcessedChanged = currentImagesProcessed !== trackingState.lastImagesProcessed;
+      
+      // ✅ CORRECCIÓN: Resetear tracking si products_processed cambió de 0 a un valor positivo
+      if (trackingState.lastProductsProcessed === -1 &amp;&amp; currentProductsProcessed > 0) {
+        trackingState.lastProductsProcessed = 0;
+      }
+      
+      // ✅ MEJORADO: Mostrar mensaje por cada producto procesado
+      // ✅ CORRECCIÓN: Verificar que tenemos datos del último producto antes de mostrar
+      if (productChanged &amp;&amp; currentProductId > 0) {
+        const lastProductImages = phase1Status.last_product_images !== undefined ? phase1Status.last_product_images : 0;
+        const lastProductDuplicates = phase1Status.last_product_duplicates !== undefined ? phase1Status.last_product_duplicates : 0;
+        const lastProductErrors = phase1Status.last_product_errors !== undefined ? phase1Status.last_product_errors : 0;
+        
+        // ✅ CORRECCIÓN: Solo mostrar si tenemos información del producto (incluso si es 0)
+        // Esto asegura que siempre mostramos algo cuando se procesa un producto
+        let productMsg = `Producto #${currentProductId}: `;
+        const parts = [];
+        
+        if (lastProductImages > 0) {
+          parts.push(`${lastProductImages} imagen${lastProductImages > 1 ? 'es' : ''} descargada${lastProductImages > 1 ? 's' : ''}`);
+        }
+        if (lastProductDuplicates > 0) {
+          parts.push(`${lastProductDuplicates} duplicada${lastProductDuplicates > 1 ? 's' : ''} omitida${lastProductDuplicates > 1 ? 's' : ''}`);
+        }
+        if (lastProductErrors > 0) {
+          parts.push(`${lastProductErrors} error${lastProductErrors > 1 ? 'es' : ''}`);
+        }
+        if (parts.length === 0) {
+          parts.push('sin imágenes');
+        }
+        
+        productMsg += parts.join(', ');
+        addLine('phase1', productMsg);
+        
+        // Actualizar tracking
+        trackingState.lastProductId = currentProductId;
+      }
+  
+      // ✅ MEJORADO: Mostrar resumen general cuando cambia el número de productos o imágenes procesados
+      // ✅ CORRECCIÓN: Mostrar resumen cada cierto número de productos o cuando cambian significativamente los totales
+      if ((productsProcessedChanged || imagesProcessedChanged) &amp;&amp; currentProductsProcessed > 0) {
+        const imagesProcessed = phase1Status.images_processed || 0;
+        const duplicatesSkipped = phase1Status.duplicates_skipped || 0;
+        const errors = phase1Status.errors || 0;
+        
+        // ✅ CORRECCIÓN: Mostrar resumen cada 5 productos o cuando cambian los totales significativamente
+        // Esto asegura feedback regular sin saturar la consola
+        const shouldShowSummary = 
+          currentProductsProcessed % 5 === 0 || // Cada 5 productos
+          currentProductsProcessed === 1 || // Primer producto
+          currentProductsProcessed === phase1Status.total_products || // Último producto
+          (productsProcessedChanged &amp;&amp; currentProductsProcessed !== trackingState.lastSummaryProducts); // Cambio significativo
+        
+        if (shouldShowSummary) {
+          let summaryMsg = `Fase 1: ${currentProductsProcessed}/${phase1Status.total_products || 0} productos procesados`;
+          summaryMsg += `, ${imagesProcessed} imagen${imagesProcessed !== 1 ? 'es' : ''} sincronizada${imagesProcessed !== 1 ? 's' : ''}`;
+          if (duplicatesSkipped > 0) {
+            summaryMsg += `, ${duplicatesSkipped} duplicado${duplicatesSkipped !== 1 ? 's' : ''} omitido${duplicatesSkipped !== 1 ? 's' : ''}`;
+          }
+          if (errors > 0) {
+            summaryMsg += `, ${errors} error${errors !== 1 ? 'es' : ''}`;
+          }
+          summaryMsg += ` (${phase1Percent}%)`;
+          
+          // ✅ NUEVO: Agregar velocidad de procesamiento al resumen
+          if (phase1Status.start_time &amp;&amp; phase1Status.start_time > 0) {
+            const elapsedSeconds = (Math.floor(Date.now() / 1000) - phase1Status.start_time);
+            if (elapsedSeconds > 0) {
+              const speed = (currentProductsProcessed / elapsedSeconds).toFixed(2);
+              summaryMsg += ` | Velocidad: ${speed} productos/seg`;
+            }
+          }
+          
+          addLine('info', summaryMsg);
+          trackingState.lastSummaryProducts = currentProductsProcessed;
+        }
+        
+        // ✅ IMPORTANTE: Actualizar tracking siempre, incluso si no mostramos el resumen
+        // Esto asegura que el tracking esté actualizado para la próxima verificación
+        trackingState.lastProductsProcessed = currentProductsProcessed;
+        trackingState.lastImagesProcessed = currentImagesProcessed;
+      }
+    }
+  
+    // Fase 2 en progreso
+    if (phase2InProgress &amp;&amp; syncData.estadisticas) {
+      const phase2Percent = syncData.porcentaje || 0;
+      const stats = syncData.estadisticas || {};
+  
+      // Verificar si ya existe una línea similar reciente
+      const lastLine = $consoleContent.find('.mia-console-line').last();
+      const lastMessage = lastLine.find('.mia-console-message').text();
+      const shouldAdd = !lastMessage.includes(`Fase 2: ${stats.procesados}/${stats.total}`);
+  
+      if (shouldAdd &amp;&amp; stats.procesados > 0) {
+        addLine('phase2', `Fase 2: ${stats.procesados}/${stats.total} productos sincronizados (${phase2Percent.toFixed(1)}%)`);
+      }
+    }
+  
+    // Fase 1 completada
+    if (phase1Completed &amp;&amp; !phase2InProgress) {
+      addLine('success', 'Fase 1 completada exitosamente. Iniciando Fase 2...');
+    }
+  
+    // Fase 2 completada
+    if (phase2Completed) {
+      addLine('success', 'Sincronización completada exitosamente');
+    }
+  }
+  
+  /**
+   * Formatea las métricas de limpieza de caché para mostrar en consola
+   * 
+   * @param {Object} cleanup - Métricas de limpieza
+   * @param {string} phase - Fase ('Fase 1' o 'Fase 2')
+   * @returns {string} Mensaje formateado
+   * @private
+   */
+  function formatCleanupMetrics(cleanup, phase) {
+    if (!cleanup) {
+      return '';
+    }
+  
+    const parts = [];
+    
+    // Memoria liberada
+    if (cleanup.memory_freed_mb &amp;&amp; cleanup.memory_freed_mb > 0) {
+      parts.push(`Memoria liberada: ${cleanup.memory_freed_mb} MB`);
+    }
+    
+    // Uso de memoria
+    if (cleanup.memory_usage_percent !== undefined) {
+      parts.push(`Uso memoria: ${cleanup.memory_usage_percent}%`);
+    }
+    
+    // Garbage collection
+    if (cleanup.gc_cycles_collected !== undefined &amp;&amp; cleanup.gc_cycles_collected > 0) {
+      parts.push(`GC: ${cleanup.gc_cycles_collected} ciclos`);
+    }
+    
+    // Cache flush
+    if (cleanup.cache_flushed) {
+      parts.push('Cache WordPress: limpiado');
+    }
+    
+    // Cold cache limpiado
+    if (cleanup.cold_cache_cleaned &amp;&amp; cleanup.cold_cache_cleaned > 0) {
+      parts.push(`Cold cache: ${cleanup.cold_cache_cleaned} entradas`);
+    }
+    
+    // Hot→Cold migrado
+    if (cleanup.hot_cold_migrated &amp;&amp; cleanup.hot_cold_migrated > 0) {
+      parts.push(`Hot→Cold: ${cleanup.hot_cold_migrated} migradas`);
+    }
+    
+    // Nivel de limpieza
+    if (cleanup.cleanup_level) {
+      const levelNames = {
+        light: 'Ligera',
+        moderate: 'Moderada',
+        aggressive: 'Agresiva',
+        critical: 'Crítica'
+      };
+      parts.push(`Nivel: ${levelNames[cleanup.cleanup_level] || cleanup.cleanup_level}`);
+    }
+    
+    // Total limpiado (Fase 2)
+    if (cleanup.total_cleared !== undefined &amp;&amp; cleanup.total_cleared > 0) {
+      parts.push(`Entradas limpiadas: ${cleanup.total_cleared}`);
+    }
+    
+    if (cleanup.preserved_hot_cache !== undefined &amp;&amp; cleanup.preserved_hot_cache > 0) {
+      parts.push(`Hot cache preservado: ${cleanup.preserved_hot_cache}`);
+    }
+  
+    const metricsText = parts.length > 0 ? parts.join(' | ') : 'Limpieza ejecutada';
+    
+    return `${phase} - Limpieza de caché: ${metricsText}`;
+  }
+  
+  /**
+   * Limpiar el contenido de la consola
+   * 
+   * @returns {void}
+   * 
+   * @example
+   * ConsoleManager.clear();
+   */
+  function clear() {
+    if (typeof jQuery === 'undefined') {
+      return;
+    }
+  
+    const $consoleContent = jQuery(SELECTORS.consoleContent);
+    if ($consoleContent.length > 0) {
+      $consoleContent.empty();
+    }
+    
+    // ✅ NUEVO: Resetear estado de tracking al limpiar
+    trackingState.lastProductId = 0;
+    trackingState.lastProductsProcessed = 0;
+    trackingState.lastImagesProcessed = 0;
+    trackingState.lastSummaryProducts = 0;
+    trackingState.lastCheckpointSavedId = 0;
+    trackingState.initialCacheClearedShown = false;
+    trackingState.checkpointLoadedShown = false;
+    trackingState.technicalInfoShown = false;
+  }
+  
+  /**
+   * Alternar entre minimizado y maximizado
+   * 
+   * @returns {void}
+   * 
+   * @example
+   * ConsoleManager.toggle();
+   */
+  function toggle() {
+    if (typeof jQuery === 'undefined') {
+      return;
+    }
+  
+    const $console = jQuery(SELECTORS.console);
+    const $toggleButton = jQuery(SELECTORS.toggleButton);
+  
+    if ($console.length === 0 || $toggleButton.length === 0) {
+      return;
+    }
+  
+    $console.toggleClass('minimized');
+  
+    const $icon = $toggleButton.find('.dashicons');
+    if ($console.hasClass('minimized')) {
+      $icon.removeClass('dashicons-arrow-up-alt2').addClass('dashicons-arrow-down-alt2');
+    } else {
+      $icon.removeClass('dashicons-arrow-down-alt2').addClass('dashicons-arrow-up-alt2');
+    }
+  }
+  
+  /**
+   * Hacer scroll al final de la consola
+   * 
+   * @returns {void}
+   * @private
+   */
+  function scrollToBottom() {
+    if (typeof jQuery === 'undefined') {
+      return;
+    }
+  
+    const $consoleBody = jQuery(SELECTORS.consoleBody);
+    if ($consoleBody.length > 0 &amp;&amp; $consoleBody[0]) {
+      $consoleBody.scrollTop($consoleBody[0].scrollHeight);
+    }
+  }
+  
+  // ✅ DEBUG: Log ANTES de crear ConsoleManager para verificar que las funciones están disponibles
+  // eslint-disable-next-line no-console
+  console.log('[ConsoleManager] Verificando funciones antes de crear objeto...', {
+    hasInitialize: typeof initialize !== 'undefined',
+    hasAddLine: typeof addLine !== 'undefined',
+    hasUpdateSyncConsole: typeof updateSyncConsole !== 'undefined',
+    hasClear: typeof clear !== 'undefined',
+    hasToggle: typeof toggle !== 'undefined'
+  });
+  
+  /**
+   * Objeto ConsoleManager con métodos públicos
+   */
+  const ConsoleManager = {
+    initialize,
+    addLine,
+    updateSyncConsole,
+    clear,
+    toggle,
+    cleanupEventListeners,
+    MAX_LINES
+  };
+  
+  /**
+   * Exponer ConsoleManager globalmente para mantener compatibilidad
+   * con el código existente que usa window.ConsoleManager, window.updateSyncConsole y window.addConsoleLine
+   * 
+   * ✅ MEJORADO: Múltiples intentos de exposición para asegurar que se exponga correctamente
+   */
+  
+  // Función para exponer ConsoleManager con múltiples métodos de fallback
+  function exposeConsoleManager() {
+    if (typeof window === 'undefined') {
+      return false;
+    }
+  
+    if (typeof ConsoleManager === 'undefined' || !ConsoleManager) {
+      return false;
+    }
+  
+    // Método 1: Asignación directa
+    try {
+      window.ConsoleManager = ConsoleManager;
+      window.updateSyncConsole = updateSyncConsole;
+      window.addConsoleLine = addLine;
+      
+      // Verificar que se expuso correctamente
+      if (typeof window.ConsoleManager !== 'undefined' &amp;&amp; window.ConsoleManager === ConsoleManager) {
+        return true;
+      }
+    } catch (error) {
+      // ✅ MEJORADO: Registrar error usando ErrorHandler en lugar de silenciarlo
+      if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.logError === 'function') {
+        ErrorHandler.logError(
+          `Error al exponer ConsoleManager (método 1 - asignación directa): ${error.message || error}`,
+          'CONSOLE_MANAGER_EXPOSE'
+        );
+      }
+      // Intentar siguiente método
+    }
+  
+    // Método 2: Object.defineProperty
+    try {
+      Object.defineProperty(window, 'ConsoleManager', {
+        value: ConsoleManager,
+        writable: true,
+        enumerable: true,
+        configurable: true
+      });
+      Object.defineProperty(window, 'updateSyncConsole', {
+        value: updateSyncConsole,
+        writable: true,
+        enumerable: true,
+        configurable: true
+      });
+      Object.defineProperty(window, 'addConsoleLine', {
+        value: addLine,
+        writable: true,
+        enumerable: true,
+        configurable: true
+      });
+      
+      // Verificar que se expuso correctamente
+      if (typeof window.ConsoleManager !== 'undefined') {
+        return true;
+      }
+    } catch (defineError) {
+      // ✅ SEGURIDAD: No usar eval como fallback. Si ambos métodos fallan, registrar error y retornar false
+      if (typeof console !== 'undefined' &amp;&amp; console.warn) {
+        // eslint-disable-next-line no-console
+        console.warn('[ConsoleManager] ⚠️ No se pudo exponer ConsoleManager usando métodos seguros:', defineError);
+      }
+    }
+  
+    // ✅ SEGURIDAD: No usar eval. Si los métodos seguros fallan, simplemente retornar false
+    // Es mejor no exponer el objeto que usar eval, que es un riesgo de seguridad
+    return false;
+  }
+  
+  // Intentar exponer inmediatamente
+  try {
+    if (!exposeConsoleManager()) {
+      // Si falla, intentar de nuevo después de un breve delay
+      setTimeout(function() {
+        try {
+          exposeConsoleManager();
+        } catch (timeoutError) {
+          // ✅ MEJORADO: Registrar error usando ErrorHandler en lugar de silenciarlo
+          if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.logError === 'function') {
+            ErrorHandler.logError(
+              `Error al exponer ConsoleManager (timeout): ${timeoutError.message || timeoutError}`,
+              'CONSOLE_MANAGER_EXPOSE'
+            );
+          }
+        }
+      }, 50);
+    }
+  } catch (exposeError) {
+    // Solo loggear error crítico
+    if (typeof console !== 'undefined' &amp;&amp; console.error) {
+      console.error('[ConsoleManager] ❌ Error crítico al exponer:', exposeError);
+    }
+  }
+  
+  /**
+   * ✅ INICIALIZACIÓN AUTOMÁTICA: DESHABILITADA
+   * 
+   * NOTA: La inicialización automática está deshabilitada porque dashboard.js
+   * ya inicializa ConsoleManager en initializeUIComponents().
+   * 
+   * Si se necesita inicialización automática independiente, descomentar el código siguiente.
+   * IMPORTANTE: Asegúrate de que PollingManager esté disponible antes de suscribirse.
+   */
+  /*
+  if (typeof jQuery !== 'undefined') {
+    jQuery(document).ready(function() {
+      // eslint-disable-next-line no-console
+      console.log('[ConsoleManager] DOM listo, intentando inicializar (auto)...');
+      // Esperar a que PollingManager esté disponible
+      const checkPollingManager = setInterval(function() {
+        if (typeof window !== 'undefined' &amp;&amp; window.pollingManager) {
+          clearInterval(checkPollingManager);
+          if (typeof ConsoleManager !== 'undefined' &amp;&amp; ConsoleManager &amp;&amp; typeof ConsoleManager.initialize === 'function') {
+            ConsoleManager.initialize();
+          } else {
+            // eslint-disable-next-line no-console
+            console.error('[ConsoleManager] ❌ ConsoleManager no está disponible para inicialización automática');
+          }
+        }
+      }, 50);
+      
+      }, 5000);
+    });
+  } else if (typeof window !== 'undefined' &amp;&amp; typeof window.addEventListener !== 'undefined') {
+    window.addEventListener('DOMContentLoaded', function() {
+      setTimeout(function() {
+        if (typeof jQuery !== 'undefined' &amp;&amp; typeof ConsoleManager !== 'undefined' &amp;&amp; ConsoleManager &amp;&amp; typeof ConsoleManager.initialize === 'function') {
+          ConsoleManager.initialize();
+        }
+      }, 100);
+    });
+  }
+  */
+  
+  /* global module */
+  if (typeof module !== 'undefined' &amp;&amp; module.exports) {
+    module.exports = { ConsoleManager };
+  }
+})(); // ✅ Cerrar el IIFE
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Thu Nov 13 2025 05:45:58 GMT+0100 (hora estándar de Europa central) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

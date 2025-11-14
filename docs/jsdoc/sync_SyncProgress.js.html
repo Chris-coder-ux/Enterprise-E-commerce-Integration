@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>sync/SyncProgress.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AjaxManager.html">AjaxManager</a><ul class='methods'><li data-type='method'><a href="AjaxManager.html#.call">call</a></li></ul></li><li><a href="ErrorHandler.html">ErrorHandler</a><ul class='methods'><li data-type='method'><a href="ErrorHandler.html#.logError">logError</a></li><li data-type='method'><a href="ErrorHandler.html#.showCancelError">showCancelError</a></li><li data-type='method'><a href="ErrorHandler.html#.showConnectionError">showConnectionError</a></li><li data-type='method'><a href="ErrorHandler.html#.showCriticalError">showCriticalError</a></li><li data-type='method'><a href="ErrorHandler.html#.showProtectionError">showProtectionError</a></li><li data-type='method'><a href="ErrorHandler.html#.showUIError">showUIError</a></li></ul></li><li><a href="EventCleanupManager.html">EventCleanupManager</a><ul class='methods'><li data-type='method'><a href="EventCleanupManager.html#cleanupAll">cleanupAll</a></li><li data-type='method'><a href="EventCleanupManager.html#getStats">getStats</a></li><li data-type='method'><a href="EventCleanupManager.html#.cleanupComponent">cleanupComponent</a></li><li data-type='method'><a href="EventCleanupManager.html#.getInstance">getInstance</a></li><li data-type='method'><a href="EventCleanupManager.html#.registerCustomEventListener">registerCustomEventListener</a></li><li data-type='method'><a href="EventCleanupManager.html#.registerDocumentListener">registerDocumentListener</a></li><li data-type='method'><a href="EventCleanupManager.html#.registerElementListener">registerElementListener</a></li><li data-type='method'><a href="EventCleanupManager.html#.registerNativeListener">registerNativeListener</a></li></ul></li><li></li><li></li><li><a href="PollingManager.html">PollingManager</a><ul class='methods'><li data-type='method'><a href="PollingManager.html#adjustPolling">adjustPolling</a></li><li data-type='method'><a href="PollingManager.html#emit">emit</a></li><li data-type='method'><a href="PollingManager.html#getIntervalId">getIntervalId</a></li><li data-type='method'><a href="PollingManager.html#isPollingActive">isPollingActive</a></li><li data-type='method'><a href="PollingManager.html#off">off</a></li><li data-type='method'><a href="PollingManager.html#on">on</a></li><li data-type='method'><a href="PollingManager.html#recordError">recordError</a></li><li data-type='method'><a href="PollingManager.html#recordResponseTime">recordResponseTime</a></li><li data-type='method'><a href="PollingManager.html#reset">reset</a></li><li data-type='method'><a href="PollingManager.html#startPolling">startPolling</a></li><li data-type='method'><a href="PollingManager.html#stopAllPolling">stopAllPolling</a></li><li data-type='method'><a href="PollingManager.html#stopPolling">stopPolling</a></li></ul></li><li></li><li></li><li><a href="SyncDashboard.html">SyncDashboard</a><ul class='methods'><li data-type='method'><a href="SyncDashboard.html#cancelPhase1">cancelPhase1</a></li><li data-type='method'><a href="SyncDashboard.html#cancelSync">cancelSync</a></li><li data-type='method'><a href="SyncDashboard.html#disableButton">disableButton</a></li><li data-type='method'><a href="SyncDashboard.html#enableButton">enableButton</a></li><li data-type='method'><a href="SyncDashboard.html#handlePhase1Response">handlePhase1Response</a></li><li data-type='method'><a href="SyncDashboard.html#loadCurrentStatus">loadCurrentStatus</a></li><li data-type='method'><a href="SyncDashboard.html#pausePhase2">pausePhase2</a></li><li data-type='method'><a href="SyncDashboard.html#resumePhase1">resumePhase1</a></li><li data-type='method'><a href="SyncDashboard.html#startPhase1">startPhase1</a></li><li data-type='method'><a href="SyncDashboard.html#startPhase2">startPhase2</a></li><li data-type='method'><a href="SyncDashboard.html#startTimer">startTimer</a></li><li data-type='method'><a href="SyncDashboard.html#stopTimer">stopTimer</a></li><li data-type='method'><a href="SyncDashboard.html#updateConfig">updateConfig</a></li><li data-type='method'><a href="SyncDashboard.html#updateDashboardFromStatus">updateDashboardFromStatus</a></li><li data-type='method'><a href="SyncDashboard.html#updatePhase1Progress">updatePhase1Progress</a></li><li data-type='method'><a href="SyncDashboard.html#updatePhase2Progress">updatePhase2Progress</a></li><li data-type='method'><a href="SyncDashboard.html#updatePhaseStatus">updatePhaseStatus</a></li></ul></li><li></li><li></li><li><a href="UIOptimizer.html">UIOptimizer</a><ul class='methods'><li data-type='method'><a href="UIOptimizer.html#cancelPendingUpdates">cancelPendingUpdates</a></li><li data-type='method'><a href="UIOptimizer.html#clearCache">clearCache</a></li><li data-type='method'><a href="UIOptimizer.html#scheduleUpdate">scheduleUpdate</a></li><li data-type='method'><a href="UIOptimizer.html#.getInstance">getInstance</a></li><li data-type='method'><a href="UIOptimizer.html#.updateCssIfChanged">updateCssIfChanged</a></li><li data-type='method'><a href="UIOptimizer.html#.updateDataIfChanged">updateDataIfChanged</a></li><li data-type='method'><a href="UIOptimizer.html#.updateHtmlIfChanged">updateHtmlIfChanged</a></li><li data-type='method'><a href="UIOptimizer.html#.updateTextIfChanged">updateTextIfChanged</a></li><li data-type='method'><a href="UIOptimizer.html#.updateValueIfChanged">updateValueIfChanged</a></li></ul></li><li></li><li></li></ul><h3>Modules</h3><ul><li><a href="module-ui_SidebarController.html">ui/SidebarController</a></li><li><a href="module-utils_FormatUtils.html">utils/FormatUtils</a></li></ul><h3>Namespaces</h3><ul><li></li><li><a href="CardManager.html">CardManager</a></li><li></li><li><a href="ConsoleManager.html">ConsoleManager</a></li><li><a href="DASHBOARD_CONFIG.html">DASHBOARD_CONFIG</a></li><li></li><li><a href="global.html#DomUtils">DomUtils</a></li><li></li><li><a href="MESSAGES.html">MESSAGES</a></li><li><a href="global.html#NonceManager">NonceManager</a></li><li><a href="global.html#Phase1Manager">Phase1Manager</a></li><li><a href="global.html#Phase2Manager">Phase2Manager</a></li><li><a href="global.html#ProgressBar">ProgressBar</a></li><li><a href="ResponsiveLayout.html">ResponsiveLayout</a></li><li></li><li><a href="SELECTORS.html">SELECTORS</a></li><li></li><li><a href="global.html#Sanitizer">Sanitizer</a><ul class='methods'><li data-type='method'><a href="global.html#Sanitizer#.escapeHtml">escapeHtml</a></li><li data-type='method'><a href="global.html#Sanitizer#.sanitizeHtml">sanitizeHtml</a></li><li data-type='method'><a href="global.html#Sanitizer#.sanitizeMessage">sanitizeMessage</a></li></ul></li><li><a href="global.html#SyncController">SyncController</a></li><li><a href="global.html#SyncProgress">SyncProgress</a></li><li><a href="global.html#SyncStateManager">SyncStateManager</a></li><li><a href="global.html#SystemEventManager">SystemEventManager</a><ul class='methods'><li data-type='method'><a href="global.html#SystemEventManager#.checkAllSystemsReady">checkAllSystemsReady</a></li><li data-type='method'><a href="global.html#SystemEventManager#.checkDependencies">checkDependencies</a></li><li data-type='method'><a href="global.html#SystemEventManager#.emitErrorHandlerReady">emitErrorHandlerReady</a></li><li data-type='method'><a href="global.html#SystemEventManager#.emitSystemBaseReady">emitSystemBaseReady</a></li><li data-type='method'><a href="global.html#SystemEventManager#.emitUnifiedDashboardReady">emitUnifiedDashboardReady</a></li><li data-type='method'><a href="global.html#SystemEventManager#.getInitializationState">getInitializationState</a></li><li data-type='method'><a href="global.html#SystemEventManager#.init">init</a></li><li data-type='method'><a href="global.html#SystemEventManager#.initializeSystem">initializeSystem</a></li><li data-type='method'><a href="global.html#SystemEventManager#.log">log</a></li><li data-type='method'><a href="global.html#SystemEventManager#.registerSystem">registerSystem</a></li></ul></li><li><a href="global.html#ToastManager">ToastManager</a></li><li><a href="UnifiedDashboard.html">UnifiedDashboard</a><ul class='methods'><li data-type='method'><a href="UnifiedDashboard.html#.init">init</a></li><li data-type='method'><a href="UnifiedDashboard.html#.toggleDebugMode">toggleDebugMode</a></li></ul></li><li></li><li><a href="UnifiedDashboardController.html">UnifiedDashboardController</a></li><li></li></ul><h3>Global</h3><ul><li><a href="global.html#DEFAULT_DURATION">DEFAULT_DURATION</a></li><li><a href="global.html#DEFAULT_RENEWAL_INTERVAL">DEFAULT_RENEWAL_INTERVAL</a></li><li><a href="global.html#DEFAULT_SELECTOR">DEFAULT_SELECTOR</a></li><li><a href="global.html#DOM_CACHE">DOM_CACHE</a></li><li><a href="global.html#TOAST_CLASSES">TOAST_CLASSES</a></li><li><a href="global.html#TOAST_COLORS">TOAST_COLORS</a></li><li><a href="global.html#TOAST_ICONS">TOAST_ICONS</a></li><li><a href="global.html#adjustLayout">adjustLayout</a></li><li><a href="global.html#attemptRenewal">attemptRenewal</a></li><li><a href="global.html#check">check</a></li><li><a href="global.html#cleanupOnPageLoad">cleanupOnPageLoad</a></li><li><a href="global.html#cleanupSyncProgressListeners">cleanupSyncProgressListeners</a></li><li><a href="global.html#clearPhase2PollingInterval">clearPhase2PollingInterval</a></li><li><a href="global.html#clearSyncInterval">clearSyncInterval</a></li><li><a href="global.html#error">error</a></li><li><a href="global.html#getCache">getCache</a></li><li><a href="global.html#getFadeInDuration">getFadeInDuration</a></li><li><a href="global.html#getInactiveProgressCounter">getInactiveProgressCounter</a></li><li><a href="global.html#getLastProgressValue">getLastProgressValue</a></li><li><a href="global.html#getPhase1Initialized">getPhase1Initialized</a></li><li><a href="global.html#getPhase1Starting">getPhase1Starting</a></li><li><a href="global.html#getPhase2Initialized">getPhase2Initialized</a></li><li><a href="global.html#getPhase2PollingInterval">getPhase2PollingInterval</a></li><li><a href="global.html#getPhase2ProcessingBatch">getPhase2ProcessingBatch</a></li><li><a href="global.html#getPhase2Starting">getPhase2Starting</a></li><li><a href="global.html#getPollingInterval">getPollingInterval</a></li><li><a href="global.html#getState">getState</a></li><li><a href="global.html#getSyncInterval">getSyncInterval</a></li><li><a href="global.html#getTrackingState">getTrackingState</a></li><li><a href="global.html#getWidth">getWidth</a></li><li><a href="global.html#hideSidebar">hideSidebar</a></li><li><a href="global.html#inactiveProgressCounter">inactiveProgressCounter</a></li><li><a href="global.html#incrementInactiveProgressCounter">incrementInactiveProgressCounter</a></li><li><a href="global.html#info">info</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initCache">initCache</a></li><li><a href="global.html#initResponsiveMenu">initResponsiveMenu</a></li><li><a href="global.html#initialize">initialize</a></li><li><a href="global.html#initializeSyncDashboard">initializeSyncDashboard</a></li><li><a href="global.html#isAutoRenewalActive">isAutoRenewalActive</a></li><li><a href="global.html#isAvailable">isAvailable</a></li><li><a href="global.html#isCacheInitialized">isCacheInitialized</a></li><li><a href="global.html#isComplete">isComplete</a></li><li><a href="global.html#isPollingActive">isPollingActive</a></li><li><a href="global.html#phase1Starting">phase1Starting</a></li><li><a href="global.html#phase2Starting">phase2Starting</a></li><li><a href="global.html#pollingManager">pollingManager</a></li><li><a href="global.html#proceedWithSync">proceedWithSync</a></li><li><a href="global.html#processNextBatchAutomatically">processNextBatchAutomatically</a></li><li><a href="global.html#refreshCache">refreshCache</a></li><li><a href="global.html#reinit">reinit</a></li><li><a href="global.html#renewalIntervalId">renewalIntervalId</a></li><li><a href="global.html#reset">reset</a></li><li><a href="global.html#resetAllState">resetAllState</a></li><li><a href="global.html#resetCounters">resetCounters</a></li><li><a href="global.html#resetPhase1State">resetPhase1State</a></li><li><a href="global.html#resetPhase2State">resetPhase2State</a></li><li><a href="global.html#setColor">setColor</a></li><li><a href="global.html#setInactiveProgressCounter">setInactiveProgressCounter</a></li><li><a href="global.html#setLastProgressValue">setLastProgressValue</a></li><li><a href="global.html#setPercentage">setPercentage</a></li><li><a href="global.html#setPhase1Initialized">setPhase1Initialized</a></li><li><a href="global.html#setPhase1Starting">setPhase1Starting</a></li><li><a href="global.html#setPhase2Initialized">setPhase2Initialized</a></li><li><a href="global.html#setPhase2PollingInterval">setPhase2PollingInterval</a></li><li><a href="global.html#setPhase2ProcessingBatch">setPhase2ProcessingBatch</a></li><li><a href="global.html#setPhase2Starting">setPhase2Starting</a></li><li><a href="global.html#setSyncInterval">setSyncInterval</a></li><li><a href="global.html#setWidth">setWidth</a></li><li><a href="global.html#setupAutoRenewal">setupAutoRenewal</a></li><li><a href="global.html#show">show</a></li><li><a href="global.html#showSidebar">showSidebar</a></li><li><a href="global.html#start">start</a></li><li><a href="global.html#stop">stop</a></li><li><a href="global.html#stopAutoRenewal">stopAutoRenewal</a></li><li><a href="global.html#stopProgressPolling">stopProgressPolling</a></li><li><a href="global.html#success">success</a></li><li><a href="global.html#toggleSidebar">toggleSidebar</a></li><li><a href="global.html#trackingState">trackingState</a></li><li><a href="global.html#updateCardData">updateCardData</a></li><li><a href="global.html#updateSpecificCard">updateSpecificCard</a></li><li><a href="global.html#warning">warning</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">sync/SyncProgress.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Gestor de Progreso de Sincronización
+ *
+ * Gestiona la verificación del progreso de sincronización mediante peticiones AJAX,
+ * actualiza la interfaz de usuario y maneja el estado de la sincronización.
+ *
+ * IMPORTANTE: Esta función SOLO monitorea el progreso, NO procesa lotes.
+ * El backend maneja automáticamente el procesamiento de todos los lotes.
+ *
+ * @module sync/SyncProgress
+ * @namespace SyncProgress
+ * @since 1.0.0
+ * @author Christian
+ */
+
+/* global jQuery, miIntegracionApiDashboard, DASHBOARD_CONFIG, DomUtils, pollingManager, ErrorHandler, AjaxManager, updateSyncConsole, stopProgressPolling, inactiveProgressCounter, lastProgressValue, SyncStateManager, window, Sanitizer */
+
+/**
+ * Variables de seguimiento del progreso
+ *
+ * @type {Object}
+ * @property {number} lastKnownBatch - Último lote conocido
+ * @property {number} lastKnownItemsSynced - Últimos items sincronizados conocidos
+ * @property {number} lastKnownTotalBatches - Total de lotes conocido
+ * @property {number} lastKnownTotalItems - Total de items conocido
+ * @property {number} lastProgressTimestamp - Timestamp del último progreso detectado
+ * @property {number} autoProcessTimeout - Timeout para procesamiento automático de lotes
+ */
+const trackingState = {
+  lastKnownBatch: 0,
+  lastKnownItemsSynced: 0,
+  lastKnownTotalBatches: 0,
+  lastKnownTotalItems: 0,
+  lastProgressTimestamp: 0,
+  autoProcessTimeout: null
+};
+
+/**
+ * Obtiene el cache DOM de forma segura
+ *
+ * @returns {Object|null} El objeto DOM_CACHE o null si no está disponible
+ * @private
+ */
+function getDomCache() {
+  if (typeof window !== 'undefined' &amp;&amp; window.DOM_CACHE) {
+    return window.DOM_CACHE;
+  }
+  if (typeof DomUtils !== 'undefined' &amp;&amp; DomUtils &amp;&amp; typeof DomUtils.getCache === 'function') {
+    return DomUtils.getCache();
+  }
+  return null;
+}
+
+/**
+ * Verifica el progreso de la sincronización
+ *
+ * Realiza una petición AJAX para verificar el estado actual de la
+ * sincronización y actualiza la interfaz de usuario en consecuencia.
+ * Utiliza un sistema de polling adaptativo para monitorear el progreso.
+ *
+ * IMPORTANTE: Esta función SOLO monitorea el progreso, NO procesa lotes.
+ * El backend maneja automáticamente el procesamiento de todos los lotes.
+ *
+ * @function check
+ * @returns {void}
+ *
+ * @example
+ * // Se ejecuta automáticamente por el sistema de polling
+ * SyncProgress.check();
+ */
+function check() {
+
+  // Verificar dependencias críticas
+  if (typeof jQuery === 'undefined') {
+    ErrorHandler.logError('jQuery no está disponible para checkSyncProgress', 'SYNC_PROGRESS');
+    return;
+  }
+
+  // eslint-disable-next-line prefer-optional-chain
+  if (typeof miIntegracionApiDashboard === 'undefined' || !miIntegracionApiDashboard || !miIntegracionApiDashboard.ajaxurl) {
+    ErrorHandler.logError('miIntegracionApiDashboard o ajaxurl no están disponibles', 'SYNC_PROGRESS');
+    return;
+  }
+
+  // ✅ CORRECCIÓN: Obtener DOM_CACHE de forma segura
+  const DOM_CACHE = getDomCache();
+  if (!DOM_CACHE) {
+    ErrorHandler.logError('DOM_CACHE no está disponible. Asegúrate de que DomUtils.js se carga antes de SyncProgress.js', 'SYNC_PROGRESS');
+    return;
+  }
+
+  // Usar AjaxManager si está disponible, sino usar jQuery.ajax directamente
+  const ajaxUrl = miIntegracionApiDashboard.ajaxurl;
+  const timeout = (DASHBOARD_CONFIG &amp;&amp; DASHBOARD_CONFIG.timeouts &amp;&amp; DASHBOARD_CONFIG.timeouts.ajax)
+    ? DASHBOARD_CONFIG.timeouts.ajax * 2
+    : 120000; // Timeout para verificación de progreso
+
+  // ✅ NUEVO: Medir tiempo de inicio de la petición para calcular latencia
+  const requestStartTime = Date.now();
+  
+  // ✅ NUEVO: Función para registrar latencia y errores
+  const recordLatency = function(success) {
+    const responseTime = Date.now() - requestStartTime;
+    
+    // Registrar latencia usando PollingManager si está disponible
+    if (typeof pollingManager !== 'undefined' &amp;&amp; pollingManager &amp;&amp; typeof pollingManager.recordResponseTime === 'function') {
+      pollingManager.recordResponseTime(responseTime);
+    }
+    
+    // Si hay error, registrar usando PollingManager
+    if (!success &amp;&amp; typeof pollingManager !== 'undefined' &amp;&amp; pollingManager &amp;&amp; typeof pollingManager.recordError === 'function') {
+      pollingManager.recordError();
+    }
+  };
+
+  // Intentar usar AjaxManager primero
+  if (typeof AjaxManager !== 'undefined' &amp;&amp; AjaxManager &amp;&amp; typeof AjaxManager.call === 'function') {
+    AjaxManager.call(
+      'mia_get_sync_progress',
+      {},
+      function(response) {
+        recordLatency(true);
+        handleSuccess(response);
+      },
+      function(xhr, status, error) {
+        recordLatency(false);
+        handleError(xhr, status, error);
+      },
+      { timeout: timeout }
+    );
+  } else {
+    // Fallback a jQuery.ajax directo
+    jQuery.ajax({
+      url: ajaxUrl,
+      type: 'POST',
+      timeout: timeout,
+      data: {
+        action: 'mia_get_sync_progress',
+        nonce: miIntegracionApiDashboard.nonce
+      },
+      success: function(response) {
+        recordLatency(true);
+        handleSuccess(response);
+      },
+      error: function(xhr, status, error) {
+        recordLatency(false);
+        handleError(xhr, status, error);
+      }
+    });
+  }
+}
+
+/**
+ * Maneja la respuesta exitosa de la verificación de progreso
+ *
+ * @param {Object} response - Respuesta del servidor
+ * @returns {void}
+ * @private
+ */
+function handleSuccess(response) {
+  // VERIFICACIÓN: Solo procesar respuestas del endpoint mia_get_sync_progress
+  if (!response.data) {
+    return;
+  }
+
+  // ✅ CORRECCIÓN: Obtener DOM_CACHE de forma segura
+  const DOM_CACHE = getDomCache();
+
+  // Verificar si hay estadísticas disponibles
+  let estadisticas = response.data.estadisticas || response.data.stats || response.data || {};
+
+  // CORRECCIÓN: Declarar variables al inicio para evitar errores de referencia
+  let porcentaje = 0;
+  let mensaje = '';
+  let syncMeta = {};
+
+  // Mostrar headers y status completo para diagnóstico
+  if (response.success) {
+    if (response.data) {
+      // CORRECCIÓN: Usar estructura flexible para diferentes endpoints
+      porcentaje = response.data.porcentaje || response.data.progress || 0;
+      mensaje = response.data.mensaje || response.data.message || response.data.status || 'Procesando...';
+
+      // Manejar estadísticas de forma flexible
+      const statsData = response.data.estadisticas || response.data.stats || response.data;
+      estadisticas = {
+        procesados: statsData.procesados || statsData.processed || statsData.completed || 0,
+        total: statsData.total || statsData.total_items || statsData.items || 0,
+        errores: statsData.errores || statsData.errors || statsData.failed || 0
+      };
+
+      syncMeta = {
+        in_progress: response.data.in_progress !== false,  // Más flexible para diferentes valores
+        current_batch: response.data.current_batch || response.data.batch || response.data.current || 0,
+        total_batches: response.data.total_batches || response.data.total || 1,
+        cancelled: response.data.cancelled === true || response.data.cancelled === 'true' // ✅ NUEVO: Detectar cancelación
+      };
+      
+      // ✅ NUEVO: Si la sincronización fue cancelada, detener polling y resetear estado
+      if (syncMeta.cancelled) {
+        if (typeof stopProgressPolling === 'function') {
+          stopProgressPolling('Sincronización cancelada');
+        }
+        
+        // ✅ NUEVO: Resetear Phase2Manager si está disponible
+        if (typeof window !== 'undefined' &amp;&amp; window.Phase2Manager &amp;&amp; typeof window.Phase2Manager.reset === 'function') {
+          window.Phase2Manager.reset();
+        }
+        
+        // ✅ NUEVO: Detener polling directamente si stopProgressPolling no está disponible
+        if (typeof pollingManager !== 'undefined' &amp;&amp; pollingManager &amp;&amp; typeof pollingManager.stopPolling === 'function') {
+          pollingManager.stopPolling('syncProgress');
+        }
+        
+        resetTrackingState();
+        return; // No procesar más datos si está cancelada
+      }
+
+      // DETECCIÓN DE CAMBIOS: Verificar si cambió el lote actual o los items procesados
+      const batchChanged = syncMeta.current_batch !== trackingState.lastKnownBatch;
+      const itemsChanged = estadisticas.procesados !== trackingState.lastKnownItemsSynced;
+      const totalBatchesChanged = syncMeta.total_batches !== trackingState.lastKnownTotalBatches;
+      const totalItemsChanged = estadisticas.total !== trackingState.lastKnownTotalItems;
+
+      // CORRECCIÓN: Si el lote cambió pero items_synced no, calcular el valor esperado
+      if (batchChanged &amp;&amp; !itemsChanged &amp;&amp; syncMeta.current_batch > trackingState.lastKnownBatch) {
+        // Calcular items_synced esperado basado en el lote actual
+        const expectedItemsSynced = syncMeta.current_batch * 50; // 50 productos por lote
+        if (expectedItemsSynced > trackingState.lastKnownItemsSynced) {
+          estadisticas.procesados = expectedItemsSynced;
+        }
+      }
+
+      const hasSignificantChange = batchChanged || itemsChanged || totalBatchesChanged || totalItemsChanged;
+
+      // SIMPLIFICADO: Solo usar mensaje del servidor - no modificar lógica de negocio
+      // PHP ya envía el mensaje correcto procesado
+
+      // Asegurar que el contenedor de progreso es visible
+      if (DOM_CACHE.$syncStatusContainer) {
+        DOM_CACHE.$syncStatusContainer.css('display', 'block');
+      }
+
+      // MEJORADO: Mostrar progreso detallado por lotes
+      const productosProcesados = estadisticas.procesados || 0;
+      const totalProductos = estadisticas.total || 0;
+      const loteActual = syncMeta.current_batch || 0;
+      const totalLotes = syncMeta.total_batches || 1;
+
+      // Usar datos calculados por el backend para consistencia
+      const porcentajeVisual = response.data.porcentaje_visual || 0;
+
+      // ✅ ELIMINADO: Actualización de barras de progreso - ahora se usa consola en tiempo real
+
+      // ✅ NUEVO: Ajustar polling adaptativamente basado en el progreso
+      if (typeof pollingManager !== 'undefined' &amp;&amp; pollingManager &amp;&amp; typeof pollingManager.adjustPolling === 'function') {
+        const isActive = response.data.in_progress || false;
+        pollingManager.adjustPolling(porcentajeVisual, isActive);
+      }
+
+      // ✅ NUEVO: Mostrar progreso de ambas fases (Fase 1: imágenes, Fase 2: productos)
+      const phase1Status = response.data.phase1_images || {};
+      const phase1InProgress = phase1Status.in_progress || false;
+      const phase1Completed = phase1Status.completed || false;
+      const phase1ProductsProcessed = phase1Status.products_processed || 0;
+      const phase1TotalProducts = phase1Status.total_products || 0;
+      const phase1ImagesProcessed = phase1Status.images_processed || 0;
+
+      // ✅ CORRECCIÓN: NO emitir eventos desde SyncProgress si Phase1Manager está activo
+      // Phase1Manager.checkPhase1Complete() ya emite eventos cada 5 segundos
+      // Esto evita duplicación de eventos para la misma consulta al backend
+      const phase1ManagerActive = typeof window !== 'undefined' &amp;&amp; 
+                                   window.Phase1Manager &amp;&amp; 
+                                   typeof window.Phase1Manager.getPollingInterval === 'function' &amp;&amp;
+                                   window.Phase1Manager.getPollingInterval() !== null;
+      
+      if (!phase1ManagerActive &amp;&amp; typeof window !== 'undefined' &amp;&amp; window.pollingManager &amp;&amp; typeof window.pollingManager.emit === 'function') {
+        // Solo emitir si Phase1Manager NO está activo (para Fase 2 o cuando no hay polling de Fase 1)
+        window.pollingManager.emit('syncProgress', {
+          syncData: response.data,
+          phase1Status: phase1Status,
+          timestamp: Date.now()
+        });
+      }
+
+      // ✅ CORRECCIÓN: Actualizar dashboard completo usando updateDashboardFromStatus
+      // Esta función también actualiza la consola internamente, evitando duplicación
+      if (typeof window !== 'undefined' &amp;&amp; window.syncDashboard) {
+        if (typeof window.syncDashboard.updateDashboardFromStatus === 'function') {
+          // Actualizar todo el dashboard desde los datos completos
+          // updateDashboardFromStatus NO actualiza la consola directamente, así que lo hacemos aquí
+          window.syncDashboard.updateDashboardFromStatus(response.data);
+          
+          // ✅ CENTRALIZADO: Actualizar consola DESPUÉS de actualizar el dashboard
+          // Solo actualizar directamente si no hay sistema de eventos disponible
+          if (typeof window === 'undefined' || !window.pollingManager || typeof window.pollingManager.emit !== 'function') {
+            if (typeof updateSyncConsole === 'function') {
+              updateSyncConsole(response.data, phase1Status);
+            } else if (typeof window !== 'undefined' &amp;&amp; typeof window.updateSyncConsole === 'function') {
+              window.updateSyncConsole(response.data, phase1Status);
+            } else if (typeof window !== 'undefined' &amp;&amp; window.ConsoleManager &amp;&amp; typeof window.ConsoleManager.updateSyncConsole === 'function') {
+              window.ConsoleManager.updateSyncConsole(response.data, phase1Status);
+            }
+          }
+        } else {
+          // Fallback: actualizar solo las fases individuales
+          if (typeof window.syncDashboard.updatePhase1Progress === 'function') {
+            window.syncDashboard.updatePhase1Progress(phase1Status);
+          }
+          if (response.data &amp;&amp; response.data.estadisticas &amp;&amp; typeof window.syncDashboard.updatePhase2Progress === 'function') {
+            window.syncDashboard.updatePhase2Progress(response.data);
+          }
+          
+          // ✅ CENTRALIZADO: Actualizar consola también en el fallback (solo si no hay eventos)
+          if ((typeof window === 'undefined' || !window.pollingManager || typeof window.pollingManager.emit !== 'function') &amp;&amp; typeof updateSyncConsole === 'function') {
+            updateSyncConsole(response.data, phase1Status);
+          }
+        }
+      } else {
+        // ✅ CENTRALIZADO: Si no hay syncDashboard, actualizar consola directamente (solo si no hay eventos)
+        if ((typeof window === 'undefined' || !window.pollingManager || typeof window.pollingManager.emit !== 'function') &amp;&amp; typeof updateSyncConsole === 'function') {
+          updateSyncConsole(response.data, phase1Status);
+        }
+      }
+
+      // ✅ ELIMINADO: Mensajes de progreso para barras - ahora se muestra en consola en tiempo real
+
+      // ACTUALIZAR VARIABLES DE SEGUIMIENTO si hay cambios significativos
+      if (hasSignificantChange) {
+        // Actualizar variables de seguimiento
+        trackingState.lastKnownBatch = syncMeta.current_batch;
+        trackingState.lastKnownItemsSynced = estadisticas.procesados;
+        trackingState.lastKnownTotalBatches = syncMeta.total_batches;
+        trackingState.lastKnownTotalItems = estadisticas.total;
+        
+        // ✅ NUEVO: Actualizar timestamp cuando hay progreso
+        trackingState.lastProgressTimestamp = Date.now();
+        
+        // Limpiar timeout si hay progreso (el backend está funcionando)
+        if (trackingState.autoProcessTimeout) {
+          clearTimeout(trackingState.autoProcessTimeout);
+          trackingState.autoProcessTimeout = null;
+        }
+      }
+
+      // Actualizar lastProgressValue si cambió usando SyncStateManager
+      if (typeof SyncStateManager !== 'undefined' &amp;&amp; SyncStateManager &amp;&amp; typeof SyncStateManager.setLastProgressValue === 'function') {
+        const currentLastProgress = SyncStateManager.getLastProgressValue();
+        if (porcentaje !== currentLastProgress) {
+          SyncStateManager.setLastProgressValue(porcentaje);
+        }
+      }
+
+      // ✅ ELIMINADO: Actualización de información de progreso - ahora se muestra en consola en tiempo real
+
+      // Usar campo is_completed calculado por el backend para consistencia
+      const isCompleted = response.data.is_completed || false;
+
+      if (isCompleted) {
+        // Detener polling y resetear estado
+        if (typeof stopProgressPolling === 'function') {
+          stopProgressPolling('Sincronización completada');
+        }
+
+        if (DOM_CACHE.$syncBtn) {
+          const originalText = (typeof window !== 'undefined' &amp;&amp; window.originalSyncButtonText) || 'Sincronizar productos en lote';
+          // ✅ OPTIMIZADO: Usar UIOptimizer para evitar actualizaciones innecesarias
+          if (typeof UIOptimizer !== 'undefined' &amp;&amp; UIOptimizer &amp;&amp; typeof UIOptimizer.updateTextIfChanged === 'function') {
+            DOM_CACHE.$syncBtn.prop('disabled', false);
+            UIOptimizer.updateTextIfChanged(DOM_CACHE.$syncBtn, originalText, 'sync-btn-text');
+          } else {
+            // Fallback: actualización directa
+            DOM_CACHE.$syncBtn.prop('disabled', false).text(originalText);
+          }
+        }
+
+        if (DOM_CACHE.$batchSizeSelector) {
+          DOM_CACHE.$batchSizeSelector.prop('disabled', false);
+        }
+
+        if (DOM_CACHE.$feedback) {
+          // ✅ OPTIMIZADO: Usar UIOptimizer para evitar actualizaciones innecesarias
+          DOM_CACHE.$feedback.removeClass('in-progress');
+          if (typeof UIOptimizer !== 'undefined' &amp;&amp; UIOptimizer &amp;&amp; typeof UIOptimizer.updateTextIfChanged === 'function') {
+            UIOptimizer.updateTextIfChanged(DOM_CACHE.$feedback, '¡Sincronización completada!', 'sync-feedback');
+          } else {
+            // Fallback: actualización directa
+            DOM_CACHE.$feedback.text('¡Sincronización completada!');
+          }
+        }
+
+        // Resetear variables de seguimiento
+        resetTrackingState();
+      } else if (syncMeta.in_progress) {
+        // ✅ NUEVO: Detectar lotes pendientes y procesarlos automáticamente si WordPress Cron no funciona
+        const currentBatch = syncMeta.current_batch || 0;
+        const totalBatches = syncMeta.total_batches || 1;
+        const hasPendingBatches = currentBatch &lt; totalBatches;
+        
+        if (hasPendingBatches) {
+          // Verificar si el progreso se ha detenido (más de 15 segundos sin cambios)
+          // Solo verificar si no hay cambios significativos (no se actualizó el timestamp)
+          if (!hasSignificantChange) {
+            const timeSinceLastProgress = Date.now() - (trackingState.lastProgressTimestamp || Date.now());
+            const progressStalled = timeSinceLastProgress > 15000; // 15 segundos
+            
+            // Si el progreso se ha detenido y hay lotes pendientes, procesar automáticamente
+            if (progressStalled &amp;&amp; !trackingState.autoProcessTimeout) {
+              // eslint-disable-next-line no-console
+              console.log('⚠️ Progreso detenido detectado, procesando siguiente lote automáticamente...', {
+                currentBatch,
+                totalBatches,
+                timeSinceLastProgress: Math.round(timeSinceLastProgress / 1000) + 's',
+                lastProgressTimestamp: trackingState.lastProgressTimestamp
+              });
+              
+              // Procesar siguiente lote automáticamente
+              processNextBatchAutomatically();
+            }
+          }
+        } else {
+          // No hay lotes pendientes, limpiar timeout
+          if (trackingState.autoProcessTimeout) {
+            clearTimeout(trackingState.autoProcessTimeout);
+            trackingState.autoProcessTimeout = null;
+          }
+        }
+      }
+    } else {
+      // ✅ ELIMINADO: Mensajes de error en barras - ahora se muestra en consola en tiempo real
+    }
+  } else {
+    // ✅ ELIMINADO: Mensajes de error en barras - ahora se muestra en consola en tiempo real
+  }
+}
+
+/**
+ * Procesa el siguiente lote automáticamente cuando WordPress Cron no funciona
+ * 
+ * Delega a Phase2Manager para mantener la separación de responsabilidades.
+ * Phase2Manager es responsable de la lógica de Fase 2, mientras que SyncProgress
+ * solo monitorea el progreso y detecta cuando es necesario procesar lotes.
+ *
+ * @returns {void}
+ * @private
+ */
+function processNextBatchAutomatically() {
+  // Evitar múltiples llamadas simultáneas usando timeout local
+  if (trackingState.autoProcessTimeout) {
+    return;
+  }
+  
+  // Configurar timeout para evitar llamadas repetidas
+  trackingState.autoProcessTimeout = setTimeout(() => {
+    trackingState.autoProcessTimeout = null;
+  }, 10000); // 10 segundos de cooldown
+  
+  // Delegar a Phase2Manager si está disponible
+  if (typeof window !== 'undefined' &amp;&amp; window.Phase2Manager &amp;&amp; typeof window.Phase2Manager.processNextBatchAutomatically === 'function') {
+    window.Phase2Manager.processNextBatchAutomatically();
+    
+    // Resetear timestamp para permitir siguiente verificación
+    trackingState.lastProgressTimestamp = Date.now();
+  } else {
+    // eslint-disable-next-line no-console
+    console.warn('⚠️ Phase2Manager no está disponible para procesar siguiente lote automáticamente');
+  }
+}
+
+/**
+ * Verifica si es un error de timeout
+ *
+ * @param {Object} xhr - Objeto XMLHttpRequest
+ * @param {string} error - Mensaje de error
+ * @returns {boolean} True si es un error de timeout
+ * @private
+ */
+function isTimeoutError(xhr, error) {
+  return (xhr &amp;&amp; xhr.readyState === 0 &amp;&amp; xhr.status === 0) || (xhr &amp;&amp; xhr.status === 0 &amp;&amp; !error);
+}
+
+/**
+ * Verifica si es un error crítico
+ *
+ * @param {Object} xhr - Objeto XMLHttpRequest
+ * @returns {boolean} True si es un error crítico
+ * @private
+ */
+function isCriticalError(xhr) {
+  return !navigator.onLine || (xhr &amp;&amp; xhr.status === 403);
+}
+
+/**
+ * Obtiene el umbral de errores desde la configuración
+ *
+ * @param {string} thresholdType - Tipo de umbral ('to_slow' o 'max_errors')
+ * @param {number} defaultValue - Valor por defecto
+ * @returns {number} Umbral de errores
+ * @private
+ */
+function getErrorThreshold(thresholdType, defaultValue) {
+  // eslint-disable-next-line prefer-optional-chain
+  if (typeof pollingManager !== 'undefined' &amp;&amp; pollingManager &amp;&amp; pollingManager.config &amp;&amp; pollingManager.config.thresholds &amp;&amp; pollingManager.config.thresholds[thresholdType]) {
+    return pollingManager.config.thresholds[thresholdType];
+  }
+  return defaultValue;
+}
+
+/**
+ * Resetea la UI de sincronización (botones y selectores)
+ *
+ * @param {string} [buttonText] - Texto para el botón de sincronización
+ * @returns {void}
+ * @private
+ */
+function resetSyncUI(buttonText) {
+  const originalText = buttonText || (typeof window !== 'undefined' &amp;&amp; window.originalSyncButtonText) || 'Sincronizar productos en lote';
+  const DOM_CACHE = getDomCache();
+
+  if (DOM_CACHE &amp;&amp; DOM_CACHE.$syncBtn) {
+    DOM_CACHE.$syncBtn.prop('disabled', false).text(originalText);
+  }
+
+  if (DOM_CACHE &amp;&amp; DOM_CACHE.$batchSizeSelector) {
+    DOM_CACHE.$batchSizeSelector.prop('disabled', false);
+  }
+}
+
+/**
+ * Configura el botón de reintento
+ *
+ * @returns {void}
+ * @private
+ */
+function setupRetryButton() {
+  if (typeof jQuery === 'undefined') {
+    return;
+  }
+
+  const componentId = 'SyncProgress';
+  const retryHandler = function() {
+    check();
+    const DOM_CACHE = getDomCache();
+    if (DOM_CACHE &amp;&amp; DOM_CACHE.$feedback) {
+      DOM_CACHE.$feedback.addClass('in-progress');
+      if (typeof UIOptimizer !== 'undefined' &amp;&amp; UIOptimizer &amp;&amp; typeof UIOptimizer.updateTextIfChanged === 'function') {
+        UIOptimizer.updateTextIfChanged(DOM_CACHE.$feedback, 'Verificando estado de la sincronización...', 'sync-feedback');
+      } else {
+        DOM_CACHE.$feedback.text('Verificando estado de la sincronización...');
+      }
+    }
+  };
+  
+  if (typeof EventCleanupManager !== 'undefined' &amp;&amp; EventCleanupManager &amp;&amp; typeof EventCleanupManager.registerElementListener === 'function') {
+    EventCleanupManager.registerElementListener('#mi-api-retry-sync', 'click', retryHandler, componentId);
+  } else {
+    jQuery('#mi-api-retry-sync').on('click', retryHandler);
+  }
+}
+
+/**
+ * Limpia todos los event listeners de SyncProgress
+ * 
+ * @returns {void}
+ */
+function cleanupSyncProgressListeners() {
+  if (typeof EventCleanupManager !== 'undefined' &amp;&amp; EventCleanupManager &amp;&amp; typeof EventCleanupManager.cleanupComponent === 'function') {
+    EventCleanupManager.cleanupComponent('SyncProgress');
+  } else {
+    jQuery('#mi-api-retry-sync').off('click');
+  }
+}
+
+/**
+ * Muestra un mensaje de error en el feedback
+ *
+ * @param {string} message - Mensaje de error
+ * @param {string} [type='error'] - Tipo de mensaje ('error' o 'warning')
+ * @returns {void}
+ * @private
+ */
+function showErrorFeedback(message, type) {
+  const DOM_CACHE = getDomCache();
+  if (!DOM_CACHE || !DOM_CACHE.$feedback) {
+    return;
+  }
+
+  const typeClass = type === 'warning' ? 'warning' : '';
+  const removeClasses = type === 'warning' ? 'in-progress' : 'in-progress warning';
+
+  // ✅ SEGURIDAD: Sanitizar mensaje antes de insertarlo en el DOM
+  const sanitizedMessage = (typeof Sanitizer !== 'undefined' &amp;&amp; Sanitizer.sanitizeMessage) 
+    ? Sanitizer.sanitizeMessage(message) 
+    : String(message).replace(/[&amp;&lt;>"']/g, function(m) {
+      const map = { '&amp;': '&amp;amp;', '&lt;': '&amp;lt;', '>': '&amp;gt;', '"': '&amp;quot;', '\'': '&amp;#039;' };
+      return map[m];
+    });
+  
+  // ✅ OPTIMIZADO: Usar UIOptimizer para evitar actualizaciones innecesarias
+  DOM_CACHE.$feedback.removeClass(removeClasses).addClass(typeClass);
+  if (typeof UIOptimizer !== 'undefined' &amp;&amp; UIOptimizer &amp;&amp; typeof UIOptimizer.updateTextIfChanged === 'function') {
+    // ✅ SEGURIDAD: Usar .text() en lugar de .html() para prevenir XSS
+    UIOptimizer.updateTextIfChanged(DOM_CACHE.$feedback, sanitizedMessage, 'sync-feedback');
+  } else {
+    // Fallback: actualización directa
+    // ✅ SEGURIDAD: Usar .text() en lugar de .html() para prevenir XSS
+    DOM_CACHE.$feedback.text(sanitizedMessage);
+  }
+}
+
+/**
+ * Maneja errores críticos (offline, 403)
+ *
+ * @returns {void}
+ * @private
+ */
+function handleCriticalError() {
+  if (typeof stopProgressPolling === 'function') {
+    stopProgressPolling('Error crítico de conexión');
+  }
+
+  resetSyncUI();
+}
+
+/**
+ * Maneja errores de timeout cuando se alcanza el máximo de errores
+ *
+ * @returns {void}
+ * @private
+ */
+function handleMaxErrorsReached() {
+  if (typeof stopProgressPolling === 'function') {
+    stopProgressPolling('Demasiados errores consecutivos');
+  }
+
+  resetSyncUI('Sincronizar productos en lote');
+
+  showErrorFeedback(
+    '&lt;div class="mi-api-error">&lt;strong>Error de comunicación:&lt;/strong> El servidor no responde después de varios intentos. ' +
+    '&lt;p>La sincronización podría estar funcionando en segundo plano o haberse detenido. Verifique los registros del sistema.&lt;/p>' +
+    '&lt;button id="mi-api-retry-sync" class="button">Reintentar verificación&lt;/button>&lt;/div>',
+    'error'
+  );
+
+  setupRetryButton();
+
+  const DOM_CACHE = getDomCache();
+  if (DOM_CACHE &amp;&amp; DOM_CACHE.$syncStatusContainer) {
+    DOM_CACHE.$syncStatusContainer.hide();
+  }
+}
+
+/**
+ * Maneja errores de timeout cuando se supera el umbral
+ *
+ * @param {number} errorThreshold - Umbral de errores
+ * @returns {void}
+ * @private
+ */
+function handleTimeoutWarning(errorThreshold) {
+  const inactiveCounter = typeof SyncStateManager !== 'undefined' &amp;&amp; SyncStateManager.getInactiveProgressCounter 
+    ? SyncStateManager.getInactiveProgressCounter() 
+    : (typeof inactiveProgressCounter !== 'undefined' ? inactiveProgressCounter : 0);
+  
+  if (inactiveCounter === errorThreshold + 1) {
+    showErrorFeedback(
+      '&lt;div class="mi-api-warning">&lt;strong>El servidor está tardando en responder&lt;/strong>&lt;p>La sincronización podría estar funcionando en segundo plano. ' +
+      'Espere unos minutos o verifique los registros para confirmar el estado.&lt;/p>&lt;/div>',
+      'warning'
+    );
+  }
+}
+
+/**
+ * Maneja errores de timeout
+ *
+ * @returns {void}
+ * @private
+ */
+function handleTimeoutError() {
+  const errorThreshold = getErrorThreshold('to_slow', 3);
+  const inactiveCounter = typeof SyncStateManager !== 'undefined' &amp;&amp; SyncStateManager.getInactiveProgressCounter 
+    ? SyncStateManager.getInactiveProgressCounter() 
+    : (typeof inactiveProgressCounter !== 'undefined' ? inactiveProgressCounter : 0);
+
+  if (inactiveCounter &lt;= errorThreshold) {
+    return;
+  }
+
+  handleTimeoutWarning(errorThreshold);
+
+  const maxErrors = getErrorThreshold('max_errors', 5);
+  // ✅ CORREGIDO: Reutilizar inactiveCounter ya declarado arriba en lugar de redeclararlo
+  
+  if (inactiveCounter > maxErrors) {
+    handleMaxErrorsReached();
+  }
+}
+
+/**
+ * Maneja errores generales después de múltiples intentos
+ *
+ * @param {Object} xhr - Objeto XMLHttpRequest
+ * @returns {void}
+ * @private
+ */
+function handleGeneralError(xhr) {
+  if (typeof stopProgressPolling === 'function') {
+    stopProgressPolling('Errores consecutivos');
+  }
+
+  resetSyncUI('Sincronizar productos en lote');
+
+  const statusMessage = xhr.status ? `Código HTTP: ${xhr.status}` : 'Verifique la conexión al servidor.';
+  showErrorFeedback(
+    '&lt;div class="mi-api-error">&lt;strong>Error de conexión:&lt;/strong> No se puede verificar el progreso. ' +
+    statusMessage +
+    '&lt;p>Intente recargar la página o esperar unos minutos.&lt;/p>&lt;/div>',
+    'error'
+  );
+
+  const DOM_CACHE = getDomCache();
+  if (DOM_CACHE &amp;&amp; DOM_CACHE.$syncStatusContainer) {
+    DOM_CACHE.$syncStatusContainer.hide();
+  }
+}
+
+/**
+ * Maneja los errores de la verificación de progreso
+ *
+ * @param {Object} xhr - Objeto XMLHttpRequest
+ * @param {string} status - Estado de la petición
+ * @param {string} error - Mensaje de error
+ * @returns {void}
+ * @private
+ */
+function handleError(xhr, status, error) {
+  // ✅ NUEVO: Emitir evento de error a través de PollingManager
+  if (typeof window !== 'undefined' &amp;&amp; window.pollingManager &amp;&amp; typeof window.pollingManager.emit === 'function') {
+    window.pollingManager.emit('syncError', {
+      message: error || 'Error en sincronización',
+      status: status,
+      xhr: xhr,
+      timestamp: Date.now()
+    });
+  }
+
+  if (typeof ErrorHandler === 'undefined' || !ErrorHandler) {
+    return;
+  }
+
+  ErrorHandler.logError(`Error AJAX al verificar progreso: ${error}`, 'POLLING');
+
+  // SIMPLIFICADO: Solo mostrar error de conexión básico
+  if (typeof ErrorHandler.showConnectionError === 'function') {
+    ErrorHandler.showConnectionError(xhr);
+  }
+
+  // SIMPLIFICADO: Solo casos críticos que requieren detener polling
+  if (isCriticalError(xhr)) {
+    handleCriticalError();
+    return;
+  }
+
+  // Si es un error de timeout (readyState 0 o status 0 con error vacío), dar un mensaje específico
+  if (isTimeoutError(xhr, error)) {
+    handleTimeoutError();
+  } else {
+    const inactiveCounter = typeof SyncStateManager !== 'undefined' &amp;&amp; SyncStateManager.getInactiveProgressCounter 
+      ? SyncStateManager.getInactiveProgressCounter() 
+      : (typeof inactiveProgressCounter !== 'undefined' ? inactiveProgressCounter : 0);
+    
+    if (inactiveCounter > 3) {
+      // Para otros tipos de errores, después de 3 intentos fallidos
+      handleGeneralError(xhr);
+    }
+  }
+}
+
+/**
+ * Resetea el estado de seguimiento
+ *
+ * @returns {void}
+ * @private
+ */
+function resetTrackingState() {
+  trackingState.lastKnownBatch = 0;
+  trackingState.lastKnownItemsSynced = 0;
+  trackingState.lastKnownTotalBatches = 0;
+  trackingState.lastKnownTotalItems = 0;
+}
+
+/**
+ * Obtiene el estado de seguimiento actual
+ *
+ * @returns {Object} Estado de seguimiento
+ */
+function getTrackingState() {
+  return Object.assign({}, trackingState);
+}
+
+/**
+ * Objeto SyncProgress con métodos públicos
+ */
+const SyncProgress = {
+  check,
+  getTrackingState,
+  resetTrackingState
+};
+
+/**
+ * Exponer SyncProgress globalmente para mantener compatibilidad
+ * con el código existente que usa window.checkSyncProgress
+ */
+// ✅ SEGURIDAD: Exposición global usando solo métodos seguros (sin eval)
+if (typeof window !== 'undefined') {
+  // ✅ SEGURIDAD: Método 1: Asignación directa dentro de try...catch
+  try {
+    window.SyncProgress = SyncProgress;
+    // Exponer también la función check como checkSyncProgress para compatibilidad
+    window.checkSyncProgress = check;
+    
+    // Verificar que se expuso correctamente
+    if (window.SyncProgress === SyncProgress &amp;&amp; window.checkSyncProgress === check) {
+      // ✅ Éxito, no hacer nada más
+    }
+  } catch (error) {
+    // ✅ SEGURIDAD: Método 2: Object.defineProperty como fallback seguro
+    try {
+      Object.defineProperty(window, 'SyncProgress', {
+        value: SyncProgress,
+        writable: true,
+        enumerable: true,
+        configurable: true
+      });
+      Object.defineProperty(window, 'checkSyncProgress', {
+        value: check,
+        writable: true,
+        enumerable: true,
+        configurable: true
+      });
+    } catch (defineError) {
+      // ✅ SEGURIDAD: Si ambos métodos fallan, registrar advertencia pero no usar eval
+      if (typeof console !== 'undefined' &amp;&amp; console.warn) {
+        // eslint-disable-next-line no-console
+        console.warn('[SyncProgress] ⚠️ No se pudo exponer SyncProgress usando métodos seguros:', defineError);
+      }
+    }
+  }
+}
+
+/* global module */
+if (typeof module !== 'undefined' &amp;&amp; module.exports) {
+  module.exports = { SyncProgress };
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Thu Nov 13 2025 05:45:58 GMT+0100 (hora estándar de Europa central) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

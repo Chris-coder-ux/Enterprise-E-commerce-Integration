@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>dashboard.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AjaxManager.html">AjaxManager</a><ul class='methods'><li data-type='method'><a href="AjaxManager.html#.call">call</a></li></ul></li><li><a href="ErrorHandler.html">ErrorHandler</a><ul class='methods'><li data-type='method'><a href="ErrorHandler.html#.logError">logError</a></li><li data-type='method'><a href="ErrorHandler.html#.showCancelError">showCancelError</a></li><li data-type='method'><a href="ErrorHandler.html#.showConnectionError">showConnectionError</a></li><li data-type='method'><a href="ErrorHandler.html#.showCriticalError">showCriticalError</a></li><li data-type='method'><a href="ErrorHandler.html#.showProtectionError">showProtectionError</a></li><li data-type='method'><a href="ErrorHandler.html#.showUIError">showUIError</a></li></ul></li><li><a href="EventCleanupManager.html">EventCleanupManager</a><ul class='methods'><li data-type='method'><a href="EventCleanupManager.html#cleanupAll">cleanupAll</a></li><li data-type='method'><a href="EventCleanupManager.html#getStats">getStats</a></li><li data-type='method'><a href="EventCleanupManager.html#.cleanupComponent">cleanupComponent</a></li><li data-type='method'><a href="EventCleanupManager.html#.getInstance">getInstance</a></li><li data-type='method'><a href="EventCleanupManager.html#.registerCustomEventListener">registerCustomEventListener</a></li><li data-type='method'><a href="EventCleanupManager.html#.registerDocumentListener">registerDocumentListener</a></li><li data-type='method'><a href="EventCleanupManager.html#.registerElementListener">registerElementListener</a></li><li data-type='method'><a href="EventCleanupManager.html#.registerNativeListener">registerNativeListener</a></li></ul></li><li></li><li></li><li><a href="PollingManager.html">PollingManager</a><ul class='methods'><li data-type='method'><a href="PollingManager.html#adjustPolling">adjustPolling</a></li><li data-type='method'><a href="PollingManager.html#emit">emit</a></li><li data-type='method'><a href="PollingManager.html#getIntervalId">getIntervalId</a></li><li data-type='method'><a href="PollingManager.html#isPollingActive">isPollingActive</a></li><li data-type='method'><a href="PollingManager.html#off">off</a></li><li data-type='method'><a href="PollingManager.html#on">on</a></li><li data-type='method'><a href="PollingManager.html#recordError">recordError</a></li><li data-type='method'><a href="PollingManager.html#recordResponseTime">recordResponseTime</a></li><li data-type='method'><a href="PollingManager.html#reset">reset</a></li><li data-type='method'><a href="PollingManager.html#startPolling">startPolling</a></li><li data-type='method'><a href="PollingManager.html#stopAllPolling">stopAllPolling</a></li><li data-type='method'><a href="PollingManager.html#stopPolling">stopPolling</a></li></ul></li><li></li><li></li><li><a href="SyncDashboard.html">SyncDashboard</a><ul class='methods'><li data-type='method'><a href="SyncDashboard.html#cancelPhase1">cancelPhase1</a></li><li data-type='method'><a href="SyncDashboard.html#cancelSync">cancelSync</a></li><li data-type='method'><a href="SyncDashboard.html#disableButton">disableButton</a></li><li data-type='method'><a href="SyncDashboard.html#enableButton">enableButton</a></li><li data-type='method'><a href="SyncDashboard.html#handlePhase1Response">handlePhase1Response</a></li><li data-type='method'><a href="SyncDashboard.html#loadCurrentStatus">loadCurrentStatus</a></li><li data-type='method'><a href="SyncDashboard.html#pausePhase2">pausePhase2</a></li><li data-type='method'><a href="SyncDashboard.html#resumePhase1">resumePhase1</a></li><li data-type='method'><a href="SyncDashboard.html#startPhase1">startPhase1</a></li><li data-type='method'><a href="SyncDashboard.html#startPhase2">startPhase2</a></li><li data-type='method'><a href="SyncDashboard.html#startTimer">startTimer</a></li><li data-type='method'><a href="SyncDashboard.html#stopTimer">stopTimer</a></li><li data-type='method'><a href="SyncDashboard.html#updateConfig">updateConfig</a></li><li data-type='method'><a href="SyncDashboard.html#updateDashboardFromStatus">updateDashboardFromStatus</a></li><li data-type='method'><a href="SyncDashboard.html#updatePhase1Progress">updatePhase1Progress</a></li><li data-type='method'><a href="SyncDashboard.html#updatePhase2Progress">updatePhase2Progress</a></li><li data-type='method'><a href="SyncDashboard.html#updatePhaseStatus">updatePhaseStatus</a></li></ul></li><li></li><li></li><li><a href="UIOptimizer.html">UIOptimizer</a><ul class='methods'><li data-type='method'><a href="UIOptimizer.html#cancelPendingUpdates">cancelPendingUpdates</a></li><li data-type='method'><a href="UIOptimizer.html#clearCache">clearCache</a></li><li data-type='method'><a href="UIOptimizer.html#scheduleUpdate">scheduleUpdate</a></li><li data-type='method'><a href="UIOptimizer.html#.getInstance">getInstance</a></li><li data-type='method'><a href="UIOptimizer.html#.updateCssIfChanged">updateCssIfChanged</a></li><li data-type='method'><a href="UIOptimizer.html#.updateDataIfChanged">updateDataIfChanged</a></li><li data-type='method'><a href="UIOptimizer.html#.updateHtmlIfChanged">updateHtmlIfChanged</a></li><li data-type='method'><a href="UIOptimizer.html#.updateTextIfChanged">updateTextIfChanged</a></li><li data-type='method'><a href="UIOptimizer.html#.updateValueIfChanged">updateValueIfChanged</a></li></ul></li><li></li><li></li></ul><h3>Modules</h3><ul><li><a href="module-ui_SidebarController.html">ui/SidebarController</a></li><li><a href="module-utils_FormatUtils.html">utils/FormatUtils</a></li></ul><h3>Namespaces</h3><ul><li></li><li><a href="CardManager.html">CardManager</a></li><li></li><li><a href="ConsoleManager.html">ConsoleManager</a></li><li><a href="DASHBOARD_CONFIG.html">DASHBOARD_CONFIG</a></li><li></li><li><a href="global.html#DomUtils">DomUtils</a></li><li></li><li><a href="MESSAGES.html">MESSAGES</a></li><li><a href="global.html#NonceManager">NonceManager</a></li><li><a href="global.html#Phase1Manager">Phase1Manager</a></li><li><a href="global.html#Phase2Manager">Phase2Manager</a></li><li><a href="global.html#ProgressBar">ProgressBar</a></li><li><a href="ResponsiveLayout.html">ResponsiveLayout</a></li><li></li><li><a href="SELECTORS.html">SELECTORS</a></li><li></li><li><a href="global.html#Sanitizer">Sanitizer</a><ul class='methods'><li data-type='method'><a href="global.html#Sanitizer#.escapeHtml">escapeHtml</a></li><li data-type='method'><a href="global.html#Sanitizer#.sanitizeHtml">sanitizeHtml</a></li><li data-type='method'><a href="global.html#Sanitizer#.sanitizeMessage">sanitizeMessage</a></li></ul></li><li><a href="global.html#SyncController">SyncController</a></li><li><a href="global.html#SyncProgress">SyncProgress</a></li><li><a href="global.html#SyncStateManager">SyncStateManager</a></li><li><a href="global.html#SystemEventManager">SystemEventManager</a><ul class='methods'><li data-type='method'><a href="global.html#SystemEventManager#.checkAllSystemsReady">checkAllSystemsReady</a></li><li data-type='method'><a href="global.html#SystemEventManager#.checkDependencies">checkDependencies</a></li><li data-type='method'><a href="global.html#SystemEventManager#.emitErrorHandlerReady">emitErrorHandlerReady</a></li><li data-type='method'><a href="global.html#SystemEventManager#.emitSystemBaseReady">emitSystemBaseReady</a></li><li data-type='method'><a href="global.html#SystemEventManager#.emitUnifiedDashboardReady">emitUnifiedDashboardReady</a></li><li data-type='method'><a href="global.html#SystemEventManager#.getInitializationState">getInitializationState</a></li><li data-type='method'><a href="global.html#SystemEventManager#.init">init</a></li><li data-type='method'><a href="global.html#SystemEventManager#.initializeSystem">initializeSystem</a></li><li data-type='method'><a href="global.html#SystemEventManager#.log">log</a></li><li data-type='method'><a href="global.html#SystemEventManager#.registerSystem">registerSystem</a></li></ul></li><li><a href="global.html#ToastManager">ToastManager</a></li><li><a href="UnifiedDashboard.html">UnifiedDashboard</a><ul class='methods'><li data-type='method'><a href="UnifiedDashboard.html#.init">init</a></li><li data-type='method'><a href="UnifiedDashboard.html#.toggleDebugMode">toggleDebugMode</a></li></ul></li><li></li><li><a href="UnifiedDashboardController.html">UnifiedDashboardController</a></li><li></li></ul><h3>Global</h3><ul><li><a href="global.html#DEFAULT_DURATION">DEFAULT_DURATION</a></li><li><a href="global.html#DEFAULT_RENEWAL_INTERVAL">DEFAULT_RENEWAL_INTERVAL</a></li><li><a href="global.html#DEFAULT_SELECTOR">DEFAULT_SELECTOR</a></li><li><a href="global.html#DOM_CACHE">DOM_CACHE</a></li><li><a href="global.html#TOAST_CLASSES">TOAST_CLASSES</a></li><li><a href="global.html#TOAST_COLORS">TOAST_COLORS</a></li><li><a href="global.html#TOAST_ICONS">TOAST_ICONS</a></li><li><a href="global.html#adjustLayout">adjustLayout</a></li><li><a href="global.html#attemptRenewal">attemptRenewal</a></li><li><a href="global.html#check">check</a></li><li><a href="global.html#cleanupOnPageLoad">cleanupOnPageLoad</a></li><li><a href="global.html#cleanupSyncProgressListeners">cleanupSyncProgressListeners</a></li><li><a href="global.html#clearPhase2PollingInterval">clearPhase2PollingInterval</a></li><li><a href="global.html#clearSyncInterval">clearSyncInterval</a></li><li><a href="global.html#error">error</a></li><li><a href="global.html#getCache">getCache</a></li><li><a href="global.html#getFadeInDuration">getFadeInDuration</a></li><li><a href="global.html#getInactiveProgressCounter">getInactiveProgressCounter</a></li><li><a href="global.html#getLastProgressValue">getLastProgressValue</a></li><li><a href="global.html#getPhase1Initialized">getPhase1Initialized</a></li><li><a href="global.html#getPhase1Starting">getPhase1Starting</a></li><li><a href="global.html#getPhase2Initialized">getPhase2Initialized</a></li><li><a href="global.html#getPhase2PollingInterval">getPhase2PollingInterval</a></li><li><a href="global.html#getPhase2ProcessingBatch">getPhase2ProcessingBatch</a></li><li><a href="global.html#getPhase2Starting">getPhase2Starting</a></li><li><a href="global.html#getPollingInterval">getPollingInterval</a></li><li><a href="global.html#getState">getState</a></li><li><a href="global.html#getSyncInterval">getSyncInterval</a></li><li><a href="global.html#getTrackingState">getTrackingState</a></li><li><a href="global.html#getWidth">getWidth</a></li><li><a href="global.html#hideSidebar">hideSidebar</a></li><li><a href="global.html#inactiveProgressCounter">inactiveProgressCounter</a></li><li><a href="global.html#incrementInactiveProgressCounter">incrementInactiveProgressCounter</a></li><li><a href="global.html#info">info</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initCache">initCache</a></li><li><a href="global.html#initResponsiveMenu">initResponsiveMenu</a></li><li><a href="global.html#initialize">initialize</a></li><li><a href="global.html#initializeSyncDashboard">initializeSyncDashboard</a></li><li><a href="global.html#isAutoRenewalActive">isAutoRenewalActive</a></li><li><a href="global.html#isAvailable">isAvailable</a></li><li><a href="global.html#isCacheInitialized">isCacheInitialized</a></li><li><a href="global.html#isComplete">isComplete</a></li><li><a href="global.html#isPollingActive">isPollingActive</a></li><li><a href="global.html#phase1Starting">phase1Starting</a></li><li><a href="global.html#phase2Starting">phase2Starting</a></li><li><a href="global.html#pollingManager">pollingManager</a></li><li><a href="global.html#proceedWithSync">proceedWithSync</a></li><li><a href="global.html#processNextBatchAutomatically">processNextBatchAutomatically</a></li><li><a href="global.html#refreshCache">refreshCache</a></li><li><a href="global.html#reinit">reinit</a></li><li><a href="global.html#renewalIntervalId">renewalIntervalId</a></li><li><a href="global.html#reset">reset</a></li><li><a href="global.html#resetAllState">resetAllState</a></li><li><a href="global.html#resetCounters">resetCounters</a></li><li><a href="global.html#resetPhase1State">resetPhase1State</a></li><li><a href="global.html#resetPhase2State">resetPhase2State</a></li><li><a href="global.html#setColor">setColor</a></li><li><a href="global.html#setInactiveProgressCounter">setInactiveProgressCounter</a></li><li><a href="global.html#setLastProgressValue">setLastProgressValue</a></li><li><a href="global.html#setPercentage">setPercentage</a></li><li><a href="global.html#setPhase1Initialized">setPhase1Initialized</a></li><li><a href="global.html#setPhase1Starting">setPhase1Starting</a></li><li><a href="global.html#setPhase2Initialized">setPhase2Initialized</a></li><li><a href="global.html#setPhase2PollingInterval">setPhase2PollingInterval</a></li><li><a href="global.html#setPhase2ProcessingBatch">setPhase2ProcessingBatch</a></li><li><a href="global.html#setPhase2Starting">setPhase2Starting</a></li><li><a href="global.html#setSyncInterval">setSyncInterval</a></li><li><a href="global.html#setWidth">setWidth</a></li><li><a href="global.html#setupAutoRenewal">setupAutoRenewal</a></li><li><a href="global.html#show">show</a></li><li><a href="global.html#showSidebar">showSidebar</a></li><li><a href="global.html#start">start</a></li><li><a href="global.html#stop">stop</a></li><li><a href="global.html#stopAutoRenewal">stopAutoRenewal</a></li><li><a href="global.html#stopProgressPolling">stopProgressPolling</a></li><li><a href="global.html#success">success</a></li><li><a href="global.html#toggleSidebar">toggleSidebar</a></li><li><a href="global.html#trackingState">trackingState</a></li><li><a href="global.html#updateCardData">updateCardData</a></li><li><a href="global.html#updateSpecificCard">updateSpecificCard</a></li><li><a href="global.html#warning">warning</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">dashboard.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Dashboard Principal - Punto de Entrada
+ * 
+ * Este archivo orquesta todos los módulos del dashboard.
+ * Mantiene la compatibilidad con el código existente mientras
+ * organiza la inicialización de forma modular.
+ * 
+ * @file dashboard.js
+ * @since 1.0.0
+ * @author Christian
+ */
+
+/* global miIntegracionApiDashboard, ErrorHandler, AjaxManager, SystemEventManager, SELECTORS, DASHBOARD_CONFIG, ConsoleManager, SyncStateManager, NonceManager, SyncProgress */
+
+// ========================================
+// VERIFICACIÓN DE DEPENDENCIAS
+// ========================================
+
+(function() {
+  'use strict';
+
+  // Verificar jQuery
+  if (typeof jQuery === 'undefined') {
+    console.error('jQuery no está disponible. El dashboard no funcionará.');
+    return;
+  }
+
+  // Verificar configuración
+  if (typeof miIntegracionApiDashboard === 'undefined') {
+    console.error('miIntegracionApiDashboard no está definido. El dashboard no funcionará.');
+    return;
+  }
+
+  // Verificar ErrorHandler (debe estar cargado como dependencia)
+  if (typeof ErrorHandler === 'undefined') {
+    console.error('ErrorHandler no está disponible. Asegúrate de que ErrorHandler.js se carga antes de dashboard.js.');
+    return;
+  }
+
+  // Verificar AjaxManager (debe estar cargado como dependencia)
+  if (typeof AjaxManager === 'undefined') {
+    console.error('AjaxManager no está disponible. Asegúrate de que AjaxManager.js se carga antes de dashboard.js.');
+    return;
+  }
+
+  // Verificar SystemEventManager (debe estar cargado como dependencia)
+  if (typeof SystemEventManager === 'undefined') {
+    console.error('SystemEventManager no está disponible. Asegúrate de que EventManager.js se carga antes de dashboard.js.');
+    return;
+  }
+
+  // Verificar SELECTORS (debe estar cargado como dependencia)
+  if (typeof SELECTORS === 'undefined') {
+    console.error('SELECTORS no está disponible. Asegúrate de que constants.js se carga antes de dashboard.js.');
+    return;
+  }
+
+  // Verificar DASHBOARD_CONFIG (debe estar cargado como dependencia)
+  if (typeof DASHBOARD_CONFIG === 'undefined') {
+    console.error('DASHBOARD_CONFIG no está disponible. Asegúrate de que dashboard-config.js se carga antes de dashboard.js.');
+    return;
+  }
+
+  // ========================================
+  // INICIALIZACIÓN PRINCIPAL
+  // ========================================
+
+  jQuery(document).ready(function() {
+    // eslint-disable-next-line no-console
+    console.log('🚀 Inicializando Dashboard...');
+
+    // ✅ ORDEN CRÍTICO DE INICIALIZACIÓN:
+    // 1. Sistemas base (ErrorHandler, AjaxManager, etc.)
+    initializeCoreSystems();
+
+    // 2. Managers del sistema (PollingManager, SyncStateManager)
+    // IMPORTANTE: PollingManager debe estar disponible antes de ConsoleManager
+    initializeManagers();
+
+    // 3. Sistema de sincronización (SyncProgress, Phase1Manager, Phase2Manager)
+    initializeSyncSystem();
+
+    // 4. Componentes UI (ConsoleManager - debe ir después de PollingManager)
+    // ConsoleManager se suscribe a eventos de PollingManager, por eso va al final
+    initializeUIComponents();
+
+    // Nota: Otros módulos se inicializan automáticamente:
+    // - SyncDashboard se inicializa automáticamente en SyncDashboard.js
+    // - UnifiedDashboardController se inicializa automáticamente en UnifiedDashboardController.js
+
+    // eslint-disable-next-line no-console
+    console.log('✅ Dashboard inicializado correctamente');
+  });
+
+  // ========================================
+  // FUNCIONES DE INICIALIZACIÓN
+  // ========================================
+
+  /**
+   * Inicializar sistemas core
+   * 
+   * Verifica y expone globalmente los sistemas base del dashboard.
+   */
+  function initializeCoreSystems() {
+    // eslint-disable-next-line no-console
+    console.log('🔧 Inicializando sistemas core...');
+
+    // ✅ NUEVO: Verificar que PollingManager esté disponible
+    // PollingManager se crea automáticamente como instancia global en PollingManager.js
+    // pero debemos asegurarnos de que esté disponible antes de que ConsoleManager se suscriba
+    if (typeof window !== 'undefined' &amp;&amp; typeof window.pollingManager === 'undefined') {
+      // eslint-disable-next-line no-console
+      console.warn('  ⚠️  PollingManager no está disponible. Verificando carga...');
+      // Esperar un poco y verificar de nuevo (puede estar cargándose)
+      setTimeout(function() {
+        if (typeof window.pollingManager !== 'undefined') {
+          // eslint-disable-next-line no-console
+          console.log('  ✅ PollingManager disponible después de esperar');
+        } else {
+          // eslint-disable-next-line no-console
+          console.error('  ❌ PollingManager no está disponible después de esperar');
+        }
+      }, 100);
+    } else if (typeof window !== 'undefined' &amp;&amp; window.pollingManager) {
+      // eslint-disable-next-line no-console
+      console.log('  ✅ PollingManager disponible');
+    }
+
+    // SELECTORS ya está disponible globalmente (cargado como dependencia)
+    // Verificación ya realizada arriba, solo asegurar exposición en window
+    // Nota: Usamos window en lugar de globalThis para compatibilidad con WordPress
+    // eslint-disable-next-line no-restricted-globals
+    if (window !== undefined &amp;&amp; window.SELECTORS === undefined &amp;&amp; typeof SELECTORS !== 'undefined') {
+      // eslint-disable-next-line no-restricted-globals
+      window.SELECTORS = SELECTORS;
+    }
+    // eslint-disable-next-line no-console
+    console.log('  ✅ SELECTORS inicializado');
+
+    // DASHBOARD_CONFIG ya está disponible globalmente (cargado como dependencia)
+    // Verificación ya realizada arriba, solo asegurar exposición en window
+    // Nota: Usamos window en lugar de globalThis para compatibilidad con WordPress
+    // eslint-disable-next-line no-restricted-globals
+    if (window !== undefined &amp;&amp; window.DASHBOARD_CONFIG === undefined &amp;&amp; typeof DASHBOARD_CONFIG !== 'undefined') {
+      // eslint-disable-next-line no-restricted-globals
+      window.DASHBOARD_CONFIG = DASHBOARD_CONFIG;
+    }
+    // eslint-disable-next-line no-console
+    console.log('  ✅ DASHBOARD_CONFIG inicializado');
+
+    // ErrorHandler ya está disponible globalmente (cargado como dependencia)
+    // Verificación ya realizada arriba, solo asegurar exposición en window
+    // Nota: Usamos window en lugar de globalThis para compatibilidad con WordPress
+    // eslint-disable-next-line no-restricted-globals
+    if (window !== undefined &amp;&amp; window.ErrorHandler === undefined) {
+      // eslint-disable-next-line no-restricted-globals
+      window.ErrorHandler = ErrorHandler;
+    }
+    // eslint-disable-next-line no-console
+    console.log('  ✅ ErrorHandler inicializado');
+
+    // AjaxManager ya está disponible globalmente (cargado como dependencia)
+    // Verificación ya realizada arriba, solo asegurar exposición en window
+    // Nota: Usamos window en lugar de globalThis para compatibilidad con WordPress
+    // eslint-disable-next-line no-restricted-globals
+    if (window !== undefined &amp;&amp; window.AjaxManager === undefined) {
+      // eslint-disable-next-line no-restricted-globals
+      window.AjaxManager = AjaxManager;
+    }
+    // eslint-disable-next-line no-console
+    console.log('  ✅ AjaxManager inicializado');
+
+    // SystemEventManager ya está disponible globalmente (cargado como dependencia)
+    // Verificación ya realizada arriba, inicializar y emitir eventos
+    // eslint-disable-next-line no-restricted-globals
+    if (window !== undefined &amp;&amp; window.SystemEventManager === undefined) {
+      // eslint-disable-next-line no-restricted-globals
+      window.SystemEventManager = SystemEventManager;
+    }
+    // Inicializar el sistema de eventos
+    if (typeof SystemEventManager !== 'undefined') {
+      SystemEventManager.init();
+      SystemEventManager.emitErrorHandlerReady();
+      // eslint-disable-next-line no-console
+      console.log('  ✅ SystemEventManager inicializado');
+    }
+  }
+
+  /**
+   * Inicializar managers del sistema
+   * 
+   * Inicializa los gestores del sistema (PollingManager, SyncStateManager, etc.)
+   */
+  function initializeManagers() {
+    // eslint-disable-next-line no-console
+    console.log('📊 Inicializando managers...');
+
+    // PollingManager - Gestor de polling unificado
+    // NOTA: PollingManager se crea automáticamente como instancia global en PollingManager.js
+    // Solo verificamos que esté disponible
+    if (typeof window !== 'undefined' &amp;&amp; window.pollingManager) {
+      // eslint-disable-next-line no-console
+      console.log('  ✅ PollingManager disponible');
+    } else {
+      // eslint-disable-next-line no-console
+      console.warn('  ⚠️  PollingManager no está disponible');
+    }
+
+    // SyncStateManager - Gestor de estado de sincronización
+    if (typeof SyncStateManager !== 'undefined' &amp;&amp; SyncStateManager &amp;&amp; typeof SyncStateManager.cleanupOnPageLoad === 'function') {
+      SyncStateManager.cleanupOnPageLoad();
+      // eslint-disable-next-line no-console
+      console.log('  ✅ SyncStateManager inicializado');
+    } else {
+      // eslint-disable-next-line no-console
+      console.warn('  ⚠️  SyncStateManager no está disponible');
+    }
+
+    // NonceManager - Gestor de renovación de nonces
+    if (typeof NonceManager !== 'undefined' &amp;&amp; NonceManager &amp;&amp; typeof NonceManager.setupAutoRenewal === 'function') {
+      NonceManager.setupAutoRenewal();
+      // eslint-disable-next-line no-console
+      console.log('  ✅ NonceManager inicializado');
+    } else {
+      // eslint-disable-next-line no-console
+      console.warn('  ⚠️  NonceManager no está disponible');
+    }
+  }
+
+  /**
+   * Inicializar sistema de sincronización
+   * 
+   * Inicializa los componentes relacionados con la sincronización.
+   */
+  function initializeSyncSystem() {
+    // eslint-disable-next-line no-console
+    console.log('🔄 Inicializando sistema de sincronización...');
+
+    // SyncProgress - Verificación de progreso de sincronización
+    if (typeof SyncProgress !== 'undefined' &amp;&amp; SyncProgress &amp;&amp; typeof SyncProgress.check === 'function') {
+      // Exponer checkSyncProgress globalmente para compatibilidad
+      if (typeof window !== 'undefined' &amp;&amp; typeof window.checkSyncProgress === 'undefined') {
+        // eslint-disable-next-line no-restricted-globals
+        window.checkSyncProgress = SyncProgress.check;
+      }
+      // eslint-disable-next-line no-console
+      console.log('  ✅ SyncProgress inicializado');
+    } else {
+      // eslint-disable-next-line no-console
+      console.warn('  ⚠️  SyncProgress no está disponible');
+    }
+
+    // Phase1Manager - Gestor de Fase 1 (sincronización de imágenes)
+    if (typeof window !== 'undefined' &amp;&amp; window.Phase1Manager) {
+      // eslint-disable-next-line no-console
+      console.log('  ✅ Phase1Manager disponible');
+    } else {
+      // eslint-disable-next-line no-console
+      console.warn('  ⚠️  Phase1Manager no está disponible');
+    }
+
+    // Phase2Manager - Gestor de Fase 2 (sincronización de productos)
+    if (typeof window !== 'undefined' &amp;&amp; window.Phase2Manager) {
+      // eslint-disable-next-line no-console
+      console.log('  ✅ Phase2Manager disponible');
+    } else {
+      // eslint-disable-next-line no-console
+      console.warn('  ⚠️  Phase2Manager no está disponible');
+    }
+  }
+
+  /**
+   * Inicializar componentes UI
+   * 
+   * Inicializa los componentes de interfaz de usuario del dashboard.
+   * IMPORTANTE: ConsoleManager debe inicializarse DESPUÉS de PollingManager
+   * para que pueda suscribirse a eventos correctamente.
+   */
+  function initializeUIComponents() {
+    // eslint-disable-next-line no-console
+    console.log('🎨 Inicializando componentes UI...');
+
+    // ConsoleManager - Consola de sincronización en tiempo real
+    // ✅ CORRECCIÓN: Esperar a que ConsoleManager esté disponible (puede cargarse después)
+    initializeConsoleManager();
+  }
+
+  /**
+   * Inicializar ConsoleManager con verificación de disponibilidad
+   * 
+   * Intenta inicializar ConsoleManager, esperando si es necesario a que se cargue.
+   * 
+   * @returns {void}
+   * @private
+   */
+  function initializeConsoleManager() {
+    // ✅ VERIFICACIÓN ADICIONAL: Verificar si el script se ejecutó
+    // Buscar en la consola si hay algún log de ConsoleManager
+    const scriptElement = typeof document !== 'undefined' 
+      ? document.querySelector('script[src*="ConsoleManager.js"]')
+      : null;
+    
+    if (scriptElement) {
+      // Verificar si el script tiene el atributo async o defer que podría estar causando problemas
+      const isAsync = scriptElement.hasAttribute('async');
+      const isDefer = scriptElement.hasAttribute('defer');
+      
+      // eslint-disable-next-line no-console
+      console.log('[dashboard.js] Información del script ConsoleManager:', {
+        scriptSrc: scriptElement.src,
+        isAsync,
+        isDefer,
+        scriptLoaded: scriptElement !== null,
+        scriptReadyState: scriptElement.readyState || 'N/A',
+        hasOnLoad: scriptElement.onload !== null,
+        hasOnError: scriptElement.onerror !== null
+      });
+      
+      // ✅ ELIMINADO: Carga manual del script
+      // Ya no es necesario porque el script ahora está envuelto en un IIFE
+      // que previene redeclaraciones si se carga múltiples veces
+    }
+    
+    // Función auxiliar para intentar inicializar
+    function tryInitialize() {
+      // Verificar disponibilidad
+      const hasConsoleManager = typeof ConsoleManager !== 'undefined' &amp;&amp; ConsoleManager &amp;&amp; typeof ConsoleManager.initialize === 'function';
+      const hasWindowConsoleManager = typeof window !== 'undefined' &amp;&amp; window.ConsoleManager &amp;&amp; typeof window.ConsoleManager.initialize === 'function';
+      const hasPollingManager = typeof window !== 'undefined' &amp;&amp; window.pollingManager;
+
+      // eslint-disable-next-line no-console
+      console.log('[dashboard.js] Verificando ConsoleManager...', {
+        hasConsoleManager,
+        hasWindowConsoleManager,
+        hasPollingManager,
+        ConsoleManagerType: typeof ConsoleManager,
+        windowConsoleManagerType: typeof window !== 'undefined' ? typeof window.ConsoleManager : 'window undefined',
+        windowKeys: typeof window !== 'undefined' ? Object.keys(window).filter(key => key.toLowerCase().includes('console')) : []
+      });
+
+      if (hasConsoleManager || hasWindowConsoleManager) {
+        // ConsoleManager está disponible, inicializar
+        const consoleManager = hasConsoleManager ? ConsoleManager : window.ConsoleManager;
+        
+        if (hasPollingManager) {
+          consoleManager.initialize();
+          // eslint-disable-next-line no-console
+          console.log('  ✅ ConsoleManager inicializado (con PollingManager disponible)');
+        } else {
+          consoleManager.initialize();
+          // eslint-disable-next-line no-console
+          console.log('  ⚠️  ConsoleManager inicializado sin PollingManager (modo fallback)');
+        }
+        return true;
+      }
+      return false;
+    }
+
+    // Intentar inicializar inmediatamente
+    if (tryInitialize()) {
+      return;
+    }
+
+    // Si no está disponible, esperar un poco y reintentar
+    // eslint-disable-next-line no-console
+    console.warn('  ⚠️  ConsoleManager no está disponible inmediatamente, esperando...');
+    
+    let attempts = 0;
+    const maxAttempts = 20; // 20 intentos = 2 segundos (aumentado para dar más tiempo)
+    const checkInterval = setInterval(function() {
+      attempts++;
+      if (tryInitialize()) {
+        clearInterval(checkInterval);
+        // eslint-disable-next-line no-console
+        console.log('  ✅ ConsoleManager disponible después de', attempts * 100, 'ms');
+      } else if (attempts >= maxAttempts) {
+        clearInterval(checkInterval);
+        // Verificar si el script está cargado
+        let scriptLoaded = false;
+        let scriptSrc = null;
+        if (typeof document !== 'undefined') {
+          const scriptElement = document.querySelector('script[src*="ConsoleManager.js"]');
+          scriptLoaded = scriptElement !== null;
+          scriptSrc = scriptElement ? scriptElement.src : null;
+        }
+        
+        // Verificar si hay errores de JavaScript en la consola
+        const allScripts = typeof document !== 'undefined' 
+          ? Array.from(document.querySelectorAll('script[src*="dashboard"]')).map(s => s.src)
+          : [];
+        
+        // eslint-disable-next-line no-console
+        console.error('  ❌ ConsoleManager no está disponible después de', maxAttempts * 100, 'ms', {
+          ConsoleManager: typeof ConsoleManager,
+          windowConsoleManager: typeof window !== 'undefined' ? typeof window.ConsoleManager : 'window undefined',
+          scriptLoaded,
+          scriptSrc,
+          allDashboardScripts: allScripts,
+          windowKeys: typeof window !== 'undefined' ? Object.keys(window).filter(key => 
+            key.toLowerCase().includes('console') || 
+            key.toLowerCase().includes('manager') ||
+            key.toLowerCase().includes('sync')
+          ).slice(0, 20) : [],
+          suggestion: 'Verifica la consola del navegador para errores de JavaScript en ConsoleManager.js'
+        });
+      }
+    }, 100);
+  }
+
+})();
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Thu Nov 13 2025 05:45:58 GMT+0100 (hora estándar de Europa central) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

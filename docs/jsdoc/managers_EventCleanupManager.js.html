@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>managers/EventCleanupManager.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AjaxManager.html">AjaxManager</a><ul class='methods'><li data-type='method'><a href="AjaxManager.html#.call">call</a></li></ul></li><li><a href="ErrorHandler.html">ErrorHandler</a><ul class='methods'><li data-type='method'><a href="ErrorHandler.html#.logError">logError</a></li><li data-type='method'><a href="ErrorHandler.html#.showCancelError">showCancelError</a></li><li data-type='method'><a href="ErrorHandler.html#.showConnectionError">showConnectionError</a></li><li data-type='method'><a href="ErrorHandler.html#.showCriticalError">showCriticalError</a></li><li data-type='method'><a href="ErrorHandler.html#.showProtectionError">showProtectionError</a></li><li data-type='method'><a href="ErrorHandler.html#.showUIError">showUIError</a></li></ul></li><li><a href="EventCleanupManager.html">EventCleanupManager</a><ul class='methods'><li data-type='method'><a href="EventCleanupManager.html#cleanupAll">cleanupAll</a></li><li data-type='method'><a href="EventCleanupManager.html#getStats">getStats</a></li><li data-type='method'><a href="EventCleanupManager.html#.cleanupComponent">cleanupComponent</a></li><li data-type='method'><a href="EventCleanupManager.html#.getInstance">getInstance</a></li><li data-type='method'><a href="EventCleanupManager.html#.registerCustomEventListener">registerCustomEventListener</a></li><li data-type='method'><a href="EventCleanupManager.html#.registerDocumentListener">registerDocumentListener</a></li><li data-type='method'><a href="EventCleanupManager.html#.registerElementListener">registerElementListener</a></li><li data-type='method'><a href="EventCleanupManager.html#.registerNativeListener">registerNativeListener</a></li></ul></li><li></li><li></li><li><a href="PollingManager.html">PollingManager</a><ul class='methods'><li data-type='method'><a href="PollingManager.html#adjustPolling">adjustPolling</a></li><li data-type='method'><a href="PollingManager.html#emit">emit</a></li><li data-type='method'><a href="PollingManager.html#getIntervalId">getIntervalId</a></li><li data-type='method'><a href="PollingManager.html#isPollingActive">isPollingActive</a></li><li data-type='method'><a href="PollingManager.html#off">off</a></li><li data-type='method'><a href="PollingManager.html#on">on</a></li><li data-type='method'><a href="PollingManager.html#recordError">recordError</a></li><li data-type='method'><a href="PollingManager.html#recordResponseTime">recordResponseTime</a></li><li data-type='method'><a href="PollingManager.html#reset">reset</a></li><li data-type='method'><a href="PollingManager.html#startPolling">startPolling</a></li><li data-type='method'><a href="PollingManager.html#stopAllPolling">stopAllPolling</a></li><li data-type='method'><a href="PollingManager.html#stopPolling">stopPolling</a></li></ul></li><li></li><li></li><li><a href="SyncDashboard.html">SyncDashboard</a><ul class='methods'><li data-type='method'><a href="SyncDashboard.html#cancelPhase1">cancelPhase1</a></li><li data-type='method'><a href="SyncDashboard.html#cancelSync">cancelSync</a></li><li data-type='method'><a href="SyncDashboard.html#disableButton">disableButton</a></li><li data-type='method'><a href="SyncDashboard.html#enableButton">enableButton</a></li><li data-type='method'><a href="SyncDashboard.html#handlePhase1Response">handlePhase1Response</a></li><li data-type='method'><a href="SyncDashboard.html#loadCurrentStatus">loadCurrentStatus</a></li><li data-type='method'><a href="SyncDashboard.html#pausePhase2">pausePhase2</a></li><li data-type='method'><a href="SyncDashboard.html#resumePhase1">resumePhase1</a></li><li data-type='method'><a href="SyncDashboard.html#startPhase1">startPhase1</a></li><li data-type='method'><a href="SyncDashboard.html#startPhase2">startPhase2</a></li><li data-type='method'><a href="SyncDashboard.html#startTimer">startTimer</a></li><li data-type='method'><a href="SyncDashboard.html#stopTimer">stopTimer</a></li><li data-type='method'><a href="SyncDashboard.html#updateConfig">updateConfig</a></li><li data-type='method'><a href="SyncDashboard.html#updateDashboardFromStatus">updateDashboardFromStatus</a></li><li data-type='method'><a href="SyncDashboard.html#updatePhase1Progress">updatePhase1Progress</a></li><li data-type='method'><a href="SyncDashboard.html#updatePhase2Progress">updatePhase2Progress</a></li><li data-type='method'><a href="SyncDashboard.html#updatePhaseStatus">updatePhaseStatus</a></li></ul></li><li></li><li></li><li><a href="UIOptimizer.html">UIOptimizer</a><ul class='methods'><li data-type='method'><a href="UIOptimizer.html#cancelPendingUpdates">cancelPendingUpdates</a></li><li data-type='method'><a href="UIOptimizer.html#clearCache">clearCache</a></li><li data-type='method'><a href="UIOptimizer.html#scheduleUpdate">scheduleUpdate</a></li><li data-type='method'><a href="UIOptimizer.html#.getInstance">getInstance</a></li><li data-type='method'><a href="UIOptimizer.html#.updateCssIfChanged">updateCssIfChanged</a></li><li data-type='method'><a href="UIOptimizer.html#.updateDataIfChanged">updateDataIfChanged</a></li><li data-type='method'><a href="UIOptimizer.html#.updateHtmlIfChanged">updateHtmlIfChanged</a></li><li data-type='method'><a href="UIOptimizer.html#.updateTextIfChanged">updateTextIfChanged</a></li><li data-type='method'><a href="UIOptimizer.html#.updateValueIfChanged">updateValueIfChanged</a></li></ul></li><li></li><li></li></ul><h3>Modules</h3><ul><li><a href="module-ui_SidebarController.html">ui/SidebarController</a></li><li><a href="module-utils_FormatUtils.html">utils/FormatUtils</a></li></ul><h3>Namespaces</h3><ul><li></li><li><a href="CardManager.html">CardManager</a></li><li></li><li><a href="ConsoleManager.html">ConsoleManager</a></li><li><a href="DASHBOARD_CONFIG.html">DASHBOARD_CONFIG</a></li><li></li><li><a href="global.html#DomUtils">DomUtils</a></li><li></li><li><a href="MESSAGES.html">MESSAGES</a></li><li><a href="global.html#NonceManager">NonceManager</a></li><li><a href="global.html#Phase1Manager">Phase1Manager</a></li><li><a href="global.html#Phase2Manager">Phase2Manager</a></li><li><a href="global.html#ProgressBar">ProgressBar</a></li><li><a href="ResponsiveLayout.html">ResponsiveLayout</a></li><li></li><li><a href="SELECTORS.html">SELECTORS</a></li><li></li><li><a href="global.html#Sanitizer">Sanitizer</a><ul class='methods'><li data-type='method'><a href="global.html#Sanitizer#.escapeHtml">escapeHtml</a></li><li data-type='method'><a href="global.html#Sanitizer#.sanitizeHtml">sanitizeHtml</a></li><li data-type='method'><a href="global.html#Sanitizer#.sanitizeMessage">sanitizeMessage</a></li></ul></li><li><a href="global.html#SyncController">SyncController</a></li><li><a href="global.html#SyncProgress">SyncProgress</a></li><li><a href="global.html#SyncStateManager">SyncStateManager</a></li><li><a href="global.html#SystemEventManager">SystemEventManager</a><ul class='methods'><li data-type='method'><a href="global.html#SystemEventManager#.checkAllSystemsReady">checkAllSystemsReady</a></li><li data-type='method'><a href="global.html#SystemEventManager#.checkDependencies">checkDependencies</a></li><li data-type='method'><a href="global.html#SystemEventManager#.emitErrorHandlerReady">emitErrorHandlerReady</a></li><li data-type='method'><a href="global.html#SystemEventManager#.emitSystemBaseReady">emitSystemBaseReady</a></li><li data-type='method'><a href="global.html#SystemEventManager#.emitUnifiedDashboardReady">emitUnifiedDashboardReady</a></li><li data-type='method'><a href="global.html#SystemEventManager#.getInitializationState">getInitializationState</a></li><li data-type='method'><a href="global.html#SystemEventManager#.init">init</a></li><li data-type='method'><a href="global.html#SystemEventManager#.initializeSystem">initializeSystem</a></li><li data-type='method'><a href="global.html#SystemEventManager#.log">log</a></li><li data-type='method'><a href="global.html#SystemEventManager#.registerSystem">registerSystem</a></li></ul></li><li><a href="global.html#ToastManager">ToastManager</a></li><li><a href="UnifiedDashboard.html">UnifiedDashboard</a><ul class='methods'><li data-type='method'><a href="UnifiedDashboard.html#.init">init</a></li><li data-type='method'><a href="UnifiedDashboard.html#.toggleDebugMode">toggleDebugMode</a></li></ul></li><li></li><li><a href="UnifiedDashboardController.html">UnifiedDashboardController</a></li><li></li></ul><h3>Global</h3><ul><li><a href="global.html#DEFAULT_DURATION">DEFAULT_DURATION</a></li><li><a href="global.html#DEFAULT_RENEWAL_INTERVAL">DEFAULT_RENEWAL_INTERVAL</a></li><li><a href="global.html#DEFAULT_SELECTOR">DEFAULT_SELECTOR</a></li><li><a href="global.html#DOM_CACHE">DOM_CACHE</a></li><li><a href="global.html#TOAST_CLASSES">TOAST_CLASSES</a></li><li><a href="global.html#TOAST_COLORS">TOAST_COLORS</a></li><li><a href="global.html#TOAST_ICONS">TOAST_ICONS</a></li><li><a href="global.html#adjustLayout">adjustLayout</a></li><li><a href="global.html#attemptRenewal">attemptRenewal</a></li><li><a href="global.html#check">check</a></li><li><a href="global.html#cleanupOnPageLoad">cleanupOnPageLoad</a></li><li><a href="global.html#cleanupSyncProgressListeners">cleanupSyncProgressListeners</a></li><li><a href="global.html#clearPhase2PollingInterval">clearPhase2PollingInterval</a></li><li><a href="global.html#clearSyncInterval">clearSyncInterval</a></li><li><a href="global.html#error">error</a></li><li><a href="global.html#getCache">getCache</a></li><li><a href="global.html#getFadeInDuration">getFadeInDuration</a></li><li><a href="global.html#getInactiveProgressCounter">getInactiveProgressCounter</a></li><li><a href="global.html#getLastProgressValue">getLastProgressValue</a></li><li><a href="global.html#getPhase1Initialized">getPhase1Initialized</a></li><li><a href="global.html#getPhase1Starting">getPhase1Starting</a></li><li><a href="global.html#getPhase2Initialized">getPhase2Initialized</a></li><li><a href="global.html#getPhase2PollingInterval">getPhase2PollingInterval</a></li><li><a href="global.html#getPhase2ProcessingBatch">getPhase2ProcessingBatch</a></li><li><a href="global.html#getPhase2Starting">getPhase2Starting</a></li><li><a href="global.html#getPollingInterval">getPollingInterval</a></li><li><a href="global.html#getState">getState</a></li><li><a href="global.html#getSyncInterval">getSyncInterval</a></li><li><a href="global.html#getTrackingState">getTrackingState</a></li><li><a href="global.html#getWidth">getWidth</a></li><li><a href="global.html#hideSidebar">hideSidebar</a></li><li><a href="global.html#inactiveProgressCounter">inactiveProgressCounter</a></li><li><a href="global.html#incrementInactiveProgressCounter">incrementInactiveProgressCounter</a></li><li><a href="global.html#info">info</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initCache">initCache</a></li><li><a href="global.html#initResponsiveMenu">initResponsiveMenu</a></li><li><a href="global.html#initialize">initialize</a></li><li><a href="global.html#initializeSyncDashboard">initializeSyncDashboard</a></li><li><a href="global.html#isAutoRenewalActive">isAutoRenewalActive</a></li><li><a href="global.html#isAvailable">isAvailable</a></li><li><a href="global.html#isCacheInitialized">isCacheInitialized</a></li><li><a href="global.html#isComplete">isComplete</a></li><li><a href="global.html#isPollingActive">isPollingActive</a></li><li><a href="global.html#phase1Starting">phase1Starting</a></li><li><a href="global.html#phase2Starting">phase2Starting</a></li><li><a href="global.html#pollingManager">pollingManager</a></li><li><a href="global.html#proceedWithSync">proceedWithSync</a></li><li><a href="global.html#processNextBatchAutomatically">processNextBatchAutomatically</a></li><li><a href="global.html#refreshCache">refreshCache</a></li><li><a href="global.html#reinit">reinit</a></li><li><a href="global.html#renewalIntervalId">renewalIntervalId</a></li><li><a href="global.html#reset">reset</a></li><li><a href="global.html#resetAllState">resetAllState</a></li><li><a href="global.html#resetCounters">resetCounters</a></li><li><a href="global.html#resetPhase1State">resetPhase1State</a></li><li><a href="global.html#resetPhase2State">resetPhase2State</a></li><li><a href="global.html#setColor">setColor</a></li><li><a href="global.html#setInactiveProgressCounter">setInactiveProgressCounter</a></li><li><a href="global.html#setLastProgressValue">setLastProgressValue</a></li><li><a href="global.html#setPercentage">setPercentage</a></li><li><a href="global.html#setPhase1Initialized">setPhase1Initialized</a></li><li><a href="global.html#setPhase1Starting">setPhase1Starting</a></li><li><a href="global.html#setPhase2Initialized">setPhase2Initialized</a></li><li><a href="global.html#setPhase2PollingInterval">setPhase2PollingInterval</a></li><li><a href="global.html#setPhase2ProcessingBatch">setPhase2ProcessingBatch</a></li><li><a href="global.html#setPhase2Starting">setPhase2Starting</a></li><li><a href="global.html#setSyncInterval">setSyncInterval</a></li><li><a href="global.html#setWidth">setWidth</a></li><li><a href="global.html#setupAutoRenewal">setupAutoRenewal</a></li><li><a href="global.html#show">show</a></li><li><a href="global.html#showSidebar">showSidebar</a></li><li><a href="global.html#start">start</a></li><li><a href="global.html#stop">stop</a></li><li><a href="global.html#stopAutoRenewal">stopAutoRenewal</a></li><li><a href="global.html#stopProgressPolling">stopProgressPolling</a></li><li><a href="global.html#success">success</a></li><li><a href="global.html#toggleSidebar">toggleSidebar</a></li><li><a href="global.html#trackingState">trackingState</a></li><li><a href="global.html#updateCardData">updateCardData</a></li><li><a href="global.html#updateSpecificCard">updateSpecificCard</a></li><li><a href="global.html#warning">warning</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">managers/EventCleanupManager.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Gestor de Limpieza de Eventos
+ * 
+ * Gestiona la limpieza de event listeners para evitar fugas de memoria.
+ * Rastrea y desvincula listeners de jQuery(document).on() y otros eventos.
+ * 
+ * @module managers/EventCleanupManager
+ * @class EventCleanupManager
+ * @since 1.0.0
+ * @author Christian
+ */
+
+/* global ErrorHandler */
+
+/**
+ * Clase para gestionar la limpieza de eventos
+ * 
+ * @class EventCleanupManager
+ * @description Rastrea y limpia event listeners para prevenir fugas de memoria
+ * 
+ * @example
+ * // Registrar un listener con cleanup automático
+ * EventCleanupManager.registerDocumentListener('click', '#my-button', handler, 'my-component');
+ * 
+ * // Limpiar todos los listeners de un componente
+ * EventCleanupManager.cleanupComponent('my-component');
+ * 
+ * // Limpiar todos los listeners al salir de la página
+ * EventCleanupManager.cleanupAll();
+ */
+class EventCleanupManager {
+  /**
+   * Constructor de EventCleanupManager
+   * 
+   * @constructor
+   */
+  constructor() {
+    this.documentListeners = new Map();
+    this.elementListeners = new Map();
+    this.customEventListeners = new Map();
+    this.nativeListeners = new Map();
+    this.autoCleanupInitialized = false;
+    this.initializeAutoCleanup();
+  }
+
+  /**
+   * Inicializa el cleanup automático al salir de la página
+   * 
+   * @returns {void}
+   * @private
+   */
+  initializeAutoCleanup() {
+    if (this.autoCleanupInitialized) {
+      return;
+    }
+    
+    if (typeof window === 'undefined') {
+      return;
+    }
+    
+    this.autoCleanupInitialized = true;
+    
+    if (typeof window.addEventListener !== 'undefined') {
+      // pagehide es más confiable en móviles que unload
+      window.addEventListener('beforeunload', () => this.cleanupAll(), { once: true });
+      window.addEventListener('unload', () => this.cleanupAll(), { once: true });
+      window.addEventListener('pagehide', () => this.cleanupAll(), { once: true });
+    }
+  }
+
+  /**
+   * Registra un listener de document con jQuery para cleanup automático
+   * 
+   * @param {string} event - Tipo de evento (ej: 'click', 'change')
+   * @param {string} selector - Selector CSS del elemento
+   * @param {Function} handler - Función handler del evento
+   * @param {string} componentId - ID del componente que registra el listener
+   * @returns {Function} Función para desvincular manualmente el listener
+   * 
+   * @example
+   * const unsubscribe = EventCleanupManager.registerDocumentListener(
+   *   'click',
+   *   '#my-button',
+   *   (e) => { console.log('clicked'); },
+   *   'my-component'
+   * );
+   */
+  static registerDocumentListener(event, selector, handler, componentId) {
+    if (typeof jQuery === 'undefined' || typeof jQuery(document).on !== 'function') {
+      if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.logError === 'function') {
+        ErrorHandler.logError('jQuery no está disponible para registrar listener de document', 'EVENT_CLEANUP');
+      }
+      return function() {};
+    }
+    
+    const manager = EventCleanupManager.getInstance();
+    jQuery(document).on(event, selector, handler);
+    
+    if (!manager.documentListeners.has(componentId)) {
+      manager.documentListeners.set(componentId, []);
+    }
+    
+    const listenerInfo = {
+      event,
+      selector,
+      handler,
+      componentId
+    };
+    
+    manager.documentListeners.get(componentId).push(listenerInfo);
+    
+    // Retornar función para desvincular manualmente
+    return function() {
+      jQuery(document).off(event, selector, handler);
+      const listeners = manager.documentListeners.get(componentId);
+      if (listeners) {
+        const index = listeners.findIndex(l => 
+          l.event === event &amp;&amp; 
+          l.selector === selector &amp;&amp; 
+          l.handler === handler
+        );
+        if (index !== -1) {
+          listeners.splice(index, 1);
+        }
+      }
+    };
+  }
+
+  /**
+   * Registra un listener de elemento específico con jQuery para cleanup automático
+   * 
+   * @param {jQuery|HTMLElement|string} element - Elemento jQuery, DOM o selector CSS
+   * @param {string} event - Tipo de evento
+   * @param {Function} handler - Función handler del evento
+   * @param {string} componentId - ID del componente que registra el listener
+   * @returns {Function} Función para desvincular manualmente el listener
+   * 
+   * @example
+   * const unsubscribe = EventCleanupManager.registerElementListener(
+   *   jQuery('#my-button'),
+   *   'click',
+   *   (e) => { console.log('clicked'); },
+   *   'my-component'
+   * );
+   */
+  static registerElementListener(element, event, handler, componentId) {
+    if (typeof jQuery === 'undefined') {
+      if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.logError === 'function') {
+        ErrorHandler.logError('jQuery no está disponible para registrar listener de elemento', 'EVENT_CLEANUP');
+      }
+      return function() {};
+    }
+    
+    const $element = typeof element === 'string' 
+      ? jQuery(element)
+      : element instanceof jQuery 
+        ? element 
+        : jQuery(element);
+    
+    if ($element.length === 0) {
+      if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.logError === 'function') {
+        ErrorHandler.logError(`Elemento no encontrado para registrar listener: ${typeof element === 'string' ? element : 'elemento'}`, 'EVENT_CLEANUP');
+      }
+      return function() {};
+    }
+    
+    const manager = EventCleanupManager.getInstance();
+    $element.on(event, handler);
+    
+    if (!manager.elementListeners.has(componentId)) {
+      manager.elementListeners.set(componentId, []);
+    }
+    
+    const listenerInfo = {
+      element: $element,
+      event,
+      handler,
+      componentId
+    };
+    
+    manager.elementListeners.get(componentId).push(listenerInfo);
+    
+    // Retornar función para desvincular manualmente
+    return function() {
+      $element.off(event, handler);
+      const listeners = manager.elementListeners.get(componentId);
+      if (listeners) {
+        const index = listeners.findIndex(l => 
+          l.element === $element &amp;&amp; 
+          l.event === event &amp;&amp; 
+          l.handler === handler
+        );
+        if (index !== -1) {
+          listeners.splice(index, 1);
+        }
+      }
+    };
+  }
+
+  /**
+   * Registra un listener de eventos personalizados (PollingManager, etc.) para cleanup automático
+   * 
+   * @param {Object} emitter - Objeto que emite eventos (debe tener métodos on/off o similar)
+   * @param {string} event - Nombre del evento
+   * @param {Function} handler - Función handler del evento
+   * @param {string} componentId - ID del componente que registra el listener
+   * @returns {Function} Función para desvincular manualmente el listener
+   * 
+   * @example
+   * const unsubscribe = EventCleanupManager.registerCustomEventListener(
+   *   pollingManager,
+   *   'syncProgress',
+   *   (data) => { console.log(data); },
+   *   'my-component'
+   * );
+   */
+  static registerCustomEventListener(emitter, event, handler, componentId) {
+    if (!emitter || typeof emitter.on !== 'function') {
+      if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.logError === 'function') {
+        ErrorHandler.logError('Emitter no válido para registrar listener de eventos personalizados', 'EVENT_CLEANUP');
+      }
+      return function() {};
+    }
+    
+    const manager = EventCleanupManager.getInstance();
+    
+    let unsubscribe = null;
+    if (typeof emitter.on === 'function') {
+      unsubscribe = emitter.on(event, handler);
+    }
+    
+    if (!manager.customEventListeners.has(componentId)) {
+      manager.customEventListeners.set(componentId, []);
+    }
+    
+    const listenerInfo = {
+      emitter,
+      event,
+      handler,
+      unsubscribe,
+      componentId
+    };
+    
+    manager.customEventListeners.get(componentId).push(listenerInfo);
+    
+    // Retornar función para desvincular manualmente
+    return function() {
+      if (unsubscribe &amp;&amp; typeof unsubscribe === 'function') {
+        unsubscribe();
+      } else if (emitter &amp;&amp; typeof emitter.off === 'function') {
+        emitter.off(event, handler);
+      }
+      
+      const listeners = manager.customEventListeners.get(componentId);
+      if (listeners) {
+        const index = listeners.findIndex(l => 
+          l.emitter === emitter &amp;&amp; 
+          l.event === event &amp;&amp; 
+          l.handler === handler
+        );
+        if (index !== -1) {
+          listeners.splice(index, 1);
+        }
+      }
+    };
+  }
+
+  /**
+   * Registra un listener nativo (addEventListener) para cleanup automático
+   * 
+   * @param {HTMLElement|Window} element - Elemento o window donde registrar el listener
+   * @param {string} event - Tipo de evento
+   * @param {Function} handler - Función handler del evento
+   * @param {string} componentId - ID del componente que registra el listener
+   * @param {Object|boolean} [options] - Opciones para addEventListener (passive, once, etc.)
+   * @returns {Function} Función para desvincular manualmente el listener
+   * 
+   * @example
+   * const unsubscribe = EventCleanupManager.registerNativeListener(
+   *   window,
+   *   'resize',
+   *   () => { console.log('resized'); },
+   *   'my-component',
+   *   { passive: true }
+   * );
+   */
+  static registerNativeListener(element, event, handler, componentId, options = false) {
+    if (!element || typeof element.addEventListener !== 'function') {
+      if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.logError === 'function') {
+        ErrorHandler.logError('Elemento no válido para registrar listener nativo', 'EVENT_CLEANUP');
+      }
+      return function() {};
+    }
+    
+    const manager = EventCleanupManager.getInstance();
+    element.addEventListener(event, handler, options);
+    
+    if (!manager.nativeListeners.has(componentId)) {
+      manager.nativeListeners.set(componentId, []);
+    }
+    
+    const listenerInfo = {
+      element,
+      event,
+      handler,
+      options,
+      componentId
+    };
+    
+    manager.nativeListeners.get(componentId).push(listenerInfo);
+    
+    // Retornar función para desvincular manualmente
+    return function() {
+      element.removeEventListener(event, handler, options);
+      const listeners = manager.nativeListeners.get(componentId);
+      if (listeners) {
+        const index = listeners.findIndex(l => 
+          l.element === element &amp;&amp; 
+          l.event === event &amp;&amp; 
+          l.handler === handler
+        );
+        if (index !== -1) {
+          listeners.splice(index, 1);
+        }
+      }
+    };
+  }
+
+  /**
+   * Limpia todos los listeners de un componente específico
+   * 
+   * @param {string} componentId - ID del componente a limpiar
+   * @returns {number} Número de listeners desvinculados
+   */
+  static cleanupComponent(componentId) {
+    const manager = EventCleanupManager.getInstance();
+    let cleanedCount = 0;
+    const docListeners = manager.documentListeners.get(componentId);
+    if (docListeners &amp;&amp; docListeners.length > 0) {
+      if (typeof jQuery !== 'undefined' &amp;&amp; typeof jQuery(document).off === 'function') {
+        docListeners.forEach(listener => {
+          try {
+            jQuery(document).off(listener.event, listener.selector, listener.handler);
+            cleanedCount++;
+          } catch (error) {
+            if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.logError === 'function') {
+              ErrorHandler.logError(`Error limpiando listener de document: ${error.message || error}`, 'EVENT_CLEANUP');
+            }
+          }
+        });
+      }
+      manager.documentListeners.delete(componentId);
+    }
+    
+    const elemListeners = manager.elementListeners.get(componentId);
+    if (elemListeners &amp;&amp; elemListeners.length > 0) {
+      elemListeners.forEach(listener => {
+        try {
+          if (listener.element &amp;&amp; typeof listener.element.off === 'function') {
+            listener.element.off(listener.event, listener.handler);
+            cleanedCount++;
+          }
+        } catch (error) {
+          if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.logError === 'function') {
+            ErrorHandler.logError(`Error limpiando listener de elemento: ${error.message || error}`, 'EVENT_CLEANUP');
+          }
+        }
+      });
+      manager.elementListeners.delete(componentId);
+    }
+    
+    const customListeners = manager.customEventListeners.get(componentId);
+    if (customListeners &amp;&amp; customListeners.length > 0) {
+      customListeners.forEach(listener => {
+        try {
+          if (listener.unsubscribe &amp;&amp; typeof listener.unsubscribe === 'function') {
+            listener.unsubscribe();
+            cleanedCount++;
+          } else if (listener.emitter &amp;&amp; typeof listener.emitter.off === 'function') {
+            listener.emitter.off(listener.event, listener.handler);
+            cleanedCount++;
+          }
+        } catch (error) {
+          if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.logError === 'function') {
+            ErrorHandler.logError(`Error limpiando listener de eventos personalizados: ${error.message || error}`, 'EVENT_CLEANUP');
+          }
+        }
+      });
+      manager.customEventListeners.delete(componentId);
+    }
+    
+    const nativeListeners = manager.nativeListeners.get(componentId);
+    if (nativeListeners &amp;&amp; nativeListeners.length > 0) {
+      nativeListeners.forEach(listener => {
+        try {
+          if (listener.element &amp;&amp; typeof listener.element.removeEventListener === 'function') {
+            listener.element.removeEventListener(listener.event, listener.handler, listener.options);
+            cleanedCount++;
+          }
+        } catch (error) {
+          if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.logError === 'function') {
+            ErrorHandler.logError(`Error limpiando listener nativo: ${error.message || error}`, 'EVENT_CLEANUP');
+          }
+        }
+      });
+      manager.nativeListeners.delete(componentId);
+    }
+    
+    return cleanedCount;
+  }
+
+  /**
+   * Limpia todos los listeners registrados
+   * 
+   * @returns {number} Número total de listeners desvinculados
+   */
+  cleanupAll() {
+    let totalCleaned = 0;
+    const componentIds = new Set([
+      ...this.documentListeners.keys(),
+      ...this.elementListeners.keys(),
+      ...this.customEventListeners.keys(),
+      ...this.nativeListeners.keys()
+    ]);
+    
+    componentIds.forEach(componentId => {
+      totalCleaned += EventCleanupManager.cleanupComponent(componentId);
+    });
+    
+    return totalCleaned;
+  }
+
+  /**
+   * Obtiene estadísticas de listeners registrados
+   * 
+   * @returns {Object} Estadísticas de listeners
+   */
+  getStats() {
+    return {
+      documentListeners: Array.from(this.documentListeners.values()).reduce((sum, arr) => sum + arr.length, 0),
+      elementListeners: Array.from(this.elementListeners.values()).reduce((sum, arr) => sum + arr.length, 0),
+      customEventListeners: Array.from(this.customEventListeners.values()).reduce((sum, arr) => sum + arr.length, 0),
+      nativeListeners: Array.from(this.nativeListeners.values()).reduce((sum, arr) => sum + arr.length, 0),
+      totalComponents: new Set([
+        ...this.documentListeners.keys(),
+        ...this.elementListeners.keys(),
+        ...this.customEventListeners.keys(),
+        ...this.nativeListeners.keys()
+      ]).size
+    };
+  }
+
+  /**
+   * Obtiene la instancia singleton de EventCleanupManager
+   * 
+   * @static
+   * @returns {EventCleanupManager} Instancia de EventCleanupManager
+   */
+  static getInstance() {
+    if (!EventCleanupManager.instance) {
+      EventCleanupManager.instance = new EventCleanupManager();
+    }
+    return EventCleanupManager.instance;
+  }
+}
+
+// Instancia singleton
+EventCleanupManager.instance = null;
+
+/**
+ * Exponer EventCleanupManager globalmente
+ */
+(function exposeEventCleanupManager() {
+  if (typeof window === 'undefined') {
+    return;
+  }
+  
+  // Método 1: Asignación directa
+  try {
+    window.EventCleanupManager = EventCleanupManager;
+    if (window.EventCleanupManager === EventCleanupManager) {
+      return; // ✅ Éxito
+    }
+  } catch (error) {
+    // Continuar con siguiente método
+  }
+  
+  // Método 2: Object.defineProperty
+  try {
+    Object.defineProperty(window, 'EventCleanupManager', {
+      value: EventCleanupManager,
+      writable: true,
+      enumerable: true,
+      configurable: true
+    });
+    if (window.EventCleanupManager === EventCleanupManager) {
+      return; // ✅ Éxito
+    }
+  } catch (defineError) {
+    // ✅ SEGURIDAD: No usar eval como fallback
+    if (typeof console !== 'undefined' &amp;&amp; console.warn) {
+      // eslint-disable-next-line no-console
+      console.warn('[EventCleanupManager] ⚠️ No se pudo exponer EventCleanupManager usando métodos seguros:', defineError);
+    }
+  }
+})();
+
+/* global module */
+if (typeof module !== 'undefined' &amp;&amp; module.exports) {
+  module.exports = { EventCleanupManager };
+}
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Thu Nov 13 2025 05:45:58 GMT+0100 (hora estándar de Europa central) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

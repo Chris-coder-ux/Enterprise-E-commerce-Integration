@@ -1,0 +1,1804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>components/UnifiedDashboard.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AjaxManager.html">AjaxManager</a><ul class='methods'><li data-type='method'><a href="AjaxManager.html#.call">call</a></li></ul></li><li><a href="ErrorHandler.html">ErrorHandler</a><ul class='methods'><li data-type='method'><a href="ErrorHandler.html#.logError">logError</a></li><li data-type='method'><a href="ErrorHandler.html#.showCancelError">showCancelError</a></li><li data-type='method'><a href="ErrorHandler.html#.showConnectionError">showConnectionError</a></li><li data-type='method'><a href="ErrorHandler.html#.showCriticalError">showCriticalError</a></li><li data-type='method'><a href="ErrorHandler.html#.showProtectionError">showProtectionError</a></li><li data-type='method'><a href="ErrorHandler.html#.showUIError">showUIError</a></li></ul></li><li><a href="EventCleanupManager.html">EventCleanupManager</a><ul class='methods'><li data-type='method'><a href="EventCleanupManager.html#cleanupAll">cleanupAll</a></li><li data-type='method'><a href="EventCleanupManager.html#getStats">getStats</a></li><li data-type='method'><a href="EventCleanupManager.html#.cleanupComponent">cleanupComponent</a></li><li data-type='method'><a href="EventCleanupManager.html#.getInstance">getInstance</a></li><li data-type='method'><a href="EventCleanupManager.html#.registerCustomEventListener">registerCustomEventListener</a></li><li data-type='method'><a href="EventCleanupManager.html#.registerDocumentListener">registerDocumentListener</a></li><li data-type='method'><a href="EventCleanupManager.html#.registerElementListener">registerElementListener</a></li><li data-type='method'><a href="EventCleanupManager.html#.registerNativeListener">registerNativeListener</a></li></ul></li><li></li><li></li><li><a href="PollingManager.html">PollingManager</a><ul class='methods'><li data-type='method'><a href="PollingManager.html#adjustPolling">adjustPolling</a></li><li data-type='method'><a href="PollingManager.html#emit">emit</a></li><li data-type='method'><a href="PollingManager.html#getIntervalId">getIntervalId</a></li><li data-type='method'><a href="PollingManager.html#isPollingActive">isPollingActive</a></li><li data-type='method'><a href="PollingManager.html#off">off</a></li><li data-type='method'><a href="PollingManager.html#on">on</a></li><li data-type='method'><a href="PollingManager.html#recordError">recordError</a></li><li data-type='method'><a href="PollingManager.html#recordResponseTime">recordResponseTime</a></li><li data-type='method'><a href="PollingManager.html#reset">reset</a></li><li data-type='method'><a href="PollingManager.html#startPolling">startPolling</a></li><li data-type='method'><a href="PollingManager.html#stopAllPolling">stopAllPolling</a></li><li data-type='method'><a href="PollingManager.html#stopPolling">stopPolling</a></li></ul></li><li></li><li></li><li><a href="SyncDashboard.html">SyncDashboard</a><ul class='methods'><li data-type='method'><a href="SyncDashboard.html#cancelPhase1">cancelPhase1</a></li><li data-type='method'><a href="SyncDashboard.html#cancelSync">cancelSync</a></li><li data-type='method'><a href="SyncDashboard.html#disableButton">disableButton</a></li><li data-type='method'><a href="SyncDashboard.html#enableButton">enableButton</a></li><li data-type='method'><a href="SyncDashboard.html#handlePhase1Response">handlePhase1Response</a></li><li data-type='method'><a href="SyncDashboard.html#loadCurrentStatus">loadCurrentStatus</a></li><li data-type='method'><a href="SyncDashboard.html#pausePhase2">pausePhase2</a></li><li data-type='method'><a href="SyncDashboard.html#resumePhase1">resumePhase1</a></li><li data-type='method'><a href="SyncDashboard.html#startPhase1">startPhase1</a></li><li data-type='method'><a href="SyncDashboard.html#startPhase2">startPhase2</a></li><li data-type='method'><a href="SyncDashboard.html#startTimer">startTimer</a></li><li data-type='method'><a href="SyncDashboard.html#stopTimer">stopTimer</a></li><li data-type='method'><a href="SyncDashboard.html#updateConfig">updateConfig</a></li><li data-type='method'><a href="SyncDashboard.html#updateDashboardFromStatus">updateDashboardFromStatus</a></li><li data-type='method'><a href="SyncDashboard.html#updatePhase1Progress">updatePhase1Progress</a></li><li data-type='method'><a href="SyncDashboard.html#updatePhase2Progress">updatePhase2Progress</a></li><li data-type='method'><a href="SyncDashboard.html#updatePhaseStatus">updatePhaseStatus</a></li></ul></li><li></li><li></li><li><a href="UIOptimizer.html">UIOptimizer</a><ul class='methods'><li data-type='method'><a href="UIOptimizer.html#cancelPendingUpdates">cancelPendingUpdates</a></li><li data-type='method'><a href="UIOptimizer.html#clearCache">clearCache</a></li><li data-type='method'><a href="UIOptimizer.html#scheduleUpdate">scheduleUpdate</a></li><li data-type='method'><a href="UIOptimizer.html#.getInstance">getInstance</a></li><li data-type='method'><a href="UIOptimizer.html#.updateCssIfChanged">updateCssIfChanged</a></li><li data-type='method'><a href="UIOptimizer.html#.updateDataIfChanged">updateDataIfChanged</a></li><li data-type='method'><a href="UIOptimizer.html#.updateHtmlIfChanged">updateHtmlIfChanged</a></li><li data-type='method'><a href="UIOptimizer.html#.updateTextIfChanged">updateTextIfChanged</a></li><li data-type='method'><a href="UIOptimizer.html#.updateValueIfChanged">updateValueIfChanged</a></li></ul></li><li></li><li></li></ul><h3>Modules</h3><ul><li><a href="module-ui_SidebarController.html">ui/SidebarController</a></li><li><a href="module-utils_FormatUtils.html">utils/FormatUtils</a></li></ul><h3>Namespaces</h3><ul><li></li><li><a href="CardManager.html">CardManager</a></li><li></li><li><a href="ConsoleManager.html">ConsoleManager</a></li><li><a href="DASHBOARD_CONFIG.html">DASHBOARD_CONFIG</a></li><li></li><li><a href="global.html#DomUtils">DomUtils</a></li><li></li><li><a href="MESSAGES.html">MESSAGES</a></li><li><a href="global.html#NonceManager">NonceManager</a></li><li><a href="global.html#Phase1Manager">Phase1Manager</a></li><li><a href="global.html#Phase2Manager">Phase2Manager</a></li><li><a href="global.html#ProgressBar">ProgressBar</a></li><li><a href="ResponsiveLayout.html">ResponsiveLayout</a></li><li></li><li><a href="SELECTORS.html">SELECTORS</a></li><li></li><li><a href="global.html#Sanitizer">Sanitizer</a><ul class='methods'><li data-type='method'><a href="global.html#Sanitizer#.escapeHtml">escapeHtml</a></li><li data-type='method'><a href="global.html#Sanitizer#.sanitizeHtml">sanitizeHtml</a></li><li data-type='method'><a href="global.html#Sanitizer#.sanitizeMessage">sanitizeMessage</a></li></ul></li><li><a href="global.html#SyncController">SyncController</a></li><li><a href="global.html#SyncProgress">SyncProgress</a></li><li><a href="global.html#SyncStateManager">SyncStateManager</a></li><li><a href="global.html#SystemEventManager">SystemEventManager</a><ul class='methods'><li data-type='method'><a href="global.html#SystemEventManager#.checkAllSystemsReady">checkAllSystemsReady</a></li><li data-type='method'><a href="global.html#SystemEventManager#.checkDependencies">checkDependencies</a></li><li data-type='method'><a href="global.html#SystemEventManager#.emitErrorHandlerReady">emitErrorHandlerReady</a></li><li data-type='method'><a href="global.html#SystemEventManager#.emitSystemBaseReady">emitSystemBaseReady</a></li><li data-type='method'><a href="global.html#SystemEventManager#.emitUnifiedDashboardReady">emitUnifiedDashboardReady</a></li><li data-type='method'><a href="global.html#SystemEventManager#.getInitializationState">getInitializationState</a></li><li data-type='method'><a href="global.html#SystemEventManager#.init">init</a></li><li data-type='method'><a href="global.html#SystemEventManager#.initializeSystem">initializeSystem</a></li><li data-type='method'><a href="global.html#SystemEventManager#.log">log</a></li><li data-type='method'><a href="global.html#SystemEventManager#.registerSystem">registerSystem</a></li></ul></li><li><a href="global.html#ToastManager">ToastManager</a></li><li><a href="UnifiedDashboard.html">UnifiedDashboard</a><ul class='methods'><li data-type='method'><a href="UnifiedDashboard.html#.init">init</a></li><li data-type='method'><a href="UnifiedDashboard.html#.toggleDebugMode">toggleDebugMode</a></li></ul></li><li></li><li><a href="UnifiedDashboardController.html">UnifiedDashboardController</a></li><li></li></ul><h3>Global</h3><ul><li><a href="global.html#DEFAULT_DURATION">DEFAULT_DURATION</a></li><li><a href="global.html#DEFAULT_RENEWAL_INTERVAL">DEFAULT_RENEWAL_INTERVAL</a></li><li><a href="global.html#DEFAULT_SELECTOR">DEFAULT_SELECTOR</a></li><li><a href="global.html#DOM_CACHE">DOM_CACHE</a></li><li><a href="global.html#TOAST_CLASSES">TOAST_CLASSES</a></li><li><a href="global.html#TOAST_COLORS">TOAST_COLORS</a></li><li><a href="global.html#TOAST_ICONS">TOAST_ICONS</a></li><li><a href="global.html#adjustLayout">adjustLayout</a></li><li><a href="global.html#attemptRenewal">attemptRenewal</a></li><li><a href="global.html#check">check</a></li><li><a href="global.html#cleanupOnPageLoad">cleanupOnPageLoad</a></li><li><a href="global.html#cleanupSyncProgressListeners">cleanupSyncProgressListeners</a></li><li><a href="global.html#clearPhase2PollingInterval">clearPhase2PollingInterval</a></li><li><a href="global.html#clearSyncInterval">clearSyncInterval</a></li><li><a href="global.html#error">error</a></li><li><a href="global.html#getCache">getCache</a></li><li><a href="global.html#getFadeInDuration">getFadeInDuration</a></li><li><a href="global.html#getInactiveProgressCounter">getInactiveProgressCounter</a></li><li><a href="global.html#getLastProgressValue">getLastProgressValue</a></li><li><a href="global.html#getPhase1Initialized">getPhase1Initialized</a></li><li><a href="global.html#getPhase1Starting">getPhase1Starting</a></li><li><a href="global.html#getPhase2Initialized">getPhase2Initialized</a></li><li><a href="global.html#getPhase2PollingInterval">getPhase2PollingInterval</a></li><li><a href="global.html#getPhase2ProcessingBatch">getPhase2ProcessingBatch</a></li><li><a href="global.html#getPhase2Starting">getPhase2Starting</a></li><li><a href="global.html#getPollingInterval">getPollingInterval</a></li><li><a href="global.html#getState">getState</a></li><li><a href="global.html#getSyncInterval">getSyncInterval</a></li><li><a href="global.html#getTrackingState">getTrackingState</a></li><li><a href="global.html#getWidth">getWidth</a></li><li><a href="global.html#hideSidebar">hideSidebar</a></li><li><a href="global.html#inactiveProgressCounter">inactiveProgressCounter</a></li><li><a href="global.html#incrementInactiveProgressCounter">incrementInactiveProgressCounter</a></li><li><a href="global.html#info">info</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initCache">initCache</a></li><li><a href="global.html#initResponsiveMenu">initResponsiveMenu</a></li><li><a href="global.html#initialize">initialize</a></li><li><a href="global.html#initializeSyncDashboard">initializeSyncDashboard</a></li><li><a href="global.html#isAutoRenewalActive">isAutoRenewalActive</a></li><li><a href="global.html#isAvailable">isAvailable</a></li><li><a href="global.html#isCacheInitialized">isCacheInitialized</a></li><li><a href="global.html#isComplete">isComplete</a></li><li><a href="global.html#isPollingActive">isPollingActive</a></li><li><a href="global.html#phase1Starting">phase1Starting</a></li><li><a href="global.html#phase2Starting">phase2Starting</a></li><li><a href="global.html#pollingManager">pollingManager</a></li><li><a href="global.html#proceedWithSync">proceedWithSync</a></li><li><a href="global.html#processNextBatchAutomatically">processNextBatchAutomatically</a></li><li><a href="global.html#refreshCache">refreshCache</a></li><li><a href="global.html#reinit">reinit</a></li><li><a href="global.html#renewalIntervalId">renewalIntervalId</a></li><li><a href="global.html#reset">reset</a></li><li><a href="global.html#resetAllState">resetAllState</a></li><li><a href="global.html#resetCounters">resetCounters</a></li><li><a href="global.html#resetPhase1State">resetPhase1State</a></li><li><a href="global.html#resetPhase2State">resetPhase2State</a></li><li><a href="global.html#setColor">setColor</a></li><li><a href="global.html#setInactiveProgressCounter">setInactiveProgressCounter</a></li><li><a href="global.html#setLastProgressValue">setLastProgressValue</a></li><li><a href="global.html#setPercentage">setPercentage</a></li><li><a href="global.html#setPhase1Initialized">setPhase1Initialized</a></li><li><a href="global.html#setPhase1Starting">setPhase1Starting</a></li><li><a href="global.html#setPhase2Initialized">setPhase2Initialized</a></li><li><a href="global.html#setPhase2PollingInterval">setPhase2PollingInterval</a></li><li><a href="global.html#setPhase2ProcessingBatch">setPhase2ProcessingBatch</a></li><li><a href="global.html#setPhase2Starting">setPhase2Starting</a></li><li><a href="global.html#setSyncInterval">setSyncInterval</a></li><li><a href="global.html#setWidth">setWidth</a></li><li><a href="global.html#setupAutoRenewal">setupAutoRenewal</a></li><li><a href="global.html#show">show</a></li><li><a href="global.html#showSidebar">showSidebar</a></li><li><a href="global.html#start">start</a></li><li><a href="global.html#stop">stop</a></li><li><a href="global.html#stopAutoRenewal">stopAutoRenewal</a></li><li><a href="global.html#stopProgressPolling">stopProgressPolling</a></li><li><a href="global.html#success">success</a></li><li><a href="global.html#toggleSidebar">toggleSidebar</a></li><li><a href="global.html#trackingState">trackingState</a></li><li><a href="global.html#updateCardData">updateCardData</a></li><li><a href="global.html#updateSpecificCard">updateSpecificCard</a></li><li><a href="global.html#warning">warning</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">components/UnifiedDashboard.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Dashboard Unificado Completo
+ *
+ * Gestiona el dashboard completo con diagnóstico automático, métricas del sistema,
+ * análisis de salud, y todas las funcionalidades de diagnóstico y monitoreo.
+ *
+ * @module components/UnifiedDashboard
+ * @namespace UnifiedDashboard
+ * @since 1.0.0
+ * @author Christian
+ */
+
+/* global jQuery, AjaxManager, ErrorHandler, pollingManager, SELECTORS, syncInterval, EventCleanupManager, Sanitizer */
+
+/**
+ * Dashboard unificado con diagnóstico automático
+ *
+ * @class UnifiedDashboard
+ * @description Gestión completa del dashboard y todas sus funcionalidades
+ * @namespace UnifiedDashboard
+ *
+ * @example
+ * // Inicializar dashboard (uso directo)
+ * UnifiedDashboard.init();
+ *
+ * // Ejecutar diagnóstico del sistema (uso directo)
+ * UnifiedDashboard.runSystemDiagnostic();
+ *
+ * // También disponible como window.UnifiedDashboard
+ * window.UnifiedDashboard.init();
+ *
+ * @since 1.0.0
+ * @author Christian
+ */
+const UnifiedDashboard = {
+  // SIMPLIFICADO: Configuración básica - PHP maneja lógica adaptativa
+  config: {
+    refreshInterval: 60000, // 60 segundos (base)
+    diagnosticTimeout: 30000, // 30 segundos
+    debugMode: false // Control de logs verbosos
+  },
+
+  // Estado del sistema
+  systemState: {
+    lastCheck: null,
+    overallHealth: 'unknown',
+    lastHealth: 'unknown',
+    issues: [],
+    recommendations: []
+  },
+
+  /**
+   * Inicializar el dashboard unificado
+   * @returns {void}
+   * @example
+   * UnifiedDashboard.init();
+   */
+  init() {
+    this.bindEvents();
+  },
+
+  /**
+   * Activar/desactivar modo debug
+   * @returns {void}
+   * @example
+   * UnifiedDashboard.toggleDebugMode();
+   */
+  toggleDebugMode() {
+    this.config.debugMode = !this.config.debugMode;
+    const $btn = jQuery('#toggle-debug-mode');
+    if (this.config.debugMode) {
+      $btn.removeClass('button-secondary').addClass('button-primary');
+      $btn.html('&lt;span class="dashicons dashicons-admin-tools">&lt;/span> Debug: ON');
+      // Modo debug activado
+    } else {
+      $btn.removeClass('button-primary').addClass('button-secondary');
+      $btn.html('&lt;span class="dashicons dashicons-admin-tools">&lt;/span> Debug: OFF');
+      // Modo debug desactivado
+    }
+  },
+
+  /**
+   * Vincular eventos del dashboard
+   * @returns {void}
+   * @private
+   */
+  bindEvents() {
+    const componentId = 'UnifiedDashboard';
+    
+    if (typeof EventCleanupManager !== 'undefined' &amp;&amp; EventCleanupManager &amp;&amp; typeof EventCleanupManager.registerDocumentListener === 'function') {
+      EventCleanupManager.registerDocumentListener('click', '#run-system-diagnostic', (e) => {
+        e.preventDefault();
+        this.runSystemDiagnostic();
+      }, componentId);
+
+      EventCleanupManager.registerDocumentListener('click', '#refresh-system-status', (e) => {
+        e.preventDefault();
+        this.refreshSystemStatus();
+      }, componentId);
+
+      EventCleanupManager.registerDocumentListener('click', '#export-system-report', (e) => {
+        e.preventDefault();
+        this.exportSystemReport();
+      }, componentId);
+
+      EventCleanupManager.registerDocumentListener('click', '#load-additional-metrics', (e) => {
+        e.preventDefault();
+        this.loadAdditionalMetrics();
+      }, componentId);
+
+      EventCleanupManager.registerDocumentListener('click', '#check-cron-status', (e) => {
+        e.preventDefault();
+        this.checkCronStatus();
+      }, componentId);
+
+      EventCleanupManager.registerDocumentListener('click', '#toggle-debug-mode', (e) => {
+        e.preventDefault();
+        this.toggleDebugMode();
+      }, componentId);
+
+      EventCleanupManager.registerDocumentListener('click', '#execute-system-diagnostic', (e) => {
+        e.preventDefault();
+        this.executeSystemDiagnostic();
+      }, componentId);
+
+      EventCleanupManager.registerDocumentListener('click', '#initialize-assets', (e) => {
+        e.preventDefault();
+        this.initializeAssets();
+      }, componentId);
+
+      EventCleanupManager.registerDocumentListener('click', '#initialize-ajax', (e) => {
+        e.preventDefault();
+        this.initializeAjax();
+      }, componentId);
+
+      EventCleanupManager.registerDocumentListener('click', '#initialize-settings', (e) => {
+        e.preventDefault();
+        this.initializeSettings();
+      }, componentId);
+
+      EventCleanupManager.registerDocumentListener('click', '#initialize-cleanup', (e) => {
+        e.preventDefault();
+        this.initializeCleanup();
+      }, componentId);
+
+      EventCleanupManager.registerDocumentListener('click', '#load-textdomain', (e) => {
+        e.preventDefault();
+        this.loadTextdomain();
+      }, componentId);
+
+      EventCleanupManager.registerDocumentListener('click', '#initialize-compatibility-reports', (e) => {
+        e.preventDefault();
+        this.initializeCompatibilityReports();
+      }, componentId);
+
+      EventCleanupManager.registerDocumentListener('click', '#initialize-theme-compatibility', (e) => {
+        e.preventDefault();
+        this.initializeThemeCompatibility();
+      }, componentId);
+
+      EventCleanupManager.registerDocumentListener('click', '#initialize-woocommerce-plugin-compatibility', (e) => {
+        e.preventDefault();
+        this.initializeWooCommercePluginCompatibility();
+      }, componentId);
+
+      EventCleanupManager.registerDocumentListener('click', '#initialize-general-compatibility', (e) => {
+        e.preventDefault();
+        this.initializeGeneralCompatibility();
+      }, componentId);
+
+      EventCleanupManager.registerDocumentListener('click', '#execute-complete-compatibility-check', (e) => {
+        e.preventDefault();
+        this.executeCompleteCompatibilityCheck();
+      }, componentId);
+
+      EventCleanupManager.registerDocumentListener('click', '#initialize-sync-hooks', (e) => {
+        e.preventDefault();
+        this.initializeSyncHooks();
+      }, componentId);
+
+      EventCleanupManager.registerDocumentListener('click', '#initialize-ajax-lazy-loading', (e) => {
+        e.preventDefault();
+        this.initializeAjaxLazyLoading();
+      }, componentId);
+
+      EventCleanupManager.registerDocumentListener('click', '#execute-batch-size-debug', (e) => {
+        e.preventDefault();
+        this.executeBatchSizeDebug();
+      }, componentId);
+    } else {
+      jQuery(document).on('click', '#run-system-diagnostic', (e) => {
+        e.preventDefault();
+        this.runSystemDiagnostic();
+      });
+      jQuery(document).on('click', '#refresh-system-status', (e) => {
+        e.preventDefault();
+        this.refreshSystemStatus();
+      });
+      jQuery(document).on('click', '#export-system-report', (e) => {
+        e.preventDefault();
+        this.exportSystemReport();
+      });
+      jQuery(document).on('click', '#load-additional-metrics', (e) => {
+        e.preventDefault();
+        this.loadAdditionalMetrics();
+      });
+      jQuery(document).on('click', '#check-cron-status', (e) => {
+        e.preventDefault();
+        this.checkCronStatus();
+      });
+      jQuery(document).on('click', '#toggle-debug-mode', (e) => {
+        e.preventDefault();
+        this.toggleDebugMode();
+      });
+      jQuery(document).on('click', '#execute-system-diagnostic', (e) => {
+        e.preventDefault();
+        this.executeSystemDiagnostic();
+      });
+      jQuery(document).on('click', '#initialize-assets', (e) => {
+        e.preventDefault();
+        this.initializeAssets();
+      });
+      jQuery(document).on('click', '#initialize-ajax', (e) => {
+        e.preventDefault();
+        this.initializeAjax();
+      });
+      jQuery(document).on('click', '#initialize-settings', (e) => {
+        e.preventDefault();
+        this.initializeSettings();
+      });
+      jQuery(document).on('click', '#initialize-cleanup', (e) => {
+        e.preventDefault();
+        this.initializeCleanup();
+      });
+      jQuery(document).on('click', '#load-textdomain', (e) => {
+        e.preventDefault();
+        this.loadTextdomain();
+      });
+      jQuery(document).on('click', '#initialize-compatibility-reports', (e) => {
+        e.preventDefault();
+        this.initializeCompatibilityReports();
+      });
+      jQuery(document).on('click', '#initialize-theme-compatibility', (e) => {
+        e.preventDefault();
+        this.initializeThemeCompatibility();
+      });
+      jQuery(document).on('click', '#initialize-woocommerce-plugin-compatibility', (e) => {
+        e.preventDefault();
+        this.initializeWooCommercePluginCompatibility();
+      });
+      jQuery(document).on('click', '#initialize-general-compatibility', (e) => {
+        e.preventDefault();
+        this.initializeGeneralCompatibility();
+      });
+      jQuery(document).on('click', '#execute-complete-compatibility-check', (e) => {
+        e.preventDefault();
+        this.executeCompleteCompatibilityCheck();
+      });
+      jQuery(document).on('click', '#initialize-sync-hooks', (e) => {
+        e.preventDefault();
+        this.initializeSyncHooks();
+      });
+      jQuery(document).on('click', '#initialize-ajax-lazy-loading', (e) => {
+        e.preventDefault();
+        this.initializeAjaxLazyLoading();
+      });
+      jQuery(document).on('click', '#execute-batch-size-debug', (e) => {
+        e.preventDefault();
+        this.executeBatchSizeDebug();
+      });
+    }
+  },
+
+  /**
+   * Desvincular eventos del dashboard
+   * @returns {void}
+   * @private
+   */
+  unbindEvents() {
+    if (typeof EventCleanupManager !== 'undefined' &amp;&amp; EventCleanupManager &amp;&amp; typeof EventCleanupManager.cleanupComponent === 'function') {
+      EventCleanupManager.cleanupComponent('UnifiedDashboard');
+    } else {
+      jQuery(document).off('click', '#run-system-diagnostic');
+      jQuery(document).off('click', '#refresh-system-status');
+      jQuery(document).off('click', '#export-system-report');
+      jQuery(document).off('click', '#load-additional-metrics');
+      jQuery(document).off('click', '#check-cron-status');
+      jQuery(document).off('click', '#toggle-debug-mode');
+      jQuery(document).off('click', '#execute-system-diagnostic');
+      jQuery(document).off('click', '#initialize-assets');
+      jQuery(document).off('click', '#initialize-ajax');
+      jQuery(document).off('click', '#initialize-settings');
+      jQuery(document).off('click', '#initialize-cleanup');
+      jQuery(document).off('click', '#load-textdomain');
+      jQuery(document).off('click', '#initialize-compatibility-reports');
+      jQuery(document).off('click', '#initialize-theme-compatibility');
+      jQuery(document).off('click', '#initialize-woocommerce-plugin-compatibility');
+      jQuery(document).off('click', '#initialize-general-compatibility');
+      jQuery(document).off('click', '#execute-complete-compatibility-check');
+      jQuery(document).off('click', '#initialize-sync-hooks');
+      jQuery(document).off('click', '#initialize-ajax-lazy-loading');
+      jQuery(document).off('click', '#execute-batch-size-debug');
+    }
+  },
+
+  // Ejecutar diagnóstico completo del sistema
+  runSystemDiagnostic() {
+    const $btn = jQuery('#run-system-diagnostic');
+    const $results = jQuery('#diagnostic-results');
+
+    // Mostrar estado de carga
+    $btn.prop('disabled', true).html('&lt;span class="dashicons dashicons-update-alt">&lt;/span> Ejecutando...');
+    $results.show().html('&lt;div class="diagnostic-loading">&lt;span class="dashicons dashicons-update-alt">&lt;/span> Ejecutando diagnóstico completo del sistema...&lt;/div>');
+
+    if (typeof AjaxManager !== 'undefined' &amp;&amp; AjaxManager &amp;&amp; typeof AjaxManager.call === 'function') {
+      AjaxManager.call('mia_run_system_diagnostic', {},
+        (response) => {
+          if (response.success) {
+            this.displayDiagnosticResults(response.data);
+            this.updateSystemHealth(response.data);
+          } else {
+            this.showError('Error en diagnóstico: ' + ((response.data &amp;&amp; response.data.message) || 'Error desconocido'));
+          }
+        },
+        (xhr, status, error) => {
+          this.showError('Error de conexión: ' + error);
+        }
+      );
+    }
+  },
+
+  // Refrescar estado del sistema (SOLO MANUAL - NO AUTOMÁTICO)
+  refreshSystemStatus() {
+    // CONTROL DE ESTADO GLOBAL: Verificar si hay sincronización en progreso
+    if (this.isSyncInProgress()) {
+      return;
+    }
+
+    const $btn = jQuery('#refresh-system-status');
+
+    if (typeof AjaxManager !== 'undefined' &amp;&amp; AjaxManager &amp;&amp; typeof AjaxManager.call === 'function') {
+      AjaxManager.call('mia_system_status', {}, $btn,
+        (response) => {
+          if (response.success) {
+            this.updateSystemStatus(response.data);
+            this.showSuccess('Estado del sistema actualizado correctamente');
+          } else {
+            this.showError('Error al refrescar: ' + ((response.data &amp;&amp; response.data.message) || 'Error desconocido'));
+          }
+        },
+        (xhr, status, error) => {
+          this.showError('Error de conexión: ' + error);
+        }
+      );
+    }
+  },
+
+  // Exportar reporte del sistema
+  exportSystemReport() {
+    const $btn = jQuery('#export-system-report');
+
+    if (typeof AjaxManager !== 'undefined' &amp;&amp; AjaxManager &amp;&amp; typeof AjaxManager.call === 'function') {
+      AjaxManager.call('mia_export_system_report', {}, $btn,
+        (response) => {
+          if (response.success) {
+            this.showSuccess('Reporte exportado correctamente');
+
+            // Crear enlace de descarga
+            if (response.data) {
+              // Extraer propiedades usando destructuring con valores por defecto
+              const { download_url = null, filename = 'reporte.json' } = response.data;
+
+              if (download_url) {
+                const $downloadLink = jQuery('&lt;a>')
+                  .attr('href', download_url)
+                  .attr('download', filename)
+                  .addClass('button button-primary')
+                  .html('&lt;span class="dashicons dashicons-download">&lt;/span> Descargar Reporte');
+
+                $btn.after($downloadLink);
+
+                // Auto-descargar después de 1 segundo
+                setTimeout(() => {
+                  $downloadLink[0].click();
+                  $downloadLink.remove();
+                }, 1000);
+              }
+            }
+          } else {
+            this.showError('Error al exportar: ' + ((response.data &amp;&amp; response.data.message) || 'Error desconocido'));
+          }
+        },
+        (xhr, status, error) => {
+          this.showError('Error de conexión: ' + error);
+        }
+      );
+    }
+  },
+
+  // Mostrar resultados del diagnóstico
+  displayDiagnosticResults(data) {
+    const $results = jQuery('#diagnostic-results');
+
+    let html = '&lt;div class="diagnostic-summary">';
+    html += '&lt;h3>Resultados del Diagnóstico del Sistema&lt;/h3>';
+    html += `&lt;p>&lt;strong>Ejecutado:&lt;/strong> ${new Date(data.timestamp).toLocaleString()}&lt;/p>`;
+
+    // Resumen de salud del sistema
+    html += '&lt;div class="health-summary">';
+    if (data &amp;&amp; typeof data === 'object' &amp;&amp; 'system_health' in data &amp;&amp; data.system_health) {
+      // Extraer propiedades usando destructuring con valores por defecto
+      const systemHealth = data.system_health;
+      const {
+        overall_status = 'unknown',
+        status_message = null,
+        components = null,
+        issues_count = 0,
+        issues = []
+      } = systemHealth;
+
+      html += `&lt;h4>Estado General: &lt;span class="health-status ${overall_status}">${this.getHealthStatusText(overall_status)}&lt;/span>&lt;/h4>`;
+
+      if (status_message) {
+        html += `&lt;p>&lt;strong>Estado:&lt;/strong> ${status_message}&lt;/p>`;
+      }
+
+      if (issues_count > 0) {
+        html += `&lt;p>&lt;strong>Problemas detectados:&lt;/strong> ${issues_count}&lt;/p>`;
+        if (issues.length > 0) {
+          html += '&lt;ul>';
+          issues.forEach(issue => {
+            html += `&lt;li>${issue}&lt;/li>`;
+          });
+          html += '&lt;/ul>';
+        }
+      }
+
+      if (components) {
+        html += '&lt;div class="health-components">';
+        Object.entries(components).forEach(([component, status]) => {
+          if (status &amp;&amp; status.status) {
+            html += `&lt;p>&lt;strong>${this.getComponentName(component)}:&lt;/strong> &lt;span class="status-${status.status}">${this.getComponentStatusText(status.status)}&lt;/span>&lt;/p>`;
+          }
+        });
+        html += '&lt;/div>';
+      }
+    } else {
+      html += '&lt;h4>Estado General: &lt;span class="health-status unknown">Desconocido&lt;/span>&lt;/h4>';
+      html += '&lt;p>No se pudo obtener el estado del sistema&lt;/p>';
+    }
+    html += '&lt;/div>';
+
+    // Análisis de memoria
+    if (data &amp;&amp; typeof data === 'object' &amp;&amp; 'memory_analysis' in data &amp;&amp; data.memory_analysis) {
+      // Extraer propiedades usando destructuring con valores por defecto
+      const memoryAnalysis = data.memory_analysis;
+      const {
+        status = 'unknown',
+        usage_percentage = null,
+        recommendations = []
+      } = memoryAnalysis;
+
+      html += '&lt;div class="analysis-section">';
+      html += '&lt;h4>Análisis de Memoria&lt;/h4>';
+      html += `&lt;p>&lt;strong>Estado:&lt;/strong> &lt;span class="status-${status}">${this.getMemoryStatusText(status)}&lt;/span>&lt;/p>`;
+
+      if (usage_percentage !== null &amp;&amp; usage_percentage !== undefined) {
+        html += `&lt;p>&lt;strong>Uso:&lt;/strong> ${usage_percentage}%&lt;/p>`;
+      }
+
+      if (recommendations &amp;&amp; recommendations.length > 0) {
+        html += '&lt;ul class="recommendations">';
+        recommendations.forEach(rec => {
+          html += `&lt;li>${rec}&lt;/li>`;
+        });
+        html += '&lt;/ul>';
+      }
+      html += '&lt;/div>';
+    }
+
+    // Análisis de reintentos
+    if (data &amp;&amp; typeof data === 'object' &amp;&amp; 'retry_analysis' in data &amp;&amp; data.retry_analysis) {
+      // Extraer propiedades usando destructuring con valores por defecto
+      const retryAnalysis = data.retry_analysis;
+      const {
+        status = 'unknown',
+        success_rate = null,
+        recommendations = []
+      } = retryAnalysis;
+
+      html += '&lt;div class="analysis-section">';
+      html += '&lt;h4>Análisis de Reintentos&lt;/h4>';
+      html += `&lt;p>&lt;strong>Estado:&lt;/strong> &lt;span class="status-${status}">${this.getRetryStatusText(status)}&lt;/span>&lt;/p>`;
+
+      if (success_rate !== null &amp;&amp; success_rate !== undefined) {
+        html += `&lt;p>&lt;strong>Tasa de Éxito:&lt;/strong> ${success_rate}%&lt;/p>`;
+      }
+
+      if (recommendations &amp;&amp; recommendations.length > 0) {
+        html += '&lt;ul class="recommendations">';
+        recommendations.forEach(rec => {
+          html += `&lt;li>${rec}&lt;/li>`;
+        });
+        html += '&lt;/ul>';
+      }
+      html += '&lt;/div>';
+    }
+
+    // Análisis de sincronización
+    if (data &amp;&amp; typeof data === 'object' &amp;&amp; 'sync_analysis' in data &amp;&amp; data.sync_analysis) {
+      // Extraer propiedades usando destructuring con valores por defecto
+      const syncAnalysis = data.sync_analysis;
+      const {
+        status = 'unknown',
+        progress = null,
+        total_items = null
+      } = syncAnalysis;
+
+      html += '&lt;div class="analysis-section">';
+      html += '&lt;h4>Análisis de Sincronización&lt;/h4>';
+      html += `&lt;p>&lt;strong>Estado:&lt;/strong> &lt;span class="status-${status}">${this.getSyncStatusText(status)}&lt;/span>&lt;/p>`;
+
+      if (progress !== null &amp;&amp; progress !== undefined) {
+        html += `&lt;p>&lt;strong>Progreso:&lt;/strong> ${progress}%&lt;/p>`;
+      }
+
+      if (total_items !== null &amp;&amp; total_items !== undefined) {
+        html += `&lt;p>&lt;strong>Total de elementos:&lt;/strong> ${total_items}&lt;/p>`;
+      }
+      html += '&lt;/div>';
+    }
+
+    // Recomendaciones
+    if (data &amp;&amp; typeof data === 'object' &amp;&amp; 'recommendations' in data &amp;&amp; data.recommendations &amp;&amp; data.recommendations.length > 0) {
+      // Extraer propiedades usando destructuring con valores por defecto
+      const recommendations = data.recommendations;
+
+      html += '&lt;div class="recommendations-section">';
+      html += '&lt;h4>Recomendaciones del Sistema&lt;/h4>';
+      html += '&lt;div class="recommendations-grid">';
+      recommendations.forEach(rec => {
+        const {
+          priority = 'medium',
+          title = 'Recomendación',
+          description = 'Sin descripción',
+          action = null
+        } = rec;
+
+        html += '&lt;div class="recommendation-item ' + priority + '">';
+        html += '&lt;div class="recommendation-header">';
+        html += '&lt;span class="priority-badge ' + priority + '">' + this.getPriorityText(priority) + '&lt;/span>';
+        html += '&lt;h5>' + title + '&lt;/h5>';
+        html += '&lt;/div>';
+        html += '&lt;p>' + description + '&lt;/p>';
+        if (action) {
+          html += `&lt;p class="action-required">&lt;strong>Acción requerida:&lt;/strong> ${action}&lt;/p>`;
+        }
+        html += '&lt;/div>';
+      });
+      html += '&lt;/div>';
+      html += '&lt;/div>';
+    }
+
+    html += '&lt;/div>';
+
+    $results.html(html);
+  },
+
+  // Actualizar estado del sistema
+  updateSystemStatus(data) {
+    this.systemState.lastCheck = data.timestamp;
+    if (data &amp;&amp; typeof data === 'object' &amp;&amp; 'overall_health' in data &amp;&amp; data.overall_health) {
+      // Extraer propiedades usando destructuring con valores por defecto
+      const overallHealth = data.overall_health;
+      const {
+        status = 'unknown',
+        components = {}
+      } = overallHealth;
+
+      if (status) {
+        this.systemState.overallHealth = status;
+        // Los issues ahora vienen de los componentes individuales
+        this.systemState.issues = [];
+        if (components &amp;&amp; typeof components === 'object') {
+          Object.entries(components).forEach(([component, componentStatus]) => {
+            if (componentStatus &amp;&amp; componentStatus.status &amp;&amp; componentStatus.status !== 'healthy') {
+              this.systemState.issues.push(`${this.getComponentName(component)}: ${this.getComponentStatusText(componentStatus.status)}`);
+            }
+          });
+        }
+      }
+    } else {
+      this.systemState.overallHealth = 'unknown';
+      this.systemState.issues = [];
+    }
+
+    // Actualizar indicadores visuales si existen
+    this.updateHealthIndicators(data);
+  },
+
+  // Actualizar indicadores de salud
+  updateHealthIndicators(data) {
+    // Actualizar tarjetas de estado si existen
+    if (data.memory) {
+      this.updateMemoryCard(data.memory);
+    }
+    if (data.retry) {
+      this.updateRetryCard(data.retry);
+    }
+    if (data.sync) {
+      this.updateSyncCard(data.sync);
+    }
+  },
+
+  // Actualizar tarjeta de memoria
+  updateMemoryCard(memoryData) {
+    const $card = jQuery(SELECTORS.STAT_CARD_MEMORY);
+    if ($card.length &amp;&amp; memoryData) {
+      // Extraer propiedades usando destructuring con valores por defecto
+      const {
+        usage_percentage = '0',
+        status = 'unknown'
+      } = memoryData;
+
+      // Validar estado de memoria - solo aceptar estados válidos
+      const validMemoryStates = ['healthy', 'warning', 'critical'];
+      const validatedStatus = validMemoryStates.includes(status) ? status : 'unknown';
+
+      $card.find(SELECTORS.STAT_VALUE).text(usage_percentage + '%');
+      $card.removeClass('healthy warning critical').addClass(validatedStatus);
+
+      // Log de advertencia si se recibió un estado inválido
+      if (!validMemoryStates.includes(status)) {
+        // eslint-disable-next-line no-console
+        console.warn('Estado de memoria inválido recibido:', status, 'Usando estado por defecto: unknown');
+      }
+    }
+  },
+
+  // Actualizar tarjeta de reintentos
+  updateRetryCard(retryData) {
+    const $card = jQuery(SELECTORS.STAT_CARD_RETRIES);
+    if ($card.length &amp;&amp; retryData) {
+      // Extraer propiedades usando destructuring con valores por defecto
+      const {
+        success_rate = '0',
+        status = 'unknown'
+      } = retryData;
+
+      $card.find(SELECTORS.STAT_VALUE).text(success_rate + '%');
+      $card.removeClass('healthy warning critical').addClass(status);
+    }
+  },
+
+  // Actualizar tarjeta de sincronización
+  updateSyncCard(syncData) {
+    const $card = jQuery(SELECTORS.STAT_CARD_SYNC);
+    if ($card.length &amp;&amp; syncData) {
+      // Extraer propiedades usando destructuring con valores por defecto
+      const {
+        status = 'unknown'
+      } = syncData;
+
+      $card.find(SELECTORS.STAT_VALUE).text(this.getSyncStatusText(status));
+      $card.removeClass('healthy warning critical').addClass(status);
+    }
+  },
+
+  // Actualizar salud del sistema
+  updateSystemHealth(data) {
+    if (data &amp;&amp; typeof data === 'object' &amp;&amp; 'system_health' in data &amp;&amp; data.system_health) {
+      // Extraer propiedades usando destructuring con valores por defecto
+      const systemHealth = data.system_health;
+      const {
+        status = 'unknown',
+        components = {}
+      } = systemHealth;
+
+      if (status) {
+        this.systemState.overallHealth = status;
+        // Los issues ahora vienen de los componentes individuales
+        this.systemState.issues = [];
+        if (components &amp;&amp; typeof components === 'object') {
+          Object.entries(components).forEach(([component, componentStatus]) => {
+            if (componentStatus &amp;&amp; componentStatus.status &amp;&amp; componentStatus.status !== 'healthy') {
+              this.systemState.issues.push(`${this.getComponentName(component)}: ${this.getComponentStatusText(componentStatus.status)}`);
+            }
+          });
+        }
+      }
+    } else {
+      this.systemState.overallHealth = 'unknown';
+      this.systemState.issues = [];
+    }
+
+    // Extraer recomendaciones usando destructuring
+    const { recommendations = [] } = data || {};
+    this.systemState.recommendations = recommendations;
+
+    // Actualizar indicadores visuales
+    this.updateHealthIndicators(data);
+  },
+
+  // Obtener métricas completas del sistema usando MemoryManager expandido
+  getCompleteSystemMetrics() {
+    return new Promise((resolve, reject) => {
+      if (typeof AjaxManager !== 'undefined' &amp;&amp; AjaxManager &amp;&amp; typeof AjaxManager.call === 'function') {
+        AjaxManager.call('mia_get_complete_system_metrics', {},
+          (response) => {
+            if (response.success) {
+              resolve(response.data);
+            } else {
+              reject(new Error((response.data &amp;&amp; response.data.message) || 'Error al obtener métricas'));
+            }
+          },
+          (xhr, status, error) => {
+            reject(new Error('Error de conexión: ' + error));
+          }
+        );
+      } else {
+        reject(new Error('AjaxManager no está disponible'));
+      }
+    });
+  },
+
+  // Mostrar métricas adicionales en el dashboard
+  displayAdditionalMetrics(metrics) {
+    // Crear sección de métricas adicionales si no existe
+    let $additionalMetrics = jQuery('#additional-system-metrics');
+    if ($additionalMetrics.length === 0) {
+      $additionalMetrics = jQuery('&lt;div id="additional-system-metrics" class="mi-additional-metrics">&lt;/div>');
+      jQuery('.mi-diagnostic-actions').after($additionalMetrics);
+    }
+
+    let html = '&lt;h2>Métricas Detalladas del Sistema&lt;/h2>';
+    html += '&lt;div class="metrics-grid">';
+
+    // Métricas de base de datos
+    if (metrics &amp;&amp; typeof metrics === 'object' &amp;&amp; 'database' in metrics &amp;&amp; metrics.database) {
+      // Extraer propiedades usando destructuring con valores por defecto
+      const database = metrics.database;
+      const {
+        total_posts = '0',
+        total_products = '0',
+        total_orders = '0',
+        table_sizes = {}
+      } = database;
+
+      html += '&lt;div class="metric-section database">';
+      html += '&lt;h3>Base de Datos&lt;/h3>';
+      html += `&lt;p>&lt;strong>Total Posts:&lt;/strong> ${total_posts}&lt;/p>`;
+      html += `&lt;p>&lt;strong>Productos:&lt;/strong> ${total_products}&lt;/p>`;
+      html += `&lt;p>&lt;strong>Pedidos:&lt;/strong> ${total_orders}&lt;/p>`;
+
+      if (table_sizes &amp;&amp; typeof table_sizes === 'object' &amp;&amp; Object.keys(table_sizes).length > 0) {
+        html += '&lt;p>&lt;strong>Tamaños de Tablas:&lt;/strong>&lt;/p>&lt;ul>';
+        Object.entries(table_sizes).forEach(([table, size]) => {
+          html += `&lt;li>${table}: ${size} MB&lt;/li>`;
+        });
+        html += '&lt;/ul>';
+      }
+      html += '&lt;/div>';
+    }
+
+    // Métricas del sistema de archivos
+    if (metrics &amp;&amp; typeof metrics === 'object' &amp;&amp; 'filesystem' in metrics &amp;&amp; metrics.filesystem) {
+      // Extraer propiedades usando destructuring con valores por defecto
+      const filesystem = metrics.filesystem;
+      const {
+        disk_total_gb = '0',
+        disk_used_gb = '0',
+        disk_usage_percentage = '0',
+        disk_free_gb = '0',
+        directory_sizes = {}
+      } = filesystem;
+
+      html += '&lt;div class="metric-section filesystem">';
+      html += '&lt;h3>Sistema de Archivos&lt;/h3>';
+      html += `&lt;p>&lt;strong>Disco Total:&lt;/strong> ${disk_total_gb} GB&lt;/p>`;
+      html += `&lt;p>&lt;strong>Disco Usado:&lt;/strong> ${disk_used_gb} GB (${disk_usage_percentage}%)&lt;/p>`;
+      html += `&lt;p>&lt;strong>Disco Libre:&lt;/strong> ${disk_free_gb} GB&lt;/p>`;
+
+      if (directory_sizes &amp;&amp; typeof directory_sizes === 'object' &amp;&amp; Object.keys(directory_sizes).length > 0) {
+        html += '&lt;p>&lt;strong>Tamaños de Directorios:&lt;/strong>&lt;/p>&lt;ul>';
+        Object.entries(directory_sizes).forEach(([dir, info]) => {
+          if (info &amp;&amp; info.exists) {
+            // Extraer propiedades usando destructuring con valores por defecto
+            const { size_mb = '0' } = info;
+            html += `&lt;li>${dir}: ${size_mb} MB&lt;/li>`;
+          }
+        });
+        html += '&lt;/ul>';
+      }
+      html += '&lt;/div>';
+    }
+
+    // Métricas de rendimiento
+    if (metrics &amp;&amp; typeof metrics === 'object' &amp;&amp; 'performance' in metrics &amp;&amp; metrics.performance) {
+      // Extraer propiedades usando destructuring con valores por defecto
+      const performance = metrics.performance;
+      const {
+        php_version = 'Unknown',
+        wordpress_version = 'Unknown',
+        plugin_version = 'Unknown',
+        memory_limit = 'Unknown',
+        scheduled_tasks = '0',
+        transients_count = '0'
+      } = performance;
+
+      html += '&lt;div class="metric-section performance">';
+      html += '&lt;h3>Rendimiento del Sistema&lt;/h3>';
+      html += `&lt;p>&lt;strong>PHP:&lt;/strong> ${php_version}&lt;/p>`;
+      html += `&lt;p>&lt;strong>WordPress:&lt;/strong> ${wordpress_version}&lt;/p>`;
+      html += `&lt;p>&lt;strong>Plugin:&lt;/strong> ${plugin_version}&lt;/p>`;
+      html += `&lt;p>&lt;strong>Límite de Memoria:&lt;/strong> ${memory_limit}&lt;/p>`;
+      html += `&lt;p>&lt;strong>Tareas Programadas:&lt;/strong> ${scheduled_tasks}&lt;/p>`;
+      html += `&lt;p>&lt;strong>Transients:&lt;/strong> ${transients_count}&lt;/p>`;
+      html += '&lt;/div>';
+    }
+
+    html += '&lt;/div>';
+
+    $additionalMetrics.html(html);
+  },
+
+  // Mostrar estado de cron jobs en el dashboard
+  displayCronStatus(cronJobs) {
+    // Crear sección de estado de cron jobs si no existe
+    let $cronStatus = jQuery('#cron-jobs-status');
+    if ($cronStatus.length === 0) {
+      $cronStatus = jQuery('&lt;div id="cron-jobs-status" class="mi-cron-status">&lt;/div>');
+      jQuery('.mi-diagnostic-actions').after($cronStatus);
+    }
+
+    let html = '&lt;h2>Estado de Cron Jobs del Plugin&lt;/h2>';
+    html += '&lt;table class="wp-list-table widefat fixed striped">';
+    html += '&lt;thead>&lt;tr>';
+    html += '&lt;th>Hook&lt;/th>';
+    html += '&lt;th>Descripción&lt;/th>';
+    html += '&lt;th>Estado&lt;/th>';
+    html += '&lt;th>Próxima Ejecución&lt;/th>';
+    html += '&lt;th>Timestamp&lt;/th>';
+    html += '&lt;/tr>&lt;/thead>';
+    html += '&lt;tbody>';
+
+    Object.entries(cronJobs).forEach(([hook, data]) => {
+      // Extraer propiedades usando destructuring con valores por defecto
+      const {
+        scheduled = false,
+        next_run = null,
+        timestamp = null,
+        description = 'Sin descripción'
+      } = data;
+
+      const statusClass = scheduled ? 'status-ok' : 'status-error';
+      const statusText = scheduled ? 'Programado' : 'No Programado';
+      const nextRun = scheduled ? next_run : 'N/A';
+      const timestampFormatted = timestamp ? new Date(timestamp * 1000).toLocaleString() : 'N/A';
+
+      html += '&lt;tr>';
+      html += `&lt;td>&lt;code>${hook}&lt;/code>&lt;/td>`;
+      html += `&lt;td>${description}&lt;/td>`;
+      html += `&lt;td>&lt;span class="${statusClass}">${statusText}&lt;/span>&lt;/td>`;
+      html += `&lt;td>${nextRun}&lt;/td>`;
+      html += `&lt;td>${timestampFormatted}&lt;/td>`;
+      html += '&lt;/tr>';
+    });
+
+    html += '&lt;/tbody>&lt;/table>';
+    html += '&lt;/div>';
+
+    $cronStatus.html(html);
+  },
+
+  // CORRECCIÓN DE OPTIMIZACIÓN: Métodos para funcionalidades bajo demanda
+
+  // Ejecutar diagnóstico del sistema
+  executeSystemDiagnostic() {
+    const $btn = jQuery('#execute-system-diagnostic');
+    $btn.prop('disabled', true).html('&lt;span class="dashicons dashicons-update-alt">&lt;/span> Ejecutando...');
+
+    if (typeof AjaxManager !== 'undefined' &amp;&amp; AjaxManager &amp;&amp; typeof AjaxManager.call === 'function') {
+      AjaxManager.call('mia_execute_system_diagnostic', {}, (response) => {
+        if (response.success) {
+          this.displaySystemDiagnostic(response.data.diagnostic);
+        }
+        $btn.prop('disabled', false).html('Ejecutar Diagnóstico');
+      }, (xhr, status, error) => {
+        $btn.prop('disabled', false).html('Ejecutar Diagnóstico');
+        if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.showConnectionError === 'function') {
+          ErrorHandler.showConnectionError(xhr);
+        }
+        // eslint-disable-next-line no-console
+        console.error(`Error en diagnóstico del sistema [${status}]:`, error);
+      });
+    }
+  },
+
+  // Inicializar sistema de assets
+  initializeAssets() {
+    if (typeof AjaxManager !== 'undefined' &amp;&amp; AjaxManager &amp;&amp; typeof AjaxManager.call === 'function') {
+      AjaxManager.call('mia_initialize_assets', {});
+    }
+  },
+
+  // Inicializar sistema de AJAX
+  initializeAjax() {
+    if (typeof AjaxManager !== 'undefined' &amp;&amp; AjaxManager &amp;&amp; typeof AjaxManager.call === 'function') {
+      AjaxManager.call('mia_initialize_ajax', {});
+    }
+  },
+
+  // Inicializar sistema de configuración
+  initializeSettings() {
+    if (typeof AjaxManager !== 'undefined' &amp;&amp; AjaxManager &amp;&amp; typeof AjaxManager.call === 'function') {
+      AjaxManager.call('mia_initialize_settings', {});
+    }
+  },
+
+  // Inicializar sistema de limpieza
+  initializeCleanup() {
+    if (typeof AjaxManager !== 'undefined' &amp;&amp; AjaxManager &amp;&amp; typeof AjaxManager.call === 'function') {
+      AjaxManager.call('mia_initialize_cleanup', {});
+    }
+  },
+
+  // Cargar textdomain del plugin
+  loadTextdomain() {
+    if (typeof AjaxManager !== 'undefined' &amp;&amp; AjaxManager &amp;&amp; typeof AjaxManager.call === 'function') {
+      AjaxManager.call('mia_load_textdomain', {});
+    }
+  },
+
+  // Mostrar diagnóstico del sistema
+  displaySystemDiagnostic(diagnostic) {
+    let $diagnosticArea = jQuery('#system-diagnostic-results');
+    if ($diagnosticArea.length === 0) {
+      $diagnosticArea = jQuery('&lt;div id="system-diagnostic-results" class="mi-system-diagnostic">&lt;/div>');
+      jQuery('.mi-diagnostic-actions').after($diagnosticArea);
+    }
+
+    let html = '&lt;h2>Diagnóstico del Sistema&lt;/h2>';
+    html += '&lt;div class="diagnostic-grid">';
+
+    // Información general
+    html += '&lt;div class="diagnostic-section general">';
+    html += '&lt;h3>Información General&lt;/h3>';
+    html += `&lt;p>&lt;strong>Timestamp:&lt;/strong> ${diagnostic.timestamp}&lt;/p>`;
+
+    // Extraer propiedades usando destructuring con valores por defecto
+    const {
+      memory_usage = 0,
+      peak_memory = 0
+    } = diagnostic;
+
+    html += `&lt;p>&lt;strong>Memoria Actual:&lt;/strong> ${this.formatBytes(memory_usage)}&lt;/p>`;
+    html += `&lt;p>&lt;strong>Memoria Pico:&lt;/strong> ${this.formatBytes(peak_memory)}&lt;/p>`;
+    html += '&lt;/div>';
+
+    // Estado de hooks
+    html += '&lt;div class="diagnostic-section hooks">';
+    html += '&lt;h3>Estado de Hooks&lt;/h3>';
+
+    // Extraer propiedades usando destructuring con valores por defecto
+    const { hooks_status = {} } = diagnostic;
+
+    Object.entries(hooks_status).forEach(([hook, count]) => {
+      const statusClass = count > 0 ? 'status-ok' : 'status-error';
+      const statusText = count > 0 ? `${count} acciones` : 'Sin acciones';
+      html += `&lt;p>&lt;strong>${hook}:&lt;/strong> &lt;span class="${statusClass}">${statusText}&lt;/span>&lt;/p>`;
+    });
+    html += '&lt;/div>';
+
+    // Estado del plugin
+    html += '&lt;div class="diagnostic-section plugin">';
+    html += '&lt;h3>Estado del Plugin&lt;/h3>';
+
+    // Extraer propiedades usando destructuring con valores por defecto
+    const { plugin_status = {} } = diagnostic;
+    const {
+      initialized = false,
+      woocommerce_ready = false,
+      logger_available = false
+    } = plugin_status;
+
+    html += `&lt;p>&lt;strong>Inicializado:&lt;/strong> &lt;span class="${initialized ? 'status-ok' : 'status-error'}">${initialized ? 'Sí' : 'No'}&lt;/span>&lt;/p>`;
+    html += `&lt;p>&lt;strong>WooCommerce:&lt;/strong> &lt;span class="${woocommerce_ready ? 'status-ok' : 'status-error'}">${woocommerce_ready ? 'Listo' : 'No disponible'}&lt;/span>&lt;/p>`;
+    html += `&lt;p>&lt;strong>Logger:&lt;/strong> &lt;span class="${logger_available ? 'status-ok' : 'status-error'}">${logger_available ? 'Disponible' : 'No disponible'}&lt;/span>&lt;/p>`;
+    html += '&lt;/div>';
+
+    // Clases del core
+    html += '&lt;div class="diagnostic-section core">';
+    html += '&lt;h3>Clases del Core&lt;/h3>';
+
+    // Extraer propiedades usando destructuring con valores por defecto
+    const { core_classes_available = {} } = plugin_status;
+
+    Object.entries(core_classes_available).forEach(([class_name, available]) => {
+      const statusClass = available ? 'status-ok' : 'status-error';
+      const statusText = available ? 'Disponible' : 'No disponible';
+      html += `&lt;p>&lt;strong>${class_name}:&lt;/strong> &lt;span class="${statusClass}">${statusText}&lt;/span>&lt;/p>`;
+    });
+    html += '&lt;/div>';
+
+    html += '&lt;/div>';
+
+    $diagnosticArea.html(html);
+  },
+
+  // Formatear bytes en formato legible
+  formatBytes(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  },
+
+  // Inicializar reportes de compatibilidad
+  initializeCompatibilityReports() {
+    if (typeof AjaxManager !== 'undefined' &amp;&amp; AjaxManager &amp;&amp; typeof AjaxManager.call === 'function') {
+      AjaxManager.call('mia_initialize_compatibility_reports', {},
+        (response) => {
+          if (response.success) {
+            this.displayCompatibilityResult(response.data, 'reports');
+          }
+        }
+      );
+    }
+  },
+
+  // Inicializar compatibilidad con temas
+  initializeThemeCompatibility() {
+    if (typeof AjaxManager !== 'undefined' &amp;&amp; AjaxManager &amp;&amp; typeof AjaxManager.call === 'function') {
+      AjaxManager.call('mia_initialize_theme_compatibility', {},
+        (response) => {
+          if (response.success) {
+            this.displayCompatibilityResult(response.data, 'themes');
+          }
+        }
+      );
+    }
+  },
+
+  // Inicializar compatibilidad con plugins de WooCommerce
+  initializeWooCommercePluginCompatibility() {
+    if (typeof AjaxManager !== 'undefined' &amp;&amp; AjaxManager &amp;&amp; typeof AjaxManager.call === 'function') {
+      AjaxManager.call('mia_initialize_woocommerce_plugin_compatibility', {},
+        (response) => {
+          if (response.success) {
+            this.displayCompatibilityResult(response.data, 'woocommerce_plugins');
+          }
+        }
+      );
+    }
+  },
+
+  // Inicializar compatibilidad general
+  initializeGeneralCompatibility() {
+    if (typeof AjaxManager !== 'undefined' &amp;&amp; AjaxManager &amp;&amp; typeof AjaxManager.call === 'function') {
+      AjaxManager.call('mia_initialize_general_compatibility', {},
+        (response) => {
+          if (response.success) {
+            this.displayCompatibilityResult(response.data, 'general');
+          }
+        }
+      );
+    }
+  },
+
+  // Ejecutar verificación completa de compatibilidad
+  executeCompleteCompatibilityCheck() {
+    if (typeof AjaxManager !== 'undefined' &amp;&amp; AjaxManager &amp;&amp; typeof AjaxManager.call === 'function') {
+      AjaxManager.call('mia_execute_complete_compatibility_check', {},
+        (response) => {
+          if (response.success) {
+            this.displayCompleteCompatibilityResult(response.data);
+          }
+        }
+      );
+    }
+  },
+
+  // Mostrar resultado de compatibilidad individual
+  displayCompatibilityResult(data, type) {
+    let $resultArea = jQuery(`#compatibility-${type}-results`);
+    if ($resultArea.length === 0) {
+      $resultArea = jQuery(`&lt;div id="compatibility-${type}-results" class="mi-compatibility-result">&lt;/div>`);
+      jQuery('.mi-diagnostic-actions').after($resultArea);
+    }
+
+    let html = `&lt;h3>Resultado de Compatibilidad: ${this.getCompatibilityTypeName(type)}&lt;/h3>`;
+    html += '&lt;div class="compatibility-details">';
+
+    if (data &amp;&amp; typeof data === 'object' &amp;&amp; 'success' in data &amp;&amp; data.success) {
+      html += '&lt;div class="status-success">✅ Inicialización exitosa&lt;/div>';
+
+      // Extraer componentes usando destructuring
+      const { components = [] } = data;
+      if (components &amp;&amp; components.length > 0) {
+        html += '&lt;p>&lt;strong>Componentes inicializados:&lt;/strong>&lt;/p>&lt;ul>';
+        components.forEach(component => {
+          html += `&lt;li>${component}&lt;/li>`;
+        });
+        html += '&lt;/ul>';
+      }
+    } else {
+      html += '&lt;div class="status-error">❌ Error en la inicialización&lt;/div>';
+
+      // Extraer errores usando destructuring
+      const { errors = [] } = data || {};
+      if (errors &amp;&amp; errors.length > 0) {
+        html += '&lt;p>&lt;strong>Errores:&lt;/strong>&lt;/p>&lt;ul>';
+        errors.forEach(error => {
+          html += `&lt;li>${error}&lt;/li>`;
+        });
+        html += '&lt;/ul>';
+      }
+    }
+
+    // Extraer advertencias usando destructuring
+    const { warnings = [] } = data || {};
+    if (warnings &amp;&amp; warnings.length > 0) {
+      html += '&lt;p>&lt;strong>Advertencias:&lt;/strong>&lt;/p>&lt;ul>';
+      warnings.forEach(warning => {
+        html += `&lt;li>⚠️ ${warning}&lt;/li>`;
+      });
+      html += '&lt;/ul>';
+    }
+
+    html += '&lt;/div>';
+
+    $resultArea.html(html);
+  },
+
+  // Mostrar resultado completo de compatibilidad
+  displayCompleteCompatibilityResult(data) {
+    let $resultArea = jQuery('#complete-compatibility-results');
+    if ($resultArea.length === 0) {
+      $resultArea = jQuery('&lt;div id="complete-compatibility-results" class="mi-complete-compatibility-result">&lt;/div>');
+      jQuery('.mi-diagnostic-actions').after($resultArea);
+    }
+
+    let html = '&lt;h3>Resultado Completo de Compatibilidad&lt;/h3>';
+    html += '&lt;div class="compatibility-summary">';
+
+    // Resumen general
+    html += '&lt;div class="summary-overview">';
+    html += `&lt;p>&lt;strong>Timestamp:&lt;/strong> ${data.timestamp}&lt;/p>`;
+
+    // Extraer propiedades usando destructuring
+    const {
+      overall_success = false,
+      summary = {}
+    } = data;
+
+    const {
+      total_checks = '0',
+      successful_checks = '0',
+      failed_checks = '0',
+      warnings = '0'
+    } = summary;
+
+    html += `&lt;p>&lt;strong>Estado General:&lt;/strong> &lt;span class="${overall_success ? 'status-success' : 'status-error'}">${overall_success ? '✅ Exitoso' : '❌ Con errores'}&lt;/span>&lt;/p>`;
+    html += `&lt;p>&lt;strong>Total de verificaciones:&lt;/strong> ${total_checks}&lt;/p>`;
+    html += `&lt;p>&lt;strong>Verificaciones exitosas:&lt;/strong> &lt;span class="status-success">${successful_checks}&lt;/span>&lt;/p>`;
+    html += `&lt;p>&lt;strong>Verificaciones fallidas:&lt;/strong> &lt;span class="status-error">${failed_checks}&lt;/span>&lt;/p>`;
+    html += `&lt;p>&lt;strong>Advertencias:&lt;/strong> &lt;span class="status-warning">${warnings}&lt;/span>&lt;/p>`;
+    html += '&lt;/div>';
+
+    // Detalles por componente
+    html += '&lt;div class="component-details">';
+    html += '&lt;h4>Detalles por Componente&lt;/h4>';
+
+    Object.entries(data.components).forEach(([component_type, result]) => {
+      const statusClass = result.success ? 'status-success' : 'status-error';
+      const statusText = result.success ? '✅ Exitoso' : '❌ Fallido';
+
+      html += `&lt;div class="component-item ${statusClass}">`;
+      html += `&lt;h5>${this.getCompatibilityTypeName(component_type)}&lt;/h5>`;
+      html += `&lt;p>&lt;strong>Estado:&lt;/strong> &lt;span class="${statusClass}">${statusText}&lt;/span>&lt;/p>`;
+
+      if (result.components &amp;&amp; result.components.length > 0) {
+        html += '&lt;p>&lt;strong>Componentes:&lt;/strong>&lt;/p>&lt;ul>';
+        result.components.forEach(comp => {
+          html += `&lt;li>${comp}&lt;/li>`;
+        });
+        html += '&lt;/ul>';
+      }
+
+      if (result.errors &amp;&amp; result.errors.length > 0) {
+        html += '&lt;p>&lt;strong>Errores:&lt;/strong>&lt;/p>&lt;ul>';
+        result.errors.forEach(error => {
+          html += `&lt;li>❌ ${error}&lt;/li>`;
+        });
+        html += '&lt;/ul>';
+      }
+
+      if (result.warnings &amp;&amp; result.warnings.length > 0) {
+        html += '&lt;p>&lt;strong>Advertencias:&lt;/strong>&lt;/p>&lt;ul>';
+        result.warnings.forEach(warning => {
+          html += `&lt;li>⚠️ ${warning}&lt;/li>`;
+        });
+        html += '&lt;/ul>';
+      }
+
+      html += '&lt;/div>';
+    });
+
+    html += '&lt;/div>';
+    html += '&lt;/div>';
+
+    $resultArea.html(html);
+  },
+
+  // Obtener nombre legible del tipo de compatibilidad
+  getCompatibilityTypeName(type) {
+    const names = {
+      reports: 'Reportes de Compatibilidad',
+      themes: 'Compatibilidad con Temas',
+      woocommerce_plugins: 'Compatibilidad con Plugins WooCommerce',
+      general: 'Compatibilidad General'
+    };
+    return names[type] || type;
+  },
+
+  // Inicializar hooks de sincronización
+  initializeSyncHooks() {
+    const $btn = jQuery('#initialize-sync-hooks');
+    $btn.prop('disabled', true).html('&lt;span class="dashicons dashicons-update-alt">&lt;/span> Inicializando...');
+
+    if (typeof AjaxManager !== 'undefined' &amp;&amp; AjaxManager &amp;&amp; typeof AjaxManager.call === 'function') {
+      AjaxManager.call('mia_initialize_sync_hooks', {}, (response) => {
+        if (response.success) {
+          this.displayHookResult(response.data, 'sync_hooks');
+        }
+        $btn.prop('disabled', false).html('Inicializar Hooks');
+      }, (xhr, status, error) => {
+        $btn.prop('disabled', false).html('Inicializar Hooks');
+        if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.showConnectionError === 'function') {
+          ErrorHandler.showConnectionError(xhr);
+        }
+        // eslint-disable-next-line no-console
+        console.error(`Error inicializando hooks [${status}]:`, error);
+      });
+    }
+  },
+
+  // Inicializar carga perezosa AJAX
+  initializeAjaxLazyLoading() {
+    const $btn = jQuery('#initialize-ajax-lazy-loading');
+    $btn.prop('disabled', true).html('&lt;span class="dashicons dashicons-update-alt">&lt;/span> Inicializando...');
+
+    if (typeof AjaxManager !== 'undefined' &amp;&amp; AjaxManager &amp;&amp; typeof AjaxManager.call === 'function') {
+      AjaxManager.call('mia_initialize_ajax_lazy_loading', {}, (response) => {
+        if (response.success) {
+          this.displayHookResult(response.data, 'ajax_lazy_loading');
+        }
+        $btn.prop('disabled', false).html('Inicializar Carga Perezosa AJAX');
+      }, (xhr, status, error) => {
+        $btn.prop('disabled', false).html('Inicializar Carga Perezosa AJAX');
+        if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.showConnectionError === 'function') {
+          ErrorHandler.showConnectionError(xhr);
+        }
+        // eslint-disable-next-line no-console
+        console.error(`Error inicializando carga perezosa AJAX [${status}]:`, error);
+      });
+    }
+  },
+
+  // Ejecutar debug de batch size
+  executeBatchSizeDebug() {
+    const $btn = jQuery('#execute-batch-size-debug');
+    $btn.prop('disabled', true).html('&lt;span class="dashicons dashicons-update-alt">&lt;/span> Ejecutando...');
+
+    if (typeof AjaxManager !== 'undefined' &amp;&amp; AjaxManager &amp;&amp; typeof AjaxManager.call === 'function') {
+      AjaxManager.call('mia_execute_batch_size_debug', {}, (response) => {
+        if (response.success) {
+          this.displayBatchSizeDebugResult(response.data);
+        }
+        $btn.prop('disabled', false).html('Ejecutar Debug de Batch Size');
+      }, (xhr, status, error) => {
+        $btn.prop('disabled', false).html('Ejecutar Debug de Batch Size');
+        if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.showConnectionError === 'function') {
+          ErrorHandler.showConnectionError(xhr);
+        }
+        // eslint-disable-next-line no-console
+        console.error(`Error ejecutando debug de batch size [${status}]:`, error);
+      });
+    }
+  },
+
+  // Mostrar resultado de hooks adicionales
+  displayHookResult(data, type) {
+    let $resultArea = jQuery(`#hook-${type}-results`);
+    if ($resultArea.length === 0) {
+      $resultArea = jQuery(`&lt;div id="hook-${type}-results" class="mi-hook-result">&lt;/div>`);
+      jQuery('.mi-diagnostic-actions').after($resultArea);
+    }
+
+    let html = `&lt;h3>Resultado de Hooks: ${this.getHookTypeName(type)}&lt;/h3>`;
+    html += '&lt;div class="hook-details">';
+
+    if (data.success) {
+      html += '&lt;div class="status-success">✅ Inicialización exitosa&lt;/div>';
+      if (data.components &amp;&amp; data.components.length > 0) {
+        html += '&lt;p>&lt;strong>Componentes inicializados:&lt;/strong>&lt;/p>&lt;ul>';
+        data.components.forEach(component => {
+          html += `&lt;li>${component}&lt;/li>`;
+        });
+        html += '&lt;/ul>';
+      }
+    } else {
+      html += '&lt;div class="status-error">❌ Error en la inicialización&lt;/div>';
+      if (data.errors &amp;&amp; data.errors.length > 0) {
+        html += '&lt;p>&lt;strong>Errores:&lt;/strong>&lt;/p>&lt;ul>';
+        data.errors.forEach(error => {
+          html += `&lt;li>${error}&lt;/li>`;
+        });
+        html += '&lt;/ul>';
+      }
+    }
+
+    if (data.warnings &amp;&amp; data.warnings.length > 0) {
+      html += '&lt;p>&lt;strong>Advertencias:&lt;/strong>&lt;/p>&lt;ul>';
+      data.warnings.forEach(warning => {
+        html += `&lt;li>⚠️ ${warning}&lt;/li>`;
+      });
+      html += '&lt;/ul>';
+    }
+
+    html += '&lt;/div>';
+
+    $resultArea.html(html);
+  },
+
+  // Mostrar resultado de debug de batch size
+  displayBatchSizeDebugResult(data) {
+    let $resultArea = jQuery('#batch-size-debug-results');
+    if ($resultArea.length === 0) {
+      $resultArea = jQuery('&lt;div id="batch-size-debug-results" class="mi-batch-size-debug-result">&lt;/div>');
+      jQuery('.mi-diagnostic-actions').after($resultArea);
+    }
+
+    let html = '&lt;h3>Resultado de Debug de Batch Size&lt;/h3>';
+    html += '&lt;div class="batch-size-debug-details">';
+
+    if (data.success) {
+      html += '&lt;div class="status-success">✅ Debug ejecutado exitosamente&lt;/div>';
+      if (data.components &amp;&amp; data.components.length > 0) {
+        html += '&lt;p>&lt;strong>Componentes procesados:&lt;/strong>&lt;/p>&lt;ul>';
+        data.components.forEach(component => {
+          html += `&lt;li>${component}&lt;/li>`;
+        });
+        html += '&lt;/ul>';
+      }
+
+      // Extraer propiedades usando destructuring con valores por defecto
+      const { debug_info = {} } = data;
+
+      if (debug_info &amp;&amp; Object.keys(debug_info).length > 0) {
+        html += '&lt;p>&lt;strong>Información de Debug:&lt;/strong>&lt;/p>&lt;div class="debug-info-grid">';
+        Object.entries(debug_info).forEach(([key, value]) => {
+          html += `&lt;div class="debug-info-item">&lt;strong>${key}:&lt;/strong> ${value}&lt;/div>`;
+        });
+        html += '&lt;/div>';
+      }
+    } else {
+      html += '&lt;div class="status-error">❌ Error en la ejecución del debug&lt;/div>';
+      if (data.errors &amp;&amp; data.errors.length > 0) {
+        html += '&lt;p>&lt;strong>Errores:&lt;/strong>&lt;/p>&lt;ul>';
+        data.errors.forEach(error => {
+          html += `&lt;li>${error}&lt;/li>`;
+        });
+        html += '&lt;/ul>';
+      }
+    }
+
+    if (data.warnings &amp;&amp; data.warnings.length > 0) {
+      html += '&lt;p>&lt;strong>Advertencias:&lt;/strong>&lt;/p>&lt;ul>';
+      data.warnings.forEach(warning => {
+        html += `&lt;li>⚠️ ${warning}&lt;/li>`;
+      });
+      html += '&lt;/ul>';
+    }
+
+    html += '&lt;/div>';
+
+    $resultArea.html(html);
+  },
+
+  // Obtener nombre legible del tipo de hook
+  getHookTypeName(type) {
+    const names = {
+      sync_hooks: 'Hooks de Sincronización',
+      sync_diagnostic_ajax: 'Diagnóstico AJAX',
+      ajax_lazy_loading: 'Carga Perezosa AJAX'
+    };
+    return names[type] || type;
+  },
+
+  // Cargar métricas adicionales del sistema
+  loadAdditionalMetrics() {
+    const $btn = jQuery('#load-additional-metrics');
+
+    // Mostrar estado de carga
+    $btn.prop('disabled', true).html('&lt;span class="dashicons dashicons-update-alt">&lt;/span> Cargando...');
+
+    this.getCompleteSystemMetrics()
+      .then((metrics) => {
+        this.displayAdditionalMetrics(metrics);
+        this.showSuccess('Métricas adicionales cargadas correctamente');
+
+        // Cambiar botón a "Refrescar"
+        $btn.prop('disabled', false)
+          .html('&lt;span class="dashicons dashicons-update">&lt;/span> Refrescar Métricas')
+          .attr('id', 'refresh-additional-metrics');
+
+        if (typeof EventCleanupManager !== 'undefined' &amp;&amp; EventCleanupManager &amp;&amp; typeof EventCleanupManager.registerDocumentListener === 'function') {
+          EventCleanupManager.cleanupComponent('UnifiedDashboard-refresh-metrics');
+          EventCleanupManager.registerDocumentListener('click', '#refresh-additional-metrics', (e) => {
+            e.preventDefault();
+            this.loadAdditionalMetrics();
+          }, 'UnifiedDashboard-refresh-metrics');
+        } else {
+          jQuery(document).off('click', '#load-additional-metrics');
+          jQuery(document).on('click', '#refresh-additional-metrics', (e) => {
+            e.preventDefault();
+            this.loadAdditionalMetrics();
+          });
+        }
+      })
+      .catch((error) => {
+        const errorMsg = error.message || 'Error desconocido';
+        
+        if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.logError === 'function') {
+          ErrorHandler.logError(`Error al cargar métricas adicionales: ${errorMsg}`, 'METRICS_LOAD');
+        }
+        
+        this.showError('Error al cargar métricas: ' + errorMsg);
+        $btn.prop('disabled', false)
+          .html('&lt;span class="dashicons dashicons-update-alt">&lt;/span> Cargar Métricas Adicionales');
+      });
+  },
+
+  // Verificar estado de cron jobs del plugin
+  checkCronStatus() {
+    const $btn = jQuery('#check-cron-status');
+    $btn.prop('disabled', true).html('&lt;span class="dashicons dashicons-update-alt">&lt;/span> Verificando...');
+
+    if (typeof AjaxManager !== 'undefined' &amp;&amp; AjaxManager &amp;&amp; typeof AjaxManager.call === 'function') {
+      AjaxManager.call('mia_check_cron_status', {}, (response) => {
+        if (response.success) {
+          // Extraer propiedades usando destructuring con valores por defecto
+          const { cron_jobs = {} } = response.data || {};
+          this.displayCronStatus(cron_jobs);
+        }
+        $btn.prop('disabled', false).html('Verificar Estado de Cron Jobs');
+      }, (xhr, status, error) => {
+        $btn.prop('disabled', false).html('Verificar Estado de Cron Jobs');
+        
+        // ✅ MEJORADO: Registrar error usando ErrorHandler
+        if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.logError === 'function') {
+          ErrorHandler.logError(`Error verificando estado de cron jobs: ${error || 'Error de conexión'} (Status: ${status || 'unknown'})`, 'CRON_STATUS_CHECK');
+        }
+        
+        // ✅ MEJORADO: Mostrar error en UI usando ErrorHandler
+        if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.showConnectionError === 'function') {
+          ErrorHandler.showConnectionError(xhr);
+        }
+      });
+    }
+  },
+
+  // Obtener texto de estado de salud
+  getHealthStatusText(status) {
+    const statusMap = {
+      healthy: 'Saludable',
+      attention: 'Atención',
+      warning: 'Advertencia',
+      critical: 'Crítico',
+      error: 'Error'
+    };
+    return statusMap[status] || status;
+  },
+
+  // Obtener nombre del componente
+  getComponentName(component) {
+    const componentMap = {
+      memory: 'Memoria',
+      retry: 'Reintentos',
+      sync: 'Sincronización',
+      api: 'API'
+    };
+    return componentMap[component] || component;
+  },
+
+  // Obtener texto de estado del componente
+  getComponentStatusText(status) {
+    const statusMap = {
+      healthy: 'Saludable',
+      attention: 'Atención',
+      warning: 'Advertencia',
+      critical: 'Crítico',
+      error: 'Error',
+      unavailable: 'No disponible'
+    };
+    return statusMap[status] || status;
+  },
+
+  // Obtener texto de estado de memoria
+  getMemoryStatusText(status) {
+    const statusMap = {
+      healthy: 'Saludable',
+      attention: 'Atención',
+      warning: 'Advertencia',
+      critical: 'Crítico',
+      error: 'Error',
+      unavailable: 'No disponible'
+    };
+    return statusMap[status] || status;
+  },
+
+  // Obtener texto de estado de reintentos
+  getRetryStatusText(status) {
+    const statusMap = {
+      excellent: 'Excelente',
+      good: 'Bueno',
+      fair: 'Regular',
+      poor: 'Pobre',
+      no_data: 'Sin datos'
+    };
+    return statusMap[status] || status;
+  },
+
+  // Obtener texto de estado de sincronización
+  getSyncStatusText(status) {
+    const statusMap = {
+      running: 'En progreso',
+      syncing: 'Sincronizando',
+      completed: 'Completada',
+      failed: 'Falló',
+      paused: 'Pausada',
+      unknown: 'Desconocido',
+      error: 'Error'
+    };
+    return statusMap[status] || status;
+  },
+
+  // Obtener texto de prioridad
+  getPriorityText(priority) {
+    const priorityMap = {
+      critical: 'Crítico',
+      high: 'Alto',
+      medium: 'Medio',
+      low: 'Bajo'
+    };
+    return priorityMap[priority] || priority;
+  },
+
+  // Mostrar mensaje de éxito
+  showSuccess(message) {
+    this.showMessage(message, 'success');
+  },
+
+  // Mostrar mensaje de error
+  showError(message) {
+    this.showMessage(message, 'error');
+  },
+
+  // Mostrar mensaje
+  showMessage(message, type = 'info') {
+    if (typeof jQuery === 'undefined' || !jQuery.fn || !jQuery.fn.prependTo) {
+      // Fallback si jQuery no está disponible
+      if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.showCriticalError === 'function') {
+        ErrorHandler.showCriticalError(message, 'FALLBACK');
+      }
+      return;
+    }
+
+    try {
+      // ✅ SEGURIDAD: Sanitizar mensaje antes de insertarlo en el DOM
+      const sanitizedMessage = (typeof Sanitizer !== 'undefined' &amp;&amp; Sanitizer.sanitizeMessage) 
+        ? Sanitizer.sanitizeMessage(message) 
+        : String(message).replace(/[&amp;&lt;>"']/g, function(m) {
+          const map = { '&amp;': '&amp;amp;', '&lt;': '&amp;lt;', '>': '&amp;gt;', '"': '&amp;quot;', '\'': '&amp;#039;' };
+          return map[m];
+        });
+      
+      const $message = jQuery('&lt;div class="notice notice-' + type + ' is-dismissible">&lt;/div>');
+      // ✅ SEGURIDAD: Usar .text() en lugar de .html() para prevenir XSS
+      $message.html('&lt;p>&lt;/p>');
+      $message.find('p').text(sanitizedMessage);
+
+      // Verificar que prependTo existe antes de usarlo
+      if (typeof $message.prependTo === 'function') {
+        $message.prependTo('.wrap');
+      } else {
+        // Fallback: usar appendTo o insertBefore
+        const $wrap = jQuery('.wrap');
+        if ($wrap.length > 0) {
+          $wrap.prepend($message);
+        } else {
+          // Último recurso: insertar al principio del body
+          jQuery('body').prepend($message);
+        }
+      }
+
+      // Auto-ocultar después de 5 segundos
+      setTimeout(() => {
+        if ($message &amp;&amp; typeof $message.fadeOut === 'function') {
+          $message.fadeOut(function() {
+            $message.remove();
+          });
+        } else {
+          $message.remove();
+        }
+      }, 5000);
+    } catch (error) {
+      // ✅ MEJORADO: Registrar error con más detalles usando ErrorHandler
+      const errorMsg = error.message || error || 'Error desconocido';
+      if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.logError === 'function') {
+        ErrorHandler.logError(`Error al mostrar mensaje: ${errorMsg}`, 'UI_MESSAGE');
+      }
+      if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.showCriticalError === 'function') {
+        ErrorHandler.showCriticalError(message, 'MESSAGE_DISPLAY');
+      }
+    }
+  },
+
+  // Verificar si hay una sincronización en progreso
+  isSyncInProgress() {
+    // Verificar si hay polling activo de sincronización
+    if (typeof pollingManager !== 'undefined' &amp;&amp; pollingManager &amp;&amp; typeof pollingManager.isPollingActive === 'function') {
+      if (pollingManager.isPollingActive('syncProgress')) {
+        return true;
+      }
+    }
+
+    // Verificar si hay un intervalo de sincronización activo
+    if (typeof window !== 'undefined' &amp;&amp; window.syncInterval !== undefined &amp;&amp; window.syncInterval !== null) {
+      return true;
+    }
+
+    // Verificar elementos del DOM una sola vez
+    const $syncBtn = jQuery('#mi-batch-sync-products');
+    const $feedback = jQuery('#mi-sync-feedback');
+
+    return (
+      // Verificar si el botón de sincronización está deshabilitado (indicador de progreso)
+      ($syncBtn.length &amp;&amp; $syncBtn.is(':disabled')) ||
+      // Verificar si hay feedback de progreso visible
+      ($feedback.length &amp;&amp; $feedback.hasClass('in-progress'))
+    );
+  }
+};
+
+/**
+ * Exponer UnifiedDashboard globalmente para mantener compatibilidad
+ * con el código existente que usa window.UnifiedDashboard
+ */
+// eslint-disable-next-line no-restricted-globals
+if (typeof window !== 'undefined') {
+  try {
+    // eslint-disable-next-line no-restricted-globals
+    window.UnifiedDashboard = UnifiedDashboard;
+  } catch (error) {
+    try {
+      // eslint-disable-next-line no-restricted-globals
+      Object.defineProperty(window, 'UnifiedDashboard', {
+        value: UnifiedDashboard,
+        writable: true,
+        enumerable: true,
+        configurable: true
+      });
+    } catch (defineError) {
+      // ✅ MEJORADO: Registrar error usando ErrorHandler además de console.warn
+      if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.logError === 'function') {
+        ErrorHandler.logError(
+          `Error al exponer UnifiedDashboard (método 2 - Object.defineProperty): ${defineError.message || defineError}`,
+          'UNIFIED_DASHBOARD_EXPOSE'
+        );
+      } else {
+        // eslint-disable-next-line no-console
+        if (typeof console !== 'undefined' &amp;&amp; console.warn) {
+          // eslint-disable-next-line no-console
+          console.warn('No se pudo asignar UnifiedDashboard a window:', defineError, error);
+        }
+      }
+    }
+  }
+}
+
+// ✅ SEGURIDAD: Exponer también en globalThis/global usando solo métodos seguros (sin eval ni function() { return this; })
+// Esto permite usar UnifiedDashboard.init() directamente como en la documentación
+// eslint-disable-next-line no-restricted-globals
+if (typeof globalThis !== 'undefined') {
+  // ✅ SEGURIDAD: Método seguro para globalThis
+  try {
+    // eslint-disable-next-line no-restricted-globals
+    globalThis.UnifiedDashboard = UnifiedDashboard;
+  } catch (error) {
+    // ✅ MEJORADO: Registrar error usando ErrorHandler (no crítico, ya se expuso en window)
+    if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.logError === 'function') {
+      ErrorHandler.logError(
+        `Error al exponer UnifiedDashboard en globalThis: ${error.message || error}`,
+        'UNIFIED_DASHBOARD_EXPOSE'
+      );
+    }
+    // No crítico, ya se expuso en window
+  }
+} else if (typeof global !== 'undefined') {
+  // ✅ SEGURIDAD: Método seguro para Node.js global
+  try {
+    global.UnifiedDashboard = UnifiedDashboard;
+  } catch (error) {
+    // ✅ MEJORADO: Registrar error usando ErrorHandler (no crítico, ya se expuso en window)
+    if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.logError === 'function') {
+      ErrorHandler.logError(
+        `Error al exponer UnifiedDashboard en global: ${error.message || error}`,
+        'UNIFIED_DASHBOARD_EXPOSE'
+      );
+    }
+    // No crítico, ya se expuso en window
+  }
+}
+// ✅ SEGURIDAD: No usar (function() { return this; })() - es problemático en modo estricto y no es necesario
+
+/* global module */
+if (typeof module !== 'undefined' &amp;&amp; module.exports) {
+  module.exports = { UnifiedDashboard };
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Thu Nov 13 2025 05:45:58 GMT+0100 (hora estándar de Europa central) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

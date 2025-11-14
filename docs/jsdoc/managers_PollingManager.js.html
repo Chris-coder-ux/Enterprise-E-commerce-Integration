@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>managers/PollingManager.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AjaxManager.html">AjaxManager</a><ul class='methods'><li data-type='method'><a href="AjaxManager.html#.call">call</a></li></ul></li><li><a href="ErrorHandler.html">ErrorHandler</a><ul class='methods'><li data-type='method'><a href="ErrorHandler.html#.logError">logError</a></li><li data-type='method'><a href="ErrorHandler.html#.showCancelError">showCancelError</a></li><li data-type='method'><a href="ErrorHandler.html#.showConnectionError">showConnectionError</a></li><li data-type='method'><a href="ErrorHandler.html#.showCriticalError">showCriticalError</a></li><li data-type='method'><a href="ErrorHandler.html#.showProtectionError">showProtectionError</a></li><li data-type='method'><a href="ErrorHandler.html#.showUIError">showUIError</a></li></ul></li><li><a href="EventCleanupManager.html">EventCleanupManager</a><ul class='methods'><li data-type='method'><a href="EventCleanupManager.html#cleanupAll">cleanupAll</a></li><li data-type='method'><a href="EventCleanupManager.html#getStats">getStats</a></li><li data-type='method'><a href="EventCleanupManager.html#.cleanupComponent">cleanupComponent</a></li><li data-type='method'><a href="EventCleanupManager.html#.getInstance">getInstance</a></li><li data-type='method'><a href="EventCleanupManager.html#.registerCustomEventListener">registerCustomEventListener</a></li><li data-type='method'><a href="EventCleanupManager.html#.registerDocumentListener">registerDocumentListener</a></li><li data-type='method'><a href="EventCleanupManager.html#.registerElementListener">registerElementListener</a></li><li data-type='method'><a href="EventCleanupManager.html#.registerNativeListener">registerNativeListener</a></li></ul></li><li></li><li></li><li><a href="PollingManager.html">PollingManager</a><ul class='methods'><li data-type='method'><a href="PollingManager.html#adjustPolling">adjustPolling</a></li><li data-type='method'><a href="PollingManager.html#emit">emit</a></li><li data-type='method'><a href="PollingManager.html#getIntervalId">getIntervalId</a></li><li data-type='method'><a href="PollingManager.html#isPollingActive">isPollingActive</a></li><li data-type='method'><a href="PollingManager.html#off">off</a></li><li data-type='method'><a href="PollingManager.html#on">on</a></li><li data-type='method'><a href="PollingManager.html#recordError">recordError</a></li><li data-type='method'><a href="PollingManager.html#recordResponseTime">recordResponseTime</a></li><li data-type='method'><a href="PollingManager.html#reset">reset</a></li><li data-type='method'><a href="PollingManager.html#startPolling">startPolling</a></li><li data-type='method'><a href="PollingManager.html#stopAllPolling">stopAllPolling</a></li><li data-type='method'><a href="PollingManager.html#stopPolling">stopPolling</a></li></ul></li><li></li><li></li><li><a href="SyncDashboard.html">SyncDashboard</a><ul class='methods'><li data-type='method'><a href="SyncDashboard.html#cancelPhase1">cancelPhase1</a></li><li data-type='method'><a href="SyncDashboard.html#cancelSync">cancelSync</a></li><li data-type='method'><a href="SyncDashboard.html#disableButton">disableButton</a></li><li data-type='method'><a href="SyncDashboard.html#enableButton">enableButton</a></li><li data-type='method'><a href="SyncDashboard.html#handlePhase1Response">handlePhase1Response</a></li><li data-type='method'><a href="SyncDashboard.html#loadCurrentStatus">loadCurrentStatus</a></li><li data-type='method'><a href="SyncDashboard.html#pausePhase2">pausePhase2</a></li><li data-type='method'><a href="SyncDashboard.html#resumePhase1">resumePhase1</a></li><li data-type='method'><a href="SyncDashboard.html#startPhase1">startPhase1</a></li><li data-type='method'><a href="SyncDashboard.html#startPhase2">startPhase2</a></li><li data-type='method'><a href="SyncDashboard.html#startTimer">startTimer</a></li><li data-type='method'><a href="SyncDashboard.html#stopTimer">stopTimer</a></li><li data-type='method'><a href="SyncDashboard.html#updateConfig">updateConfig</a></li><li data-type='method'><a href="SyncDashboard.html#updateDashboardFromStatus">updateDashboardFromStatus</a></li><li data-type='method'><a href="SyncDashboard.html#updatePhase1Progress">updatePhase1Progress</a></li><li data-type='method'><a href="SyncDashboard.html#updatePhase2Progress">updatePhase2Progress</a></li><li data-type='method'><a href="SyncDashboard.html#updatePhaseStatus">updatePhaseStatus</a></li></ul></li><li></li><li></li><li><a href="UIOptimizer.html">UIOptimizer</a><ul class='methods'><li data-type='method'><a href="UIOptimizer.html#cancelPendingUpdates">cancelPendingUpdates</a></li><li data-type='method'><a href="UIOptimizer.html#clearCache">clearCache</a></li><li data-type='method'><a href="UIOptimizer.html#scheduleUpdate">scheduleUpdate</a></li><li data-type='method'><a href="UIOptimizer.html#.getInstance">getInstance</a></li><li data-type='method'><a href="UIOptimizer.html#.updateCssIfChanged">updateCssIfChanged</a></li><li data-type='method'><a href="UIOptimizer.html#.updateDataIfChanged">updateDataIfChanged</a></li><li data-type='method'><a href="UIOptimizer.html#.updateHtmlIfChanged">updateHtmlIfChanged</a></li><li data-type='method'><a href="UIOptimizer.html#.updateTextIfChanged">updateTextIfChanged</a></li><li data-type='method'><a href="UIOptimizer.html#.updateValueIfChanged">updateValueIfChanged</a></li></ul></li><li></li><li></li></ul><h3>Modules</h3><ul><li><a href="module-ui_SidebarController.html">ui/SidebarController</a></li><li><a href="module-utils_FormatUtils.html">utils/FormatUtils</a></li></ul><h3>Namespaces</h3><ul><li></li><li><a href="CardManager.html">CardManager</a></li><li></li><li><a href="ConsoleManager.html">ConsoleManager</a></li><li><a href="DASHBOARD_CONFIG.html">DASHBOARD_CONFIG</a></li><li></li><li><a href="global.html#DomUtils">DomUtils</a></li><li></li><li><a href="MESSAGES.html">MESSAGES</a></li><li><a href="global.html#NonceManager">NonceManager</a></li><li><a href="global.html#Phase1Manager">Phase1Manager</a></li><li><a href="global.html#Phase2Manager">Phase2Manager</a></li><li><a href="global.html#ProgressBar">ProgressBar</a></li><li><a href="ResponsiveLayout.html">ResponsiveLayout</a></li><li></li><li><a href="SELECTORS.html">SELECTORS</a></li><li></li><li><a href="global.html#Sanitizer">Sanitizer</a><ul class='methods'><li data-type='method'><a href="global.html#Sanitizer#.escapeHtml">escapeHtml</a></li><li data-type='method'><a href="global.html#Sanitizer#.sanitizeHtml">sanitizeHtml</a></li><li data-type='method'><a href="global.html#Sanitizer#.sanitizeMessage">sanitizeMessage</a></li></ul></li><li><a href="global.html#SyncController">SyncController</a></li><li><a href="global.html#SyncProgress">SyncProgress</a></li><li><a href="global.html#SyncStateManager">SyncStateManager</a></li><li><a href="global.html#SystemEventManager">SystemEventManager</a><ul class='methods'><li data-type='method'><a href="global.html#SystemEventManager#.checkAllSystemsReady">checkAllSystemsReady</a></li><li data-type='method'><a href="global.html#SystemEventManager#.checkDependencies">checkDependencies</a></li><li data-type='method'><a href="global.html#SystemEventManager#.emitErrorHandlerReady">emitErrorHandlerReady</a></li><li data-type='method'><a href="global.html#SystemEventManager#.emitSystemBaseReady">emitSystemBaseReady</a></li><li data-type='method'><a href="global.html#SystemEventManager#.emitUnifiedDashboardReady">emitUnifiedDashboardReady</a></li><li data-type='method'><a href="global.html#SystemEventManager#.getInitializationState">getInitializationState</a></li><li data-type='method'><a href="global.html#SystemEventManager#.init">init</a></li><li data-type='method'><a href="global.html#SystemEventManager#.initializeSystem">initializeSystem</a></li><li data-type='method'><a href="global.html#SystemEventManager#.log">log</a></li><li data-type='method'><a href="global.html#SystemEventManager#.registerSystem">registerSystem</a></li></ul></li><li><a href="global.html#ToastManager">ToastManager</a></li><li><a href="UnifiedDashboard.html">UnifiedDashboard</a><ul class='methods'><li data-type='method'><a href="UnifiedDashboard.html#.init">init</a></li><li data-type='method'><a href="UnifiedDashboard.html#.toggleDebugMode">toggleDebugMode</a></li></ul></li><li></li><li><a href="UnifiedDashboardController.html">UnifiedDashboardController</a></li><li></li></ul><h3>Global</h3><ul><li><a href="global.html#DEFAULT_DURATION">DEFAULT_DURATION</a></li><li><a href="global.html#DEFAULT_RENEWAL_INTERVAL">DEFAULT_RENEWAL_INTERVAL</a></li><li><a href="global.html#DEFAULT_SELECTOR">DEFAULT_SELECTOR</a></li><li><a href="global.html#DOM_CACHE">DOM_CACHE</a></li><li><a href="global.html#TOAST_CLASSES">TOAST_CLASSES</a></li><li><a href="global.html#TOAST_COLORS">TOAST_COLORS</a></li><li><a href="global.html#TOAST_ICONS">TOAST_ICONS</a></li><li><a href="global.html#adjustLayout">adjustLayout</a></li><li><a href="global.html#attemptRenewal">attemptRenewal</a></li><li><a href="global.html#check">check</a></li><li><a href="global.html#cleanupOnPageLoad">cleanupOnPageLoad</a></li><li><a href="global.html#cleanupSyncProgressListeners">cleanupSyncProgressListeners</a></li><li><a href="global.html#clearPhase2PollingInterval">clearPhase2PollingInterval</a></li><li><a href="global.html#clearSyncInterval">clearSyncInterval</a></li><li><a href="global.html#error">error</a></li><li><a href="global.html#getCache">getCache</a></li><li><a href="global.html#getFadeInDuration">getFadeInDuration</a></li><li><a href="global.html#getInactiveProgressCounter">getInactiveProgressCounter</a></li><li><a href="global.html#getLastProgressValue">getLastProgressValue</a></li><li><a href="global.html#getPhase1Initialized">getPhase1Initialized</a></li><li><a href="global.html#getPhase1Starting">getPhase1Starting</a></li><li><a href="global.html#getPhase2Initialized">getPhase2Initialized</a></li><li><a href="global.html#getPhase2PollingInterval">getPhase2PollingInterval</a></li><li><a href="global.html#getPhase2ProcessingBatch">getPhase2ProcessingBatch</a></li><li><a href="global.html#getPhase2Starting">getPhase2Starting</a></li><li><a href="global.html#getPollingInterval">getPollingInterval</a></li><li><a href="global.html#getState">getState</a></li><li><a href="global.html#getSyncInterval">getSyncInterval</a></li><li><a href="global.html#getTrackingState">getTrackingState</a></li><li><a href="global.html#getWidth">getWidth</a></li><li><a href="global.html#hideSidebar">hideSidebar</a></li><li><a href="global.html#inactiveProgressCounter">inactiveProgressCounter</a></li><li><a href="global.html#incrementInactiveProgressCounter">incrementInactiveProgressCounter</a></li><li><a href="global.html#info">info</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initCache">initCache</a></li><li><a href="global.html#initResponsiveMenu">initResponsiveMenu</a></li><li><a href="global.html#initialize">initialize</a></li><li><a href="global.html#initializeSyncDashboard">initializeSyncDashboard</a></li><li><a href="global.html#isAutoRenewalActive">isAutoRenewalActive</a></li><li><a href="global.html#isAvailable">isAvailable</a></li><li><a href="global.html#isCacheInitialized">isCacheInitialized</a></li><li><a href="global.html#isComplete">isComplete</a></li><li><a href="global.html#isPollingActive">isPollingActive</a></li><li><a href="global.html#phase1Starting">phase1Starting</a></li><li><a href="global.html#phase2Starting">phase2Starting</a></li><li><a href="global.html#pollingManager">pollingManager</a></li><li><a href="global.html#proceedWithSync">proceedWithSync</a></li><li><a href="global.html#processNextBatchAutomatically">processNextBatchAutomatically</a></li><li><a href="global.html#refreshCache">refreshCache</a></li><li><a href="global.html#reinit">reinit</a></li><li><a href="global.html#renewalIntervalId">renewalIntervalId</a></li><li><a href="global.html#reset">reset</a></li><li><a href="global.html#resetAllState">resetAllState</a></li><li><a href="global.html#resetCounters">resetCounters</a></li><li><a href="global.html#resetPhase1State">resetPhase1State</a></li><li><a href="global.html#resetPhase2State">resetPhase2State</a></li><li><a href="global.html#setColor">setColor</a></li><li><a href="global.html#setInactiveProgressCounter">setInactiveProgressCounter</a></li><li><a href="global.html#setLastProgressValue">setLastProgressValue</a></li><li><a href="global.html#setPercentage">setPercentage</a></li><li><a href="global.html#setPhase1Initialized">setPhase1Initialized</a></li><li><a href="global.html#setPhase1Starting">setPhase1Starting</a></li><li><a href="global.html#setPhase2Initialized">setPhase2Initialized</a></li><li><a href="global.html#setPhase2PollingInterval">setPhase2PollingInterval</a></li><li><a href="global.html#setPhase2ProcessingBatch">setPhase2ProcessingBatch</a></li><li><a href="global.html#setPhase2Starting">setPhase2Starting</a></li><li><a href="global.html#setSyncInterval">setSyncInterval</a></li><li><a href="global.html#setWidth">setWidth</a></li><li><a href="global.html#setupAutoRenewal">setupAutoRenewal</a></li><li><a href="global.html#show">show</a></li><li><a href="global.html#showSidebar">showSidebar</a></li><li><a href="global.html#start">start</a></li><li><a href="global.html#stop">stop</a></li><li><a href="global.html#stopAutoRenewal">stopAutoRenewal</a></li><li><a href="global.html#stopProgressPolling">stopProgressPolling</a></li><li><a href="global.html#success">success</a></li><li><a href="global.html#toggleSidebar">toggleSidebar</a></li><li><a href="global.html#trackingState">trackingState</a></li><li><a href="global.html#updateCardData">updateCardData</a></li><li><a href="global.html#updateSpecificCard">updateSpecificCard</a></li><li><a href="global.html#warning">warning</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">managers/PollingManager.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Gestor de Polling del Dashboard
+ * 
+ * Gestiona todos los sistemas de polling de forma unificada con ajuste adaptativo
+ * basado en el progreso y la actividad del sistema.
+ * 
+ * @module managers/PollingManager
+ * @class PollingManager
+ * @since 1.0.0
+ * @author Christian
+ */
+
+/* global miIntegracionApiDashboard */
+
+/**
+ * Clase para gestionar todos los sistemas de polling de forma unificada
+ * 
+ * @class PollingManager
+ * @description Gestión unificada de sistemas de polling del dashboard
+ * 
+ * @example
+ * // Crear instancia
+ * const pollingManager = new PollingManager();
+ * 
+ * // Iniciar polling
+ * pollingManager.startPolling('syncProgress', callback, 30000);
+ * 
+ * // Detener polling
+ * pollingManager.stopPolling('syncProgress');
+ */
+class PollingManager {
+  /**
+   * Constructor de PollingManager
+   * 
+   * @constructor
+   * @description Inicializa el gestor de polling con configuración desde PHP
+   */
+  constructor() {
+    this.intervals = new Map();
+    // ✅ NUEVO: Sistema de eventos para notificar a suscriptores
+    this.eventListeners = new Map();
+
+    // CENTRALIZADO: Solo usar configuración de PHP - sin fallbacks hardcodeados
+    // Nota: Usamos verificaciones tradicionales en lugar de optional chaining
+    // para compatibilidad con ESLint 3.0.1
+    // eslint-disable-next-line prefer-optional-chain
+    const phpConfig = (typeof miIntegracionApiDashboard !== 'undefined' &amp;&amp;
+                       // eslint-disable-next-line prefer-optional-chain
+                       miIntegracionApiDashboard &amp;&amp;
+                       // eslint-disable-next-line prefer-optional-chain
+                       miIntegracionApiDashboard.pollingConfig)
+      ? miIntegracionApiDashboard.pollingConfig
+      : {}; // Si no hay config PHP, será problema del servidor
+
+    this.config = {
+      intervals: phpConfig.intervals || {
+        normal: 15000,    // 15 segundos - modo normal
+        active: 2000,     // 2 segundos - modo activo (sincronización en progreso)
+        fast: 1000,       // 1 segundo - modo rápido (progreso activo)
+        slow: 45000,      // 45 segundos - modo lento (sin actividad)
+        idle: 120000,     // 2 minutos - modo inactivo
+        min: 500,         // ✅ NUEVO: Intervalo mínimo absoluto (500ms) - previene sobrecarga
+        max: 300000       // ✅ NUEVO: Intervalo máximo absoluto (5 minutos) - previene timeouts
+      },
+      thresholds: phpConfig.thresholds || {
+        to_slow: 3,
+        to_idle: 8,
+        max_errors: 5,
+        progress_threshold: 0.1,  // Cambio mínimo de progreso para considerar activo
+        latency_threshold: 1000,  // ✅ NUEVO: Latencia máxima aceptable (1 segundo)
+        error_backoff_base: 2,     // ✅ NUEVO: Base para backoff exponencial
+        error_backoff_max: 60000,  // ✅ NUEVO: Backoff máximo (60 segundos)
+        consecutive_errors_threshold: 3  // ✅ NUEVO: Errores consecutivos antes de activar backoff
+      },
+      // eslint-disable-next-line prefer-optional-chain
+      currentInterval: (phpConfig.intervals &amp;&amp; phpConfig.intervals.normal) || 10000, // Mantener &amp;&amp; para compatibilidad
+      currentMode: 'normal',
+      errorCount: 0,
+      consecutiveErrors: 0,  // ✅ NUEVO: Contador de errores consecutivos
+      lastProgress: 0,
+      progressStagnantCount: 0,
+      lastResponseTime: null,  // ✅ NUEVO: Tiempo de respuesta de la última petición
+      averageLatency: null,    // ✅ NUEVO: Latencia promedio calculada
+      backoffMultiplier: 1,    // ✅ NUEVO: Multiplicador actual para backoff
+      userActive: true,        // ✅ NUEVO: Estado de actividad del usuario
+      lastUserActivity: Date.now()  // ✅ NUEVO: Timestamp de última actividad del usuario
+    };
+    this.counters = {
+      inactive: 0,
+      lastProgress: 0
+    };
+    
+    // ✅ NUEVO: Inicializar detección de actividad del usuario
+    this.initializeUserActivityDetection();
+  }
+
+  /**
+   * Suscribirse a un evento
+   * 
+   * @param {string} eventName - Nombre del evento ('syncProgress', 'syncError', etc.)
+   * @param {Function} callback - Función a ejecutar cuando se emita el evento
+   * @returns {Function} Función para desuscribirse
+   * 
+   * @example
+   * const unsubscribe = pollingManager.on('syncProgress', (data) => {
+   *   console.log('Progreso actualizado:', data);
+   * });
+   * 
+   * // Para desuscribirse:
+   * unsubscribe();
+   */
+  on(eventName, callback) {
+    if (!this.eventListeners.has(eventName)) {
+      this.eventListeners.set(eventName, []);
+    }
+    this.eventListeners.get(eventName).push(callback);
+    
+    // Retornar función para desuscribirse
+    return () => {
+      const listeners = this.eventListeners.get(eventName);
+      if (listeners) {
+        const index = listeners.indexOf(callback);
+        if (index > -1) {
+          listeners.splice(index, 1);
+        }
+      }
+    };
+  }
+
+  /**
+   * Emitir un evento
+   * 
+   * @param {string} eventName - Nombre del evento
+   * @param {*} data - Datos a pasar a los listeners
+   * @returns {void}
+   * 
+   * @example
+   * pollingManager.emit('syncProgress', { progress: 50, status: 'active' });
+   */
+  emit(eventName, data) {
+    const listeners = this.eventListeners.get(eventName);
+    
+    if (listeners &amp;&amp; listeners.length > 0) {
+      listeners.forEach((callback) => {
+        try {
+          callback(data);
+        } catch (error) {
+          // ✅ MEJORADO: Registrar error usando ErrorHandler en lugar de silenciarlo
+          if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.logError === 'function') {
+            ErrorHandler.logError(
+              `Error en listener del evento '${eventName}': ${error.message || error}`,
+              'POLLING_EVENT'
+            );
+          }
+          // El listener falló pero no afecta otros listeners
+        }
+      });
+    }
+  }
+
+  /**
+   * Desuscribirse de un evento
+   * 
+   * @param {string} eventName - Nombre del evento
+   * @param {Function} callback - Función a desuscribir (opcional, si no se proporciona se desuscriben todos)
+   * @returns {void}
+   * 
+   * @example
+   * pollingManager.off('syncProgress', myCallback);
+   * pollingManager.off('syncProgress'); // Desuscribir todos los listeners
+   */
+  off(eventName, callback) {
+    if (!callback) {
+      // Desuscribir todos los listeners del evento
+      this.eventListeners.delete(eventName);
+      return;
+    }
+    
+    const listeners = this.eventListeners.get(eventName);
+    if (listeners) {
+      const index = listeners.indexOf(callback);
+      if (index > -1) {
+        listeners.splice(index, 1);
+      }
+    }
+  }
+
+  /**
+   * Iniciar polling con nombre específico
+   * 
+   * ✅ MEJORADO: Si el polling ya está activo, retorna el ID existente en lugar de recrearlo.
+   * Esto previene duplicaciones y permite que múltiples componentes soliciten el mismo polling
+   * sin conflictos.
+   * 
+   * @param {string} name - Nombre único del polling
+   * @param {Function} callback - Función a ejecutar en cada intervalo
+   * @param {number|null} [interval=null] - Intervalo en milisegundos (usa configuración por defecto si es null)
+   * @returns {number} ID del intervalo creado o existente
+   * 
+   * @example
+   * pollingManager.startPolling('syncProgress', checkSyncProgress, 30000);
+   */
+  startPolling(name, callback, interval = null) {
+    // ✅ MEJORADO: Si el polling ya está activo, retornar el ID existente
+    // Esto previene duplicaciones cuando múltiples componentes solicitan el mismo polling
+    if (this.intervals.has(name)) {
+      const existingPolling = this.intervals.get(name);
+      // Opcional: Actualizar callback si es diferente (útil para debugging)
+      // Pero mantener el intervalo existente para evitar recreaciones innecesarias
+      return existingPolling.id;
+    }
+
+    // ✅ MEJORADO: Aplicar límites mínimo y máximo al intervalo
+    const requestedInterval = interval || this.config.currentInterval;
+    const minInterval = this.config.intervals.min || 500;
+    const maxInterval = this.config.intervals.max || 300000;
+    const actualInterval = Math.max(minInterval, Math.min(maxInterval, requestedInterval));
+    
+    // ✅ MEJORADO: Medir tiempo de ejecución del callback para detectar latencia
+    const intervalId = setInterval(() => {
+      const startTime = Date.now();
+      try {
+        callback();
+        // ✅ NUEVO: Registrar tiempo de respuesta si el callback es asíncrono
+        // (Para callbacks síncronos, esto será ~0ms)
+        const responseTime = Date.now() - startTime;
+        if (responseTime > 10) { // Solo registrar si toma más de 10ms
+          this.recordResponseTime(responseTime);
+        }
+      } catch (error) {
+        // ✅ MEJORADO: Registrar error y aplicar backoff
+        if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.logError === 'function') {
+          ErrorHandler.logError(
+            `Error en callback de polling '${name}': ${error.message || error}`,
+            'POLLING_CALLBACK'
+          );
+        }
+        
+        // ✅ NUEVO: Aplicar backoff exponencial para errores
+        this.recordError();
+        
+        // Emitir evento de error si el callback falla
+        this.emit('pollingError', {
+          name,
+          error: error.message,
+          stack: error.stack,
+          timestamp: Date.now(),
+          consecutiveErrors: this.config.consecutiveErrors
+        });
+      }
+    }, actualInterval);
+
+    this.intervals.set(name, {
+      id: intervalId,
+      callback,
+      interval: actualInterval,
+      startTime: Date.now()
+    });
+
+    // ✅ NUEVO: Emitir evento cuando se inicia un polling
+    this.emit('pollingStarted', {
+      name,
+      interval: actualInterval,
+      timestamp: Date.now()
+    });
+
+    return intervalId;
+  }
+
+  /**
+   * Detener polling específico
+   * 
+   * ✅ MEJORADO: Emite evento cuando se detiene un polling para notificar a suscriptores.
+   * 
+   * @param {string} name - Nombre del polling a detener
+   * @returns {boolean} true si se detuvo correctamente, false si no existía
+   * 
+   * @example
+   * pollingManager.stopPolling('syncProgress');
+   */
+  stopPolling(name) {
+    if (this.intervals.has(name)) {
+      const polling = this.intervals.get(name);
+      clearInterval(polling.id);
+      this.intervals.delete(name);
+      
+      // ✅ NUEVO: Emitir evento cuando se detiene un polling
+      this.emit('pollingStopped', {
+        name,
+        timestamp: Date.now()
+      });
+      
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Detener todos los polling
+   * 
+   * @returns {void}
+   * 
+   * @example
+   * pollingManager.stopAllPolling();
+   */
+  stopAllPolling() {
+    // eslint-disable-next-line prefer-for-of
+    for (const polling of this.intervals.values()) {
+      clearInterval(polling.id);
+    }
+    this.intervals.clear();
+  }
+
+  /**
+   * Verificar si hay polling activo
+   * 
+   * @param {string|null} [name=null] - Nombre específico del polling a verificar (opcional)
+   * @returns {boolean} true si hay polling activo, false en caso contrario
+   * 
+   * @example
+   * // Verificar si hay algún polling activo
+   * pollingManager.isPollingActive();
+   * 
+   * // Verificar polling específico
+   * pollingManager.isPollingActive('syncProgress');
+   */
+  isPollingActive(name = null) {
+    if (name) {
+      return this.intervals.has(name);
+    }
+    return this.intervals.size > 0;
+  }
+
+  /**
+   * Obtener el ID del intervalo de un polling específico
+   * 
+   * @param {string} name - Nombre del polling
+   * @returns {number|null} ID del intervalo o null si no existe
+   * 
+   * @example
+   * const intervalId = pollingManager.getIntervalId('syncProgress');
+   */
+  getIntervalId(name) {
+    if (this.intervals.has(name)) {
+      return this.intervals.get(name).id;
+    }
+    return null;
+  }
+
+  /**
+   * ✅ NUEVO: Inicializa la detección de actividad del usuario
+   * 
+   * @returns {void}
+   * @private
+   */
+  initializeUserActivityDetection() {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    
+    const activityEvents = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+    const updateActivity = () => {
+      this.config.lastUserActivity = Date.now();
+      if (!this.config.userActive) {
+        this.config.userActive = true;
+        // Si el usuario vuelve a estar activo, ajustar polling si es necesario
+        this.adjustPollingForUserActivity();
+      }
+    };
+    
+    activityEvents.forEach(event => {
+      window.addEventListener(event, updateActivity, { passive: true });
+    });
+    
+    // Verificar actividad periódicamente
+    setInterval(() => {
+      const timeSinceActivity = Date.now() - this.config.lastUserActivity;
+      const inactiveThreshold = 60000; // 1 minuto sin actividad = inactivo
+      
+      if (timeSinceActivity > inactiveThreshold &amp;&amp; this.config.userActive) {
+        this.config.userActive = false;
+        this.adjustPollingForUserActivity();
+      }
+    }, 10000); // Verificar cada 10 segundos
+  }
+
+  /**
+   * ✅ NUEVO: Ajusta el polling basándose en la actividad del usuario
+   * 
+   * @returns {void}
+   * @private
+   */
+  adjustPollingForUserActivity() {
+    if (!this.config.userActive &amp;&amp; this.config.currentMode !== 'idle') {
+      // Usuario inactivo - reducir frecuencia de polling
+      const currentInterval = this.config.currentInterval;
+      const newInterval = Math.min(currentInterval * 2, this.config.intervals.idle);
+      this.updatePollingInterval(newInterval, 'low-power');
+    } else if (this.config.userActive &amp;&amp; this.config.currentMode === 'low-power') {
+      // Usuario activo de nuevo - restaurar intervalo normal
+      this.config.currentMode = 'normal';
+      this.config.currentInterval = this.config.intervals.normal;
+      this.updatePollingInterval(this.config.intervals.normal, 'normal');
+    }
+  }
+
+  /**
+   * ✅ NUEVO: Actualiza el intervalo de todos los polling activos
+   * 
+   * @param {number} newInterval - Nuevo intervalo en milisegundos
+   * @param {string} mode - Modo actual
+   * @returns {void}
+   * @private
+   */
+  updatePollingInterval(newInterval, mode) {
+    // Aplicar límites mínimo y máximo
+    const minInterval = this.config.intervals.min || 500;
+    const maxInterval = this.config.intervals.max || 300000;
+    const clampedInterval = Math.max(minInterval, Math.min(maxInterval, newInterval));
+    
+    this.config.currentInterval = clampedInterval;
+    this.config.currentMode = mode;
+    
+    // Actualizar intervalos activos (requiere recrear los intervalos)
+    // Nota: Esto es costoso, solo hacerlo cuando sea realmente necesario
+    if (this.intervals.size > 0) {
+      // Guardar callbacks y nombres
+      const activePollings = Array.from(this.intervals.entries()).map(([name, polling]) => ({
+        name,
+        callback: polling.callback
+      }));
+      
+      // Detener todos
+      this.stopAllPolling();
+      
+      // Reiniciar con nuevo intervalo
+      activePollings.forEach(({ name, callback }) => {
+        this.startPolling(name, callback, clampedInterval);
+      });
+    }
+  }
+
+  /**
+   * ✅ NUEVO: Registra el tiempo de respuesta de una petición
+   * 
+   * @param {number} responseTime - Tiempo de respuesta en milisegundos
+   * @returns {void}
+   */
+  recordResponseTime(responseTime) {
+    this.config.lastResponseTime = responseTime;
+    
+    // Calcular latencia promedio (media móvil simple)
+    if (this.config.averageLatency === null) {
+      this.config.averageLatency = responseTime;
+    } else {
+      // Media móvil exponencial con factor de suavizado 0.3
+      this.config.averageLatency = this.config.averageLatency * 0.7 + responseTime * 0.3;
+    }
+    
+    // Ajustar intervalo basándose en latencia
+    this.adjustPollingForLatency();
+    
+    // Resetear contador de errores consecutivos si la petición fue exitosa
+    if (responseTime &lt; this.config.thresholds.latency_threshold) {
+      this.config.consecutiveErrors = 0;
+      this.config.backoffMultiplier = 1;
+    }
+  }
+
+  /**
+   * ✅ NUEVO: Ajusta el polling basándose en la latencia del servidor
+   * 
+   * @returns {void}
+   * @private
+   */
+  adjustPollingForLatency() {
+    if (this.config.averageLatency === null) {
+      return;
+    }
+    
+    const latencyThreshold = this.config.thresholds.latency_threshold;
+    const currentInterval = this.config.currentInterval;
+    
+    if (this.config.averageLatency > latencyThreshold * 2) {
+      // Latencia muy alta - aumentar intervalo significativamente
+      const newInterval = Math.min(currentInterval * 1.5, this.config.intervals.max);
+      if (newInterval !== currentInterval) {
+        this.updatePollingInterval(newInterval, 'high-latency');
+      }
+    } else if (this.config.averageLatency > latencyThreshold) {
+      // Latencia moderada - aumentar intervalo ligeramente
+      const newInterval = Math.min(currentInterval * 1.2, this.config.intervals.max);
+      if (newInterval !== currentInterval &amp;&amp; currentInterval &lt; this.config.intervals.slow) {
+        this.updatePollingInterval(newInterval, 'moderate-latency');
+      }
+    } else if (this.config.averageLatency &lt; latencyThreshold * 0.5 &amp;&amp; currentInterval > this.config.intervals.active) {
+      // Latencia baja - reducir intervalo si es seguro
+      const newInterval = Math.max(currentInterval * 0.9, this.config.intervals.active);
+      if (newInterval !== currentInterval) {
+        this.updatePollingInterval(newInterval, this.config.currentMode);
+      }
+    }
+  }
+
+  /**
+   * ✅ NUEVO: Registra un error y aplica backoff exponencial con jitter
+   * 
+   * @returns {number} Nuevo intervalo con backoff aplicado
+   */
+  recordError() {
+    this.config.errorCount++;
+    this.config.consecutiveErrors++;
+    
+    // Solo aplicar backoff si hay múltiples errores consecutivos
+    if (this.config.consecutiveErrors >= this.config.thresholds.consecutive_errors_threshold) {
+      // Backoff exponencial: base^consecutiveErrors
+      const base = this.config.thresholds.error_backoff_base;
+      const exponentialBackoff = Math.pow(base, this.config.consecutiveErrors - this.config.thresholds.consecutive_errors_threshold + 1);
+      
+      // Aplicar jitter aleatorio (±20%) para evitar sincronización de múltiples clientes
+      const jitter = 1 + (Math.random() * 0.4 - 0.2); // Entre 0.8 y 1.2
+      const backoffInterval = this.config.currentInterval * exponentialBackoff * jitter;
+      
+      // Limitar al máximo configurado
+      const maxBackoff = this.config.thresholds.error_backoff_max;
+      const newInterval = Math.min(backoffInterval, maxBackoff);
+      
+      // Aplicar límites mínimo y máximo
+      const minInterval = this.config.intervals.min || 500;
+      const maxInterval = this.config.intervals.max || 300000;
+      const clampedInterval = Math.max(minInterval, Math.min(maxInterval, newInterval));
+      
+      this.config.backoffMultiplier = exponentialBackoff;
+      this.updatePollingInterval(clampedInterval, 'error-backoff');
+      
+      // Registrar error usando ErrorHandler si está disponible
+      if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.logError === 'function') {
+        ErrorHandler.logError(
+          `Polling backoff aplicado: ${this.config.consecutiveErrors} errores consecutivos, nuevo intervalo: ${Math.round(clampedInterval / 1000)}s`,
+          'POLLING_BACKOFF'
+        );
+      }
+      
+      return clampedInterval;
+    }
+    
+    return this.config.currentInterval;
+  }
+
+  /**
+   * Ajusta el polling adaptativamente basado en el progreso
+   * 
+   * ✅ MEJORADO: Ahora considera latencia, actividad del usuario y errores
+   * 
+   * @param {number} currentProgress - Progreso actual (0-100)
+   * @param {boolean} isActive - Si la sincronización está activa
+   * @returns {void}
+   * 
+   * @example
+   * pollingManager.adjustPolling(75, true);
+   */
+  adjustPolling(currentProgress, isActive) {
+    if (!isActive) {
+      this.config.currentMode = 'idle';
+      this.config.currentInterval = this.config.intervals.idle;
+      this.updatePollingInterval(this.config.intervals.idle, 'idle');
+      return;
+    }
+
+    // ✅ MEJORADO: Considerar actividad del usuario
+    if (!this.config.userActive) {
+      // Usuario inactivo - usar modo de bajo consumo
+      const lowPowerInterval = Math.min(this.config.intervals.slow, this.config.currentInterval * 2);
+      this.updatePollingInterval(lowPowerInterval, 'low-power');
+      return;
+    }
+
+    const progressChange = Math.abs(currentProgress - this.config.lastProgress);
+    const threshold = this.config.thresholds.progress_threshold;
+
+    // ✅ MEJORADO: Considerar latencia antes de ajustar por progreso
+    const latencyFactor = this.config.averageLatency 
+      ? Math.min(this.config.averageLatency / this.config.thresholds.latency_threshold, 2)
+      : 1;
+
+    // OPTIMIZACIÓN: Lógica más conservadora para reducir peticiones
+    if (progressChange > threshold) {
+      // Progreso activo - usar modo rápido solo si el cambio es significativo
+      if (progressChange > 5) { // Cambio de más del 5%
+        const fastInterval = Math.max(
+          this.config.intervals.fast * latencyFactor,
+          this.config.intervals.min
+        );
+        this.config.currentMode = 'fast';
+        this.config.currentInterval = Math.min(fastInterval, this.config.intervals.max);
+      } else {
+        // Cambio pequeño - mantener modo activo
+        const activeInterval = Math.max(
+          this.config.intervals.active * latencyFactor,
+          this.config.intervals.min
+        );
+        this.config.currentMode = 'active';
+        this.config.currentInterval = Math.min(activeInterval, this.config.intervals.max);
+      }
+      this.config.progressStagnantCount = 0;
+    } else {
+      // Progreso estancado - incrementar contador
+      this.config.progressStagnantCount++;
+
+      if (this.config.progressStagnantCount >= 5) { // Aumentado de 3 a 5
+        // Progreso estancado por 5 ciclos - usar modo lento
+        this.config.currentMode = 'slow';
+        this.config.currentInterval = this.config.intervals.slow;
+      } else if (this.config.progressStagnantCount >= 2) {
+        // Después de 2 ciclos sin progreso - usar modo normal
+        this.config.currentMode = 'normal';
+        this.config.currentInterval = this.config.intervals.normal;
+      } else {
+        // Mantener modo activo normal
+        this.config.currentMode = 'active';
+        this.config.currentInterval = this.config.intervals.active;
+      }
+    }
+
+    // ✅ MEJORADO: Aplicar límites mínimo y máximo
+    const minInterval = this.config.intervals.min || 500;
+    const maxInterval = this.config.intervals.max || 300000;
+    this.config.currentInterval = Math.max(minInterval, Math.min(maxInterval, this.config.currentInterval));
+
+    this.config.lastProgress = currentProgress;
+  }
+
+  /**
+   * Resetear configuración
+   * 
+   * ✅ MEJORADO: Ahora resetea también métricas de latencia y backoff
+   * 
+   * @returns {void}
+   * 
+   * @example
+   * pollingManager.reset();
+   */
+  reset() {
+    this.stopAllPolling();
+    this.config.currentInterval = this.config.intervals.normal;
+    this.config.currentMode = 'normal';
+    this.config.errorCount = 0;
+    this.config.consecutiveErrors = 0;
+    this.config.lastProgress = 0;
+    this.config.progressStagnantCount = 0;
+    this.config.lastResponseTime = null;
+    this.config.averageLatency = null;
+    this.config.backoffMultiplier = 1;
+    this.config.userActive = true;
+    this.config.lastUserActivity = Date.now();
+    this.counters.inactive = 0;
+    this.counters.lastProgress = 0;
+  }
+}
+
+/**
+ * Exponer PollingManager globalmente para mantener compatibilidad
+ * con el código existente que usa window.PollingManager
+ * 
+ * ✅ MEJORADO: Exposición más robusta con múltiples métodos de fallback
+ */
+(function exposePollingManagerClass() {
+  if (typeof window === 'undefined') {
+    return;
+  }
+  
+  // Método 1: Asignación directa
+  try {
+    window.PollingManager = PollingManager;
+    if (window.PollingManager === PollingManager) {
+      return; // ✅ Éxito
+    }
+  } catch (error) {
+    // Continuar con siguiente método
+  }
+  
+  // Método 2: Object.defineProperty
+  try {
+    Object.defineProperty(window, 'PollingManager', {
+      value: PollingManager,
+      writable: true,
+      enumerable: true,
+      configurable: true
+    });
+    if (window.PollingManager === PollingManager) {
+      return; // ✅ Éxito
+    }
+  } catch (defineError) {
+    // ✅ SEGURIDAD: No usar eval como fallback. Si ambos métodos fallan, registrar advertencia
+    // Es mejor no exponer el objeto que usar eval, que es un riesgo de seguridad
+    if (typeof console !== 'undefined' &amp;&amp; console.warn) {
+      // eslint-disable-next-line no-console
+      console.warn('[PollingManager] ⚠️ No se pudo exponer PollingManager usando métodos seguros:', defineError);
+    }
+  }
+})();
+
+/**
+ * Instancia global del PollingManager
+ * 
+ * NOTA: En el archivo original (dashboard.js línea 936) se crea:
+ * const pollingManager = new PollingManager();
+ * 
+ * El código existente usa directamente esta instancia global, no crea nuevas instancias.
+ * Por lo tanto, creamos y exponemos solo esta instancia global.
+ */
+const pollingManager = new PollingManager();
+
+/**
+ * Exponer pollingManager (instancia) globalmente para mantener compatibilidad
+ * con el código existente que usa pollingManager directamente
+ * 
+ * ✅ MEJORADO: Exposición más robusta con múltiples métodos de fallback
+ */
+(function exposePollingManager() {
+  if (typeof window === 'undefined') {
+    return;
+  }
+  
+  // Método 1: Asignación directa (más común y compatible)
+  try {
+    window.pollingManager = pollingManager;
+    if (window.pollingManager === pollingManager) {
+      return; // ✅ Éxito
+    }
+  } catch (error) {
+    // Continuar con siguiente método
+  }
+  
+  // Método 2: Object.defineProperty (más control)
+  try {
+    Object.defineProperty(window, 'pollingManager', {
+      value: pollingManager,
+      writable: true,
+      enumerable: true,
+      configurable: true
+    });
+    if (window.pollingManager === pollingManager) {
+      return; // ✅ Éxito
+    }
+  } catch (defineError) {
+    // ✅ SEGURIDAD: No usar eval como fallback. Si ambos métodos fallan, registrar advertencia
+    // Es mejor no exponer el objeto que usar eval, que es un riesgo de seguridad
+    if (typeof console !== 'undefined' &amp;&amp; console.warn) {
+      // eslint-disable-next-line no-console
+      console.warn('[PollingManager] ⚠️ No se pudo exponer pollingManager usando métodos seguros:', defineError);
+    }
+  }
+})();
+
+/* global module */
+if (typeof module !== 'undefined' &amp;&amp; module.exports) {
+  module.exports = { PollingManager, pollingManager };
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Thu Nov 13 2025 05:45:58 GMT+0100 (hora estándar de Europa central) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>sync/Phase1Manager.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AjaxManager.html">AjaxManager</a><ul class='methods'><li data-type='method'><a href="AjaxManager.html#.call">call</a></li></ul></li><li><a href="ErrorHandler.html">ErrorHandler</a><ul class='methods'><li data-type='method'><a href="ErrorHandler.html#.logError">logError</a></li><li data-type='method'><a href="ErrorHandler.html#.showCancelError">showCancelError</a></li><li data-type='method'><a href="ErrorHandler.html#.showConnectionError">showConnectionError</a></li><li data-type='method'><a href="ErrorHandler.html#.showCriticalError">showCriticalError</a></li><li data-type='method'><a href="ErrorHandler.html#.showProtectionError">showProtectionError</a></li><li data-type='method'><a href="ErrorHandler.html#.showUIError">showUIError</a></li></ul></li><li><a href="EventCleanupManager.html">EventCleanupManager</a><ul class='methods'><li data-type='method'><a href="EventCleanupManager.html#cleanupAll">cleanupAll</a></li><li data-type='method'><a href="EventCleanupManager.html#getStats">getStats</a></li><li data-type='method'><a href="EventCleanupManager.html#.cleanupComponent">cleanupComponent</a></li><li data-type='method'><a href="EventCleanupManager.html#.getInstance">getInstance</a></li><li data-type='method'><a href="EventCleanupManager.html#.registerCustomEventListener">registerCustomEventListener</a></li><li data-type='method'><a href="EventCleanupManager.html#.registerDocumentListener">registerDocumentListener</a></li><li data-type='method'><a href="EventCleanupManager.html#.registerElementListener">registerElementListener</a></li><li data-type='method'><a href="EventCleanupManager.html#.registerNativeListener">registerNativeListener</a></li></ul></li><li></li><li></li><li><a href="PollingManager.html">PollingManager</a><ul class='methods'><li data-type='method'><a href="PollingManager.html#adjustPolling">adjustPolling</a></li><li data-type='method'><a href="PollingManager.html#emit">emit</a></li><li data-type='method'><a href="PollingManager.html#getIntervalId">getIntervalId</a></li><li data-type='method'><a href="PollingManager.html#isPollingActive">isPollingActive</a></li><li data-type='method'><a href="PollingManager.html#off">off</a></li><li data-type='method'><a href="PollingManager.html#on">on</a></li><li data-type='method'><a href="PollingManager.html#recordError">recordError</a></li><li data-type='method'><a href="PollingManager.html#recordResponseTime">recordResponseTime</a></li><li data-type='method'><a href="PollingManager.html#reset">reset</a></li><li data-type='method'><a href="PollingManager.html#startPolling">startPolling</a></li><li data-type='method'><a href="PollingManager.html#stopAllPolling">stopAllPolling</a></li><li data-type='method'><a href="PollingManager.html#stopPolling">stopPolling</a></li></ul></li><li></li><li></li><li><a href="SyncDashboard.html">SyncDashboard</a><ul class='methods'><li data-type='method'><a href="SyncDashboard.html#cancelPhase1">cancelPhase1</a></li><li data-type='method'><a href="SyncDashboard.html#cancelSync">cancelSync</a></li><li data-type='method'><a href="SyncDashboard.html#disableButton">disableButton</a></li><li data-type='method'><a href="SyncDashboard.html#enableButton">enableButton</a></li><li data-type='method'><a href="SyncDashboard.html#handlePhase1Response">handlePhase1Response</a></li><li data-type='method'><a href="SyncDashboard.html#loadCurrentStatus">loadCurrentStatus</a></li><li data-type='method'><a href="SyncDashboard.html#pausePhase2">pausePhase2</a></li><li data-type='method'><a href="SyncDashboard.html#resumePhase1">resumePhase1</a></li><li data-type='method'><a href="SyncDashboard.html#startPhase1">startPhase1</a></li><li data-type='method'><a href="SyncDashboard.html#startPhase2">startPhase2</a></li><li data-type='method'><a href="SyncDashboard.html#startTimer">startTimer</a></li><li data-type='method'><a href="SyncDashboard.html#stopTimer">stopTimer</a></li><li data-type='method'><a href="SyncDashboard.html#updateConfig">updateConfig</a></li><li data-type='method'><a href="SyncDashboard.html#updateDashboardFromStatus">updateDashboardFromStatus</a></li><li data-type='method'><a href="SyncDashboard.html#updatePhase1Progress">updatePhase1Progress</a></li><li data-type='method'><a href="SyncDashboard.html#updatePhase2Progress">updatePhase2Progress</a></li><li data-type='method'><a href="SyncDashboard.html#updatePhaseStatus">updatePhaseStatus</a></li></ul></li><li></li><li></li><li><a href="UIOptimizer.html">UIOptimizer</a><ul class='methods'><li data-type='method'><a href="UIOptimizer.html#cancelPendingUpdates">cancelPendingUpdates</a></li><li data-type='method'><a href="UIOptimizer.html#clearCache">clearCache</a></li><li data-type='method'><a href="UIOptimizer.html#scheduleUpdate">scheduleUpdate</a></li><li data-type='method'><a href="UIOptimizer.html#.getInstance">getInstance</a></li><li data-type='method'><a href="UIOptimizer.html#.updateCssIfChanged">updateCssIfChanged</a></li><li data-type='method'><a href="UIOptimizer.html#.updateDataIfChanged">updateDataIfChanged</a></li><li data-type='method'><a href="UIOptimizer.html#.updateHtmlIfChanged">updateHtmlIfChanged</a></li><li data-type='method'><a href="UIOptimizer.html#.updateTextIfChanged">updateTextIfChanged</a></li><li data-type='method'><a href="UIOptimizer.html#.updateValueIfChanged">updateValueIfChanged</a></li></ul></li><li></li><li></li></ul><h3>Modules</h3><ul><li><a href="module-ui_SidebarController.html">ui/SidebarController</a></li><li><a href="module-utils_FormatUtils.html">utils/FormatUtils</a></li></ul><h3>Namespaces</h3><ul><li></li><li><a href="CardManager.html">CardManager</a></li><li></li><li><a href="ConsoleManager.html">ConsoleManager</a></li><li><a href="DASHBOARD_CONFIG.html">DASHBOARD_CONFIG</a></li><li></li><li><a href="global.html#DomUtils">DomUtils</a></li><li></li><li><a href="MESSAGES.html">MESSAGES</a></li><li><a href="global.html#NonceManager">NonceManager</a></li><li><a href="global.html#Phase1Manager">Phase1Manager</a></li><li><a href="global.html#Phase2Manager">Phase2Manager</a></li><li><a href="global.html#ProgressBar">ProgressBar</a></li><li><a href="ResponsiveLayout.html">ResponsiveLayout</a></li><li></li><li><a href="SELECTORS.html">SELECTORS</a></li><li></li><li><a href="global.html#Sanitizer">Sanitizer</a><ul class='methods'><li data-type='method'><a href="global.html#Sanitizer#.escapeHtml">escapeHtml</a></li><li data-type='method'><a href="global.html#Sanitizer#.sanitizeHtml">sanitizeHtml</a></li><li data-type='method'><a href="global.html#Sanitizer#.sanitizeMessage">sanitizeMessage</a></li></ul></li><li><a href="global.html#SyncController">SyncController</a></li><li><a href="global.html#SyncProgress">SyncProgress</a></li><li><a href="global.html#SyncStateManager">SyncStateManager</a></li><li><a href="global.html#SystemEventManager">SystemEventManager</a><ul class='methods'><li data-type='method'><a href="global.html#SystemEventManager#.checkAllSystemsReady">checkAllSystemsReady</a></li><li data-type='method'><a href="global.html#SystemEventManager#.checkDependencies">checkDependencies</a></li><li data-type='method'><a href="global.html#SystemEventManager#.emitErrorHandlerReady">emitErrorHandlerReady</a></li><li data-type='method'><a href="global.html#SystemEventManager#.emitSystemBaseReady">emitSystemBaseReady</a></li><li data-type='method'><a href="global.html#SystemEventManager#.emitUnifiedDashboardReady">emitUnifiedDashboardReady</a></li><li data-type='method'><a href="global.html#SystemEventManager#.getInitializationState">getInitializationState</a></li><li data-type='method'><a href="global.html#SystemEventManager#.init">init</a></li><li data-type='method'><a href="global.html#SystemEventManager#.initializeSystem">initializeSystem</a></li><li data-type='method'><a href="global.html#SystemEventManager#.log">log</a></li><li data-type='method'><a href="global.html#SystemEventManager#.registerSystem">registerSystem</a></li></ul></li><li><a href="global.html#ToastManager">ToastManager</a></li><li><a href="UnifiedDashboard.html">UnifiedDashboard</a><ul class='methods'><li data-type='method'><a href="UnifiedDashboard.html#.init">init</a></li><li data-type='method'><a href="UnifiedDashboard.html#.toggleDebugMode">toggleDebugMode</a></li></ul></li><li></li><li><a href="UnifiedDashboardController.html">UnifiedDashboardController</a></li><li></li></ul><h3>Global</h3><ul><li><a href="global.html#DEFAULT_DURATION">DEFAULT_DURATION</a></li><li><a href="global.html#DEFAULT_RENEWAL_INTERVAL">DEFAULT_RENEWAL_INTERVAL</a></li><li><a href="global.html#DEFAULT_SELECTOR">DEFAULT_SELECTOR</a></li><li><a href="global.html#DOM_CACHE">DOM_CACHE</a></li><li><a href="global.html#TOAST_CLASSES">TOAST_CLASSES</a></li><li><a href="global.html#TOAST_COLORS">TOAST_COLORS</a></li><li><a href="global.html#TOAST_ICONS">TOAST_ICONS</a></li><li><a href="global.html#adjustLayout">adjustLayout</a></li><li><a href="global.html#attemptRenewal">attemptRenewal</a></li><li><a href="global.html#check">check</a></li><li><a href="global.html#cleanupOnPageLoad">cleanupOnPageLoad</a></li><li><a href="global.html#cleanupSyncProgressListeners">cleanupSyncProgressListeners</a></li><li><a href="global.html#clearPhase2PollingInterval">clearPhase2PollingInterval</a></li><li><a href="global.html#clearSyncInterval">clearSyncInterval</a></li><li><a href="global.html#error">error</a></li><li><a href="global.html#getCache">getCache</a></li><li><a href="global.html#getFadeInDuration">getFadeInDuration</a></li><li><a href="global.html#getInactiveProgressCounter">getInactiveProgressCounter</a></li><li><a href="global.html#getLastProgressValue">getLastProgressValue</a></li><li><a href="global.html#getPhase1Initialized">getPhase1Initialized</a></li><li><a href="global.html#getPhase1Starting">getPhase1Starting</a></li><li><a href="global.html#getPhase2Initialized">getPhase2Initialized</a></li><li><a href="global.html#getPhase2PollingInterval">getPhase2PollingInterval</a></li><li><a href="global.html#getPhase2ProcessingBatch">getPhase2ProcessingBatch</a></li><li><a href="global.html#getPhase2Starting">getPhase2Starting</a></li><li><a href="global.html#getPollingInterval">getPollingInterval</a></li><li><a href="global.html#getState">getState</a></li><li><a href="global.html#getSyncInterval">getSyncInterval</a></li><li><a href="global.html#getTrackingState">getTrackingState</a></li><li><a href="global.html#getWidth">getWidth</a></li><li><a href="global.html#hideSidebar">hideSidebar</a></li><li><a href="global.html#inactiveProgressCounter">inactiveProgressCounter</a></li><li><a href="global.html#incrementInactiveProgressCounter">incrementInactiveProgressCounter</a></li><li><a href="global.html#info">info</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initCache">initCache</a></li><li><a href="global.html#initResponsiveMenu">initResponsiveMenu</a></li><li><a href="global.html#initialize">initialize</a></li><li><a href="global.html#initializeSyncDashboard">initializeSyncDashboard</a></li><li><a href="global.html#isAutoRenewalActive">isAutoRenewalActive</a></li><li><a href="global.html#isAvailable">isAvailable</a></li><li><a href="global.html#isCacheInitialized">isCacheInitialized</a></li><li><a href="global.html#isComplete">isComplete</a></li><li><a href="global.html#isPollingActive">isPollingActive</a></li><li><a href="global.html#phase1Starting">phase1Starting</a></li><li><a href="global.html#phase2Starting">phase2Starting</a></li><li><a href="global.html#pollingManager">pollingManager</a></li><li><a href="global.html#proceedWithSync">proceedWithSync</a></li><li><a href="global.html#processNextBatchAutomatically">processNextBatchAutomatically</a></li><li><a href="global.html#refreshCache">refreshCache</a></li><li><a href="global.html#reinit">reinit</a></li><li><a href="global.html#renewalIntervalId">renewalIntervalId</a></li><li><a href="global.html#reset">reset</a></li><li><a href="global.html#resetAllState">resetAllState</a></li><li><a href="global.html#resetCounters">resetCounters</a></li><li><a href="global.html#resetPhase1State">resetPhase1State</a></li><li><a href="global.html#resetPhase2State">resetPhase2State</a></li><li><a href="global.html#setColor">setColor</a></li><li><a href="global.html#setInactiveProgressCounter">setInactiveProgressCounter</a></li><li><a href="global.html#setLastProgressValue">setLastProgressValue</a></li><li><a href="global.html#setPercentage">setPercentage</a></li><li><a href="global.html#setPhase1Initialized">setPhase1Initialized</a></li><li><a href="global.html#setPhase1Starting">setPhase1Starting</a></li><li><a href="global.html#setPhase2Initialized">setPhase2Initialized</a></li><li><a href="global.html#setPhase2PollingInterval">setPhase2PollingInterval</a></li><li><a href="global.html#setPhase2ProcessingBatch">setPhase2ProcessingBatch</a></li><li><a href="global.html#setPhase2Starting">setPhase2Starting</a></li><li><a href="global.html#setSyncInterval">setSyncInterval</a></li><li><a href="global.html#setWidth">setWidth</a></li><li><a href="global.html#setupAutoRenewal">setupAutoRenewal</a></li><li><a href="global.html#show">show</a></li><li><a href="global.html#showSidebar">showSidebar</a></li><li><a href="global.html#start">start</a></li><li><a href="global.html#stop">stop</a></li><li><a href="global.html#stopAutoRenewal">stopAutoRenewal</a></li><li><a href="global.html#stopProgressPolling">stopProgressPolling</a></li><li><a href="global.html#success">success</a></li><li><a href="global.html#toggleSidebar">toggleSidebar</a></li><li><a href="global.html#trackingState">trackingState</a></li><li><a href="global.html#updateCardData">updateCardData</a></li><li><a href="global.html#updateSpecificCard">updateSpecificCard</a></li><li><a href="global.html#warning">warning</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">sync/Phase1Manager.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Gestor de Fase 1: Sincronización de Imágenes
+ *
+ * Gestiona la Fase 1 de la sincronización en dos fases, que consiste en
+ * sincronizar todas las imágenes antes de proceder con la sincronización
+ * de productos (Fase 2).
+ *
+ * @module sync/Phase1Manager
+ * @namespace Phase1Manager
+ * @since 1.0.0
+ * @author Christian
+ */
+
+/* global jQuery, miIntegracionApiDashboard, DASHBOARD_CONFIG, DOM_CACHE, pollingManager, ErrorHandler, SyncStateManager, startPhase2, window */
+
+/**
+ * Intervalo de polling para verificar el progreso de Fase 1
+ * 
+ * ✅ DEPRECADO: Ya no se usa directamente. PollingManager gestiona el intervalo.
+ * Se mantiene para compatibilidad hacia atrás.
+ *
+ * @type {number|null}
+ * @private
+ * @deprecated Usar PollingManager para gestionar polling
+ */
+let phase1PollingInterval = null;
+
+/**
+ * Estado de completitud de Fase 1
+ *
+ * @type {boolean}
+ * @private
+ */
+let phase1Complete = false;
+
+/**
+ * Verifica si Fase 1 está completa basándose en el estado recibido
+ *
+ * @param {Object} phase1Status - Estado de Fase 1
+ * @returns {boolean} True si Fase 1 está completa
+ * @private
+ */
+function isPhase1Completed(phase1Status) {
+  // Solo considerar completada si:
+  // 1. Está explícitamente marcada como completada Y tiene productos procesados
+  // 2. O no está en progreso Y ha procesado todos los productos (total_products > 0)
+  // NO considerar completada si:
+  // - Se detectó como proceso huérfano (stale_detected)
+  // - No tiene total_products definido o es 0
+  // - No ha procesado ningún producto
+  const isStale = phase1Status.stale_detected === true;
+  const hasTotalProducts = phase1Status.total_products &amp;&amp; phase1Status.total_products > 0;
+  const hasProcessedProducts = phase1Status.products_processed &amp;&amp; phase1Status.products_processed > 0;
+  const allProductsProcessed = hasTotalProducts &amp;&amp; hasProcessedProducts &amp;&amp;
+                               phase1Status.products_processed === phase1Status.total_products;
+
+  return !isStale &amp;&amp; (
+    (phase1Status.completed === true &amp;&amp; hasProcessedProducts) ||
+    (!phase1Status.in_progress &amp;&amp; allProductsProcessed)
+  );
+}
+
+/**
+ * Verifica el progreso de Fase 1 y determina si está completa
+ *
+ * @returns {void}
+ * @private
+ */
+function checkPhase1Complete() {
+  if (typeof jQuery === 'undefined' || typeof miIntegracionApiDashboard === 'undefined') {
+    return;
+  }
+
+  jQuery.ajax({
+    url: miIntegracionApiDashboard.ajaxurl || ajaxurl,
+    type: 'POST',
+    data: {
+      action: 'mia_get_sync_progress',
+      nonce: miIntegracionApiDashboard.nonce
+    },
+    success: function(progressResponse) {
+      if (progressResponse.success &amp;&amp; progressResponse.data) {
+        const phase1Status = progressResponse.data.phase1_images || {};
+
+
+        // ✅ NUEVO: Emitir evento de progreso a través de PollingManager
+        // Esto permite que ConsoleManager y otros suscriptores reciban actualizaciones
+        if (typeof window !== 'undefined' &amp;&amp; window.pollingManager &amp;&amp; typeof window.pollingManager.emit === 'function') {
+          window.pollingManager.emit('syncProgress', {
+            syncData: progressResponse.data,
+            phase1Status: phase1Status,
+            timestamp: Date.now()
+          });
+        } else {
+          // Fallback: Intentar actualizar consola directamente si no hay sistema de eventos
+          if (typeof window !== 'undefined') {
+            if (typeof window.updateSyncConsole === 'function') {
+              window.updateSyncConsole(progressResponse.data, phase1Status);
+            } else if (window.ConsoleManager &amp;&amp; typeof window.ConsoleManager.updateSyncConsole === 'function') {
+              window.ConsoleManager.updateSyncConsole(progressResponse.data, phase1Status);
+            }
+          }
+        }
+
+        // ✅ NUEVO: Actualizar dashboard también
+        if (typeof window !== 'undefined' &amp;&amp; window.syncDashboard &amp;&amp; typeof window.syncDashboard.updateDashboardFromStatus === 'function') {
+          window.syncDashboard.updateDashboardFromStatus(progressResponse.data);
+        }
+
+        if (isPhase1Completed(phase1Status)) {
+          phase1Complete = true;
+
+          // ✅ PROTECCIÓN: Marcar Fase 1 como completada usando SyncStateManager
+          if (typeof SyncStateManager !== 'undefined' &amp;&amp; SyncStateManager &amp;&amp; typeof SyncStateManager.setPhase1Initialized === 'function') {
+            SyncStateManager.setPhase1Initialized(false); // Ya no está en progreso
+          }
+
+          // Detener polling de Fase 1
+          stopPolling();
+
+          // ✅ NUEVO: Emitir evento de finalización de Fase 1 a través de PollingManager
+          // Esto permite que Phase2Manager y otros componentes se suscriban y actúen
+          if (typeof window !== 'undefined' &amp;&amp; window.pollingManager &amp;&amp; typeof window.pollingManager.emit === 'function') {
+            window.pollingManager.emit('phase1Completed', {
+              phase1Status: phase1Status,
+              timestamp: Date.now(),
+              data: progressResponse.data
+            });
+            // eslint-disable-next-line no-console
+            if (typeof console !== 'undefined' &amp;&amp; console.log) {
+              // eslint-disable-next-line no-console
+              console.log('✅ [Phase1Manager] Evento phase1Completed emitido');
+            }
+          }
+
+          // ✅ COMPATIBILIDAD: Mantener llamada directa a startPhase2 para código legacy
+          // Phase2Manager también escuchará el evento phase1Completed, pero mantenemos
+          // esta llamada para compatibilidad con código existente
+          if (typeof startPhase2 === 'function') {
+            startPhase2();
+          } else if (typeof console !== 'undefined' &amp;&amp; console.error) {
+            // eslint-disable-next-line no-console
+            console.error('startPhase2 no está disponible');
+          }
+        }
+      }
+    },
+    error: function(xhr, status, error) {
+      // ✅ MEJORADO: Registrar error usando ErrorHandler en lugar de silenciarlo
+      if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.logError === 'function') {
+        ErrorHandler.logError(
+          `Error al verificar progreso de Fase 1: ${error || 'Error de conexión'} (Status: ${status || 'unknown'})`,
+          'PHASE1_POLLING'
+        );
+      }
+      // El polling continuará, pero ahora tenemos registro del error
+    }
+  });
+}
+
+/**
+ * Inicializa el polling para monitorear Fase 1
+ * 
+ * ✅ MIGRADO: Ahora usa PollingManager en lugar de setInterval directo.
+ * PollingManager es el único responsable de gestionar intervalos.
+ *
+ * @returns {void}
+ * @private
+ */
+function startPolling() {
+  // ✅ MIGRADO: Usar PollingManager en lugar de setInterval directo
+  if (typeof pollingManager === 'undefined' || !pollingManager || typeof pollingManager.startPolling !== 'function') {
+    // eslint-disable-next-line no-console
+    if (typeof console !== 'undefined' &amp;&amp; console.error) {
+      // eslint-disable-next-line no-console
+      console.error('PollingManager no está disponible para Phase1Manager');
+    }
+    return;
+  }
+
+  // Configurar polling
+  if (pollingManager.config) {
+    // eslint-disable-next-line prefer-optional-chain
+    if (pollingManager.config.intervals &amp;&amp; pollingManager.config.intervals.active) {
+      pollingManager.config.currentInterval = pollingManager.config.intervals.active;
+    }
+    pollingManager.config.currentMode = 'active';
+    pollingManager.config.errorCount = 0;
+  }
+
+  // Resetear contador de progreso inactivo usando SyncStateManager
+  if (typeof SyncStateManager !== 'undefined' &amp;&amp; SyncStateManager &amp;&amp; typeof SyncStateManager.setInactiveProgressCounter === 'function') {
+    SyncStateManager.setInactiveProgressCounter(0);
+  }
+
+  // ✅ MIGRADO: Usar PollingManager para iniciar polling con nombre único 'phase1'
+  // PollingManager previene duplicaciones automáticamente
+  const intervalId = pollingManager.startPolling('phase1', checkPhase1Complete, 2000);
+  
+  // Mantener compatibilidad hacia atrás guardando el ID
+  phase1PollingInterval = intervalId;
+
+  // También verificar inmediatamente después de 1 segundo para feedback instantáneo
+  setTimeout(checkPhase1Complete, 1000);
+}
+
+/**
+ * Detiene el polling de Fase 1
+ * 
+ * ✅ MIGRADO: Ahora usa PollingManager para detener el polling.
+ * PollingManager es el único responsable de gestionar intervalos.
+ *
+ * @returns {void}
+ * @private
+ */
+function stopPolling() {
+  // ✅ MIGRADO: Usar PollingManager para detener polling
+  if (typeof pollingManager !== 'undefined' &amp;&amp; pollingManager &amp;&amp; typeof pollingManager.stopPolling === 'function') {
+    pollingManager.stopPolling('phase1');
+  }
+  
+  // Mantener compatibilidad hacia atrás limpiando la variable
+  phase1PollingInterval = null;
+}
+
+/**
+ * Maneja la respuesta exitosa de iniciar Fase 1
+ *
+ * @param {Object} response - Respuesta del servidor
+ * @returns {void}
+ * @private
+ */
+function handleSuccess(response) {
+  // ✅ PROTECCIÓN: Liberar lock de inicio después de recibir respuesta exitosa
+  if (typeof SyncStateManager !== 'undefined' &amp;&amp; SyncStateManager &amp;&amp; typeof SyncStateManager.setPhase1Starting === 'function') {
+    SyncStateManager.setPhase1Starting(false);
+  } else if (typeof window !== 'undefined') {
+    window.phase1Starting = false;
+  }
+
+  // ✅ PROTECCIÓN: Marcar como inicializada usando SyncStateManager
+  if (typeof SyncStateManager !== 'undefined' &amp;&amp; SyncStateManager &amp;&amp; typeof SyncStateManager.setPhase1Initialized === 'function') {
+    SyncStateManager.setPhase1Initialized(true);
+  }
+
+  // Verificar si el proceso ya está en progreso o se acaba de iniciar
+  if (response.data &amp;&amp; response.data.in_progress) {
+    if (DOM_CACHE &amp;&amp; DOM_CACHE.$feedback) {
+      DOM_CACHE.$feedback.text('Fase 1: Sincronización iniciada (proceso en segundo plano)...');
+    }
+  } else {
+    if (DOM_CACHE &amp;&amp; DOM_CACHE.$feedback) {
+      DOM_CACHE.$feedback.text('Fase 1: Sincronizando imágenes...');
+    }
+  }
+
+  // Inicializar estado
+  phase1Complete = false;
+
+  // ✅ NUEVO: Emitir evento inmediato cuando se inicia la sincronización
+  // Esto permite que ConsoleManager muestre el mensaje de inicio inmediatamente
+  if (typeof window !== 'undefined' &amp;&amp; window.pollingManager &amp;&amp; typeof window.pollingManager.emit === 'function') {
+    // Obtener datos iniciales de la respuesta o hacer una consulta rápida
+    const phase1Status = response.data &amp;&amp; response.data.phase1_images ? response.data.phase1_images : {
+      in_progress: true,
+      completed: false,
+      products_processed: 0,
+      total_products: response.data &amp;&amp; response.data.total_products ? response.data.total_products : 0
+    };
+    
+    window.pollingManager.emit('syncProgress', {
+      syncData: response.data || {
+        in_progress: false,
+        is_completed: false
+      },
+      phase1Status: phase1Status,
+      timestamp: Date.now()
+    });
+  }
+
+  // Iniciar polling para monitorear Fase 1
+  startPolling();
+}
+
+/**
+ * Maneja errores al iniciar Fase 1
+ *
+ * @param {Object} response - Respuesta del servidor con error
+ * @param {string} originalText - Texto original del botón de sincronización
+ * @returns {void}
+ * @private
+ */
+function handleErrorResponse(response, originalText) {
+  // ✅ PROTECCIÓN: Liberar lock de inicio después de error
+  if (typeof SyncStateManager !== 'undefined' &amp;&amp; SyncStateManager &amp;&amp; typeof SyncStateManager.setPhase1Starting === 'function') {
+    SyncStateManager.setPhase1Starting(false);
+  } else if (typeof window !== 'undefined') {
+    window.phase1Starting = false;
+  }
+
+  const errorMsg = (response.data &amp;&amp; response.data.message) || 'Error desconocido';
+
+  if (DOM_CACHE &amp;&amp; DOM_CACHE.$feedback) {
+    DOM_CACHE.$feedback.text('Error al iniciar Fase 1: ' + errorMsg);
+  }
+
+  if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.logError === 'function') {
+    ErrorHandler.logError('Error al iniciar Fase 1', 'SYNC_START');
+  }
+
+  if (DOM_CACHE &amp;&amp; DOM_CACHE.$syncBtn) {
+    DOM_CACHE.$syncBtn.prop('disabled', false).text(originalText);
+  }
+
+  if (DOM_CACHE &amp;&amp; DOM_CACHE.$batchSizeSelector) {
+    DOM_CACHE.$batchSizeSelector.prop('disabled', false);
+  }
+}
+
+/**
+ * Maneja errores AJAX al iniciar Fase 1
+ *
+ * @param {Object} xhr - Objeto XMLHttpRequest
+ * @param {string} status - Estado de la petición
+ * @param {string} error - Mensaje de error
+ * @param {string} originalText - Texto original del botón de sincronización
+ * @returns {boolean} True si se manejó el error (timeout), false en caso contrario
+ * @private
+ */
+function handleAjaxError(xhr, status, error, originalText) {
+  // ✅ PROTECCIÓN: Liberar lock de inicio después de error AJAX
+  if (typeof SyncStateManager !== 'undefined' &amp;&amp; SyncStateManager &amp;&amp; typeof SyncStateManager.setPhase1Starting === 'function') {
+    SyncStateManager.setPhase1Starting(false);
+  } else if (typeof window !== 'undefined') {
+    window.phase1Starting = false;
+  }
+
+  if (DOM_CACHE &amp;&amp; DOM_CACHE.$feedback) {
+    DOM_CACHE.$feedback.text('Error al iniciar Fase 1: ' + (error || 'Error de comunicación'));
+  }
+
+  if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.logError === 'function') {
+    ErrorHandler.logError('Error AJAX al iniciar Fase 1', 'SYNC_START');
+  }
+
+  if (DOM_CACHE &amp;&amp; DOM_CACHE.$syncBtn) {
+    DOM_CACHE.$syncBtn.prop('disabled', false).text(originalText);
+  }
+
+  if (DOM_CACHE &amp;&amp; DOM_CACHE.$batchSizeSelector) {
+    DOM_CACHE.$batchSizeSelector.prop('disabled', false);
+  }
+
+  // Verificar si es un error de nonce y recargar página (patrón existente)
+  // eslint-disable-next-line prefer-optional-chain
+  if (xhr &amp;&amp; xhr.responseJSON &amp;&amp; xhr.responseJSON.data &amp;&amp; xhr.responseJSON.data.error_type === 'invalid_nonce') {
+    // Usar el patrón existente de recarga de página
+    setTimeout(function() {
+      if (typeof window !== 'undefined' &amp;&amp; window.location) {
+        window.location.reload();
+      }
+    }, 1000);
+    return false;
+  }
+
+  // Manejar timeout específicamente
+  if (status === 'timeout') {
+    if (DOM_CACHE &amp;&amp; DOM_CACHE.$feedback) {
+      DOM_CACHE.$feedback.text('Fase 1: Sincronización en curso (proceso largo, puede tardar varios minutos)...');
+    }
+
+    // ✅ MEJORADO: Si hay timeout, asumir que el proceso se inició correctamente y monitorear progreso
+    // Inicializar estado
+    phase1Complete = false;
+
+    // Iniciar polling inmediatamente para monitorear el progreso
+    startPolling();
+
+    return true; // Indicar que se manejó el timeout
+  }
+
+  return false; // No se manejó como timeout
+}
+
+/**
+ * Inicia la Fase 1: Sincronización de Imágenes
+ *
+ * @param {number} batchSize - Tamaño del lote para la sincronización
+ * @param {string} originalText - Texto original del botón de sincronización
+ * @returns {void}
+ *
+ * @example
+ * Phase1Manager.start(50, 'Sincronizar productos en lote');
+ */
+function start(batchSize, originalText) {
+  // ✅ PROTECCIÓN CRÍTICA: Lock atómico para prevenir ejecuciones simultáneas
+  // Usar SyncStateManager para obtener lock de forma atómica
+  if (typeof SyncStateManager !== 'undefined' &amp;&amp; SyncStateManager &amp;&amp; typeof SyncStateManager.setPhase1Starting === 'function') {
+    const lockAcquired = SyncStateManager.setPhase1Starting(true);
+    if (!lockAcquired) {
+      // Ya hay una ejecución en progreso, ignorar esta llamada
+      // eslint-disable-next-line no-console
+      if (typeof console !== 'undefined' &amp;&amp; console.warn) {
+        // eslint-disable-next-line no-console
+        console.warn('⚠️ Fase 1 ya se está iniciando, ignorando llamada duplicada');
+      }
+      return;
+    }
+  } else {
+    // Fallback: verificar flag directamente si SyncStateManager no está disponible
+    if (typeof window !== 'undefined' &amp;&amp; window.phase1Starting === true) {
+      // eslint-disable-next-line no-console
+      if (typeof console !== 'undefined' &amp;&amp; console.warn) {
+        // eslint-disable-next-line no-console
+        console.warn('⚠️ Fase 1 ya se está iniciando, ignorando llamada duplicada');
+      }
+      return;
+    }
+    if (typeof window !== 'undefined') {
+      window.phase1Starting = true;
+    }
+  }
+  
+  // ✅ PROTECCIÓN: Verificar si ya está inicializada y en progreso
+  if (typeof SyncStateManager !== 'undefined' &amp;&amp; SyncStateManager &amp;&amp; typeof SyncStateManager.getPhase1Initialized === 'function') {
+    if (SyncStateManager.getPhase1Initialized()) {
+      // Liberar lock antes de retornar
+      if (typeof SyncStateManager.setPhase1Starting === 'function') {
+        SyncStateManager.setPhase1Starting(false);
+      }
+      // eslint-disable-next-line no-console
+      if (typeof console !== 'undefined' &amp;&amp; console.warn) {
+        // eslint-disable-next-line no-console
+        console.warn('⚠️ Fase 1 ya está inicializada y en progreso, ignorando llamada duplicada');
+      }
+      return;
+    }
+  }
+
+  // Verificar dependencias críticas
+  if (typeof jQuery === 'undefined') {
+    // Liberar lock antes de retornar
+    if (typeof SyncStateManager !== 'undefined' &amp;&amp; SyncStateManager &amp;&amp; typeof SyncStateManager.setPhase1Starting === 'function') {
+      SyncStateManager.setPhase1Starting(false);
+    }
+    if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.logError === 'function') {
+      ErrorHandler.logError('jQuery no está disponible para Phase1Manager', 'PHASE1_START');
+    }
+    return;
+  }
+
+  // eslint-disable-next-line prefer-optional-chain
+  if (typeof miIntegracionApiDashboard === 'undefined' || !miIntegracionApiDashboard || !miIntegracionApiDashboard.ajaxurl) {
+    // Liberar lock antes de retornar
+    if (typeof SyncStateManager !== 'undefined' &amp;&amp; SyncStateManager &amp;&amp; typeof SyncStateManager.setPhase1Starting === 'function') {
+      SyncStateManager.setPhase1Starting(false);
+    }
+    if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.logError === 'function') {
+      ErrorHandler.logError('miIntegracionApiDashboard o ajaxurl no están disponibles', 'PHASE1_START');
+    }
+    return;
+  }
+
+  // eslint-disable-next-line prefer-optional-chain
+  if (typeof DOM_CACHE === 'undefined' || !DOM_CACHE) {
+    // Liberar lock antes de retornar
+    if (typeof SyncStateManager !== 'undefined' &amp;&amp; SyncStateManager &amp;&amp; typeof SyncStateManager.setPhase1Starting === 'function') {
+      SyncStateManager.setPhase1Starting(false);
+    }
+    if (typeof ErrorHandler !== 'undefined' &amp;&amp; ErrorHandler &amp;&amp; typeof ErrorHandler.logError === 'function') {
+      ErrorHandler.logError('DOM_CACHE no está disponible', 'PHASE1_START');
+    }
+    return;
+  }
+
+  if (DOM_CACHE.$feedback) {
+    DOM_CACHE.$feedback.text('Fase 1: Sincronizando imágenes...');
+  }
+
+  // Variable para almacenar el batch_size para Fase 2
+  if (typeof window !== 'undefined') {
+    window.pendingPhase2BatchSize = batchSize;
+  }
+
+  // Lanzar AJAX para iniciar Fase 1 (sincronización de imágenes)
+  const timeout = (DASHBOARD_CONFIG &amp;&amp; DASHBOARD_CONFIG.timeouts &amp;&amp; DASHBOARD_CONFIG.timeouts.ajax)
+    ? DASHBOARD_CONFIG.timeouts.ajax * 4
+    : 240000;
+
+  jQuery.ajax({
+    url: miIntegracionApiDashboard.ajaxurl,
+    type: 'POST',
+    timeout: timeout,
+    data: {
+      action: 'mia_sync_images',
+      nonce: miIntegracionApiDashboard.nonce || (typeof window !== 'undefined' &amp;&amp; window.miIntegracionApiDashboard &amp;&amp; window.miIntegracionApiDashboard.nonce),
+      resume: false,
+      batch_size: batchSize
+    },
+    success: function(response) {
+      // ✅ FASE 1: Manejar respuesta de sincronización de imágenes
+      if (response.success) {
+        handleSuccess(response);
+      } else {
+        handleErrorResponse(response, originalText);
+      }
+    },
+    error: function(xhr, status, error) {
+      const handled = handleAjaxError(xhr, status, error, originalText);
+      // Si se manejó como timeout, no hacer nada más (el polling ya está iniciado)
+      if (!handled) {
+        // Error no manejado como timeout, ya se mostró el mensaje de error
+      }
+    }
+  });
+}
+
+/**
+ * Detiene el polling de Fase 1
+ *
+ * @returns {void}
+ */
+function stop() {
+  stopPolling();
+  phase1Complete = false;
+  
+  // ✅ PROTECCIÓN: Resetear flags de estado al detener
+  if (typeof SyncStateManager !== 'undefined' &amp;&amp; SyncStateManager) {
+    if (typeof SyncStateManager.resetPhase1State === 'function') {
+      SyncStateManager.resetPhase1State();
+    } else {
+      // Fallback: resetear flags individualmente
+      if (typeof SyncStateManager.setPhase1Starting === 'function') {
+        SyncStateManager.setPhase1Starting(false);
+      }
+      if (typeof SyncStateManager.setPhase1Initialized === 'function') {
+        SyncStateManager.setPhase1Initialized(false);
+      }
+    }
+  } else if (typeof window !== 'undefined') {
+    window.phase1Starting = false;
+  }
+}
+
+/**
+ * Verifica si Fase 1 está completa
+ *
+ * @returns {boolean} True si Fase 1 está completa
+ */
+function isComplete() {
+  return phase1Complete;
+}
+
+/**
+ * Obtiene el intervalo de polling actual
+ *
+ * @returns {number|null} ID del intervalo de polling o null si no está activo
+ */
+function getPollingInterval() {
+  // ✅ MIGRADO: Obtener ID del intervalo desde PollingManager si está disponible
+  if (typeof pollingManager !== 'undefined' &amp;&amp; pollingManager &amp;&amp; typeof pollingManager.getIntervalId === 'function') {
+    return pollingManager.getIntervalId('phase1');
+  }
+  // Fallback a variable local para compatibilidad hacia atrás
+  return phase1PollingInterval;
+}
+
+/**
+ * Objeto Phase1Manager con métodos públicos
+ */
+const Phase1Manager = {
+  start,
+  stop,
+  isComplete,
+  getPollingInterval,
+  // ✅ NUEVO: Exponer startPolling para que SyncDashboard pueda iniciarlo
+  startPolling
+};
+
+/**
+ * Exponer Phase1Manager globalmente para mantener compatibilidad
+ * con el código existente que usa window.Phase1Manager
+ */
+if (typeof window !== 'undefined') {
+  try {
+    window.Phase1Manager = Phase1Manager;
+    // Exponer también variables globales para compatibilidad
+    Object.defineProperty(window, 'phase1Complete', {
+      get: function() {
+        return phase1Complete;
+      },
+      set: function(value) {
+        phase1Complete = value;
+      },
+      enumerable: true,
+      configurable: true
+    });
+
+    Object.defineProperty(window, 'phase1PollingInterval', {
+      get: function() {
+        return phase1PollingInterval;
+      },
+      set: function(value) {
+        phase1PollingInterval = value;
+      },
+      enumerable: true,
+      configurable: true
+    });
+  } catch (error) {
+    try {
+      Object.defineProperty(window, 'Phase1Manager', {
+        value: Phase1Manager,
+        writable: true,
+        enumerable: true,
+        configurable: true
+      });
+    } catch (defineError) {
+      // eslint-disable-next-line no-console
+      if (typeof console !== 'undefined' &amp;&amp; console.warn) {
+        // eslint-disable-next-line no-console
+        console.warn('No se pudo asignar Phase1Manager a window:', defineError, error);
+      }
+    }
+  }
+}
+
+/* global module */
+if (typeof module !== 'undefined' &amp;&amp; module.exports) {
+  module.exports = { Phase1Manager };
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Thu Nov 13 2025 05:45:58 GMT+0100 (hora estándar de Europa central) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>
